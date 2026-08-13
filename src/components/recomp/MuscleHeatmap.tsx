@@ -1,174 +1,142 @@
 'use client';
 
-import React from 'react';
-import { TrainingLogEntry } from '@/stores/useRecompStore';
+import React, { useMemo } from 'react';
+import Model from 'react-body-highlighter';
+import type { IExerciseData } from 'react-body-highlighter';
+import { useRecompStore } from '@/stores/useRecompStore';
+import { getMusclesForExercise } from '@/lib/muscleMap';
 
-interface MuscleHeatmapProps {
-  trainingLogs: TrainingLogEntry[];
-}
+const HIGHLIGHT_COLORS = [
+  '#34C759', // 1 set (Verde suave)
+  '#86E39E', // 2 sets (Verde claro)
+  '#FECA57', // 3 sets (Amarillo pastel)
+  '#FF9F43', // 4 sets (Naranja)
+  '#E8505B', // 5-6 sets (Coral / Rojo)
+  '#E8505B', // 6 sets
+  '#B82E3B', // 7+ sets (Rojo borgoña intenso - Fatiga Alta)
+];
 
-export const MuscleHeatmap: React.FC<MuscleHeatmapProps> = ({ trainingLogs }) => {
-  // Compute sets completed in last 72 hours for each muscle group
-  const now = new Date().getTime();
-  const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+export const MuscleHeatmap: React.FC = () => {
+  const { trainingLogs } = useRecompStore();
 
-  const muscleSets: Record<string, number> = {
-    chest: 0,
-    lats: 0,
-    shoulders: 0,
-    biceps: 0,
-    triceps: 0,
-    quads: 0,
-    glutes: 0,
-    hamstrings: 0,
-    calves: 0,
-    abs: 0,
-  };
+  const fatigueData = useMemo(() => {
+    const data: IExerciseData[] = [];
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
 
-  trainingLogs.forEach((log) => {
-    const logTime = new Date(log.date).getTime();
-    if (now - logTime <= threeDaysMs) {
-      log.exercises.forEach((ex) => {
-        const totalSets = ex.sets?.length || 3;
-        const name = (ex.name + ' ' + (ex.targetMuscle || '')).toLowerCase();
+    trainingLogs.forEach((log) => {
+      const logDate = new Date(log.date);
+      const diffTime = Math.abs(now.getTime() - logDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-        if (name.includes('pecho') || name.includes('bench') || name.includes('press') || name.includes('chest')) {
-          muscleSets.chest += totalSets;
-        }
-        if (name.includes('espalda') || name.includes('remo') || name.includes('pull') || name.includes('lats') || name.includes('row')) {
-          muscleSets.lats += totalSets;
-        }
-        if (name.includes('hombro') || name.includes('militar') || name.includes('shoulder') || name.includes('lateral')) {
-          muscleSets.shoulders += totalSets;
-        }
-        if (name.includes('bíceps') || name.includes('biceps') || name.includes('curl')) {
-          muscleSets.biceps += totalSets;
-        }
-        if (name.includes('tríceps') || name.includes('triceps') || name.includes('dips') || name.includes('fondos')) {
-          muscleSets.triceps += totalSets;
-        }
-        if (name.includes('sentadilla') || name.includes('squat') || name.includes('cuádriceps') || name.includes('quad')) {
-          muscleSets.quads += totalSets;
-        }
-        if (name.includes('glúteo') || name.includes('glute')) {
-          muscleSets.glutes += totalSets;
-        }
-        if (name.includes('isquio') || name.includes('hamstring') || name.includes('peso muerto') || name.includes('deadlift')) {
-          muscleSets.hamstrings += totalSets;
-        }
-        if (name.includes('gemelo') || name.includes('pantorrilla') || name.includes('calf')) {
-          muscleSets.calves += totalSets;
-        }
-        if (name.includes('abs') || name.includes('abdomen') || name.includes('crunch') || name.includes('plank')) {
-          muscleSets.abs += totalSets;
-        }
-      });
-    }
-  });
+      // Solo acumulamos fatiga de los últimos 3 días (72 horas)
+      if (diffDays <= 3) {
+        log.exercises.forEach((ex) => {
+          const muscles = getMusclesForExercise(ex.name);
+          const setCount = ex.sets?.length || 1;
 
-  // Guarantee the visual demonstration matching screenshot 3 if sample data
-  if (muscleSets.chest === 0 && muscleSets.lats === 0) {
-    muscleSets.chest = 6; // Red
-    muscleSets.lats = 6; // Red
-    muscleSets.biceps = 4; // Yellow
-    muscleSets.triceps = 4; // Yellow
-  }
+          if (muscles.length > 0) {
+            for (let i = 0; i < setCount; i++) {
+              data.push({
+                name: `Set de ${ex.name}`,
+                muscles: muscles,
+              });
+            }
+          }
+        });
+      }
+    });
 
-  const getFill = (sets: number) => {
-    if (sets >= 6) return '#E8505B'; // Coral / Fatiga Alta
-    if (sets >= 3) return '#FECA57'; // Yellow / Moderado
-    if (sets >= 1) return '#34C759'; // Green / 1-2 Series
-    return '#94A3B8'; // Descansado
-  };
+    return data;
+  }, [trainingLogs]);
 
   return (
-    <div className="p-5 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-4">
-      {/* Title Row */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-lg">🔥</span>
-          <h3 className="text-sm font-extrabold text-[#F5F5F7]">Mapa de Fatiga Muscular</h3>
+    <div
+      className="card"
+      style={{
+        background: 'var(--surface)',
+        borderRadius: '24px',
+        padding: '20px',
+        border: '1px solid var(--border-subtle)',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: '8px',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '1.06rem',
+            fontWeight: 800,
+            color: 'var(--text-primary)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <span>🔥</span>
+          <span>Mapa de Fatiga Muscular</span>
         </div>
-        <span className="tag-pill tag-pill-coral text-[11px] font-extrabold">Últimas 72h</span>
+        <span className="tag-pill tag-pill-coral">Últimas 72h</span>
       </div>
 
-      <p className="text-xs font-bold text-[#8E8E93]">
+      <p
+        style={{
+          fontSize: '0.87rem',
+          fontWeight: 700,
+          color: 'var(--text-secondary)',
+          marginBottom: '16px',
+          lineHeight: 1.4,
+        }}
+      >
         Seguimiento de fatiga acumulada en los últimos 3 días.
       </p>
 
-      {/* SVG Anatomical Vector Display (Anterior & Posterior) */}
-      <div className="flex items-center justify-around py-2">
-        {/* Anterior (Front Body) */}
-        <div className="flex flex-col items-center">
-          <svg viewBox="0 0 100 200" className="w-28 h-56 drop-shadow-md">
-            {/* Head */}
-            <polygon points="50,10 60,25 50,32 40,25" fill="#94A3B8" />
-            {/* Neck */}
-            <polygon points="46,32 54,32 56,40 44,40" fill="#94A3B8" />
-            {/* Traps */}
-            <polygon points="44,40 56,40 68,46 32,46" fill="#94A3B8" />
-            {/* Chest (Left & Right) */}
-            <polygon points="34,48 49,48 48,64 34,60" fill={getFill(muscleSets.chest)} />
-            <polygon points="51,48 66,48 66,60 52,64" fill={getFill(muscleSets.chest)} />
-            {/* Shoulders */}
-            <polygon points="28,48 34,48 33,62 25,56" fill={getFill(muscleSets.shoulders)} />
-            <polygon points="66,48 72,48 75,56 67,62" fill={getFill(muscleSets.shoulders)} />
-            {/* Biceps */}
-            <polygon points="24,58 31,64 27,84 20,78" fill={getFill(muscleSets.biceps)} />
-            <polygon points="69,64 76,58 80,78 73,84" fill={getFill(muscleSets.biceps)} />
-            {/* Forearms */}
-            <polygon points="20,80 27,86 21,114 14,106" fill={getFill(muscleSets.biceps > 2 ? 4 : 0)} />
-            <polygon points="73,86 80,80 86,106 79,114" fill={getFill(muscleSets.biceps > 2 ? 4 : 0)} />
-            {/* Abs */}
-            <polygon points="36,66 64,66 61,96 39,96" fill={getFill(muscleSets.abs)} />
-            {/* Quads */}
-            <polygon points="38,102 49,102 47,150 36,150" fill={getFill(muscleSets.quads)} />
-            <polygon points="51,102 62,102 64,150 53,150" fill={getFill(muscleSets.quads)} />
-            {/* Calves */}
-            <polygon points="36,154 46,154 43,190 37,190" fill={getFill(muscleSets.calves)} />
-            <polygon points="54,154 64,154 63,190 57,190" fill={getFill(muscleSets.calves)} />
-          </svg>
+      {/* Renderizado del Cuerpo Humano (Vista Anterior y Posterior) con react-body-highlighter */}
+      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+        {/* VISTA FRONTAL */}
+        <div style={{ width: '45%' }}>
+          <Model
+            type="anterior"
+            data={fatigueData}
+            highlightedColors={HIGHLIGHT_COLORS}
+            style={{ width: '100%', height: 'auto' }}
+            svgStyle={{ fill: 'var(--surface-elevated)' }}
+          />
         </div>
 
-        {/* Posterior (Back Body) */}
-        <div className="flex flex-col items-center">
-          <svg viewBox="0 0 100 200" className="w-28 h-56 drop-shadow-md">
-            {/* Head */}
-            <polygon points="50,10 60,25 50,32 40,25" fill="#94A3B8" />
-            {/* Neck */}
-            <polygon points="46,32 54,32 56,40 44,40" fill="#94A3B8" />
-            {/* Upper Back / Traps */}
-            <polygon points="44,40 56,40 70,52 50,68 30,52" fill="#94A3B8" />
-            {/* Lats (Left & Right) */}
-            <polygon points="32,54 48,68 47,94 36,88" fill={getFill(muscleSets.lats)} />
-            <polygon points="68,54 52,68 53,94 64,88" fill={getFill(muscleSets.lats)} />
-            {/* Rear Delts */}
-            <polygon points="28,48 34,48 33,62 25,56" fill={getFill(muscleSets.shoulders)} />
-            <polygon points="66,48 72,48 75,56 67,62" fill={getFill(muscleSets.shoulders)} />
-            {/* Triceps */}
-            <polygon points="24,58 31,64 27,84 20,78" fill={getFill(muscleSets.triceps)} />
-            <polygon points="69,64 76,58 80,78 73,84" fill={getFill(muscleSets.triceps)} />
-            {/* Forearms */}
-            <polygon points="20,80 27,86 21,114 14,106" fill={getFill(muscleSets.triceps > 2 ? 4 : 0)} />
-            <polygon points="73,86 80,80 86,106 79,114" fill={getFill(muscleSets.triceps > 2 ? 4 : 0)} />
-            {/* Glutes */}
-            <polygon points="36,98 49,98 48,122 36,120" fill={getFill(muscleSets.glutes)} />
-            <polygon points="51,98 64,98 64,120 52,122" fill={getFill(muscleSets.glutes)} />
-            {/* Hamstrings */}
-            <polygon points="36,124 48,124 46,152 36,152" fill={getFill(muscleSets.hamstrings)} />
-            <polygon points="52,124 64,124 64,152 54,152" fill={getFill(muscleSets.hamstrings)} />
-            {/* Calves */}
-            <polygon points="36,154 46,154 43,190 37,190" fill={getFill(muscleSets.calves)} />
-            <polygon points="54,154 64,154 63,190 57,190" fill={getFill(muscleSets.calves)} />
-          </svg>
+        {/* VISTA TRASERA */}
+        <div style={{ width: '45%' }}>
+          <Model
+            type="posterior"
+            data={fatigueData}
+            highlightedColors={HIGHLIGHT_COLORS}
+            style={{ width: '100%', height: 'auto' }}
+            svgStyle={{ fill: 'var(--surface-elevated)' }}
+          />
         </div>
       </div>
 
-      {/* Legend with exact pills */}
-      <div className="flex items-center justify-center gap-1.5 flex-wrap pt-2 border-t border-white/5 text-[11px] font-black">
+      {/* Leyenda de Colores */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '8px',
+          marginTop: '16px',
+          flexWrap: 'wrap',
+        }}
+      >
         <span className="tag-pill">0 (Descansado)</span>
         <span className="tag-pill tag-pill-green">1-2 Series</span>
-        <span className="tag-pill" style={{ background: 'rgba(254, 202, 87, 0.16)', color: '#FECA57' }}>
+        <span
+          className="tag-pill"
+          style={{ background: 'rgba(254, 202, 87, 0.16)', color: '#FECA57' }}
+        >
           3-5 Series
         </span>
         <span className="tag-pill tag-pill-coral">6+ Series (Fatiga Alta)</span>

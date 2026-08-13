@@ -4,6 +4,25 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 💎 [v1.2.0] - 2026-08-13 (React Body Highlighter, Escaneo IA 1:1, Galería Limpia & Logo HUBos)
+
+### 🌟 Ajustes Críticos de Fidelidad y Limpieza
+- **Mapa de Fatiga Muscular Oficial (`react-body-highlighter`)**:
+  - Sustitución completa del maniquí SVG anterior por la librería oficial `react-body-highlighter` con los componentes `<Model type="anterior" />` y `<Model type="posterior" />`.
+  - Mapeo completo en `src/lib/muscleMap.ts` de los 19 músculos anatómicos.
+  - Paleta exacta `HIGHLIGHT_COLORS` (`#34C759`, `#86E39E`, `#FECA57`, `#FF9F43`, `#E8505B`, `#B82E3B`) y filtro temporal de 72 horas.
+- **Modal de Escaneo IA 1:1 (`MealCaptureModal`)**:
+  - Replicación exacta del diseño de la captura: selector superior de categoría (`🥐 Desayuno`, `🍲 Almuerzo`, `🍽️ Cena`, `🍎 Snacks`), área de captura con borde punteado `Toca para tomar foto de tu plato`, caja de descripción y botón verde `✨ Analizar Comida`.
+- **Galería de Comidas 100% Limpia**:
+  - Eliminadas todas las fotos de demostración dummy.
+  - La galería ahora muestra **exclusivamente las fotos reales** que el usuario toma o sube con sus comidas.
+- **Entrenamientos Mock Eliminados**:
+  - Vaciado del estado inicial (`trainingLogs: []`). Solo se mostrarán las sesiones reales que el usuario suba o registre.
+- **Logo Minimalista HUBos**:
+  - Creado isotipo geométrico e icono vectorial de alta gama (`src/components/common/HubLogo.tsx` y `public/hubos-icon.svg`) en fondo negro OLED con nexus central plateado y acento neón.
+
+---
+
 ## 🚀 [v1.0.0] - 2026-08-13 (Lanzamiento Inicial de HUBos)
 
 ### 🌟 Super-App & Contenedor Modular Unificado para iOS

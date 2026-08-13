@@ -77,7 +77,7 @@ export const TrainingSection: React.FC = () => {
       </div>
 
       {/* 2. Muscle Heatmap */}
-      <MuscleHeatmap trainingLogs={trainingLogs} />
+      <MuscleHeatmap />
 
       {/* 3. Training Date Selector Card */}
       <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
@@ -128,31 +128,42 @@ export const TrainingSection: React.FC = () => {
             <span>🏋️</span>
             <span>Historial de Entrenamientos</span>
           </div>
-          <span className="text-xs font-bold text-[#8E8E93]">{trainingLogs.length} sesiones</span>
+          <span className="text-xs font-bold text-[#8E8E93]">
+            {trainingLogs.length === 0 ? 'Sin registros' : `${trainingLogs.length} sesiones`}
+          </span>
         </div>
 
-        <div className="space-y-2.5">
-          {trainingLogs.map((log) => (
-            <div
-              key={log.id}
-              onClick={() => setSelectedLog(log)}
-              className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between cursor-pointer hover:bg-[#242426] active:scale-[0.98] transition-all shadow-sm"
-            >
-              <div className="flex items-center gap-3.5 overflow-hidden">
-                <div className="w-12 h-12 rounded-2xl bg-[#2A2A2C] flex items-center justify-center text-2xl shrink-0">
-                  🏋️
+        {trainingLogs.length === 0 ? (
+          <div className="card empty-state" style={{ padding: '24px 16px' }}>
+            <span className="text-2xl">🏋️</span>
+            <span className="text-xs font-bold text-[#8E8E93] max-w-xs text-center mt-1">
+              Sube tus capturas de pantalla de Symmetry para ver el historial y análisis de tus ejercicios.
+            </span>
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {trainingLogs.map((log) => (
+              <div
+                key={log.id}
+                onClick={() => setSelectedLog(log)}
+                className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between cursor-pointer hover:bg-[#242426] active:scale-[0.98] transition-all shadow-sm"
+              >
+                <div className="flex items-center gap-3.5 overflow-hidden">
+                  <div className="w-12 h-12 rounded-2xl bg-[#242426] flex items-center justify-center text-2xl shrink-0">
+                    🏋️
+                  </div>
+                  <div className="overflow-hidden">
+                    <h4 className="text-sm font-black text-[#F5F5F7] truncate">{log.title}</h4>
+                    <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
+                      {log.date} • {log.exercises.length} ejercicios
+                    </p>
+                  </div>
                 </div>
-                <div className="overflow-hidden">
-                  <h4 className="text-sm font-black text-[#F5F5F7] truncate">{log.title}</h4>
-                  <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
-                    {log.date} • {log.exercises.length} ejercicios
-                  </p>
-                </div>
+                <IconChevronRight className="w-5 h-5 text-[#8E8E93] shrink-0" />
               </div>
-              <IconChevronRight className="w-5 h-5 text-[#8E8E93] shrink-0" />
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Workout Detail Modal */}

@@ -9,6 +9,7 @@ import { calculateDailyNutrition } from '@/lib/nutritionEngine';
 import { calculateFinancialSummary } from '@/lib/financialsEngine';
 import { formatCurrency, formatNumber } from '@/lib/utils';
 import { AnimatedNumber } from '../common/AnimatedNumber';
+import { HubLogo } from '../common/HubLogo';
 import {
   IconSettings,
   IconSparkles,
@@ -43,17 +44,20 @@ export const HubDashboard: React.FC = () => {
     <div className="flex-1 flex flex-col px-5 pt-12 pb-28 overflow-y-auto no-scrollbar animate-fade-in">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#34C759] animate-pulse" />
-            <span className="text-[11px] font-black uppercase tracking-widest text-[#34C759]">
-              HUBos • Super-App iOS
-            </span>
+        <div className="flex items-center gap-3">
+          <HubLogo size={44} />
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#34C759] animate-pulse" />
+              <span className="text-[11px] font-black uppercase tracking-widest text-[#34C759]">
+                HUBos • Super-App iOS
+              </span>
+            </div>
+            <h1 className="text-xl font-black text-[#F5F5F7] tracking-tight mt-0.5">
+              {greeting}, {userName}
+            </h1>
+            <p className="text-[11px] font-bold text-[#8E8E93] capitalize">{formattedDate}</p>
           </div>
-          <h1 className="text-2xl font-black text-[#F5F5F7] tracking-tight mt-0.5">
-            {greeting}, {userName}
-          </h1>
-          <p className="text-xs text-[#8E8E93] capitalize">{formattedDate}</p>
         </div>
 
         <button

@@ -297,56 +297,7 @@ export const useRecompStore = create<RecompState>()(
         });
       },
 
-      trainingLogs: [
-        {
-          id: 'train-1',
-          date: '2026-08-11',
-          title: 'Entrenamiento de Espalda y Bíceps',
-          muscleGroups: ['Espalda', 'Bíceps'],
-          totalVolumeKg: 5800,
-          durationMinutes: 55,
-          exercises: [
-            {
-              id: 'ex-1',
-              name: 'Remo con Barra',
-              targetMuscle: 'Espalda',
-              sets: [
-                { setNumber: 1, weightKg: 70, reps: 10 },
-                { setNumber: 2, weightKg: 75, reps: 8 },
-                { setNumber: 3, weightKg: 80, reps: 6 },
-              ],
-            },
-            {
-              id: 'ex-2',
-              name: 'Curl con Barra Z',
-              targetMuscle: 'Bíceps',
-              sets: [
-                { setNumber: 1, weightKg: 30, reps: 12 },
-                { setNumber: 2, weightKg: 35, reps: 10 },
-              ],
-            },
-          ],
-        },
-        {
-          id: 'train-2',
-          date: '2026-08-07',
-          title: 'Entrenamiento del Viernes - Pierna / Squats',
-          muscleGroups: ['Cuádriceps', 'Glúteos'],
-          totalVolumeKg: 6200,
-          durationMinutes: 60,
-          exercises: [
-            {
-              id: 'ex-3',
-              name: 'Sentadilla Trasera',
-              targetMuscle: 'Piernas',
-              sets: [
-                { setNumber: 1, weightKg: 90, reps: 10 },
-                { setNumber: 2, weightKg: 100, reps: 8 },
-              ],
-            },
-          ],
-        },
-      ],
+      trainingLogs: [],
 
       addTrainingLog: (log) => {
         set((state) => ({

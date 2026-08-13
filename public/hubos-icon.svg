@@ -1,0 +1,28 @@
+<svg viewBox="0 0 120 120" width="120" height="120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Black Background squircle -->
+  <rect width="120" height="120" rx="28" fill="#0B0B0D"/>
+  <rect x="0.5" y="0.5" width="119" height="119" rx="27.5" stroke="rgba(255,255,255,0.1)"/>
+  
+  <!-- Ambient Glow -->
+  <circle cx="60" cy="60" r="45" fill="url(#hub_glow)" opacity="0.2"/>
+
+  <!-- Minimalist H Nexus -->
+  <rect x="28" y="30" width="14" height="60" rx="7" fill="url(#hub_silver)"/>
+  <rect x="78" y="30" width="14" height="60" rx="7" fill="url(#hub_silver)"/>
+  <rect x="28" y="53" width="64" height="14" rx="7" fill="url(#hub_silver)"/>
+
+  <!-- Core Neon Nexus -->
+  <circle cx="60" cy="60" r="6" fill="#34C759"/>
+
+  <defs>
+    <radialGradient id="hub_glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(60 60) rotate(90) scale(45)">
+      <stop stopColor="#34C759"/>
+      <stop offset="1" stopColor="#0B0B0D" stopOpacity="0"/>
+    </radialGradient>
+    <linearGradient id="hub_silver" x1="28" y1="30" x2="92" y2="90" gradientUnits="userSpaceOnUse">
+      <stop stopColor="#FFFFFF"/>
+      <stop offset="0.5" stopColor="#E2E8F0"/>
+      <stop offset="1" stopColor="#94A3B8"/>
+    </linearGradient>
+  </defs>
+</svg>

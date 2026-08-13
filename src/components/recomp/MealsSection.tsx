@@ -4,25 +4,9 @@ import React, { useState } from 'react';
 import { useRecompStore, MealItem, FavoriteMealItem } from '@/stores/useRecompStore';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { IconPlus, IconTrash, IconCamera, IconX } from '../common/Icons';
+import { IconPlus, IconTrash, IconCamera } from '../common/Icons';
 import { MealCaptureModal } from './MealCaptureModal';
 import { DateSelectionModal } from './DateSelectionModal';
-
-// Sample gallery photos matching screenshot 2
-const GALLERY_ITEMS: { id: string; url: string; calories: number; title: string }[] = [
-  { id: 'g-1', url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80', calories: 615, title: 'Pollo con arroz y papa' },
-  { id: 'g-2', url: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80', calories: 210, title: 'Desayuno ligero con café' },
-  { id: 'g-3', url: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=400&q=80', calories: 1150, title: 'Bandeja con queso y maíz' },
-  { id: 'g-4', url: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=80', calories: 720, title: 'Arroz especial con vegetales' },
-  { id: 'g-5', url: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&q=80', calories: 765, title: 'Desayuno con arepa y huevos' },
-  { id: 'g-6', url: 'https://images.unsplash.com/photo-1584776296944-ab6fb57b0bdd?w=400&q=80', calories: 116, title: 'Yogurt griego con proteína' },
-  { id: 'g-7', url: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&q=80', calories: 140, title: 'Galletas de mantequilla' },
-  { id: 'g-8', url: 'https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400&q=80', calories: 105, title: 'Banano fresco' },
-  { id: 'g-9', url: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&q=80', calories: 780, title: 'Parrillada mixta' },
-  { id: 'g-10', url: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80', calories: 680, title: 'Gratinado de maíz' },
-  { id: 'g-11', url: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400&q=80', calories: 615, title: 'Huevos revueltos con café' },
-  { id: 'g-12', url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=80', calories: 680, title: 'Arroz chaufa con carne' },
-];
 
 export function getMealCategory(meal: MealItem): 'desayuno' | 'almuerzo' | 'cena' | 'snack' {
   if (meal.category && ['desayuno', 'almuerzo', 'cena', 'snack'].includes(meal.category)) {
@@ -50,6 +34,7 @@ export function getMealCategory(meal: MealItem): 'desayuno' | 'almuerzo' | 'cena
 
 export const MealsSection: React.FC = () => {
   const {
+    meals,
     selectedDate,
     getMealsByDate,
     addMeal,
@@ -62,7 +47,7 @@ export const MealsSection: React.FC = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [activeCategoryForManual, setActiveCategoryForManual] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('desayuno');
-  const [selectedGalleryPhoto, setSelectedGalleryPhoto] = useState<(typeof GALLERY_ITEMS)[0] | null>(null);
+  const [selectedPhotoMeal, setSelectedPhotoMeal] = useState<MealItem | null>(null);
 
   // Form for manual entry
   const [manualName, setManualName] = useState('');
@@ -73,6 +58,9 @@ export const MealsSection: React.FC = () => {
 
   const currentMeals = getMealsByDate(selectedDate);
   const formattedDate = format(parseISO(selectedDate), 'MMM d, yyyy', { locale: es });
+
+  // Only meals with uploaded photos (User meals only, zero random placeholders)
+  const mealsWithPhotos = meals.filter((m) => Boolean(m.imageBase64 || m.imageUrl));
 
   const categories: { key: 'desayuno' | 'almuerzo' | 'cena' | 'snack'; label: string; icon: string }[] = [
     { key: 'desayuno', label: 'Desayuno', icon: '🥐' },
@@ -220,9 +208,19 @@ export const MealsSection: React.FC = () => {
                       className="p-3.5 rounded-[20px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between shadow-sm"
                     >
                       <div className="flex items-center gap-3 overflow-hidden">
-                        <div className="w-10 h-10 rounded-xl bg-[#2A2A2C] flex items-center justify-center text-lg shrink-0">
-                          {cat.icon}
-                        </div>
+                        {meal.imageBase64 || meal.imageUrl ? (
+                          <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-white/10">
+                            <img
+                              src={meal.imageBase64 || meal.imageUrl}
+                              alt={meal.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-xl bg-[#2A2A2C] flex items-center justify-center text-lg shrink-0">
+                            {cat.icon}
+                          </div>
+                        )}
                         <div className="overflow-hidden">
                           <h4 className="text-xs font-extrabold text-[#F5F5F7] truncate">{meal.name}</h4>
                           <div className="flex items-center gap-1 mt-1">
@@ -253,34 +251,41 @@ export const MealsSection: React.FC = () => {
         })}
       </div>
 
-      {/* 5. Galería de Comidas */}
+      {/* 5. Galería de Comidas (ONLY Real user-uploaded photos) */}
       <div className="space-y-3 pt-2">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#242426] border border-white/5 text-xs font-black text-[#F5F5F7]">
           <span>📸</span>
           <span>Galería de Comidas</span>
         </div>
 
-        {/* 3-Column Photo Grid */}
-        <div className="grid grid-cols-3 gap-2.5">
-          {GALLERY_ITEMS.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setSelectedGalleryPhoto(item)}
-              className="relative aspect-square rounded-[20px] overflow-hidden border border-white/10 group cursor-pointer active:scale-95 transition-transform"
-            >
-              <img
-                src={item.url}
-                alt={item.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-              <span className="absolute bottom-2 left-2 text-[11px] font-black text-white px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-sm">
-                {item.calories} kcal
-              </span>
-            </div>
-          ))}
-        </div>
+        {mealsWithPhotos.length === 0 ? (
+          <div className="card empty-state" style={{ padding: '24px 16px' }}>
+            <span className="text-2xl">📸</span>
+            <span className="text-xs font-bold text-[#8E8E93] max-w-xs text-center mt-1">
+              Las fotos de los platos que escanees o registres aparecerán aquí automáticamente.
+            </span>
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-2.5">
+            {mealsWithPhotos.map((meal) => (
+              <div
+                key={meal.id}
+                onClick={() => setSelectedPhotoMeal(meal)}
+                className="relative aspect-square rounded-[20px] overflow-hidden border border-white/10 group cursor-pointer active:scale-95 transition-transform"
+              >
+                <img
+                  src={meal.imageBase64 || meal.imageUrl}
+                  alt={meal.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+                <span className="absolute bottom-2 left-2 text-[11px] font-black text-white px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-sm">
+                  {meal.calories} kcal
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 6. Floating Action Buttons (Bottom Left Manual + Bottom Right AI Camera) */}
@@ -396,12 +401,12 @@ export const MealsSection: React.FC = () => {
         </div>
       )}
 
-      {/* Gallery Photo Detail Modal */}
-      {selectedGalleryPhoto && (
+      {/* User Meal Photo Detail Modal */}
+      {selectedPhotoMeal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div
             className="fixed inset-0 bg-black/80 backdrop-blur-md"
-            onClick={() => setSelectedGalleryPhoto(null)}
+            onClick={() => setSelectedPhotoMeal(null)}
           />
           <div
             className="relative bg-[#1C1C1E] border border-white/10 rounded-[28px] overflow-hidden max-w-xs w-full z-10 animate-scale-up"
@@ -409,38 +414,27 @@ export const MealsSection: React.FC = () => {
           >
             <div className="relative aspect-video">
               <img
-                src={selectedGalleryPhoto.url}
-                alt={selectedGalleryPhoto.title}
+                src={selectedPhotoMeal.imageBase64 || selectedPhotoMeal.imageUrl}
+                alt={selectedPhotoMeal.name}
                 className="w-full h-full object-cover"
               />
               <button
-                onClick={() => setSelectedGalleryPhoto(null)}
+                onClick={() => setSelectedPhotoMeal(null)}
                 className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center text-xs"
               >
                 ✕
               </button>
             </div>
             <div className="p-4 space-y-2 text-center">
-              <h4 className="text-sm font-black text-[#F5F5F7]">{selectedGalleryPhoto.title}</h4>
+              <h4 className="text-sm font-black text-[#F5F5F7]">{selectedPhotoMeal.name}</h4>
               <div className="inline-block px-3 py-1 rounded-full bg-[#242426] text-xs font-black text-[#34C759]">
-                {selectedGalleryPhoto.calories} kcal
+                {selectedPhotoMeal.calories} kcal • {selectedPhotoMeal.date}
               </div>
               <button
-                onClick={() => {
-                  addMeal({
-                    name: selectedGalleryPhoto.title,
-                    calories: selectedGalleryPhoto.calories,
-                    protein: 30,
-                    carbs: 45,
-                    fat: 15,
-                    date: selectedDate,
-                    category: 'almuerzo',
-                  });
-                  setSelectedGalleryPhoto(null);
-                }}
+                onClick={() => setSelectedPhotoMeal(null)}
                 className="btn-primary w-full py-2.5 text-xs mt-2"
               >
-                Añadir al día ({formattedDate})
+                Cerrar
               </button>
             </div>
           </div>
