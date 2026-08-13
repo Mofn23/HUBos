@@ -10,7 +10,36 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 - **Solución al Límite de 3 Apps de SideStore / AltStore**: HUBos consolida múltiples aplicaciones nativas completas e independientes dentro de un único archivo `.ipa`, ocupando sólo **1 de los 3 slots activos permitidos**.
 - **Navegación Instantánea (0ms Latency)**: Barra flotante inferior (`FloatingHubBar`) con efecto de cristal (glassmorphism) y conmutación reactiva e inmediata entre el HUB central y los submódulos.
 
-## 🎨 [v1.0.1] - 2026-08-13 (Ajuste y Fidelidad de Diseño RecompAI 1:1)
+## 🧠 [v1.1.0] - 2026-08-13 (Lógica de Negocio Completa & Vistas 1:1 de RecompAI)
+
+### 🌟 Implementación Integral de Toda la Lógica de Negocio
+- **Estado Reactivo Global por Fecha (`selectedDate`)**:
+  - Toda la aplicación (calorías, macros, hidratación, bomba de glucógeno, fatiga muscular y comidas) reacciona instantáneamente a la fecha activa `selectedDate`.
+  - Hoja flotante modal `📅 Seleccionar Fecha` (`DateSelectionModal`) con opciones rápidas `☀️ Hoy`, `◀️ Ayer` e selector de calendario personalizado `📅 O elige una fecha específica`.
+  - Píldora del TopBar con indicador de punto verde si se está visualizando un día pasado.
+- **Motor de Rachas Independientes (Streaks Engine)**:
+  - **Racha de Gimnasio (`calculateWorkoutStreak`)**: Agrupación por semanas naturales (Lunes a Domingo) con regla de 4 entrenamientos mínimos para mantener viva la racha histórica sin penalizar la semana en curso.
+  - **Racha de Nutrición (`calculateNutritionStreak`)**: Conteo de días consecutivos con protección de racha en estado de riesgo (⚠️ naranja) si ayer se registró pero hoy está pendiente.
+- **Categorización Determinista y Unívoca de Comidas (`getMealCategory`)**:
+  - Prioridad 1: Categoría explícita (`desayuno`, `almuerzo`, `cena`, `snack`).
+  - Prioridad 2: Prefijos en descripción (`desayuno:`, `almuerzo:`, etc.).
+  - Prioridad 3: Horario del timestamp (05:00-11:59 Desayuno, 12:00-17:59 Almuerzo, 18:00-22:59 Cena, resto Snacks).
+- **Pantalla de Comidas 1:1 (`MealsSection` - Tab `🍴`)**:
+  - `⭐ COMIDAS FRECUENTES`: Carrusel horizontal con chips de comida rápida, botón `+` para añadir a hoy y `✕` para remover.
+  - 4 Secciones (`🥐 Desayuno`, `🍲 Almuerzo`, `🍽️ Cena`, `🍎 Snacks`) con estados vacíos (`Sin registro para...`) y listado detallado de macros.
+  - `📸 Galería de Comidas`: Cuadrícula de 3 columnas de fotos con badge inferior de calorías (`615 kcal`, `210 kcal`, etc.).
+  - **Botones Flotantes (FABs)**: Botón izquierdo circular `[+]` para registro manual y botón derecho circular coral `[📷]` para escaneo con IA.
+- **Pantalla de Entrenamiento 1:1 (`TrainingSection` - Tab `🏋️‍♂️`)**:
+  - `🔥 Mapa de Fatiga Muscular [Últimas 72h]`: Vectores anatómicos interactivos (maniquíes anterior y posterior) con degradado según fatiga (`0 Descansado`, `1-2 Series Verde`, `3-5 Series Amarillo`, `6+ Series Coral`).
+  - Botón coral destacado `☁️ Subir Capturas de Symmetry` para auditoría con Gemini 2.0.
+  - `🏋️ Historial de Entrenamientos` con conteo de ejercicios y desglose de series.
+- **Sistema de Alertas Flotantes Adaptativas a la Dynamic Island (`AlertToast`)**:
+  - Posicionamiento seguro en `top: calc(env(safe-area-inset-top, 20px) + 12px)`.
+  - Chequeos de sodio (>2300mg), meta proteica (<120g a las 8:00 PM) y recordatorio de creatina.
+- **Notificaciones Nativas con Sonido (`notifications.ts`)**:
+  - Desayuno 10:00 AM, Almuerzo 02:00 PM, Creatina 06:00 PM, Cena 08:30 PM y Alerta nocturna de Racha 09:30 PM.
+
+---
 
 ### 🌟 Réplica Exacta de la Interfaz Original de RecompAI
 - **TopBar MonAI (`RecompHeader`)**:

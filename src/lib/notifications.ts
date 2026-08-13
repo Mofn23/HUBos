@@ -1,116 +1,160 @@
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { Capacitor } from '@capacitor/core';
 import { SubscriptionItem } from '@/stores/useSubsStore';
-import { formatCurrency } from './utils';
 
 export async function requestNotificationPermissions(): Promise<boolean> {
-  if (typeof window === 'undefined') return false;
+  if (!Capacitor.isNativePlatform()) {
+    if (typeof Notification !== 'undefined') {
+      const perm = await Notification.requestPermission();
+      return perm === 'granted';
+    }
+    return false;
+  }
 
   try {
-    const status = await LocalNotifications.requestPermissions();
-    if (status.display === 'granted') return true;
-  } catch (err) {
-    console.warn('[HUBos] Capacitor LocalNotifications request error:', err);
+    const res = await LocalNotifications.requestPermissions();
+    return res.display === 'granted';
+  } catch {
+    return false;
   }
-
-  if ('Notification' in window) {
-    if (Notification.permission === 'granted') return true;
-    const permission = await Notification.requestPermission();
-    return permission === 'granted';
-  }
-
-  return false;
 }
 
 export async function sendLocalNotification(
-  id: number,
-  title: string,
-  body: string,
-  scheduleDate?: Date
+  arg1: string | number,
+  arg2: string,
+  arg3?: string | number
 ) {
-  if (typeof window === 'undefined') return;
+  let title = '';
+  let body = '';
+  let id = Date.now() % 100000;
+
+  if (typeof arg1 === 'number') {
+    id = arg1;
+    title = arg2;
+    body = typeof arg3 === 'string' ? arg3 : '';
+  } else {
+    title = arg1;
+    body = arg2;
+    if (typeof arg3 === 'number') id = arg3;
+  }
+
+  if (Capacitor.isNativePlatform()) {
+    try {
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id,
+            title,
+            body,
+            schedule: { at: new Date(Date.now() + 1000) },
+            sound: 'default',
+          },
+        ],
+      });
+    } catch (e) {
+      console.warn('Native notification error:', e);
+    }
+  } else if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+    new Notification(title, { body });
+  }
+}
+
+export async function initNativeNotifications() {
+  if (!Capacitor.isNativePlatform()) return;
 
   try {
+    const perm = await LocalNotifications.requestPermissions();
+    if (perm.display !== 'granted') return;
+
+    // Flush cache of previously scheduled notifications
+    const pending = await LocalNotifications.getPending();
+    if (pending.notifications.length > 0) {
+      await LocalNotifications.cancel({ notifications: pending.notifications });
+    }
+
+    // Schedule daily recurrent notifications
     await LocalNotifications.schedule({
       notifications: [
         {
-          id,
-          title,
-          body,
-          schedule: scheduleDate ? { at: scheduleDate } : undefined,
-          sound: 'beep.wav',
-          actionTypeId: '',
-          extra: null,
+          id: 101,
+          title: '🥐 Hora del Desayuno',
+          body: 'Registra tu desayuno o toma una foto para que la IA calcule tus macros.',
+          schedule: {
+            on: { hour: 10, minute: 0 },
+            allowWhileIdle: true,
+          },
+          sound: 'default',
+        },
+        {
+          id: 102,
+          title: '🍲 Almuerzo & Entrenamiento',
+          body: '¡Mantén la energía alta! Revisa tus carbohidratos y tu rutina de hoy.',
+          schedule: {
+            on: { hour: 14, minute: 0 },
+            allowWhileIdle: true,
+          },
+          sound: 'default',
+        },
+        {
+          id: 103,
+          title: '💊 Snack & Creatina',
+          body: 'No olvides tomar tu dosis de 3-5g de creatina para mantener la saturación.',
+          schedule: {
+            on: { hour: 18, minute: 0 },
+            allowWhileIdle: true,
+          },
+          sound: 'default',
+        },
+        {
+          id: 104,
+          title: '🍽️ Cena & Cierre de Macros',
+          body: 'Ajusta tus proteínas y calorías restantes antes de finalizar tu día.',
+          schedule: {
+            on: { hour: 20, minute: 30 },
+            allowWhileIdle: true,
+          },
+          sound: 'default',
+        },
+        {
+          id: 105,
+          title: '🔥 ¡Defiende tu Racha!',
+          body: 'Aún no has registrado tus comidas de hoy. ¡No dejes romper tu racha de nutrición!',
+          schedule: {
+            on: { hour: 21, minute: 30 },
+            allowWhileIdle: true,
+          },
+          sound: 'default',
         },
       ],
     });
-    return;
-  } catch (e) {
-    console.warn('[HUBos] LocalNotification fallback to Web Notification:', e);
-  }
-
-  if ('Notification' in window && Notification.permission === 'granted') {
-    try {
-      new Notification(title, {
-        body,
-        icon: '/icon-192.png',
-      });
-    } catch (e) {
-      console.warn('[HUBos] Web Notification error:', e);
-    }
+  } catch (error) {
+    console.warn('Local notifications error:', error);
   }
 }
 
-export async function checkAndNotifyUpcomingSubscriptions(
+export function checkAndNotifyUpcomingSubscriptions(
   subscriptions: SubscriptionItem[],
-  currency: string = 'COP'
+  daysAheadOrCurrency: number | string = 3,
+  currency = 'COP'
 ) {
-  if (typeof window === 'undefined') return;
+  const daysAhead = typeof daysAheadOrCurrency === 'number' ? daysAheadOrCurrency : 3;
+  const effectiveCurrency = typeof daysAheadOrCurrency === 'string' ? daysAheadOrCurrency : currency;
+  const now = new Date();
+  const currentDay = now.getDate();
 
-  const today = new Date();
-  const currentDay = today.getDate(); // 1-31
-  const todayStr = today.toISOString().split('T')[0];
+  subscriptions.forEach((sub) => {
+    if (sub.status !== 'active') return;
 
-  for (const sub of subscriptions) {
-    if (sub.status !== 'active') continue;
+    let diff = sub.billingDay - currentDay;
+    if (diff < 0) diff += 30;
 
-    const daysDiff = sub.billingDay - currentDay;
+    if (diff <= daysAhead && diff >= 0) {
+      const msg =
+        diff === 0
+          ? `Tu suscripción a ${sub.name} vence HOY (${sub.amount} ${effectiveCurrency}).`
+          : `Tu suscripción a ${sub.name} renovará en ${diff} día(s) (${sub.amount} ${effectiveCurrency}).`;
 
-    // 1. Same day renewal
-    if (daysDiff === 0 && sub.lastPaidDate !== todayStr) {
-      const notifId = Math.abs(hashString(`same-${sub.id}-${todayStr}`));
-      await sendLocalNotification(
-        notifId,
-        `🔔 ¡Hoy Vence Tu Suscripción!: ${sub.name}`,
-        `Hoy corresponde el cobro de ${sub.name} por ${formatCurrency(sub.amount, currency)}. ¡Regístralo en HUBos!`
-      );
+      sendLocalNotification(`🔔 Recordatorio de Pago: ${sub.name}`, msg, sub.billingDay * 100);
     }
-    // 2. 1 day before
-    else if (daysDiff === 1) {
-      const notifId = Math.abs(hashString(`1day-${sub.id}-${todayStr}`));
-      await sendLocalNotification(
-        notifId,
-        `⏳ Próximo Cobro Mañana: ${sub.name}`,
-        `Mañana se renovará ${sub.name} (${formatCurrency(sub.amount, currency)}).`
-      );
-    }
-    // 3. 3 days before
-    else if (daysDiff === 3) {
-      const notifId = Math.abs(hashString(`3days-${sub.id}-${todayStr}`));
-      await sendLocalNotification(
-        notifId,
-        `📅 Próximo Cobro en 3 Días: ${sub.name}`,
-        `En 3 días vencerá la suscripción a ${sub.name} (${formatCurrency(sub.amount, currency)}).`
-      );
-    }
-  }
-}
-
-function hashString(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = (hash << 5) - hash + char;
-    hash |= 0;
-  }
-  return Math.abs(hash);
+  });
 }

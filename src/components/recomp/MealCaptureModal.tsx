@@ -28,7 +28,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   const [protein, setProtein] = useState('');
   const [carbs, setCarbs] = useState('');
   const [fat, setFat] = useState('');
-  const [mealType, setMealType] = useState<MealItem['mealType']>('almuerzo');
+  const [category, setCategory] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('almuerzo');
   const [notes, setNotes] = useState('');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,7 +64,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
       setProtein(String(result.protein));
       setCarbs(String(result.carbs));
       setFat(String(result.fat));
-      setMealType(result.mealType);
+      const validCat = ['desayuno', 'almuerzo', 'cena', 'snack'].includes(result.mealType)
+        ? (result.mealType as 'desayuno' | 'almuerzo' | 'cena' | 'snack')
+        : 'almuerzo';
+      setCategory(validCat);
       setNotes(result.notes || '');
       showToast('¡Comida analizada con Gemini 2.0 Flash!');
     } catch (err: any) {
@@ -89,7 +92,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
       carbs: Number(carbs) || 0,
       fat: Number(fat) || 0,
       date: todayStr,
-      mealType,
+      category,
       notes: notes.trim(),
       imageBase64: imageBase64 || undefined,
       isAiGenerated: Boolean(imageBase64 || textInput),
@@ -109,7 +112,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     setProtein('');
     setCarbs('');
     setFat('');
-    setMealType('almuerzo');
+    setCategory('almuerzo');
     setNotes('');
   };
 
@@ -242,15 +245,15 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
           <div>
             <label className="block text-xs text-[#8E8E93] mb-1 font-medium">Momento del Día</label>
-            <div className="grid grid-cols-3 gap-1.5">
-              {(['desayuno', 'almuerzo', 'cena', 'snack', 'pre-entreno', 'post-entreno'] as const).map(
+            <div className="grid grid-cols-4 gap-1.5">
+              {(['desayuno', 'almuerzo', 'cena', 'snack'] as const).map(
                 (type) => (
                   <button
                     key={type}
                     type="button"
-                    onClick={() => setMealType(type)}
+                    onClick={() => setCategory(type)}
                     className={`py-1.5 rounded-xl text-[11px] font-bold capitalize transition-all ${
-                      mealType === type
+                      category === type
                         ? 'bg-[#34C759] text-black shadow'
                         : 'bg-[#242426] text-[#8E8E93] hover:text-[#F5F5F7]'
                     }`}

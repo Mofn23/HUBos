@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore, RecompTab } from '@/stores/useRecompStore';
 import { getTodayKey } from '@/lib/date';
 import { calculateDailyNutrition } from '@/lib/nutritionEngine';
+import { initNativeNotifications } from '@/lib/notifications';
 import { RecompHeader } from './RecompHeader';
 import { CalorieRing } from './CalorieRing';
 import { MacroBars } from './MacroBars';
@@ -15,14 +16,15 @@ import { SupplementTracker } from './SupplementTracker';
 import { AchievementsGrid } from './AchievementsGrid';
 import { MealLog } from './MealLog';
 import { MealCaptureModal } from './MealCaptureModal';
+import { MealsSection } from './MealsSection';
 import { TrainingSection } from './TrainingSection';
 import { ProgressSection } from './ProgressSection';
 import { AICoachModal } from './AICoachModal';
+import { AlertToast } from '../common/AlertToast';
 import {
   IconHome,
   IconDumbbell,
   IconActivity,
-  IconMessage,
   IconSparkles,
 } from '../common/Icons';
 
@@ -31,6 +33,7 @@ export const RecompView: React.FC = () => {
   const {
     currentTab,
     setCurrentTab,
+    selectedDate,
     meals,
     deleteMeal,
     targetCalories,
@@ -43,17 +46,50 @@ export const RecompView: React.FC = () => {
     supplements,
     toggleSupplement,
     achievements,
+    addAlert,
   } = useRecompStore();
 
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
 
-  const todayKey = getTodayKey();
-  const nutrition = calculateDailyNutrition(meals, todayKey, targetCalories, targetCarbs);
-  const todayMeals = meals.filter((m) => m.date === todayKey);
-  const todayWater = waterLogs[todayKey] || 0;
+  // Initialize notifications on mount
+  useEffect(() => {
+    initNativeNotifications();
+  }, []);
+
+  // Nutritional checks (Sodium, Protein, Creatine)
+  useEffect(() => {
+    const today = getTodayKey();
+    const todayMeals = meals.filter((m) => m.date === today);
+    const totalSodium = todayMeals.reduce((s, m) => s + (m.sodium || 0), 0);
+    const totalProtein = todayMeals.reduce((s, m) => s + m.protein, 0);
+
+    if (totalSodium > 2300) {
+      addAlert({
+        type: 'sodium',
+        title: '⚠️ Exceso de Sodio Detectado',
+        message: `Has acumulado ${totalSodium}mg de sodio hoy. Aumenta tu hidratación.`,
+      });
+    }
+
+    const hour = new Date().getHours();
+    if (hour >= 20 && totalProtein < 120 && todayMeals.length > 0) {
+      addAlert({
+        type: 'protein',
+        title: '🥩 Meta Proteica Incompleta',
+        message: `Llevas ${totalProtein}g de proteína. Te sugerimos un batido o cena alta en proteína.`,
+      });
+    }
+  }, [meals, addAlert]);
+
+  const nutrition = calculateDailyNutrition(meals, selectedDate, targetCalories, targetCarbs);
+  const selectedDayMeals = meals.filter((m) => m.date === selectedDate);
+  const selectedDayWater = waterLogs[selectedDate] || 0;
 
   return (
-    <div className="flex-1 flex flex-col px-4 pt-10 pb-28 overflow-y-auto no-scrollbar animate-fade-in">
+    <div className="flex-1 flex flex-col px-4 pt-10 pb-28 overflow-y-auto no-scrollbar animate-fade-in relative">
+      {/* Dynamic Island In-App Alert */}
+      <AlertToast />
+
       {/* 1. Header (Hoy dropdown, Streaks, Settings, Greeting) */}
       <RecompHeader onOpenSettings={() => setIsSettingsOpen(true)} />
 
@@ -83,50 +119,32 @@ export const RecompView: React.FC = () => {
 
           {/* 6. Hidratación (12 Glass Circles Grid) */}
           <WaterTracker
-            glasses={todayWater}
+            glasses={selectedDayWater}
             maxGlasses={12}
-            onAddGlass={() => addWaterGlass(todayKey)}
-            onRemoveGlass={() => removeWaterGlass(todayKey)}
+            onAddGlass={() => addWaterGlass(selectedDate)}
+            onRemoveGlass={() => removeWaterGlass(selectedDate)}
           />
 
           {/* 7. Suplementos (SettingsRow with iOS Toggle) */}
           <SupplementTracker
             supplements={supplements}
-            todayKey={todayKey}
-            onToggle={(id) => toggleSupplement(id, todayKey)}
+            todayKey={selectedDate}
+            onToggle={(id) => toggleSupplement(id, selectedDate)}
           />
 
           {/* 8. Logros (5x4 Circles Grid with Green Glow) */}
           <AchievementsGrid achievements={achievements} />
 
-          {/* 9. Comidas de Hoy (Empty State with Green Button) */}
+          {/* 9. Comidas del Día Seleccionado */}
           <MealLog
-            meals={todayMeals}
+            meals={selectedDayMeals}
             onAddMeal={() => setIsMealModalOpen(true)}
             onDeleteMeal={(id) => deleteMeal(id)}
           />
         </div>
       )}
 
-      {currentTab === 'meals' && (
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-extrabold text-[#F5F5F7]">Comidas</h2>
-            <button
-              onClick={() => setIsMealModalOpen(true)}
-              className="btn-primary btn-sm"
-            >
-              + Escanear IA
-            </button>
-          </div>
-          <MealLog
-            meals={meals}
-            onAddMeal={() => setIsMealModalOpen(true)}
-            onDeleteMeal={(id) => deleteMeal(id)}
-          />
-        </div>
-      )}
-
+      {currentTab === 'meals' && <MealsSection />}
       {currentTab === 'training' && <TrainingSection />}
       {currentTab === 'progress' && <ProgressSection />}
       {currentTab === 'coach' && <AICoachModal />}

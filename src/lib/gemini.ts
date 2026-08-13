@@ -8,7 +8,7 @@ export const GEMINI_MODELS = [
 ];
 
 export async function callGemini(apiKey: string, contents: any, preferredModel = 'gemini-2.0-flash'): Promise<string> {
-  const cleanKey = apiKey.trim();
+  const cleanKey = (apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '').trim();
   if (!cleanKey) {
     throw new Error('No se ha configurado la API Key de Gemini. Puedes añadirla en Ajustes.');
   }
@@ -104,7 +104,7 @@ export async function parseWorkoutWithGemini(
     name: string;
     targetMuscle: string;
     estimated1RM: number;
-    sets: { setNumber: number; weightKg: number; reps: number }[];
+    sets: { setNumber: number; weightKg: number; reps: number; rpe?: number }[];
   }[];
   totalVolumeKg: number;
   symmetryNotes: string;
@@ -155,6 +155,30 @@ Analiza la rutina o imagen y devuelve ÚNICAMENTE un JSON válido con esta estru
   }
 }
 
+export async function parseSymmetryScreenshots(imagesBase64: string[], apiKey = ''): Promise<{
+  routineTitle: string;
+  totalVolumeKg: number;
+  recommendations: string;
+  exercises: {
+    name: string;
+    targetMuscle: string;
+    sets: { weightKg: number; reps: number; rpe?: number }[];
+  }[];
+}> {
+  const input = { imageBase64: imagesBase64[0] };
+  const res = await parseWorkoutWithGemini(apiKey, input);
+  return {
+    routineTitle: res.title,
+    totalVolumeKg: res.totalVolumeKg,
+    recommendations: res.symmetryNotes,
+    exercises: res.exercises.map((e) => ({
+      name: e.name,
+      targetMuscle: e.targetMuscle,
+      sets: e.sets.map((s) => ({ weightKg: s.weightKg, reps: s.reps, rpe: s.rpe })),
+    })),
+  };
+}
+
 /**
  * Parses a subscription command or invoice text.
  */
@@ -200,7 +224,7 @@ Si la moneda no está clara, devuelve el número en valor local (ej. 18900 o 20)
 }
 
 /**
- * Omnibar fast dispatcher: Determines whether the command is for Recomp, Subscriptions, or General.
+ * Omnibar fast dispatcher.
  */
 export async function parseQuickActionWithGemini(
   apiKey: string,
@@ -212,8 +236,7 @@ export async function parseQuickActionWithGemini(
   message: string;
 }> {
   const systemPrompt = `Eres el despachador de inteligencia central de HUBos.
-El usuario escribe un comando libre en español (ej. "Me comí 3 huevos con arepa", "Pagué 85000 de ChatGPT el 18", "Hice pecho y bíceps 5000kg de volumen").
-Clasifica la intención y devuelve ÚNICAMENTE un JSON válido:
+El usuario escribe un comando libre en español. Clasifica la intención y devuelve ÚNICAMENTE un JSON válido:
 {
   "targetApp": "recomp" | "subs" | "general",
   "actionType": "add_meal" | "add_workout" | "add_sub" | "info",
@@ -251,7 +274,8 @@ Contexto actual del usuario hoy:
 - Proteína: ${contextData.proteinConsumed} / ${contextData.targetProtein} g
 - Último entrenamiento registrado: ${contextData.lastWorkoutTitle || 'Ninguno hoy aún'}`;
 
-  const genAI = new GoogleGenerativeAI(apiKey);
+  const cleanKey = (apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '').trim();
+  const genAI = new GoogleGenerativeAI(cleanKey);
   const model = genAI.getGenerativeModel({
     model: 'gemini-2.0-flash',
     systemInstruction: { role: 'system', parts: [{ text: systemInstruction }] },

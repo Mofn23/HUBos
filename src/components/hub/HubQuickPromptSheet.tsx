@@ -47,7 +47,9 @@ export const HubQuickPromptSheet: React.FC = () => {
           carbs: mealData.carbs,
           fat: mealData.fat,
           date: todayStr,
-          mealType: mealData.mealType,
+          category: (['desayuno', 'almuerzo', 'cena', 'snack'].includes(mealData.mealType)
+            ? mealData.mealType
+            : 'almuerzo') as any,
           notes: mealData.notes,
           isAiGenerated: true,
         });
