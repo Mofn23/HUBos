@@ -1,0 +1,80 @@
+name: Build iOS IPA (SideStore Compatible)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-ios-ipa:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js Static Export
+        run: npm run build
+
+      - name: Add & Sync Capacitor iOS
+        run: |
+          npx cap add ios || true
+          npx cap sync ios
+
+      - name: Build iOS Xcode App & Package IPA
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -archivePath build/App.xcarchive archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+
+          mkdir -p build/Payload
+          cp -r build/App.xcarchive/Products/Applications/App.app build/Payload/
+          cd build
+          zip -r HUBos.ipa Payload
+          cd ../..
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HUBos-iOS-IPA
+          path: ios/App/build/HUBos.ipa
+
+      - name: Release IPA on GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: HUBos Super-App v1.0.0 (SideStore IPA)
+          body: |
+            ## 🚀 HUBos Super-App v1.0.0 (SideStore & AltStore Compatible)
+            
+            **HUBos** es un contenedor modular unificado para iOS que agrupa múltiples aplicaciones completas e independientes en un único archivo `.ipa`, permitiendo superar el límite estricto de 3 aplicaciones activas de SideStore / AltStore.
+
+            ### 📦 Módulos Incluidos en este Release:
+            1. **🏠 HUB Launcher Dashboard**: Panel central con telemetría en vivo, acceso rápido con IA (Gemini 2.0 Flash) y conmutador flotante con 0ms de latencia.
+            2. **🥗 Módulo RecompAI**: Conteo de calorías, distribución de macros, escáner de fotos/texto con IA, auditoría de capturas Symmetry, medidor de glucógeno y mapa de calor muscular.
+            3. **💳 Módulo Subscriptions**: Gestor integral de suscripciones estilo MonAI/DinER, métricas de gasto mensual/anual, calendario de cobros, alertas de renovación y guías de cancelación en 1 tap.
+            
+            ### 📲 Instrucciones de Instalación en iPhone:
+            1. Descarga el archivo `HUBos.ipa` adjunto abajo en tu iPhone.
+            2. Abre **SideStore** (o AltStore).
+            3. Ve a la pestaña **My Apps** ➔ Presiona **`+`** ➔ Selecciona `HUBos.ipa`.
+            4. ¡Disfruta de todo tu ecosistema integrado en un solo slot activo!
+          files: ios/App/build/HUBos.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
