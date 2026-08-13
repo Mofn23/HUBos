@@ -10,6 +10,38 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 - **Solución al Límite de 3 Apps de SideStore / AltStore**: HUBos consolida múltiples aplicaciones nativas completas e independientes dentro de un único archivo `.ipa`, ocupando sólo **1 de los 3 slots activos permitidos**.
 - **Navegación Instantánea (0ms Latency)**: Barra flotante inferior (`FloatingHubBar`) con efecto de cristal (glassmorphism) y conmutación reactiva e inmediata entre el HUB central y los submódulos.
 
+## 🎨 [v1.0.1] - 2026-08-13 (Ajuste y Fidelidad de Diseño RecompAI 1:1)
+
+### 🌟 Réplica Exacta de la Interfaz Original de RecompAI
+- **TopBar MonAI (`RecompHeader`)**:
+  - Píldora de selector de fecha `[Hoy ∨]`.
+  - Píldoras de racha de entrenamiento (`[💪 1d]`) y racha de nutrición (`[🥑 2d]`).
+  - Botón circular de ajustes (`[⚙️]`).
+  - Saludo dinámico con emoji (`Buenas tardes, Samuel 👋`).
+- **Hero TotalBlock Calórico 1:1 (`CalorieRing`)**:
+  - Etiqueta superior en mayúsculas `CALORÍAS RESTANTES`.
+  - Número gigante `+ 2,275 kcal` con insignia circular verde `+`.
+  - Píldora de estado `[Déficit]` / `[Óptimo]`.
+  - Píldora dual segmentada `[⊝ 0 kcal consumidas]` y `[⊝ Meta 2275 kcal]`.
+- **Tarjetas de Macros y Glucógeno**:
+  - `💪 Proteína 0g / 150g` con barra de progreso fina en verde `#34C759`.
+  - `🍞 Carbos 0g / 250g` con barra de progreso fina en azul `#54A0FF`.
+  - `🥑 Grasas 0g / 75g` con barra de progreso fina en naranja `#FF9F43`.
+  - Medidor de `⚡ Pump Glucógeno [Óptimo] 50%` con barra en azul.
+- **Fila de 3 Widgets Rápidos**:
+  - `[💪 Upper B - Rutina Hoy]`, `[🔥 1 días - Racha Gym]`, `[🥑 2 días - Nutrición ⚠️]`.
+- **Tracker de Hidratación 1:1 (`WaterTracker`)**:
+  - Encabezado `💧 Hidratación 0.0L / 3.0L`.
+  - Cuadrícula simétrica de 12 vasos circulares en 2 filas de 6.
+  - Botones circulares `[-]` y `[+]` con indicador de vasos y ml.
+- **Suplementos y Logros**:
+  - Sección `💊 Suplementos 0 / 1 tomados` con switch toggle iOS nativo.
+  - Cuadrícula de 5 columnas para `🥇 Logros 5 / 19 desbloqueados` con resplandor verde en logros conseguidos y candados en bloqueados.
+- **Comidas de Hoy (`MealLog`)**:
+  - Estado vacío con icono `🍽️`, texto y botón verde `+ Registrar Comida`.
+- **Barra de Navegación Flotante (`BottomNav`)**:
+  - Iconos flotantes `[ 🏠 ]`, `[ 🍴 ]`, `[ 🏋️‍♂️ ]`, `[ 👤 ]` en píldora oscura con elevación.
+
 ---
 
 ### 🥗 Módulo Integrado: RecompAI (v1.1 Migrado)

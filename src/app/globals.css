@@ -1,28 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Baloo+2:wght@700;800&family=JetBrains+Mono:wght@500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================
+   HUBos / Recomp AI / DinER — Design Tokens 1:1
+   ============================================ */
+
 :root {
-  --font-nunito: 'Nunito', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-  color-scheme: dark;
+  /* Dark Theme (Principal OLED) */
+  --bg-app: #0B0B0D;
+  --bg-sheet: #121214;
+  --surface: #1C1C1E;
+  --surface-elevated: #2A2A2C;
+  --tag: #1E1E20;
+
+  --border: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+
+  --text-primary: #F5F5F7;
+  --text-secondary: #8E8E93;
+  --text-placeholder: #3A3A3C;
+  --text-muted: #636366;
+
+  --green: #34C759;
+  --coral: #E8505B;
+  --pill-light: #E9E9EC;
+  --pill-light-text: #1C1C1E;
+  --water: #A9C6FF;
+
+  --accent-green: var(--green);
+  --accent-blue: #54A0FF;
+  --accent-orange: #FF9F43;
+  --accent-purple: #9C88FF;
+  --accent-yellow: #FECA57;
+
+  /* Radii MonAI */
+  --radius-pill: 9999px;
+  --radius-chart-bar: 24px;
+  --radius-sheet-top: 32px;
+  --radius-squircle: 22%;
+  --radius-card: 20px;
+  --radius-input: 16px;
+
+  /* Typography MonAI */
+  --font-sans: 'Nunito', 'Baloo 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --font-size-hero: 3.5rem;
+  --font-size-sheet-title: 2rem;
+  --font-size-row-title: 1.0625rem;
+  --font-size-sub: 0.875rem;
+  --font-size-tag: 0.8125rem;
+
+  --motion-sheet: 240ms cubic-bezier(0.32, 0.72, 0.28, 1);
+  --motion-press: 100ms ease;
+  --transition-fast: 150ms ease;
+  --transition-base: 220ms ease;
+
+  --safe-bottom: env(safe-area-inset-bottom, 16px);
+  --safe-top: env(safe-area-inset-top, 44px);
+  --nav-height: 76px;
 }
 
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
 }
 
-input, textarea {
-  user-select: text;
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 html, body {
-  background-color: #131313;
-  color: #F5F5F7;
-  font-family: var(--font-nunito);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-weight: 700;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -34,26 +94,21 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Hide scrollbars for ultra-clean Apple feel */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+input, textarea {
+  user-select: text;
 }
 
-/* Desktop and Web framing wrapper mimicking modern iPhone 15/16 Pro */
+/* Desktop framing wrapper */
 @media (min-width: 481px) {
   .app-frame {
     width: 390px;
     height: 844px;
-    border-radius: 50px;
+    border-radius: 48px;
     border: 10px solid #1C1C1E;
-    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.12);
+    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
-    background-color: #131313;
+    background-color: var(--bg-app);
     display: flex;
     flex-direction: column;
   }
@@ -66,33 +121,736 @@ html, body {
     height: 100dvh;
     border-radius: 0;
     border: none;
-    background-color: #131313;
+    background-color: var(--bg-app);
     display: flex;
     flex-direction: column;
     overflow: hidden;
   }
 }
 
-/* Safe area support for Dynamic Island and home bar */
-.safe-top {
-  padding-top: max(env(safe-area-inset-top, 0px), 16px);
+/* ============================================
+   MonAI Pattern Library Classes 1:1
+   ============================================ */
+
+.page {
+  padding: calc(var(--safe-top) + 8px) 16px calc(var(--nav-height) + var(--safe-bottom) + 24px);
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
 }
 
-.safe-bottom {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 20px);
+/* TopBar */
+.monai-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  gap: 10px;
+  margin-bottom: 12px;
 }
 
-/* Smooth glassmorphism */
-.glass-panel {
-  background: rgba(28, 28, 30, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.monai-topbar-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 48px;
+  padding: 0 18px;
+  border-radius: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: var(--font-size-row-title);
+  font-weight: 800;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform var(--motion-press);
 }
 
-.glass-floating-bar {
-  background: rgba(24, 24, 26, 0.88);
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+.monai-topbar-pill:active {
+  transform: scale(0.96);
+}
+
+.monai-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.monai-streak-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 159, 67, 0.15);
+  border: 1px solid rgba(255, 159, 67, 0.25);
+  font-size: var(--font-size-sub);
+  font-weight: 800;
+  color: var(--accent-orange);
+}
+
+.monai-topbar-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform var(--motion-press);
+}
+
+.monai-topbar-btn:active {
+  transform: scale(0.95);
+}
+
+.monai-greeting-row {
+  padding: 0 4px;
+  margin-bottom: 20px;
+}
+
+.monai-greeting-text {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* TotalBlock */
+.monai-total-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 0 16px 0;
+}
+
+.monai-total-label {
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.monai-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 8px 0;
+}
+
+.monai-total-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  flex-shrink: 0;
+}
+
+.monai-total-badge.positive {
+  background: var(--green);
+}
+
+.monai-total-badge.negative {
+  background: var(--coral);
+}
+
+.monai-total-number {
+  font-size: var(--font-size-hero);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text-primary);
+  letter-spacing: -0.04em;
+}
+
+.monai-total-suffix {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  margin-left: 2px;
+}
+
+.monai-total-status-wrapper {
+  margin-top: 6px;
+}
+
+/* SegmentedPill */
+.monai-segmented-pill {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto 16px;
+}
+
+.monai-segmented-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.monai-segmented-item.active {
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+}
+
+/* Cards MonAI */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 16px;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--tag);
+  color: var(--text-secondary);
+  font-size: var(--font-size-tag);
+  font-weight: 800;
+}
+
+.tag-pill-green {
+  background: rgba(52, 199, 89, 0.14);
+  color: var(--green);
+}
+
+.tag-pill-coral {
+  background: rgba(232, 80, 91, 0.14);
+  color: var(--coral);
+}
+
+/* MacroBars Card */
+.monai-macrobars-card {
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.monai-macrobars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.monai-macro-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.monai-macro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.monai-macro-title {
+  font-size: var(--font-size-sub);
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.monai-macro-values {
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.monai-macro-values strong {
+  color: var(--text-primary);
+  font-weight: 900;
+}
+
+.monai-progress-track {
+  height: 6px;
+  background: var(--surface-elevated);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  width: 100%;
+}
+
+.monai-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width var(--transition-base);
+}
+
+.monai-progress-fill.protein { background: var(--green); }
+.monai-progress-fill.carbs { background: #54A0FF; }
+.monai-progress-fill.fats { background: #FF9F43; }
+
+/* Glycogen Card */
+.monai-glycogen-card {
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.monai-glycogen-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.monai-glycogen-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.monai-glycogen-title {
+  font-size: var(--font-size-sub);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.monai-glycogen-value {
+  font-size: var(--font-size-row-title);
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+/* Quick Stats Row (3 Cards) */
+.dashboard-quick-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.quick-stat {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 88px;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.quick-stat-icon-top {
+  font-size: 1.25rem;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.quick-stat-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.quick-stat-val {
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.quick-stat-lbl {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Water Tracker */
+.monai-water-card {
+  margin-bottom: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 16px;
+}
+
+.monai-water-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.monai-water-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-row-title);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.monai-water-count {
+  font-size: var(--font-size-sub);
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.monai-water-count strong {
+  color: var(--water);
+  font-weight: 900;
+}
+
+.monai-water-circles-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px 6px;
+  justify-items: center;
+  align-items: center;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.monai-water-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: transform var(--motion-press), background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.monai-water-circle.filled {
+  background: var(--water);
+  border-color: var(--water);
+  box-shadow: 0 4px 12px rgba(169, 198, 255, 0.3);
+}
+
+.monai-water-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.monai-water-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform var(--motion-press);
+}
+
+.monai-water-subtitle {
+  font-size: var(--font-size-tag);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* List Headers (Pill + Total) */
+.monai-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.monai-list-header-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  font-size: var(--font-size-sub);
+  font-weight: 800;
+}
+
+.monai-list-header-total {
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* Settings Row & iOS Toggle Switch */
+.monai-settings-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 24px;
+  margin-bottom: 8px;
+}
+
+.monai-settings-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--tag);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.monai-settings-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.monai-settings-title {
+  font-size: var(--font-size-row-title);
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.monai-settings-sub {
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.monai-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 32px;
+}
+
+.monai-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.monai-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  transition: 0.2s;
+  border-radius: 32px;
+}
+
+.monai-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 2px;
+  bottom: 2px;
+  background: #FFFFFF;
+  transition: 0.2s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.monai-toggle-switch input:checked + .monai-toggle-slider {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.monai-toggle-switch input:checked + .monai-toggle-slider:before {
+  transform: translateX(20px);
+}
+
+/* Empty State Card & Button */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-secondary);
+  gap: 8px;
+}
+
+.empty-state-emoji {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.empty-state-text {
+  font-size: var(--font-size-sub);
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.btn-primary {
+  background: var(--green);
+  color: #0A0A0F;
+  font-weight: 800;
+  border-radius: var(--radius-pill);
+  padding: 10px 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--font-size-sub);
+  cursor: pointer;
+  transition: transform var(--motion-press);
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+/* Floating Bottom Navigation Bar */
+.monai-bottom-nav-container {
+  position: fixed;
+  bottom: calc(var(--safe-bottom) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  width: auto;
+}
+
+.monai-bottom-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 60px;
+  padding: 0 8px;
+  background: #121214;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.monai-bottom-nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.monai-bottom-nav-item.active {
+  background: var(--surface-elevated);
+  color: #FFFFFF;
+}
+
+/* Achievements Grid */
+.monai-achievements-card {
+  background: var(--surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 18px 14px;
+  margin-bottom: 16px;
+}
+
+.monai-achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px 8px;
+  justify-items: center;
+}
+
+.monai-achievement-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.monai-achievement-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  transition: transform var(--motion-press);
+}
+
+.monai-achievement-circle.unlocked {
+  background: rgba(52, 199, 89, 0.16);
+  border: 1.5px solid var(--green);
+  box-shadow: 0 0 14px rgba(52, 199, 89, 0.35);
+}
+
+.monai-achievement-title {
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--text-muted);
+  max-width: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monai-achievement-title.unlocked {
+  color: var(--green);
 }
