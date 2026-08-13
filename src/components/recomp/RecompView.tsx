@@ -18,18 +18,14 @@ import { MealLog } from './MealLog';
 import { MealCaptureModal } from './MealCaptureModal';
 import { MealsSection } from './MealsSection';
 import { TrainingSection } from './TrainingSection';
-import { ProgressSection } from './ProgressSection';
-import { AICoachModal } from './AICoachModal';
+import { ProfilePage } from './ProfilePage';
 import { AlertToast } from '../common/AlertToast';
 import {
   IconHome,
   IconDumbbell,
-  IconActivity,
-  IconSparkles,
 } from '../common/Icons';
 
 export const RecompView: React.FC = () => {
-  const { setIsSettingsOpen } = useHubStore();
   const {
     currentTab,
     setCurrentTab,
@@ -91,7 +87,7 @@ export const RecompView: React.FC = () => {
       <AlertToast />
 
       {/* 1. Header (Hoy dropdown, Streaks, Settings, Greeting) */}
-      <RecompHeader onOpenSettings={() => setIsSettingsOpen(true)} />
+      <RecompHeader onOpenSettings={() => setCurrentTab('profile')} />
 
       {/* Sub-tab Views */}
       {currentTab === 'dashboard' && (
@@ -146,10 +142,9 @@ export const RecompView: React.FC = () => {
 
       {currentTab === 'meals' && <MealsSection />}
       {currentTab === 'training' && <TrainingSection />}
-      {currentTab === 'progress' && <ProgressSection />}
-      {currentTab === 'coach' && <AICoachModal />}
+      {currentTab === 'profile' && <ProfilePage />}
 
-      {/* Floating Bottom Nav Icons for Recomp */}
+      {/* Native Floating Bottom Nav Dock (Recomp Only - Zero Overlap!) */}
       <div className="monai-bottom-nav-container">
         <nav className="monai-bottom-nav">
           <button
@@ -174,18 +169,11 @@ export const RecompView: React.FC = () => {
             <IconDumbbell className="w-5 h-5" />
           </button>
           <button
-            className={`monai-bottom-nav-item ${currentTab === 'progress' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('progress')}
-            aria-label="Progreso"
+            className={`monai-bottom-nav-item ${currentTab === 'profile' ? 'active' : ''}`}
+            onClick={() => setCurrentTab('profile')}
+            aria-label="Perfil y Ajustes"
           >
-            <IconActivity className="w-5 h-5" />
-          </button>
-          <button
-            className={`monai-bottom-nav-item ${currentTab === 'coach' ? 'active' : ''}`}
-            onClick={() => setCurrentTab('coach')}
-            aria-label="Coach IA"
-          >
-            <IconSparkles className="w-5 h-5 text-[#34C759]" />
+            <span className="text-lg">👤</span>
           </button>
         </nav>
       </div>

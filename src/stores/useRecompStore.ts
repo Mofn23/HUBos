@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import { calculateWorkoutStreak, calculateNutritionStreak } from '@/lib/streak';
 import { getTodayKey } from '@/lib/date';
 
-export type RecompTab = 'dashboard' | 'meals' | 'training' | 'progress' | 'coach';
+export type RecompTab = 'dashboard' | 'meals' | 'training' | 'progress' | 'coach' | 'profile';
 
 export interface MealItem {
   id: string;

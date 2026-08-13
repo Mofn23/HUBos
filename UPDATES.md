@@ -4,6 +4,31 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🚀 [v1.3.0] - 2026-08-13 (Perfil & Ajustes 1:1, Análisis Corporal IA, Icono Nativo iOS y Corrección de Barra Flotante)
+
+### 🌟 Corrección de Interfaz, Perfil 1:1 & Nuevo Módulo de Progreso Corporal
+- **Eliminación Total de Barras Flotantes Sobrepuestas**:
+  - La barra global `FloatingHubBar` ahora se muestra **únicamente en el HUB principal**.
+  - Al entrar a `RecompAI`, se utiliza exclusivamente su propia barra inferior dock nativa (`[ 🏠 ] [ 🍴 ] [ 🏋️‍♂️ ] [ 👤 ]`), eliminando por completo cualquier colisión o sobreposición visual.
+- **Pantalla de Perfil y Ajustes 1:1 (`ProfilePage` - Tab `👤`)**:
+  - **Tarjeta de Usuario**: Nombre `Samuel` con objetivo `🎯 Recomposición Corporal • 80kg`.
+  - **Selector de Modo de Tema**: Píldoras segmentadas `🌙 Tema Oscuro` y `☀️ Tema Claro`.
+  - **Metas de Calorías y Macronutrientes**: `🎯 Meta Calórica Diaria (2275 kcal)` y `🥗 Metas de Macronutrientes (150g Proteína)`.
+  - **Configuración de API Key de Gemini**: Indicador de estado `[Activo]` con campo de texto protegido y botón de guardado verde `✓ Guardar API Key`.
+  - **Consumo Semanal (kcal)**: Gráfico de 5 columnas con píldoras de barras redondeadas, emojis contextuales (`🥗` o `🔥`), calorías y base verde activa para el día actual.
+  - **Mis Suplementos**: Lista editable con dosis, horario y botón `+ Añadir` con modal de creación.
+  - **Registro Corporal & Tendencia de Peso (`WeightTrend`)**:
+    - Algoritmo de media móvil de 7 días (7-Day Moving Average) con línea punteada de peso diario, línea sólida de media móvil y delta de tendencia (`↓ / ↑`).
+    - Modal para registrar peso corporal (kg), cintura, pecho y brazos.
+  - **Fotos de Progreso Físico & Análisis con Coach IA**:
+    - Carga de fotos de progreso físico reales con compresión y almacenamiento en dispositivo.
+    - Generación de informe personalizado con Gemini Vision 2.0 / 2.5 evaluando estructura, puntos fuertes, progreso y recomendaciones.
+  - **Respaldo y Exportación**: Botones `📥 Resumen .txt`, `📤 Exportar JSON` e `📥 Importar JSON`.
+- **Icono Nativo Oficial para iOS Homescreen**:
+  - Generado el icono universal `AppIcon-512@2x.png` (1024x1024) en `ios/App/App/Assets.xcassets/AppIcon.appiconset/` y en `public/apple-touch-icon.png` con el diseño OLED negro de HUBos para que aparezca en el HomeScreen de iOS tras la instalación con SideStore.
+
+---
+
 ## 💎 [v1.2.0] - 2026-08-13 (React Body Highlighter, Escaneo IA 1:1, Galería Limpia & Logo HUBos)
 
 ### 🌟 Ajustes Críticos de Fidelidad y Limpieza

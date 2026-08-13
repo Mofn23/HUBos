@@ -34,8 +34,8 @@ export default function Home() {
         {currentApp === 'subs' && <SubscriptionsView />}
       </div>
 
-      {/* Floating Bottom Navigation Bar */}
-      <FloatingHubBar />
+      {/* Floating Bottom Navigation Bar (HUB mode only) */}
+      {currentApp === 'hub' && <FloatingHubBar />}
 
       {/* Global Bottom Sheets & Modals */}
       <HubSettingsSheet />
