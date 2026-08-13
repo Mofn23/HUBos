@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { BottomModal } from '../common/BottomModal';
 import { useSubsStore, SubscriptionItem, SubFrequency } from '@/stores/useSubsStore';
 import { useHubStore } from '@/stores/useHubStore';
 import { getAutoEmoji } from '@/lib/financialsEngine';
-import { IconCheck, IconTrash } from '../common/Icons';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -18,36 +16,26 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   onClose,
   editingSub,
 }) => {
-  const { addSubscription, updateSubscription, deleteSubscription, categories } = useSubsStore();
+  const { addSubscription, updateSubscription, categories } = useSubsStore();
   const { currency, showToast } = useHubStore();
 
   const [name, setName] = useState('');
-  const [emoji, setEmoji] = useState('💳');
+  const [emoji, setEmoji] = useState('📺');
   const [amount, setAmount] = useState('');
   const [frequency, setFrequency] = useState<SubFrequency>('monthly');
-  const [billingDay, setBillingDay] = useState('15');
+  const [billingDay, setBillingDay] = useState('1');
   const [category, setCategory] = useState('Streaming');
-  const [provider, setProvider] = useState('');
-  const [cancelUrl, setCancelUrl] = useState('');
-  const [cancelSteps, setCancelSteps] = useState('');
-  const [notes, setNotes] = useState('');
-  const [reminderDays, setReminderDays] = useState(3);
-  const [status, setStatus] = useState<'active' | 'paused' | 'canceled'>('active');
+
+  const commonEmojis = ['📺', '🎵', '💻', '🤖', '🏋️', '☁️', '🎮', '📱', '📦', '🍔', '🛡️', '💳'];
 
   useEffect(() => {
     if (editingSub) {
       setName(editingSub.name);
-      setEmoji(editingSub.emoji || '💳');
+      setEmoji(editingSub.emoji || '📺');
       setAmount(String(editingSub.amount));
       setFrequency(editingSub.frequency || 'monthly');
       setBillingDay(String(editingSub.billingDay || 1));
       setCategory(editingSub.category || 'Streaming');
-      setProvider(editingSub.provider || '');
-      setCancelUrl(editingSub.cancelUrl || '');
-      setCancelSteps(editingSub.cancelSteps || '');
-      setNotes(editingSub.notes || '');
-      setReminderDays(editingSub.reminderDays || 3);
-      setStatus(editingSub.status || 'active');
     } else {
       resetForm();
     }
@@ -56,18 +44,20 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   const handleNameChange = (val: string) => {
     setName(val);
     if (!editingSub) {
-      const detectedEmoji = getAutoEmoji(val, category);
-      setEmoji(detectedEmoji);
+      const detected = getAutoEmoji(val, category);
+      setEmoji(detected);
     }
   };
 
-  const handleSave = () => {
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!name.trim()) {
-      showToast('Introduce el nombre de la suscripción.');
+      showToast('Ingresa el nombre del servicio.');
       return;
     }
-    if (!amount || Number(amount) <= 0) {
-      showToast('Introduce un monto válido.');
+    const numAmount = parseFloat(amount);
+    if (!numAmount || numAmount <= 0) {
+      showToast('Ingresa un valor válido.');
       return;
     }
 
@@ -77,217 +67,192 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       updateSubscription(editingSub.id, {
         name: name.trim(),
         emoji,
-        amount: Number(amount),
+        amount: numAmount,
         frequency,
         billingDay: cleanDay,
         category,
-        provider: provider.trim() || name.trim(),
-        cancelUrl: cancelUrl.trim() || undefined,
-        cancelSteps: cancelSteps.trim() || undefined,
-        notes: notes.trim() || undefined,
-        reminderDays,
-        status,
+        provider: name.trim(),
       });
-      showToast(`Suscripción actualizada: ${name}`);
+      showToast(`✅ Suscripción actualizada: ${name}`);
     } else {
       addSubscription({
         name: name.trim(),
         emoji,
-        amount: Number(amount),
+        amount: numAmount,
         frequency,
         billingDay: cleanDay,
         category,
-        provider: provider.trim() || name.trim(),
-        cancelUrl: cancelUrl.trim() || undefined,
-        cancelSteps: cancelSteps.trim() || undefined,
-        notes: notes.trim() || undefined,
-        reminderDays,
-        status,
-        tags: [`#${category.toLowerCase().replace(/\s+/g, '')}`],
+        provider: name.trim(),
+        status: 'active',
+        reminderDays: 3,
+        tags: [category.toLowerCase()],
       });
-      showToast(`Nueva suscripción agregada: ${name}`);
+      showToast(`✅ Suscripción guardada: ${name}`);
     }
 
+    resetForm();
     onClose();
-  };
-
-  const handleDelete = () => {
-    if (editingSub && confirm(`¿Eliminar la suscripción "${editingSub.name}"?`)) {
-      deleteSubscription(editingSub.id);
-      showToast('Suscripción eliminada.');
-      onClose();
-    }
   };
 
   const resetForm = () => {
     setName('');
-    setEmoji('💳');
+    setEmoji('📺');
     setAmount('');
     setFrequency('monthly');
-    setBillingDay('15');
+    setBillingDay('1');
     setCategory('Streaming');
-    setProvider('');
-    setCancelUrl('');
-    setCancelSteps('');
-    setNotes('');
-    setReminderDays(3);
-    setStatus('active');
   };
 
+  if (!isOpen) return null;
+
   return (
-    <BottomModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={editingSub ? 'Editar Suscripción' : 'Nueva Suscripción'}
-      subtitle="Control de ciclo de facturación y alertas"
-      headerAction={
-        editingSub ? (
+    <div className="fixed inset-0 z-[99999] flex items-end justify-center">
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={onClose} />
+
+      {/* MonAI Bottom Sheet Modal */}
+      <div
+        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-xl font-black text-[#F5F5F7]">
+              {editingSub ? 'Editar Suscripción' : 'Nueva Suscripción'}
+            </h3>
+            <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
+              Control de renovación y costo recurrente
+            </p>
+          </div>
           <button
-            onClick={handleDelete}
-            className="w-8 h-8 rounded-full bg-[#E8505B]/15 text-[#E8505B] flex items-center justify-center hover:bg-[#E8505B]/25 transition-colors"
+            onClick={onClose}
+            className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
           >
-            <IconTrash className="w-4 h-4" />
+            <span className="text-base font-bold">✕</span>
           </button>
-        ) : null
-      }
-    >
-      <div className="space-y-4 pb-6">
-        {/* Name & Emoji */}
-        <div className="flex gap-2">
-          <div className="w-14">
-            <label className="block text-[10px] text-[#8E8E93] mb-1 font-bold">Emoji</label>
-            <input
-              type="text"
-              value={emoji}
-              onChange={(e) => setEmoji(e.target.value)}
-              className="w-full bg-[#242426] border border-white/10 rounded-xl py-2.5 text-center text-lg focus:outline-none focus:border-[#0A84FF]"
-            />
-          </div>
-
-          <div className="flex-1">
-            <label className="block text-[10px] text-[#8E8E93] mb-1 font-bold">Servicio / Nombre *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="Ej: ChatGPT Plus, Spotify..."
-              className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            />
-          </div>
         </div>
 
-        {/* Amount & Frequency */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <label className="block text-[10px] text-[#8E8E93] mb-1 font-bold">
-              Monto ({currency}) *
+        <form onSubmit={handleSave} className="space-y-4 pt-1">
+          {/* Service Name & Auto Emoji */}
+          <div className="space-y-1.5">
+            <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+              Nombre del Servicio
             </label>
-            <input
-              type="number"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Ej: 85000"
-              className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm font-black text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            />
+            <div className="flex gap-2">
+              <div className="w-12 h-12 rounded-2xl bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-2xl shrink-0">
+                {emoji}
+              </div>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => handleNameChange(e.target.value)}
+                placeholder="ej: Spotify, Netflix, ChatGPT, iCloud"
+                className="input-field flex-1 text-sm font-black"
+                required
+              />
+            </div>
           </div>
 
-          <div>
-            <label className="block text-[10px] text-[#8E8E93] mb-1 font-bold">Día de Cobro (1-31)</label>
-            <input
-              type="number"
-              min="1"
-              max="31"
-              value={billingDay}
-              onChange={(e) => setBillingDay(e.target.value)}
-              placeholder="Día del mes"
-              className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm font-black text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-            />
-          </div>
-        </div>
-
-        {/* Frequency pills */}
-        <div>
-          <label className="block text-[10px] text-[#8E8E93] mb-1.5 font-bold">Frecuencia de Cobro</label>
-          <div className="grid grid-cols-4 gap-1.5">
-            {(['monthly', 'yearly', 'weekly', 'bimonthly'] as const).map((freq) => {
-              const labels: Record<string, string> = {
-                monthly: 'Mensual',
-                yearly: 'Anual',
-                weekly: 'Semanal',
-                bimonthly: 'Bimestral',
-              };
-              return (
-                <button
-                  key={freq}
-                  type="button"
-                  onClick={() => setFrequency(freq)}
-                  className={`py-2 rounded-xl text-[11px] font-bold transition-all ${
-                    frequency === freq
-                      ? 'bg-[#0A84FF] text-white shadow-md'
-                      : 'bg-[#242426] text-[#8E8E93] hover:text-[#F5F5F7]'
-                  }`}
-                >
-                  {labels[freq]}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Category selector */}
-        <div>
-          <label className="block text-[10px] text-[#8E8E93] mb-1.5 font-bold">Categoría</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-xs text-[#F5F5F7] focus:outline-none focus:border-[#0A84FF]"
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
+          {/* Emoji Selection Chips */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar py-1">
+            {commonEmojis.map((em) => (
+              <button
+                key={em}
+                type="button"
+                onClick={() => setEmoji(em)}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center text-lg shrink-0 transition-all ${
+                  emoji === em
+                    ? 'bg-[#2A2A2C] border border-[#34C759] scale-105'
+                    : 'bg-[#1C1C1E] border border-white/5 opacity-60 hover:opacity-100'
+                }`}
+              >
+                {em}
+              </button>
             ))}
-          </select>
-        </div>
-
-        {/* Cancellation Details */}
-        <div className="p-3.5 rounded-2xl bg-[#141416] border border-white/5 space-y-2.5">
-          <p className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93]">
-            Asistente de Cancelación Rápida
-          </p>
-
-          <div>
-            <label className="block text-[10px] text-[#8E8E93] mb-1">Enlace Directo de Cancelación</label>
-            <input
-              type="url"
-              value={cancelUrl}
-              onChange={(e) => setCancelUrl(e.target.value)}
-              placeholder="https://servicioweb.com/cancelar"
-              className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] focus:outline-none"
-            />
           </div>
 
-          <div>
-            <label className="block text-[10px] text-[#8E8E93] mb-1">Pasos para Cancelar</label>
-            <input
-              type="text"
-              value={cancelSteps}
-              onChange={(e) => setCancelSteps(e.target.value)}
-              placeholder="Ej: Cuenta > Suscripción > Cancelar plan"
-              className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] focus:outline-none"
-            />
-          </div>
-        </div>
+          {/* Amount & Frequency */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+                Monto ({currency || 'COP'})
+              </label>
+              <input
+                type="number"
+                step="any"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="44900"
+                className="input-field text-base font-black"
+                required
+              />
+            </div>
 
-        <button
-          onClick={handleSave}
-          disabled={!name.trim() || !amount}
-          className="w-full py-3 rounded-2xl bg-[#0A84FF] text-white font-extrabold text-xs flex items-center justify-center gap-2 active:scale-98 transition-all disabled:opacity-40 shadow-lg mt-2"
-        >
-          <IconCheck className="w-4 h-4 stroke-[3]" />
-          <span>{editingSub ? 'Guardar Cambios' : 'Crear Suscripción'}</span>
-        </button>
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+                Frecuencia
+              </label>
+              <select
+                value={frequency}
+                onChange={(e) => setFrequency(e.target.value as SubFrequency)}
+                className="input-field text-xs font-black capitalize h-12"
+              >
+                <option value="monthly">Mensual</option>
+                <option value="yearly">Anual</option>
+                <option value="weekly">Semanal</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Billing Day & Category */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+                Día de Cobro (1 - 31)
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="31"
+                value={billingDay}
+                onChange={(e) => setBillingDay(e.target.value)}
+                placeholder="3"
+                className="input-field text-sm font-black"
+                required
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+                Categoría
+              </label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="input-field text-xs font-black h-12"
+              >
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="pt-3 pb-6">
+            <button
+              type="submit"
+              className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all"
+            >
+              <span>✓</span>
+              <span>Guardar Suscripción</span>
+            </button>
+          </div>
+        </form>
       </div>
-    </BottomModal>
+    </div>
   );
 };

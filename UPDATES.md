@@ -4,6 +4,21 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.4.1] - 2026-08-13 (Ajustes de Navegación en Suscripciones, Modal MonAI & Limpieza Visual)
+
+### 🌟 Ajustes y Refinamiento de Interfaz
+- **Limpieza del TopBar de Suscripciones**:
+  - Reemplazado el menú desplegable innecesario de `RappiPay` por el botón de retorno al HUB principal (`🏠 Volver al HUB`).
+  - Eliminado el botón redundante de calendario junto al botón de ajustes.
+- **Eliminación del Conmutador de Gastos**:
+  - Removido el segmento superior que mostraba `Gastos & Finanzas 💳` y `Suscripciones 📺`, maximizando el espacio limpio para las tarjetas de costos y filtros.
+- **Rediseño del Modal de Agregar / Editar Suscripción (`SubscriptionModal.tsx`)**:
+  - Actualizado al diseño MonAI ultra-minimalista en fondo OLED oscuro (`#121214`), con detector inteligente de emojis, selector de chips de iconos, periodicidad, día de cobro y botón verde `✓ Guardar Suscripción` con espaciado inferior seguro.
+- **Rediseño de la Hoja de Ajustes del Sistema (`HubSettingsSheet.tsx`)**:
+  - Unificado con la estética de tarjetas MonAI para configuración de perfil, moneda, API Key de Gemini y copias de seguridad.
+
+---
+
 ## 🚀 [v1.4.0] - 2026-08-13 (Diseño 1:1 de Suscripciones & Espaciado Seguro para Dynamic Island)
 
 ### 🌟 Rediseño 1:1 del Gestor de Suscripciones & Ajustes de Interfaz
