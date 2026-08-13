@@ -83,7 +83,7 @@ export const RecompView: React.FC = () => {
   const selectedDayWater = waterLogs[selectedDate] || 0;
 
   return (
-    <div className="flex-1 flex flex-col px-4 pt-10 pb-28 overflow-y-auto no-scrollbar animate-fade-in relative">
+    <div className="flex-1 flex flex-col px-4 pt-16 pb-28 overflow-y-auto no-scrollbar animate-fade-in relative">
       {/* Dynamic Island In-App Alert */}
       <AlertToast />
 

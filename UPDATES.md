@@ -4,6 +4,24 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🚀 [v1.4.0] - 2026-08-13 (Diseño 1:1 de Suscripciones & Espaciado Seguro para Dynamic Island)
+
+### 🌟 Rediseño 1:1 del Gestor de Suscripciones & Ajustes de Interfaz
+- **Espaciado Superior para Dynamic Island**:
+  - Incrementado el padding superior a `pt-16` / `pt-[calc(env(safe-area-inset-top,44px)+16px)]` en `RecompView`, `SubscriptionsView` y `HubDashboard`, eliminando cualquier colisión o contacto con la Dynamic Island y la barra de estado de iOS.
+- **Rediseño Integral de la App de Suscripciones (`SubscriptionsView` & `SubscriptionList`)**:
+  - **TopBar 1:1**: Selector de cuenta desplegable `RappiPay ⌄` a la izquierda, botones circulares de `[ 📅 Calendario ]` y `[ ⚙️ Ajustes ]` a la derecha.
+  - **Conmutador Segmentado Superior**: Segmentos estilizados `Gastos & Finanzas 💳` y `Suscripciones 📺` (con fondo verde `#34C759` y texto blanco en el estado activo).
+  - **Tarjetas de Resumen Financiero Lado a Lado**: `Costo Mensual ($ 44,900 / mes)` y `Costo Anual ($ 538,800 / año)`.
+  - **Barra de Filtros Horizontales**: Píldoras de filtro `Todas 📺`, `Timeline ⏰`, `Fugas 💡` y `Cancelar 🚫`.
+  - **Botón de Acción**: Botón prominente `+ Agregar Suscripción`.
+  - **Tarjetas de Suscripción 1:1**:
+    - Icono de servicio en contenedor oscuro redondeado `#242426`.
+    - Nombre del servicio (ej. `Icloud+`), categoría y periodicidad (`Servicio • Mensual • Día 3`) con etiqueta `#suscripción`.
+    - Importe en rojo coral `-$44,900` con botón verde `Pagar`, botón de edición `✏️` y botón de eliminación `🗑️`.
+
+---
+
 ## 🛠️ [v1.3.3] - 2026-08-13 (Compresión Inteligente de Fotos, Corrección de Cuota Gemini & Cero Crashes)
 
 ### 🌟 Correcciones Críticas de Estabilidad y Rendimiento

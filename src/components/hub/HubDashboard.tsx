@@ -41,7 +41,7 @@ export const HubDashboard: React.FC = () => {
   const financials = calculateFinancialSummary(subscriptions);
 
   return (
-    <div className="flex-1 flex flex-col px-5 pt-12 pb-28 overflow-y-auto no-scrollbar animate-fade-in">
+    <div className="flex-1 flex flex-col px-5 pt-16 pb-28 overflow-y-auto no-scrollbar animate-fade-in">
       {/* Top Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
