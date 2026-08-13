@@ -242,12 +242,12 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
 
           {/* Submit Button */}
-          <div className="pt-3 pb-4">
+          <div className="pt-4 pb-4 flex justify-center">
             <button
               type="submit"
-              className="w-full py-4.5 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all"
+              className="px-8 py-3.5 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all"
             >
-              <span>✓</span>
+              <span className="text-base font-black">✓</span>
               <span>Guardar Suscripción</span>
             </button>
           </div>

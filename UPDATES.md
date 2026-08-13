@@ -4,6 +4,20 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.4.3] - 2026-08-13 (Píldoras Flexibles de Filtros, Botón Píldora Compacto & Unificación MonAI en Fugas/Timeline)
+
+### 🌟 Ajustes y Perfeccionamiento de Diseño
+- **Eliminación de Etiquetas de Hashtag (`#suscripción`)**:
+  - Removido el texto `#suscripción` de las tarjetas de lista en `SubscriptionList.tsx`.
+- **Botón de Guardado Compacto (`SubscriptionModal.tsx`)**:
+  - Rediseñado el botón inferior como una píldora centrada elegante con icono de confirmación (`✓ Guardar Suscripción`) con sombra verde y efecto táctil.
+- **Píldoras de Filtro no Deformables (`SubscriptionsView.tsx`)**:
+  - Añadido `shrink-0 min-h-[38px]` y contenedor flexible para que las píldoras (`Todas 📺`, `Timeline ⏰`, `Fugas 💡`, `Cancelar 🚫`) nunca se aplasten ni se desborden al cambiar de pestaña.
+- **Unificación de Colores MonAI en Fugas e Insights (`InsightsView.tsx` & `TimelineView.tsx`)**:
+  - Sustituidos todos los acentos azules por el verde característico MonAI (`#34C759`), tarjetas redondeadas `#1C1C1E` con bordes suaves y barras de progreso fluidas.
+
+---
+
 ## 🛠️ [v1.4.2] - 2026-08-13 (Corrección Universal de Fondos Oscuros en Inputs de iOS)
 
 ### 🌟 Correcciones Visuales y Estilos Nativos

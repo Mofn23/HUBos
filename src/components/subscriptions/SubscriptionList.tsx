@@ -54,9 +54,6 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
                 <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
                   {sub.category || 'Servicio'} • {sub.frequency === 'yearly' ? 'Anual' : sub.frequency === 'weekly' ? 'Semanal' : 'Mensual'} • Día {sub.billingDay || 1}
                 </p>
-                <span className="text-[11px] font-extrabold text-[#636366] block mt-0.5">
-                  #suscripción
-                </span>
               </div>
             </div>
 

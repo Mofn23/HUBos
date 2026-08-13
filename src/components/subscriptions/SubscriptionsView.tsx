@@ -85,16 +85,16 @@ export const SubscriptionsView: React.FC = () => {
       </div>
 
       {/* 3. Horizontal Filter Pills Row (Todas 📺, Timeline ⏰, Fugas 💡, Cancelar 🚫) */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 shrink-0 w-full">
         {filterTabs.map((t) => {
           const isActive = currentTab === t.id;
           return (
             <button
               key={t.id}
               onClick={() => setCurrentTab(t.id)}
-              className={`px-4 py-2 rounded-full text-xs font-black flex items-center gap-1.5 whitespace-nowrap transition-all active:scale-95 shrink-0 ${
+              className={`px-4 py-2.5 rounded-full text-xs font-black flex items-center gap-1.5 whitespace-nowrap transition-all active:scale-95 shrink-0 min-h-[38px] ${
                 isActive
-                  ? 'bg-[#34C759] text-white shadow-sm'
+                  ? 'bg-[#34C759] text-white shadow-md'
                   : 'bg-[#1C1C1E] border border-white/5 text-[#8E8E93] hover:text-[#F5F5F7]'
               }`}
             >
