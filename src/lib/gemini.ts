@@ -2,15 +2,14 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 
 export const GEMINI_MODELS = [
   'gemini-2.0-flash',
-  'gemini-2.0-flash-lite',
   'gemini-1.5-flash',
-  'gemini-2.5-flash',
+  'gemini-1.5-pro',
 ];
 
 export async function callGemini(apiKey: string, contents: any, preferredModel = 'gemini-2.0-flash'): Promise<string> {
   const cleanKey = (apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '').trim();
   if (!cleanKey) {
-    throw new Error('No se ha configurado la API Key de Gemini. Puedes añadirla en Ajustes.');
+    throw new Error('No se ha configurado la API Key de Gemini. Puedes añadirla en Perfil y Ajustes.');
   }
 
   const genAI = new GoogleGenerativeAI(cleanKey);
@@ -55,7 +54,7 @@ export async function parseMealWithGemini(
   const systemPrompt = `Eres un nutricionista deportivo de élite y experto en estimación de macronutrientes.
 Analiza la comida descrita o mostrada en la imagen y devuelve ÚNICAMENTE un objeto JSON válido con este formato exacto (sin markdown, sin backticks):
 {
-  "name": "Nombre descriptivo y apetitoso del plato",
+  "name": "Nombre descriptivo del plato",
   "calories": 550,
   "protein": 35,
   "carbs": 50,
@@ -68,10 +67,14 @@ Opciones válidas para mealType: "desayuno", "almuerzo", "cena", "snack", "pre-e
   const contents: any[] = [{ text: systemPrompt }];
 
   if (input.imageBase64) {
+    const rawMime = input.imageBase64.match(/^data:([^;]+);base64,/)?.[1];
+    const mimeType = rawMime || input.mimeType || 'image/jpeg';
+    const cleanData = input.imageBase64.replace(/^data:[^;]+;base64,/, '');
+
     contents.push({
       inlineData: {
-        data: input.imageBase64.replace(/^data:image\/\w+;base64,/, ''),
-        mimeType: input.mimeType || 'image/jpeg',
+        data: cleanData,
+        mimeType: mimeType,
       },
     });
   }
@@ -80,7 +83,7 @@ Opciones válidas para mealType: "desayuno", "almuerzo", "cena", "snack", "pre-e
     contents.push({ text: `Descripción del usuario: "${input.text}"` });
   }
 
-  const raw = await callGemini(apiKey, contents);
+  const raw = await callGemini(apiKey, contents, 'gemini-2.0-flash');
   try {
     const cleanJson = raw.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleanJson);

@@ -312,13 +312,13 @@ export const MealsSection: React.FC = () => {
 
       {/* Manual Entry Sheet Modal */}
       {isManualModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
+        <div className="fixed inset-0 z-[9999] flex items-end justify-center">
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/85 backdrop-blur-md"
             onClick={() => setIsManualModalOpen(false)}
           />
           <div
-            className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-10 z-10 animate-sheet-up space-y-4"
+            className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -403,9 +403,9 @@ export const MealsSection: React.FC = () => {
 
       {/* User Meal Photo Detail Modal */}
       {selectedPhotoMeal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/85 backdrop-blur-md"
             onClick={() => setSelectedPhotoMeal(null)}
           />
           <div

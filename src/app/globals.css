@@ -764,8 +764,9 @@ input, textarea {
   bottom: calc(var(--safe-bottom) + 12px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 40;
   width: auto;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .monai-bottom-nav {

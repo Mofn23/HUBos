@@ -33,16 +33,16 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
   const formattedSelectedDate = format(parseISO(selectedDate), 'MMM d, yyyy', { locale: es });
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center">
+    <div className="fixed inset-0 z-[9999] flex items-end justify-center">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
       {/* MonAI Bottom Sheet */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-10 z-10 animate-sheet-up space-y-4"
+        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}

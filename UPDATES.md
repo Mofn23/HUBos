@@ -4,6 +4,19 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.3.1] - 2026-08-13 (Corrección de Modelos Gemini & Ajuste de Elevación de Modals)
+
+### 🌟 Correcciones y Parches
+- **Corrección del Modelo Gemini (Error 404 / Interactions API)**:
+  - Eliminado el modelo obsoleto/no disponible `gemini-2.5-flash`.
+  - Establecido `gemini-2.0-flash` como modelo principal por defecto con fallback automático resiliente a `gemini-1.5-flash` y `gemini-1.5-pro`.
+  - Sanitización estricta de imágenes Base64 y extracción de MIME types (`data:[^;]+;base64`) para escaneo multimodal de comidas y progreso físico.
+- **Corrección de Elevación y Visibilidad en Hojas Modales**:
+  - Ajustado el `z-index` de la barra dock flotante de navegación (`.monai-bottom-nav-container`) a `z-40` y los modales/hojas flotantes a `z-[9999]`.
+  - Añadido padding inferior de seguridad `pb-[calc(env(safe-area-inset-bottom,24px)+28px)]` en `MealCaptureModal`, `DateSelectionModal`, `MealsSection` y `ProfilePage` para que el botón verde `✨ Analizar Comida` quede completamente visible, elevado y cómodo para pulsar con el pulgar.
+
+---
+
 ## 🚀 [v1.3.0] - 2026-08-13 (Perfil & Ajustes 1:1, Análisis Corporal IA, Icono Nativo iOS y Corrección de Barra Flotante)
 
 ### 🌟 Corrección de Interfaz, Perfil 1:1 & Nuevo Módulo de Progreso Corporal
