@@ -189,6 +189,10 @@ interface RecompState {
   coachMessages: ChatCoachMessage[];
   addCoachMessage: (sender: 'user' | 'coach', text: string) => void;
   clearCoachChat: () => void;
+
+  // Modal Overlay Visibility
+  isModalOpen: boolean;
+  setIsModalOpen: (open: boolean) => void;
 }
 
 const DEFAULT_SUPPLEMENTS: SupplementEntry[] = [
@@ -219,6 +223,9 @@ export const useRecompStore = create<RecompState>()(
         set({ selectedDate: date });
         get().updateStreaks();
       },
+
+      isModalOpen: false,
+      setIsModalOpen: (open) => set({ isModalOpen: open }),
 
       targetCalories: 2275,
       targetProtein: 150,

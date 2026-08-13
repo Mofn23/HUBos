@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { parseMealWithGemini } from '@/lib/gemini';
 import { getTodayKey } from '@/lib/date';
-import { IconCamera, IconSparkles, IconX } from '../common/Icons';
+import { IconSparkles } from '../common/Icons';
 
 interface MealCaptureModalProps {
   isOpen: boolean;
@@ -14,7 +14,7 @@ interface MealCaptureModalProps {
 
 export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onClose }) => {
   const { geminiApiKey, showToast } = useHubStore();
-  const { addMeal, selectedDate } = useRecompStore();
+  const { addMeal, selectedDate, setIsModalOpen } = useRecompStore();
 
   const [category, setCategory] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('almuerzo');
   const [imageBase64, setImageBase64] = useState<string | null>(null);
@@ -23,6 +23,13 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsModalOpen(isOpen);
+    return () => {
+      setIsModalOpen(false);
+    };
+  }, [isOpen, setIsModalOpen]);
 
   if (!isOpen) return null;
 
@@ -93,10 +100,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   ];
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-end justify-center">
+    <div className="fixed inset-0 z-[99999] flex items-end justify-center">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/85 backdrop-blur-md"
+        className="fixed inset-0 bg-black/90 backdrop-blur-md"
         onClick={() => {
           if (!isLoading) onClose();
         }}
@@ -104,7 +111,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
       {/* Bottom Sheet Modal matching Screenshot */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,24px)+28px)] z-20 animate-sheet-up space-y-5 max-h-[92vh] overflow-y-auto no-scrollbar"
+        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -202,25 +209,27 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           />
         </div>
 
-        {/* Action Button */}
-        <button
-          type="button"
-          onClick={handleAnalyze}
-          disabled={isLoading || (!description.trim() && !imageBase64)}
-          className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all disabled:opacity-40"
-        >
-          {isLoading ? (
-            <>
-              <IconSparkles className="w-5 h-5 animate-spin" />
-              <span>Analizando con Gemini 2.0...</span>
-            </>
-          ) : (
-            <>
-              <IconSparkles className="w-5 h-5 text-black" />
-              <span>Analizar Comida</span>
-            </>
-          )}
-        </button>
+        {/* Action Button - Clearly Elevated with margin */}
+        <div className="pt-2 pb-6">
+          <button
+            type="button"
+            onClick={handleAnalyze}
+            disabled={isLoading || (!description.trim() && !imageBase64)}
+            className="w-full py-4.5 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all disabled:opacity-40"
+          >
+            {isLoading ? (
+              <>
+                <IconSparkles className="w-5 h-5 animate-spin" />
+                <span>Analizando con Gemini 3.5...</span>
+              </>
+            ) : (
+              <>
+                <IconSparkles className="w-5 h-5 text-black" />
+                <span>Analizar Comida</span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

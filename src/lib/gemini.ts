@@ -1,19 +1,27 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, type GenerateContentResult } from '@google/generative-ai';
+import { AI_CONFIG, GEMINI_MODEL_CANDIDATES } from '@/constants/ai';
 
-export const GEMINI_MODELS = [
-  'gemini-2.0-flash',
-  'gemini-1.5-flash',
-  'gemini-1.5-pro',
-];
+export { AI_CONFIG, GEMINI_MODEL_CANDIDATES };
 
-export async function callGemini(apiKey: string, contents: any, preferredModel = 'gemini-2.0-flash'): Promise<string> {
+/**
+ * Executes generateContent trying candidate models in order if 404 or model error occurs.
+ */
+export async function generateContentWithFallback(
+  apiKey: string,
+  contents: any,
+  preferredModel: string = AI_CONFIG.DEFAULT_MODEL
+): Promise<GenerateContentResult> {
   const cleanKey = (apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '').trim();
   if (!cleanKey) {
     throw new Error('No se ha configurado la API Key de Gemini. Puedes añadirla en Perfil y Ajustes.');
   }
 
   const genAI = new GoogleGenerativeAI(cleanKey);
-  const modelsToTry = [preferredModel, ...GEMINI_MODELS.filter((m) => m !== preferredModel)];
+
+  const modelsToTry = [
+    preferredModel,
+    ...GEMINI_MODEL_CANDIDATES.filter((m) => m !== preferredModel),
+  ];
 
   let lastError: any = null;
 
@@ -21,19 +29,30 @@ export async function callGemini(apiKey: string, contents: any, preferredModel =
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
       const result = await model.generateContent(contents);
-      const response = await result.response;
-      const text = response.text();
-      if (text) return text;
+      return result;
     } catch (err: any) {
-      console.warn(`[Gemini] Model ${modelName} error:`, err?.message || err);
+      const errMsg = err?.message || String(err);
+      console.warn(`[Gemini AI] Model ${modelName} failed:`, errMsg);
       lastError = err;
-      if (err?.message?.includes('API_KEY_INVALID') || err?.message?.includes('API key not valid')) {
-        throw new Error('La API Key de Gemini no es válida. Revisa los Ajustes.');
+
+      // If it's an invalid API key, throw immediate user alert
+      if (errMsg.includes('API_KEY_INVALID') || errMsg.includes('API key not valid')) {
+        throw new Error('Tu API Key de Gemini no es válida. Revisa la configuración en tu Perfil.');
       }
     }
   }
 
-  throw lastError || new Error('No se pudo comunicar con Google Gemini.');
+  throw lastError || new Error('No se pudo conectar con ningún modelo disponible de Gemini.');
+}
+
+export async function callGemini(
+  apiKey: string,
+  contents: any,
+  preferredModel: string = AI_CONFIG.DEFAULT_MODEL
+): Promise<string> {
+  const result = await generateContentWithFallback(apiKey, contents, preferredModel);
+  const response = await result.response;
+  return response.text();
 }
 
 /**
@@ -83,7 +102,7 @@ Opciones válidas para mealType: "desayuno", "almuerzo", "cena", "snack", "pre-e
     contents.push({ text: `Descripción del usuario: "${input.text}"` });
   }
 
-  const raw = await callGemini(apiKey, contents, 'gemini-2.0-flash');
+  const raw = await callGemini(apiKey, contents, AI_CONFIG.VISION_MODEL);
   try {
     const cleanJson = raw.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleanJson);
@@ -136,10 +155,14 @@ Analiza la rutina o imagen y devuelve ÚNICAMENTE un JSON válido con esta estru
   const contents: any[] = [{ text: systemPrompt }];
 
   if (input.imageBase64) {
+    const rawMime = input.imageBase64.match(/^data:([^;]+);base64,/)?.[1];
+    const mimeType = rawMime || input.mimeType || 'image/jpeg';
+    const cleanData = input.imageBase64.replace(/^data:[^;]+;base64,/, '');
+
     contents.push({
       inlineData: {
-        data: input.imageBase64.replace(/^data:image\/\w+;base64,/, ''),
-        mimeType: input.mimeType || 'image/jpeg',
+        data: cleanData,
+        mimeType: mimeType,
       },
     });
   }
@@ -148,7 +171,7 @@ Analiza la rutina o imagen y devuelve ÚNICAMENTE un JSON válido con esta estru
     contents.push({ text: `Registro de entrenamiento: "${input.text}"` });
   }
 
-  const raw = await callGemini(apiKey, contents);
+  const raw = await callGemini(apiKey, contents, AI_CONFIG.VISION_MODEL);
   try {
     const cleanJson = raw.replace(/```json/g, '').replace(/```/g, '').trim();
     return JSON.parse(cleanJson);
@@ -277,17 +300,11 @@ Contexto actual del usuario hoy:
 - Proteína: ${contextData.proteinConsumed} / ${contextData.targetProtein} g
 - Último entrenamiento registrado: ${contextData.lastWorkoutTitle || 'Ninguno hoy aún'}`;
 
-  const cleanKey = (apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '').trim();
-  const genAI = new GoogleGenerativeAI(cleanKey);
-  const model = genAI.getGenerativeModel({
-    model: 'gemini-2.0-flash',
-    systemInstruction: { role: 'system', parts: [{ text: systemInstruction }] },
-  });
+  const contents = [
+    { text: systemInstruction },
+    ...history.map((h) => ({ text: `${h.role}: ${h.parts.map((p) => p.text).join(' ')}` })),
+    { text: `user: ${userPrompt}` },
+  ];
 
-  const chat = model.startChat({
-    history,
-  });
-
-  const result = await chat.sendMessage(userPrompt);
-  return result.response.text();
+  return callGemini(apiKey, contents, AI_CONFIG.DEFAULT_MODEL);
 }

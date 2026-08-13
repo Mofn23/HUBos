@@ -43,6 +43,7 @@ export const RecompView: React.FC = () => {
     toggleSupplement,
     achievements,
     addAlert,
+    isModalOpen,
   } = useRecompStore();
 
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
@@ -144,8 +145,12 @@ export const RecompView: React.FC = () => {
       {currentTab === 'training' && <TrainingSection />}
       {currentTab === 'profile' && <ProfilePage />}
 
-      {/* Native Floating Bottom Nav Dock (Recomp Only - Zero Overlap!) */}
-      <div className="monai-bottom-nav-container">
+      {/* Native Floating Bottom Nav Dock (Recomp Only - Automatically hidden when any modal is open) */}
+      <div
+        className={`monai-bottom-nav-container transition-all duration-300 ${
+          isModalOpen || isMealModalOpen ? 'opacity-0 pointer-events-none translate-y-24 scale-90' : 'opacity-100 translate-y-0 scale-100'
+        }`}
+      >
         <nav className="monai-bottom-nav">
           <button
             className={`monai-bottom-nav-item ${currentTab === 'dashboard' ? 'active' : ''}`}

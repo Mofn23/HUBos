@@ -4,6 +4,26 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.3.2] - 2026-08-13 (Pipeline de Modelos Gemini 3.5 & Ocultamiento Total de Barra de Navegación)
+
+### 🌟 Correcciones y Robustez de IA
+- **Pipeline Completo de Modelos Gemini (`src/constants/ai.ts` & `src/lib/gemini.ts`)**:
+  - Configurado **`gemini-3.5-flash-lite`** como modelo principal activo (`AI_CONFIG.DEFAULT_MODEL` y `VISION_MODEL`).
+  - Implementada la lista de respaldo automático en cascada en el orden exacto especificado:
+    1. `gemini-3.5-flash-lite` (Primario)
+    2. `gemini-3.1-flash-lite`
+    3. `gemini-2.0-flash`
+    4. `gemini-1.5-flash-latest`
+    5. `gemini-2.5-flash`
+    6. `gemini-1.5-flash`
+    7. `gemini-2.0-flash-lite`
+  - Función `generateContentWithFallback` con captura transparente de errores y fallback instantáneo.
+- **Ocultamiento Automático de la Barra de Navegación al Abrir Modales**:
+  - Al abrir el modal de escaneo de comida, la barra dock inferior se oculta inmediatamente (`opacity-0 pointer-events-none translate-y-24 scale-90`).
+  - Elevación incrementada en `MealCaptureModal` (`pb-16`, margen inferior `mb-4` y `z-[99999]`) para que el botón verde `✨ Analizar Comida` quede 100% visible, amplio y cómodo de presionar.
+
+---
+
 ## 🛠️ [v1.3.1] - 2026-08-13 (Corrección de Modelos Gemini & Ajuste de Elevación de Modals)
 
 ### 🌟 Correcciones y Parches
