@@ -4,6 +4,16 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.4.2] - 2026-08-13 (Corrección Universal de Fondos Oscuros en Inputs de iOS)
+
+### 🌟 Correcciones Visuales y Estilos Nativos
+- **Eliminación Total de Fondos Blancos en Inputs y Selects**:
+  - Declaradas reglas universales en `globals.css` para `input`, `select`, `textarea` y `.input-field` forzando `background-color: #1C1C1E !important`, `color: #F5F5F7 !important` y `-webkit-appearance: none !important`.
+  - Añadido `color-scheme: dark !important` y chevron SVG personalizado para selectores desplegables nativos en iOS WebKit.
+  - Actualizados todos los campos de `SubscriptionModal.tsx` con estilos explícitos oscuros de alta legibilidad y alturas uniformes (`h-12`).
+
+---
+
 ## 🛠️ [v1.4.1] - 2026-08-13 (Ajustes de Navegación en Suscripciones, Modal MonAI & Limpieza Visual)
 
 ### 🌟 Ajustes y Refinamiento de Interfaz

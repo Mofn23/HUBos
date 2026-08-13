@@ -855,3 +855,70 @@ input, textarea {
 .monai-achievement-title.unlocked {
   color: var(--green);
 }
+
+/* ==========================================================================
+   Universal Dark Inputs & Selects for iOS WebKit & Desktop
+   ========================================================================== */
+input,
+select,
+textarea,
+.input-field {
+  background-color: #1C1C1E !important;
+  color: #F5F5F7 !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 18px !important;
+  padding: 12px 16px !important;
+  font-family: inherit !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  width: 100% !important;
+  outline: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  color-scheme: dark !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.input-field:focus {
+  border-color: rgba(52, 199, 89, 0.6) !important;
+  box-shadow: 0 0 0 2px rgba(52, 199, 89, 0.2) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #636366 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* Custom chevron arrow for select elements */
+select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%238E8E93' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 14px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 18px 18px !important;
+  padding-right: 36px !important;
+  cursor: pointer !important;
+}
+
+select option {
+  background-color: #1C1C1E !important;
+  color: #F5F5F7 !important;
+  font-weight: 700 !important;
+  padding: 8px !important;
+}
+
+/* Number inputs without ugly spin buttons */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}
+input[type='number'] {
+  -moz-appearance: textfield !important;
+}
