@@ -6,6 +6,7 @@ import { useRecompStore, BodyMeasurementEntry, ProgressPhotoItem } from '@/store
 import { getTodayKey, formatDateSpanish } from '@/lib/date';
 import { WeightTrend } from './WeightTrend';
 import { callGemini } from '@/lib/gemini';
+import { compressImage } from '@/lib/image';
 import { IconTrash, IconCamera, IconSparkles, IconPlus } from '../common/Icons';
 
 export const ProfilePage: React.FC = () => {
@@ -95,13 +96,11 @@ export const ProfilePage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-      setIsAnalyzingPhoto(true);
+    setIsAnalyzingPhoto(true);
+    try {
+      const base64 = await compressImage(file, 800, 0.7);
 
-      try {
-        const prompt = `Eres un experto en fitness y recomposición corporal. Analiza esta foto de progreso físico.
+      const prompt = `Eres un experto en fitness y recomposición corporal. Analiza esta foto de progreso físico.
 Usuario: ${userName}, Altura: 1.83m, Peso: ${latestWeight}kg.
 Dame un análisis constructivo, motivador y profesional (máximo 3-4 párrafos cortos).
 Enfócate en:
@@ -110,40 +109,34 @@ Enfócate en:
 3. Como consejo breve para mejorar (sobrecarga progresiva, ejercicios compuestos y nutrición).
 Formato en Markdown claro con emojis.`;
 
-        const analysisText = await callGemini(geminiApiKey, [
-          { text: prompt },
-          {
-            inlineData: {
-              data: base64.replace(/^data:image\/\w+;base64,/, ''),
-              mimeType: file.type || 'image/jpeg',
-            },
+      const analysisText = await callGemini(geminiApiKey, [
+        { text: prompt },
+        {
+          inlineData: {
+            data: base64.replace(/^data:[^;]+;base64,/, ''),
+            mimeType: 'image/jpeg',
           },
-        ]);
+        },
+      ]);
 
-        const newPhoto: Omit<ProgressPhotoItem, 'id'> = {
-          date: todayKey,
-          type: 'front',
-          imageBase64: base64,
-          aiAnalysis: analysisText,
-        };
+      const newPhoto: Omit<ProgressPhotoItem, 'id'> = {
+        date: todayKey,
+        type: 'front',
+        imageBase64: base64,
+        aiAnalysis: analysisText,
+      };
 
-        addProgressPhoto(newPhoto);
-        showToast('✨ ¡Foto de progreso analizada por el Coach IA!');
-      } catch (err: any) {
-        console.error('Photo analysis error:', err);
-        // Save photo even if AI call fails
-        addProgressPhoto({
-          date: todayKey,
-          type: 'front',
-          imageBase64: base64,
-          aiAnalysis: 'Foto registrada. Configura tu API Key de Gemini para activar el análisis automático.',
-        });
-        showToast(err?.message || 'Foto guardada.');
-      } finally {
-        setIsAnalyzingPhoto(false);
+      addProgressPhoto(newPhoto);
+      showToast('✨ ¡Foto de progreso analizada por el Coach IA!');
+    } catch (err: any) {
+      console.error('Photo analysis error:', err);
+      showToast(err?.message || 'Error al procesar foto con IA.');
+    } finally {
+      setIsAnalyzingPhoto(false);
+      if (photoInputRef.current) {
+        photoInputRef.current.value = '';
       }
-    };
-    reader.readAsDataURL(file);
+    }
   };
 
   // Weekly intake calculations (Lun - Dom)

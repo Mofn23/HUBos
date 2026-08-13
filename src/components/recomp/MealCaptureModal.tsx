@@ -5,6 +5,7 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { parseMealWithGemini } from '@/lib/gemini';
 import { getTodayKey } from '@/lib/date';
+import { compressImage } from '@/lib/image';
 import { IconSparkles } from '../common/Icons';
 
 interface MealCaptureModalProps {
@@ -25,7 +26,9 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setIsModalOpen(isOpen);
+    if (isOpen) {
+      setIsModalOpen(true);
+    }
     return () => {
       setIsModalOpen(false);
     };
@@ -33,17 +36,19 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
   if (!isOpen) return null;
 
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      setImageBase64(base64);
-      setImagePreview(base64);
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Compress to ~150KB to avoid localStorage quota crash & Gemini payload limits
+      const compressed = await compressImage(file, 800, 0.7);
+      setImageBase64(compressed);
+      setImagePreview(compressed);
+    } catch (err: any) {
+      console.error('Error compressing image:', err);
+      showToast('No se pudo procesar la imagen seleccionada.');
+    }
   };
 
   const handleAnalyze = async () => {
@@ -55,17 +60,17 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     setIsLoading(true);
     try {
       const result = await parseMealWithGemini(geminiApiKey, {
-        text: description,
+        text: description.trim() || undefined,
         imageBase64: imageBase64 || undefined,
       });
 
       const targetDate = selectedDate || getTodayKey();
       addMeal({
-        name: result.name,
-        calories: result.calories,
-        protein: result.protein,
-        carbs: result.carbs,
-        fat: result.fat,
+        name: result.name || 'Comida Registrada',
+        calories: Number(result.calories) || 0,
+        protein: Number(result.protein) || 0,
+        carbs: Number(result.carbs) || 0,
+        fat: Number(result.fat) || 0,
         date: targetDate,
         category,
         notes: result.notes || '',
@@ -105,13 +110,16 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
       <div
         className="fixed inset-0 bg-black/90 backdrop-blur-md"
         onClick={() => {
-          if (!isLoading) onClose();
+          if (!isLoading) {
+            setIsModalOpen(false);
+            onClose();
+          }
         }}
       />
 
-      {/* Bottom Sheet Modal matching Screenshot */}
+      {/* Bottom Sheet Modal */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-20 z-20 animate-sheet-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -119,7 +127,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           <h2 className="text-2xl font-black text-[#F5F5F7]">Escaneo IA</h2>
           <button
             onClick={() => {
-              if (!isLoading) onClose();
+              if (!isLoading) {
+                setIsModalOpen(false);
+                onClose();
+              }
             }}
             className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
           >
@@ -210,7 +221,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Action Button - Clearly Elevated with margin */}
-        <div className="pt-2 pb-6">
+        <div className="pt-2 pb-8">
           <button
             type="button"
             onClick={handleAnalyze}
@@ -220,7 +231,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
             {isLoading ? (
               <>
                 <IconSparkles className="w-5 h-5 animate-spin" />
-                <span>Analizando con Gemini 3.5...</span>
+                <span>Analizando con Gemini...</span>
               </>
             ) : (
               <>

@@ -4,6 +4,18 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.3.3] - 2026-08-13 (Compresión Inteligente de Fotos, Corrección de Cuota Gemini & Cero Crashes)
+
+### 🌟 Correcciones Críticas de Estabilidad y Rendimiento
+- **Compresión Automática de Imágenes (`src/lib/image.ts`)**:
+  - Implementada compresión adaptativa en canvas HTML5 (máximo 800px, calidad 0.7) antes de enviar datos a Gemini o persistir en el almacenamiento local.
+  - **Eliminación del Error de Cuota Excedida (`RESOURCE_EXHAUSTED`)**: Las fotos directas de cámara de iPhone (12-15MB) ahora se optimizan a ~150KB, respetando holgadamente el límite de payload de Google Gemini.
+  - **Eliminación del Crash de la Aplicación (`Application error / QuotaExceededError`)**: Evita saturar el `localStorage` de iOS con cadenas Base64 pesadas al cerrar o guardar comidas, erradicando los reinicios forzados de la app.
+- **Pipeline de Modelos de Visión Oficiales**:
+  - Priorizados modelos estables de visión con fallback automático transparente (`gemini-2.0-flash`, `gemini-1.5-flash`, `gemini-1.5-flash-8b`, `gemini-2.0-flash-lite-preview-02-05`).
+
+---
+
 ## 🛠️ [v1.3.2] - 2026-08-13 (Pipeline de Modelos Gemini 3.5 & Ocultamiento Total de Barra de Navegación)
 
 ### 🌟 Correcciones y Robustez de IA
