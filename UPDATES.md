@@ -4,6 +4,19 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🛠️ [v1.4.4] - 2026-08-13 (Rediseño MonAI del HUB Principal & Eliminación de Barra Flotante Global)
+
+### 🌟 Unificación Visual del HUB Launcher
+- **Eliminación Total de la Barra Flotante Inferior Global (`FloatingHubBar`)**:
+  - Removida la barra inferior del launcher principal para ofrecer una experiencia limpia e inmersiva sin elementos flotantes superpuestos.
+- **Rediseño Completo del Dashboard del HUB (`HubDashboard.tsx`)**:
+  - Unificado con la estética de tarjetas oscuras OLED MonAI (`#1C1C1E` / `#242426`) y acentos verdes `#34C759`.
+  - **Tarjeta de Estado Global**: Métricas de sincronización lado a lado de RecompAI (calorías restantes, déficit, % de bomba de glucógeno) y Suscripciones (gasto mensual recurrente y servicios activos).
+  - **Tarjetas de Aplicaciones Modulares**: Tarjetas amplias táctiles con iconos grandes (`🥑 Recomp AI` y `📺 Suscripciones`), telemetría en tiempo real y botón de acceso directo `Abrir →`.
+  - **Acceso Rápido al Sistema**: Configuración de ecosistema, llaves de API y copias de seguridad.
+
+---
+
 ## 🛠️ [v1.4.3] - 2026-08-13 (Píldoras Flexibles de Filtros, Botón Píldora Compacto & Unificación MonAI en Fugas/Timeline)
 
 ### 🌟 Ajustes y Perfeccionamiento de Diseño

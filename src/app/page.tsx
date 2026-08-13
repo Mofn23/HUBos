@@ -8,7 +8,6 @@ import { HubSettingsSheet } from '@/components/hub/HubSettingsSheet';
 import { HubQuickPromptSheet } from '@/components/hub/HubQuickPromptSheet';
 import { RecompView } from '@/components/recomp/RecompView';
 import { SubscriptionsView } from '@/components/subscriptions/SubscriptionsView';
-import { FloatingHubBar } from '@/components/navigation/FloatingHubBar';
 import { ToastNotification } from '@/components/common/ToastNotification';
 import { checkAndNotifyUpcomingSubscriptions } from '@/lib/notifications';
 
@@ -33,9 +32,6 @@ export default function Home() {
         {currentApp === 'recomp' && <RecompView />}
         {currentApp === 'subs' && <SubscriptionsView />}
       </div>
-
-      {/* Floating Bottom Navigation Bar (HUB mode only) */}
-      {currentApp === 'hub' && <FloatingHubBar />}
 
       {/* Global Bottom Sheets & Modals */}
       <HubSettingsSheet />
