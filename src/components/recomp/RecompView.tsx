@@ -30,6 +30,7 @@ export const RecompView: React.FC = () => {
     currentTab,
     setCurrentTab,
     selectedDate,
+    setSelectedDate,
     meals,
     deleteMeal,
     targetCalories,
@@ -47,6 +48,30 @@ export const RecompView: React.FC = () => {
   } = useRecompStore();
 
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
+
+  // Auto-select current date on launch or when returning to foreground
+  useEffect(() => {
+    const today = getTodayKey();
+    setSelectedDate(today);
+
+    const handleFocus = () => {
+      const currentToday = getTodayKey();
+      setSelectedDate(currentToday);
+    };
+
+    window.addEventListener('focus', handleFocus);
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        handleFocus();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      window.removeEventListener('focus', handleFocus);
+      document.removeEventListener('visibilitychange', handleVisibility);
+    };
+  }, [setSelectedDate]);
 
   // Initialize notifications on mount
   useEffect(() => {

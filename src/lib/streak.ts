@@ -1,10 +1,10 @@
-import { format, subDays, startOfWeek, endOfWeek, parseISO, isSameDay } from 'date-fns';
+import { format, subDays, differenceInCalendarDays, parseISO } from 'date-fns';
 
 /**
- * Calculates the workout streak grouping by Mon-Sun natural weeks.
- * A past week keeps the streak alive if at least 4 unique workout days were logged.
- * Current week does not break if < 4 yet.
- * Returns the total count of unique workout days in the unbroken period.
+ * Calculates the workout streak based on logged workouts.
+ * - Each workout day adds +1 to the streak.
+ * - Up to 3 consecutive rest days without a workout are permitted.
+ * - If > 3 days pass since the last workout relative to today, the streak resets to 0.
  */
 export function calculateWorkoutStreak(
   trainingLogs: { date: string }[],
@@ -14,48 +14,51 @@ export function calculateWorkoutStreak(
     return { currentStreak: 0, bestStreak: 0 };
   }
 
-  const uniqueDates = Array.from(new Set(trainingLogs.map((l) => l.date))).sort();
+  // Get sorted unique workout dates (descending: newest first)
+  const uniqueDates = Array.from(new Set(trainingLogs.map((l) => l.date)))
+    .filter(Boolean)
+    .sort()
+    .reverse();
+
   if (uniqueDates.length === 0) {
     return { currentStreak: 0, bestStreak: 0 };
   }
 
   const today = parseISO(todayKey);
-  const currentWeekStart = startOfWeek(today, { weekStartsOn: 1 });
+  const latestWorkoutDate = parseISO(uniqueDates[0]);
+  const daysSinceLatest = differenceInCalendarDays(today, latestWorkoutDate);
 
-  let streakDays = 0;
-  let checkWeekStart = currentWeekStart;
-
-  // 1. Current week unique days
-  const currentWeekDays = uniqueDates.filter((d) => {
-    const p = parseISO(d);
-    return p >= currentWeekStart && p <= today;
-  });
-  streakDays += currentWeekDays.length;
-
-  // 2. Iterate backwards by natural weeks
-  while (true) {
-    const prevWeekStart = subDays(checkWeekStart, 7);
-    const prevWeekEnd = subDays(checkWeekStart, 1);
-
-    const prevWeekDays = uniqueDates.filter((d) => {
-      const p = parseISO(d);
-      return p >= prevWeekStart && p <= prevWeekEnd;
-    });
-
-    if (prevWeekDays.length >= 4) {
-      streakDays += prevWeekDays.length;
-      checkWeekStart = prevWeekStart;
-    } else {
-      break;
-    }
+  // If more than 3 days have passed since the last workout, streak is broken
+  if (daysSinceLatest > 3) {
+    return { currentStreak: 0, bestStreak: Math.max(uniqueDates.length, 0) };
   }
 
-  return { currentStreak: streakDays, bestStreak: Math.max(streakDays, 7) };
+  let streak = 0;
+  let previousDate = latestWorkoutDate;
+
+  for (let i = 0; i < uniqueDates.length; i++) {
+    const currentDate = parseISO(uniqueDates[i]);
+
+    if (i > 0) {
+      const gapDays = differenceInCalendarDays(previousDate, currentDate);
+      // If gap between consecutive workouts is more than 4 calendar days (i.e. > 3 rest days in between)
+      if (gapDays > 4) {
+        break;
+      }
+    }
+
+    streak++;
+    previousDate = currentDate;
+  }
+
+  return { currentStreak: streak, bestStreak: Math.max(streak, uniqueDates.length) };
 }
 
 /**
- * Calculates the nutrition logging streak (consecutive days with >= 1 meal).
- * If no meal today, checks if yesterday had meals to keep streak active in warning state.
+ * Calculates the nutrition logging streak.
+ * - Requires at least 2 meals logged per day.
+ * - If today has < 2 meals, checks yesterday to keep streak in warning state.
+ * - If yesterday also had < 2 meals, streak is 0.
  */
 export function calculateNutritionStreak(
   meals: { date: string }[],
@@ -65,15 +68,24 @@ export function calculateNutritionStreak(
     return { currentStreak: 0, hasLoggedToday: false };
   }
 
-  const uniqueDates = new Set(meals.map((m) => m.date));
-  const hasLoggedToday = uniqueDates.has(todayKey);
+  // Count meals per day
+  const mealsCountByDate: Record<string, number> = {};
+  for (const m of meals) {
+    if (m.date) {
+      mealsCountByDate[m.date] = (mealsCountByDate[m.date] || 0) + 1;
+    }
+  }
+
+  const todayCount = mealsCountByDate[todayKey] || 0;
+  const hasLoggedToday = todayCount >= 2;
 
   let startDate = todayKey;
 
   if (!hasLoggedToday) {
     try {
       const yesterday = format(subDays(parseISO(todayKey), 1), 'yyyy-MM-dd');
-      if (!uniqueDates.has(yesterday)) {
+      const yesterdayCount = mealsCountByDate[yesterday] || 0;
+      if (yesterdayCount < 2) {
         return { currentStreak: 0, hasLoggedToday: false };
       }
       startDate = yesterday;
@@ -87,7 +99,8 @@ export function calculateNutritionStreak(
 
   while (true) {
     const key = format(curr, 'yyyy-MM-dd');
-    if (uniqueDates.has(key)) {
+    const count = mealsCountByDate[key] || 0;
+    if (count >= 2) {
       streak++;
       curr = subDays(curr, 1);
     } else {

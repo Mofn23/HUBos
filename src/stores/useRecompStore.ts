@@ -392,8 +392,8 @@ export const useRecompStore = create<RecompState>()(
           ),
         })),
 
-      streak: { currentStreak: 1, bestStreak: 7 },
-      nutritionStreak: { currentStreak: 2, hasLoggedToday: false },
+      streak: { currentStreak: 0, bestStreak: 0 },
+      nutritionStreak: { currentStreak: 0, hasLoggedToday: false },
 
       updateStreaks: () => {
         const today = getTodayKey();

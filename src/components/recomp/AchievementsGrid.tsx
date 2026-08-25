@@ -32,10 +32,14 @@ const ALL_ACHIEVEMENT_DEFS: { id: string; title: string; description: string; ic
 export const AchievementsGrid: React.FC<AchievementsGridProps> = ({ achievements }) => {
   const [selected, setSelected] = useState<{ title: string; description: string; icon: string; unlocked: boolean } | null>(null);
 
-  const unlockedIds = achievements.map((a) => a.id);
-  // Guarantee the 5 unlocked from screenshot for authentic preview
-  const defaultUnlocked = ['hydration-3', 'first_meal', 'first_workout', 'star-chef', 'iron-giant'];
-  const effectiveUnlocked = Array.from(new Set([...unlockedIds, ...defaultUnlocked]));
+  // Unlocked achievements based on active store records with valid unlockedAt
+  const unlockedIds = Array.from(
+    new Set(
+      achievements
+        .filter((a) => a.unlockedAt)
+        .map((a) => a.id)
+    )
+  );
 
   return (
     <div className="mb-4">
@@ -45,7 +49,7 @@ export const AchievementsGrid: React.FC<AchievementsGridProps> = ({ achievements
           <span>🥇 Logros</span>
         </div>
         <div className="monai-list-header-total">
-          {effectiveUnlocked.length} / {ALL_ACHIEVEMENT_DEFS.length} desbloqueados
+          {unlockedIds.length} / {ALL_ACHIEVEMENT_DEFS.length} desbloqueados
         </div>
       </div>
 
@@ -53,7 +57,7 @@ export const AchievementsGrid: React.FC<AchievementsGridProps> = ({ achievements
       <div className="monai-achievements-card">
         <div className="monai-achievements-grid">
           {ALL_ACHIEVEMENT_DEFS.map((def) => {
-            const unlocked = effectiveUnlocked.includes(def.id);
+            const unlocked = unlockedIds.includes(def.id);
             return (
               <div
                 key={def.id}

@@ -113,11 +113,11 @@ Opciones válidas para mealType: "desayuno", "almuerzo", "cena", "snack", "pre-e
 }
 
 /**
- * Parses a Symmetry workout screenshot or text log.
+ * Parses a Symmetry workout screenshot or text log (supports multiple images).
  */
 export async function parseWorkoutWithGemini(
   apiKey: string,
-  input: { text?: string; imageBase64?: string; mimeType?: string }
+  input: { text?: string; imageBase64?: string; imagesBase64?: string[]; mimeType?: string }
 ): Promise<{
   title: string;
   muscleGroups: string[];
@@ -132,10 +132,10 @@ export async function parseWorkoutWithGemini(
   symmetryNotes: string;
 }> {
   const systemPrompt = `Eres un entrenador de fuerza y biomecánica experto en auditar capturas de la app "Symmetry" y rutinas de gimnasio.
-Analiza la rutina o imagen y devuelve ÚNICAMENTE un JSON válido con esta estructura:
+Analiza la rutina o todas las imágenes subidas y devuelve ÚNICAMENTE un JSON válido con esta estructura:
 {
-  "title": "Nombre de la sesión (ej. Empuje Hipertrofia / Torso)",
-  "muscleGroups": ["Pecho", "Hombros", "Tríceps"],
+  "title": "Nombre de la sesión (ej. Torso Hipertrofia / Pierna / Empuje)",
+  "muscleGroups": ["Pecho", "Hombros", "Tríceps", "Espalda"],
   "durationMinutes": 60,
   "exercises": [
     {
@@ -143,28 +143,31 @@ Analiza la rutina o imagen y devuelve ÚNICAMENTE un JSON válido con esta estru
       "targetMuscle": "Pecho",
       "estimated1RM": 100,
       "sets": [
-        { "setNumber": 1, "weightKg": 70, "reps": 10 },
-        { "setNumber": 2, "weightKg": 80, "reps": 8 }
+        { "setNumber": 1, "weightKg": 70, "reps": 10, "rpe": 8 },
+        { "setNumber": 2, "weightKg": 80, "reps": 8, "rpe": 9 }
       ]
     }
   ],
   "totalVolumeKg": 5400,
-  "symmetryNotes": "Comentario técnico sobre volumen y balance muscular"
+  "symmetryNotes": "Comentario técnico y motivador sobre volumen y balance muscular"
 }`;
 
   const contents: any[] = [{ text: systemPrompt }];
 
-  if (input.imageBase64) {
-    const rawMime = input.imageBase64.match(/^data:([^;]+);base64,/)?.[1];
-    const mimeType = rawMime || input.mimeType || 'image/jpeg';
-    const cleanData = input.imageBase64.replace(/^data:[^;]+;base64,/, '');
+  const allImages = input.imagesBase64 || (input.imageBase64 ? [input.imageBase64] : []);
+  for (const img of allImages) {
+    if (img) {
+      const rawMime = img.match(/^data:([^;]+);base64,/)?.[1];
+      const mimeType = rawMime || input.mimeType || 'image/jpeg';
+      const cleanData = img.replace(/^data:[^;]+;base64,/, '');
 
-    contents.push({
-      inlineData: {
-        data: cleanData,
-        mimeType: mimeType,
-      },
-    });
+      contents.push({
+        inlineData: {
+          data: cleanData,
+          mimeType: mimeType,
+        },
+      });
+    }
   }
 
   if (input.text) {
@@ -191,8 +194,7 @@ export async function parseSymmetryScreenshots(imagesBase64: string[], apiKey = 
     sets: { weightKg: number; reps: number; rpe?: number }[];
   }[];
 }> {
-  const input = { imageBase64: imagesBase64[0] };
-  const res = await parseWorkoutWithGemini(apiKey, input);
+  const res = await parseWorkoutWithGemini(apiKey, { imagesBase64 });
   return {
     routineTitle: res.title,
     totalVolumeKg: res.totalVolumeKg,

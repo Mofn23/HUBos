@@ -7,6 +7,7 @@ import { es } from 'date-fns/locale';
 import { IconPlus, IconTrash, IconCamera } from '../common/Icons';
 import { MealCaptureModal } from './MealCaptureModal';
 import { DateSelectionModal } from './DateSelectionModal';
+import { MealDetailModal } from './MealDetailModal';
 
 export function getMealCategory(meal: MealItem): 'desayuno' | 'almuerzo' | 'cena' | 'snack' {
   if (meal.category && ['desayuno', 'almuerzo', 'cena', 'snack'].includes(meal.category)) {
@@ -48,6 +49,7 @@ export const MealsSection: React.FC = () => {
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [activeCategoryForManual, setActiveCategoryForManual] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('desayuno');
   const [selectedPhotoMeal, setSelectedPhotoMeal] = useState<MealItem | null>(null);
+  const [selectedDetailMeal, setSelectedDetailMeal] = useState<MealItem | null>(null);
 
   // Form for manual entry
   const [manualName, setManualName] = useState('');
@@ -205,7 +207,8 @@ export const MealsSection: React.FC = () => {
                   {categoryMeals.map((meal) => (
                     <div
                       key={meal.id}
-                      className="p-3.5 rounded-[20px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between shadow-sm"
+                      onClick={() => setSelectedDetailMeal(meal)}
+                      className="p-3.5 rounded-[20px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between shadow-sm cursor-pointer hover:bg-[#242426] active:scale-[0.99] transition-all group"
                     >
                       <div className="flex items-center gap-3 overflow-hidden">
                         {meal.imageBase64 || meal.imageUrl ? (
@@ -222,7 +225,7 @@ export const MealsSection: React.FC = () => {
                           </div>
                         )}
                         <div className="overflow-hidden">
-                          <h4 className="text-xs font-extrabold text-[#F5F5F7] truncate">{meal.name}</h4>
+                          <h4 className="text-xs font-extrabold text-[#F5F5F7] truncate group-hover:text-[#34C759] transition-colors">{meal.name}</h4>
                           <div className="flex items-center gap-1 mt-1">
                             <span className="tag-pill tag-pill-green text-[10px] py-0.5">{meal.protein}g P</span>
                             <span className="tag-pill text-[10px] py-0.5">{meal.carbs}g C</span>
@@ -236,7 +239,11 @@ export const MealsSection: React.FC = () => {
                           {meal.calories} kcal
                         </span>
                         <button
-                          onClick={() => deleteMeal(meal.id)}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteMeal(meal.id);
+                          }}
                           className="text-[#8E8E93] hover:text-[#E8505B] p-1"
                         >
                           <IconTrash className="w-3.5 h-3.5" />
@@ -451,6 +458,17 @@ export const MealsSection: React.FC = () => {
       <DateSelectionModal
         isOpen={isDateModalOpen}
         onClose={() => setIsDateModalOpen(false)}
+      />
+
+      {/* Meal Detail Modal */}
+      <MealDetailModal
+        meal={selectedDetailMeal}
+        isOpen={!!selectedDetailMeal}
+        onClose={() => setSelectedDetailMeal(null)}
+        onDelete={(id) => {
+          deleteMeal(id);
+          setSelectedDetailMeal(null);
+        }}
       />
     </div>
   );

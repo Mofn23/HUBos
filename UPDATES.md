@@ -4,6 +4,31 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🚀 [v1.5.0] - 2026-08-25 (Actualización Mayor: Rutina Dinámica, Modal de Comidas, Motor de Rachas & Multi-Upload Symmetry)
+
+### 🌟 Nuevas Funcionalidades & Lógica de Negocio
+- **Sincronización Automática de Fecha**:
+  - Al abrir la app o regresar a primer plano, se auto-selecciona el día actual en curso (`getTodayKey()`), evitando arrastrar información de días anteriores.
+- **Rutina Dinámica según el Día de la Semana (`src/lib/trainingSchedule.ts`)**:
+  - La tarjeta de entrenamiento en el dashboard se adapta automáticamente al split semanal del usuario:
+    - **Lunes & Jueves**: `Torso Hipertrofia` (Pecho, Espalda & Brazos)
+    - **Martes & Viernes**: `Pierna Hipertrofia` (Cuádriceps & Isquios)
+    - **Miércoles, Sábado & Domingo**: `Descanso Activo` (Recuperación)
+- **Modal Detallado de Comidas (`MealDetailModal.tsx`)**:
+  - Al tocar cualquier comida en la pantalla principal o en la sección de comidas, se abre un modal emergente MonAI con la foto ampliada, calorías, desglose exacto de macronutrientes (Proteína, Carbos, Grasas), notas y opción de eliminación.
+- **Motor Exacto de Rachas (`src/lib/streak.ts`)**:
+  - **Racha de Gimnasio**: Suma +1 día por cada entrenamiento de Symmetry subido. Tolerancia de hasta 3 días de descanso permitidos sin perder la racha; se reinicia a 0 únicamente si pasan > 3 días sin entrenar.
+  - **Racha de Nutrición**: Requiere registrar al menos 2 comidas en el día para mantener la racha activa; si no se cumple, la racha se reinicia a 0.
+  - Sincronización de badges en TopBar y métricas principales con valores reales y reactivos (cero números falsos por defecto).
+- **Subida Múltiple de Capturas de Symmetry (Hasta 4 imágenes)**:
+  - Soporte para adjuntar hasta 4 capturas de pantalla de la rutina en `TrainingSection.tsx`, comprimidas con Canvas y analizadas en una sola consulta multimodal con Gemini IA.
+- **Ocultamiento Automático de Barra de Navegación**:
+  - Al abrir el detalle de cualquier sesión de entrenamiento, la píldora inferior se oculta inmediatamente.
+- **Corrección en Contador de Logros**:
+  - Sincronización exacta del texto del encabezado con la cantidad real de logros desbloqueados.
+
+---
+
 ## 🛠️ [v1.4.4] - 2026-08-13 (Rediseño MonAI del HUB Principal & Eliminación de Barra Flotante Global)
 
 ### 🌟 Unificación Visual del HUB Launcher

@@ -61,18 +61,18 @@ export const RecompHeader: React.FC<RecompHeaderProps> = ({ onOpenSettings }) =>
             {/* Workout Streak Pill */}
             <div className="monai-streak-pill" title="Racha de Entrenamiento">
               <span>💪</span>
-              <span>{streak.currentStreak || 1}d</span>
+              <span>{streak?.currentStreak ?? 0}d</span>
             </div>
 
             {/* Nutrition Streak Pill */}
             <div
               className="monai-streak-pill"
               style={{
-                background: nutritionStreak.hasLoggedToday
+                background: nutritionStreak?.hasLoggedToday
                   ? 'rgba(52, 199, 89, 0.16)'
                   : 'rgba(255, 159, 67, 0.16)',
                 border: `1px solid ${
-                  nutritionStreak.hasLoggedToday
+                  nutritionStreak?.hasLoggedToday
                     ? 'rgba(52, 199, 89, 0.4)'
                     : 'rgba(255, 159, 67, 0.3)'
                 }`,
@@ -80,8 +80,8 @@ export const RecompHeader: React.FC<RecompHeaderProps> = ({ onOpenSettings }) =>
               title="Racha de Nutrición"
             >
               <span>🥑</span>
-              <span style={{ color: nutritionStreak.hasLoggedToday ? '#34C759' : '#FF9F43' }}>
-                {nutritionStreak.currentStreak || 2}d
+              <span style={{ color: nutritionStreak?.hasLoggedToday ? '#34C759' : '#FF9F43' }}>
+                {nutritionStreak?.currentStreak ?? 0}d
               </span>
             </div>
 
