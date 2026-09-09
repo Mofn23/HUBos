@@ -2,6 +2,14 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🐛 [v1.5.2] - 2026-09-08 (Fix Definitivo Modelos Gemini: gemini-3.5-flash-lite Activo & Verificado)
+
+### 🔴 Corrección de Modelos de IA
+- **Configuración a Modelos Activos Verificados en API**:
+  - Se eliminaron modelos retirados (`gemini-1.0-pro`, `gemini-1.5-flash`, etc.) que causaban error 404 al consultar la API de Google en `v1beta`.
+  - Se estableció el modelo principal solicitado: **`gemini-3.5-flash-lite`**, con pipeline de fallback probado en vivo: `gemini-3.1-flash-lite`, `gemini-3.6-flash`, y `gemini-3.8-flash`.
+  - Validación directa ejecutada con éxito tanto para respuesta de texto como para visión computacional (`inlineData`).
+
 ---
 
 ## 🐛 [v1.5.1] - 2026-09-08 (Corrección Crítica: Crash al Registrar Comida & Rendimiento de IA)
