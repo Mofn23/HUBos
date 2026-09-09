@@ -4,6 +4,32 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🐛 [v1.5.1] - 2026-09-08 (Corrección Crítica: Crash al Registrar Comida & Rendimiento de IA)
+
+### 🔴 Correcciones Críticas
+- **Fix Crash al Registrar Comida con Foto**:
+  - La app crasheaba (~1 minuto de espera y luego reinicio forzado) porque las imágenes comprimidas (~150-400KB de base64) se persistían íntegras en `localStorage` a través de Zustand. Con pocas comidas, se excedía la cuota de ~5-10MB de iOS WebKit (`QuotaExceededError`).
+  - **Solución**: Se implementó `createThumbnail()` en `src/lib/image.ts` que genera miniaturas de ~3-8KB (120px, calidad 0.4) para la persistencia local. La imagen completa se usa únicamente en memoria para enviar a Gemini, y nunca se guarda en `localStorage`.
+- **Protección contra QuotaExceededError**:
+  - Se envolvió la interfaz `localStorage` del store Zustand (`useRecompStore`) con un wrapper seguro que captura errores de cuota silenciosamente en lugar de crashear toda la app.
+
+### ⚡ Mejoras de Rendimiento
+- **Timeout de 25 segundos por modelo de Gemini**:
+  - Cada intento de modelo ahora tiene un timeout de 25 segundos. Si un modelo cuelga, pasa automáticamente al siguiente sin dejar la app bloqueada indefinidamente.
+- **Compresión más agresiva de imágenes para Gemini API**:
+  - Reducción de dimensión máxima de 800px a 640px y calidad de 0.7 a 0.5, generando payloads más ligeros (~60-120KB) que se envían más rápido a la API.
+- **Modelos de IA actualizados** (`src/constants/ai.ts`):
+  - Modelo principal cambiado a `gemini-2.5-flash` (el más rápido y actual).
+  - Eliminados modelos inexistentes/deprecados (`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-2.0-flash-lite-preview-02-05`) que causaban intentos fallidos extra y latencia innecesaria.
+- **Bail-out inmediato en errores de cuota**:
+  - Si Gemini devuelve `RESOURCE_EXHAUSTED` o error de cuota, la app ahora muestra el error inmediatamente sin intentar los demás modelos de fallback.
+
+### 🧹 Correcciones Menores
+- Fix en cleanup de `useEffect` en `MealCaptureModal` que podía ocultar la barra de navegación prematuramente.
+- Reset del input de archivo después de cada selección de foto para permitir re-selección del mismo archivo.
+
+---
+
 ## 🚀 [v1.5.0] - 2026-08-25 (Actualización Mayor: Rutina Dinámica, Modal de Comidas, Motor de Rachas & Multi-Upload Symmetry)
 
 ### 🌟 Nuevas Funcionalidades & Lógica de Negocio

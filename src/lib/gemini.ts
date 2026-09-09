@@ -3,8 +3,28 @@ import { AI_CONFIG, GEMINI_MODEL_CANDIDATES } from '@/constants/ai';
 
 export { AI_CONFIG, GEMINI_MODEL_CANDIDATES };
 
+/** Wraps a promise with a timeout. */
+function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`Timeout: ${label} tardó más de ${Math.round(ms / 1000)}s`));
+    }, ms);
+
+    promise
+      .then((val) => {
+        clearTimeout(timer);
+        resolve(val);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
+
 /**
  * Executes generateContent trying candidate models in order if 404 or model error occurs.
+ * Each model attempt has a 25-second timeout to prevent hanging.
  */
 export async function generateContentWithFallback(
   apiKey: string,
@@ -28,16 +48,24 @@ export async function generateContentWithFallback(
   for (const modelName of modelsToTry) {
     try {
       const model = genAI.getGenerativeModel({ model: modelName });
-      const result = await model.generateContent(contents);
+      const result = await withTimeout(
+        model.generateContent(contents),
+        25000,
+        modelName
+      );
       return result;
     } catch (err: any) {
       const errMsg = err?.message || String(err);
       console.warn(`[Gemini AI] Model ${modelName} failed:`, errMsg);
       lastError = err;
 
-      // If it's an invalid API key, throw immediate user alert
+      // Immediate bail-out errors (don't try other models)
       if (errMsg.includes('API_KEY_INVALID') || errMsg.includes('API key not valid')) {
         throw new Error('Tu API Key de Gemini no es válida. Revisa la configuración en tu Perfil.');
+      }
+
+      if (errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('quota')) {
+        throw new Error('Se ha excedido la cuota de la API de Gemini. Intenta de nuevo en unos minutos.');
       }
     }
   }

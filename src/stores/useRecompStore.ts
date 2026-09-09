@@ -444,7 +444,31 @@ export const useRecompStore = create<RecompState>()(
     }),
     {
       name: 'hubos_recomp_v1',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => ({
+        getItem: (name: string) => {
+          try {
+            return localStorage.getItem(name);
+          } catch (e) {
+            console.warn('[Storage] Error reading localStorage:', e);
+            return null;
+          }
+        },
+        setItem: (name: string, value: string) => {
+          try {
+            localStorage.setItem(name, value);
+          } catch (e: any) {
+            console.error('[Storage] QuotaExceededError or write failure:', e?.message || e);
+            // Don't crash — silently fail the persist so the app remains functional
+          }
+        },
+        removeItem: (name: string) => {
+          try {
+            localStorage.removeItem(name);
+          } catch (e) {
+            console.warn('[Storage] Error removing from localStorage:', e);
+          }
+        },
+      })),
     }
   )
 );

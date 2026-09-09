@@ -5,7 +5,7 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { parseMealWithGemini } from '@/lib/gemini';
 import { getTodayKey } from '@/lib/date';
-import { compressImage } from '@/lib/image';
+import { compressImage, createThumbnail } from '@/lib/image';
 import { IconSparkles } from '../common/Icons';
 
 interface MealCaptureModalProps {
@@ -18,7 +18,9 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   const { addMeal, selectedDate, setIsModalOpen } = useRecompStore();
 
   const [category, setCategory] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('almuerzo');
-  const [imageBase64, setImageBase64] = useState<string | null>(null);
+  // Full compressed image for Gemini API call (kept in memory only, never persisted)
+  const [imageForApi, setImageForApi] = useState<string | null>(null);
+  // Small preview for display in the modal UI
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [description, setDescription] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +32,9 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
       setIsModalOpen(true);
     }
     return () => {
-      setIsModalOpen(false);
+      if (!isOpen) {
+        setIsModalOpen(false);
+      }
     };
   }, [isOpen, setIsModalOpen]);
 
@@ -41,18 +45,23 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     if (!file) return;
 
     try {
-      // Compress to ~150KB to avoid localStorage quota crash & Gemini payload limits
-      const compressed = await compressImage(file, 800, 0.7);
-      setImageBase64(compressed);
+      // Compress for Gemini API (~100-200KB, enough for nutritional analysis)
+      const compressed = await compressImage(file, 640, 0.5);
+      setImageForApi(compressed);
       setImagePreview(compressed);
     } catch (err: any) {
       console.error('Error compressing image:', err);
       showToast('No se pudo procesar la imagen seleccionada.');
     }
+
+    // Reset file input so same file can be re-selected
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleAnalyze = async () => {
-    if (!description.trim() && !imageBase64) {
+    if (!description.trim() && !imageForApi) {
       showToast('Toma una foto o escribe una descripción de tu comida.');
       return;
     }
@@ -61,8 +70,20 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     try {
       const result = await parseMealWithGemini(geminiApiKey, {
         text: description.trim() || undefined,
-        imageBase64: imageBase64 || undefined,
+        imageBase64: imageForApi || undefined,
       });
+
+      // Create a tiny thumbnail (~3-8KB) for localStorage persistence
+      // The full image is NOT saved to avoid QuotaExceededError crashes
+      let thumbnail: string | undefined;
+      if (imageForApi) {
+        try {
+          thumbnail = await createThumbnail(imageForApi, 120, 0.4);
+        } catch {
+          // If thumbnail creation fails, just save without image
+          thumbnail = undefined;
+        }
+      }
 
       const targetDate = selectedDate || getTodayKey();
       addMeal({
@@ -74,8 +95,9 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         date: targetDate,
         category,
         notes: result.notes || '',
-        imageBase64: imageBase64 || undefined,
-        imageUrl: imageBase64 || undefined,
+        // Save ONLY the tiny thumbnail to localStorage (NOT the full image)
+        imageBase64: thumbnail,
+        imageUrl: undefined,
         isAiGenerated: true,
       });
 
@@ -91,10 +113,18 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   };
 
   const resetForm = () => {
-    setImageBase64(null);
+    setImageForApi(null);
     setImagePreview(null);
     setDescription('');
     setCategory('almuerzo');
+  };
+
+  const handleClose = () => {
+    if (!isLoading) {
+      resetForm();
+      setIsModalOpen(false);
+      onClose();
+    }
   };
 
   const categories: { key: 'desayuno' | 'almuerzo' | 'cena' | 'snack'; label: string; icon: string }[] = [
@@ -109,12 +139,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/90 backdrop-blur-md"
-        onClick={() => {
-          if (!isLoading) {
-            setIsModalOpen(false);
-            onClose();
-          }
-        }}
+        onClick={handleClose}
       />
 
       {/* Bottom Sheet Modal */}
@@ -126,12 +151,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-black text-[#F5F5F7]">Escaneo IA</h2>
           <button
-            onClick={() => {
-              if (!isLoading) {
-                setIsModalOpen(false);
-                onClose();
-              }
-            }}
+            onClick={handleClose}
             className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
           >
             <span className="text-base font-bold">✕</span>
@@ -181,7 +201,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setImageBase64(null);
+                  setImageForApi(null);
                   setImagePreview(null);
                 }}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/75 backdrop-blur-sm text-white flex items-center justify-center text-xs"
@@ -220,12 +240,12 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           />
         </div>
 
-        {/* Action Button - Clearly Elevated with margin */}
+        {/* Action Button */}
         <div className="pt-2 pb-8">
           <button
             type="button"
             onClick={handleAnalyze}
-            disabled={isLoading || (!description.trim() && !imageBase64)}
+            disabled={isLoading || (!description.trim() && !imageForApi)}
             className="w-full py-4.5 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all disabled:opacity-40"
           >
             {isLoading ? (
