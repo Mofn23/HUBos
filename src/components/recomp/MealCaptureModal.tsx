@@ -6,6 +6,7 @@ import { useRecompStore } from '@/stores/useRecompStore';
 import { parseMealWithGemini } from '@/lib/gemini';
 import { getTodayKey } from '@/lib/date';
 import { compressImage, createThumbnail } from '@/lib/image';
+import { saveMealImage } from '@/lib/imageStorage';
 import { IconSparkles } from '../common/Icons';
 
 interface MealCaptureModalProps {
@@ -15,14 +16,15 @@ interface MealCaptureModalProps {
 
 export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onClose }) => {
   const { geminiApiKey, showToast } = useHubStore();
-  const { addMeal, selectedDate, setIsModalOpen } = useRecompStore();
+  const { addMeal, addFavoriteMeal, selectedDate, setIsModalOpen } = useRecompStore();
 
   const [category, setCategory] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('almuerzo');
-  // Full compressed image for Gemini API call (kept in memory only, never persisted)
+  // Full HD compressed image for Gemini API and IndexedDB storage
   const [imageForApi, setImageForApi] = useState<string | null>(null);
-  // Small preview for display in the modal UI
+  // Preview for display in the modal UI
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [description, setDescription] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -45,8 +47,8 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     if (!file) return;
 
     try {
-      // Compress for Gemini API (~100-200KB, enough for nutritional analysis)
-      const compressed = await compressImage(file, 640, 0.5);
+      // Compress to high-definition (1200px, 0.8 quality) for crystal-clear clarity & accurate IA macro calculation
+      const compressed = await compressImage(file, 1200, 0.8);
       setImageForApi(compressed);
       setImagePreview(compressed);
     } catch (err: any) {
@@ -73,35 +75,65 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         imageBase64: imageForApi || undefined,
       });
 
-      // Create a tiny thumbnail (~3-8KB) for localStorage persistence
-      // The full image is NOT saved to avoid QuotaExceededError crashes
+      // Generate a stable ID for the meal
+      const mealId = `meal-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
+      // Save high-resolution image to IndexedDB (unlimited iPhone storage quota)
+      if (imageForApi) {
+        await saveMealImage(mealId, imageForApi);
+      }
+
+      // Generate a sharp 420px preview thumbnail for fast list display in localStorage
       let thumbnail: string | undefined;
       if (imageForApi) {
         try {
-          thumbnail = await createThumbnail(imageForApi, 120, 0.4);
+          thumbnail = await createThumbnail(imageForApi, 420, 0.65);
         } catch {
-          // If thumbnail creation fails, just save without image
           thumbnail = undefined;
         }
       }
 
       const targetDate = selectedDate || getTodayKey();
+      const mealName = result.name || 'Comida Registrada';
+      const calories = Number(result.calories) || 0;
+      const protein = Number(result.protein) || 0;
+      const carbs = Number(result.carbs) || 0;
+      const fat = Number(result.fat) || 0;
+
       addMeal({
-        name: result.name || 'Comida Registrada',
-        calories: Number(result.calories) || 0,
-        protein: Number(result.protein) || 0,
-        carbs: Number(result.carbs) || 0,
-        fat: Number(result.fat) || 0,
+        id: mealId,
+        name: mealName,
+        calories,
+        protein,
+        carbs,
+        fat,
         date: targetDate,
         category,
         notes: result.notes || '',
-        // Save ONLY the tiny thumbnail to localStorage (NOT the full image)
         imageBase64: thumbnail,
         imageUrl: undefined,
         isAiGenerated: true,
       });
 
-      showToast(`✅ ${result.name} (${result.calories} kcal) registrada.`);
+      // If user toggled favorite, save to favoriteMeals
+      if (isFavorite) {
+        const categoryEmojis: Record<string, string> = {
+          desayuno: '🥐',
+          almuerzo: '🍲',
+          cena: '🍽️',
+          snack: '🍎',
+        };
+        addFavoriteMeal({
+          name: mealName,
+          calories,
+          protein,
+          carbs,
+          fat,
+          emoji: categoryEmojis[category] || '🍲',
+        });
+      }
+
+      showToast(`✅ ${mealName} (${calories} kcal) registrada${isFavorite ? ' y agregada a Frecuentes' : ''}.`);
       resetForm();
       onClose();
     } catch (err: any) {
@@ -117,6 +149,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     setImagePreview(null);
     setDescription('');
     setCategory('almuerzo');
+    setIsFavorite(false);
   };
 
   const handleClose = () => {
@@ -144,7 +177,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
       {/* Bottom Sheet Modal */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-20 z-20 animate-sheet-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -217,6 +250,9 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
               <span className="text-sm font-extrabold text-[#F5F5F7]">
                 Toca para tomar foto de tu plato
               </span>
+              <span className="text-[11px] font-semibold text-[#8E8E93]">
+                Alta resolución HD para cálculo exacto de macros
+              </span>
             </div>
           )}
 
@@ -240,8 +276,33 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           />
         </div>
 
+        {/* Favorite Toggle Option */}
+        <button
+          type="button"
+          onClick={() => setIsFavorite(!isFavorite)}
+          className={`w-full py-3 px-4 rounded-2xl flex items-center justify-between border transition-all active:scale-[0.99] ${
+            isFavorite
+              ? 'bg-[#FFD60A]/10 border-[#FFD60A]/40 text-[#FFD60A]'
+              : 'bg-[#1C1C1E] border-white/5 text-[#8E8E93] hover:text-[#F5F5F7]'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 text-xs font-black">
+            <span>⭐</span>
+            <span>Guardar en Comidas Frecuentes</span>
+          </div>
+          <div
+            className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-black transition-all ${
+              isFavorite
+                ? 'bg-[#FFD60A] text-black shadow-[0_0_10px_rgba(255,214,10,0.5)]'
+                : 'border border-white/20'
+            }`}
+          >
+            {isFavorite ? '✓' : ''}
+          </div>
+        </button>
+
         {/* Action Button */}
-        <div className="pt-2 pb-8">
+        <div className="pt-1 pb-8">
           <button
             type="button"
             onClick={handleAnalyze}
@@ -251,7 +312,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
             {isLoading ? (
               <>
                 <IconSparkles className="w-5 h-5 animate-spin" />
-                <span>Analizando con Gemini...</span>
+                <span>Analizando con Gemini 3.5...</span>
               </>
             ) : (
               <>

@@ -1,13 +1,14 @@
 /**
- * Compresses an image file to a lightweight base64 string.
- * Prevents localStorage QuotaExceededError crashes and Gemini payload limits.
+ * Compresses an image file to a high-definition, clear base64 string.
+ * Retains high visual detail so the user can inspect ingredients and Gemini AI
+ * can accurately detect portions, textures, and food items.
  *
  * @param file - The image File to compress.
- * @param maxWidth - Max dimension in pixels (default 800).
- * @param quality - JPEG quality 0-1 (default 0.6).
- * @returns A data:image/jpeg;base64,... string.
+ * @param maxWidth - Max dimension in pixels (default 1200 for crisp HD).
+ * @param quality - JPEG quality 0-1 (default 0.80 for high fidelity).
+ * @returns A data:image/jpeg;base64,... string (~150-280KB).
  */
-export function compressImage(file: File, maxWidth = 800, quality = 0.6): Promise<string> {
+export function compressImage(file: File, maxWidth = 1200, quality = 0.8): Promise<string> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
     const img = new Image();
@@ -59,15 +60,15 @@ export function compressImage(file: File, maxWidth = 800, quality = 0.6): Promis
 }
 
 /**
- * Creates a tiny thumbnail from a base64 data URL for localStorage persistence.
- * Full-resolution images must NOT be saved to localStorage to avoid QuotaExceededError.
+ * Creates a clear, optimized preview thumbnail from a base64 data URL.
+ * Used for fast rendering in dashboard meal lists without blurring or pixelation.
  *
  * @param base64DataUrl - A full data:image/...;base64,... string.
- * @param thumbSize - Max dimension for the thumbnail (default 120px).
- * @param quality - JPEG quality 0-1 (default 0.4).
- * @returns A small data:image/jpeg;base64,... thumbnail string (~3-8KB).
+ * @param thumbSize - Max dimension for the thumbnail (default 420px for sharp previews).
+ * @param quality - JPEG quality 0-1 (default 0.65).
+ * @returns A crisp data:image/jpeg;base64,... preview string (~25-35KB).
  */
-export function createThumbnail(base64DataUrl: string, thumbSize = 120, quality = 0.4): Promise<string> {
+export function createThumbnail(base64DataUrl: string, thumbSize = 420, quality = 0.65): Promise<string> {
   return new Promise((resolve, reject) => {
     const img = new Image();
 

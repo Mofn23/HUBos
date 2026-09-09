@@ -5,15 +5,14 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { getTodayKey, getYesterdayKey } from '@/lib/date';
 import { format, parseISO } from 'date-fns';
-import { IconSettings } from '../common/Icons';
 import { DateSelectionModal } from './DateSelectionModal';
 
 interface RecompHeaderProps {
-  onOpenSettings: () => void;
+  onOpenSettings?: () => void;
 }
 
-export const RecompHeader: React.FC<RecompHeaderProps> = ({ onOpenSettings }) => {
-  const { userName } = useHubStore();
+export const RecompHeader: React.FC<RecompHeaderProps> = () => {
+  const { userName, setCurrentApp } = useHubStore();
   const { selectedDate, streak, nutritionStreak } = useRecompStore();
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
 
@@ -43,10 +42,10 @@ export const RecompHeader: React.FC<RecompHeaderProps> = ({ onOpenSettings }) =>
     <>
       <header className="mb-4">
         {/* MonAI TopBar */}
-        <div className="monai-topbar">
+        <div className="monai-topbar flex items-center justify-between gap-2">
           {/* Date Selector Pill */}
           <button
-            className="monai-topbar-pill relative"
+            className="monai-topbar-pill relative shrink-0"
             onClick={() => setIsDateModalOpen(true)}
             aria-label="Seleccionar fecha"
           >
@@ -57,41 +56,34 @@ export const RecompHeader: React.FC<RecompHeaderProps> = ({ onOpenSettings }) =>
             )}
           </button>
 
-          <div className="monai-topbar-actions">
-            {/* Workout Streak Pill */}
-            <div className="monai-streak-pill" title="Racha de Entrenamiento">
-              <span>💪</span>
-              <span>{streak?.currentStreak ?? 0}d</span>
-            </div>
-
-            {/* Nutrition Streak Pill */}
+          <div className="flex items-center gap-2">
+            {/* Unified Streaks Pill (Workout + Nutrition) */}
             <div
-              className="monai-streak-pill"
-              style={{
-                background: nutritionStreak?.hasLoggedToday
-                  ? 'rgba(52, 199, 89, 0.16)'
-                  : 'rgba(255, 159, 67, 0.16)',
-                border: `1px solid ${
-                  nutritionStreak?.hasLoggedToday
-                    ? 'rgba(52, 199, 89, 0.4)'
-                    : 'rgba(255, 159, 67, 0.3)'
-                }`,
-              }}
-              title="Racha de Nutrición"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1C1C1E] border border-white/10 text-xs font-black shadow-sm"
+              title="Rachas de Entrenamiento y Nutrición"
             >
-              <span>🥑</span>
-              <span style={{ color: nutritionStreak?.hasLoggedToday ? '#34C759' : '#FF9F43' }}>
-                {nutritionStreak?.currentStreak ?? 0}d
-              </span>
+              <div className="flex items-center gap-1">
+                <span>💪</span>
+                <span className="text-[#F5F5F7]">{streak?.currentStreak ?? 0}d</span>
+              </div>
+              <span className="text-white/20">|</span>
+              <div className="flex items-center gap-1">
+                <span>🥑</span>
+                <span style={{ color: nutritionStreak?.hasLoggedToday ? '#34C759' : '#FF9F43' }}>
+                  {nutritionStreak?.currentStreak ?? 0}d
+                </span>
+              </div>
             </div>
 
-            {/* Settings Button */}
+            {/* Return to HUB Button */}
             <button
-              className="monai-topbar-btn"
-              onClick={onOpenSettings}
-              aria-label="Ajustes"
+              onClick={() => setCurrentApp('hub')}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1C1C1E] hover:bg-[#252528] active:scale-95 border border-white/10 transition-all text-xs font-black text-[#F5F5F7]"
+              title="Regresar al HUB principal"
+              aria-label="Regresar al HUB"
             >
-              <IconSettings className="w-5 h-5 text-[#F5F5F7]" />
+              <span className="text-sm">🏠</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93]">HUB</span>
             </button>
           </div>
         </div>

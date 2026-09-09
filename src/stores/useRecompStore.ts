@@ -2,6 +2,9 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { calculateWorkoutStreak, calculateNutritionStreak } from '@/lib/streak';
 import { getTodayKey } from '@/lib/date';
+import { evaluateAchievements } from '@/lib/achievements';
+import { audioEngine } from '@/lib/audio';
+import { deleteMealImage } from '@/lib/imageStorage';
 
 export type RecompTab = 'dashboard' | 'meals' | 'training' | 'progress' | 'coach' | 'profile';
 
@@ -133,7 +136,7 @@ interface RecompState {
 
   // Meals
   meals: MealItem[];
-  addMeal: (meal: Omit<MealItem, 'id' | 'timestamp'>) => void;
+  addMeal: (meal: Omit<MealItem, 'id' | 'timestamp'> & { id?: string }) => void;
   updateMeal: (id: string, meal: Partial<MealItem>) => void;
   deleteMeal: (id: string) => void;
   getMealsByDate: (date: string) => MealItem[];
@@ -174,6 +177,9 @@ interface RecompState {
   // Achievements
   achievements: AchievementItem[];
   unlockAchievement: (id: string) => void;
+  recentlyUnlockedAchievement: AchievementItem | null;
+  clearRecentlyUnlockedAchievement: () => void;
+  checkAchievements: () => void;
 
   // Streaks
   streak: { currentStreak: number; bestStreak: number };
@@ -205,11 +211,20 @@ const DEFAULT_FAVORITES: FavoriteMealItem[] = [
 ];
 
 const DEFAULT_ACHIEVEMENTS: AchievementItem[] = [
-  { id: 'hydration-3', title: '3 Días Hidratado', description: '3 días seguidos cumpliendo meta de agua', icon: '💧', category: 'hydration', unlockedAt: '2026-08-10' },
-  { id: 'first_meal', title: 'Primera Comida', description: 'Registrar tu primera comida con IA', icon: '🍽️', category: 'nutrition', unlockedAt: '2026-08-10' },
-  { id: 'first_workout', title: 'Primer Entrenamiento', description: 'Completar tu primer entrenamiento', icon: '💪', category: 'training', unlockedAt: '2026-08-10' },
-  { id: 'star-chef', title: 'Cocinero Estrella', description: '10 comidas registradas con fotos para la IA', icon: '👨‍🍳', category: 'nutrition', unlockedAt: '2026-08-11' },
-  { id: 'iron-giant', title: 'Gigante de Hierro', description: 'Levantar más de 5,000kg de volumen en una sola sesión', icon: '🌋', category: 'training', unlockedAt: '2026-08-11' },
+  { id: 'first_workout', title: 'Primer Entrenamiento', description: '¡Completaste tu primer entrenamiento!', icon: '💪', category: 'training' },
+  { id: 'first_meal', title: 'Primera Comida', description: '¡Registraste tu primera comida con IA!', icon: '🍽️', category: 'nutrition' },
+  { id: 'iron-giant', title: 'Gigante de Hierro', description: 'Levantaste más de 5,000kg de volumen en una sesión', icon: '🌋', category: 'training' },
+  { id: 'star-chef', title: 'Cocinero Estrella', description: '10 comidas registradas con fotos para la IA', icon: '👨‍🍳', category: 'nutrition' },
+  { id: 'hydration-3', title: '3 Días Hidratado', description: '3 días cumpliendo tu meta de agua', icon: '💧', category: 'hydration' },
+  { id: 'hydration-7', title: 'Semana Hidratada', description: '7 días cumpliendo tu meta de agua', icon: '🌊', category: 'hydration' },
+  { id: 'hydration-10', title: '10 Días Hidratado', description: '10 días de hidratación impecable', icon: '🧊', category: 'hydration' },
+  { id: 'aquatic', title: 'Acuático', description: 'Tomaste 12 vasos de agua en un día', icon: '🐳', category: 'hydration' },
+  { id: 'streak-7', title: 'Semana Perfecta', description: 'Alcanzaste una racha de 7 días', icon: '🔥', category: 'streak' },
+  { id: 'streak-14', title: '2 Semanas Imparable', description: 'Alcanzaste una racha de 14 días', icon: '⚡', category: 'streak' },
+  { id: 'streak-30', title: 'Máquina 30 Días', description: '30 días consecutivos de constancia', icon: '🏆', category: 'streak' },
+  { id: 'protein-7', title: 'Fuerza Proteica', description: 'Cumpliste tu meta de proteína', icon: '🥩', category: 'nutrition' },
+  { id: 'no-excuses', title: 'Cero Excusas', description: '5 entrenamientos completados', icon: '🎯', category: 'training' },
+  { id: 'steel-constancy', title: 'Constancia de Acero', description: '10 entrenamientos registrados en tu bitácora', icon: '🛡️', category: 'training' },
 ];
 
 export const useRecompStore = create<RecompState>()(
@@ -245,14 +260,16 @@ export const useRecompStore = create<RecompState>()(
       meals: [],
 
       addMeal: (meal) => {
+        const mealId = (meal as any).id || `meal-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
         const newMeal: MealItem = {
           ...meal,
-          id: `meal-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          id: mealId,
           timestamp: new Date().toISOString(),
           category: meal.category || 'almuerzo',
         };
         set((state) => ({ meals: [newMeal, ...state.meals] }));
         get().updateStreaks();
+        get().checkAchievements();
       },
 
       updateMeal: (id, updated) => {
@@ -263,6 +280,7 @@ export const useRecompStore = create<RecompState>()(
       },
 
       deleteMeal: (id) => {
+        deleteMealImage(id);
         set((state) => ({
           meals: state.meals.filter((m) => m.id !== id),
         }));
@@ -294,6 +312,7 @@ export const useRecompStore = create<RecompState>()(
           const current = state.waterLogs[key] || 0;
           return { waterLogs: { ...state.waterLogs, [key]: Math.min(current + 1, 20) } };
         });
+        get().checkAchievements();
       },
 
       removeWaterGlass: (dateStr) => {
@@ -311,6 +330,7 @@ export const useRecompStore = create<RecompState>()(
           trainingLogs: [{ ...log, id: `train-${Date.now()}` }, ...state.trainingLogs],
         }));
         get().updateStreaks();
+        get().checkAchievements();
       },
 
       deleteTrainingLog: (id) => {
@@ -385,12 +405,42 @@ export const useRecompStore = create<RecompState>()(
         })),
 
       achievements: DEFAULT_ACHIEVEMENTS,
-      unlockAchievement: (id) =>
+      recentlyUnlockedAchievement: null,
+      clearRecentlyUnlockedAchievement: () => set({ recentlyUnlockedAchievement: null }),
+
+      unlockAchievement: (id) => {
         set((state) => ({
           achievements: state.achievements.map((a) =>
             a.id === id && !a.unlockedAt ? { ...a, unlockedAt: new Date().toISOString() } : a
           ),
-        })),
+        }));
+        const target = get().achievements.find((a) => a.id === id);
+        if (target) {
+          set({ recentlyUnlockedAchievement: target });
+          audioEngine.playAchievementChime();
+        }
+      },
+
+      checkAchievements: () => {
+        const state = get();
+        const newlyUnlocked = evaluateAchievements({
+          achievements: state.achievements,
+          trainingLogs: state.trainingLogs,
+          meals: state.meals,
+          waterLogs: state.waterLogs,
+          workoutStreak: state.streak?.currentStreak ?? 0,
+          nutritionStreak: state.nutritionStreak?.currentStreak ?? 0,
+        });
+
+        if (newlyUnlocked.length > 0) {
+          const newMap = new Map(newlyUnlocked.map((a) => [a.id, a]));
+          set((s) => ({
+            achievements: s.achievements.map((a) => newMap.get(a.id) || a),
+            recentlyUnlockedAchievement: newlyUnlocked[0],
+          }));
+          audioEngine.playAchievementChime();
+        }
+      },
 
       streak: { currentStreak: 0, bestStreak: 0 },
       nutritionStreak: { currentStreak: 0, hasLoggedToday: false },

@@ -2,6 +2,14 @@ import { LocalNotifications } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
 import { SubscriptionItem } from '@/stores/useSubsStore';
 
+function formatAmount(amount: number): string {
+  try {
+    return new Intl.NumberFormat('es-CO').format(amount);
+  } catch {
+    return amount.toLocaleString();
+  }
+}
+
 export async function requestNotificationPermissions(): Promise<boolean> {
   if (!Capacitor.isNativePlatform()) {
     if (typeof Notification !== 'undefined') {
@@ -66,10 +74,12 @@ export async function initNativeNotifications() {
     const perm = await LocalNotifications.requestPermissions();
     if (perm.display !== 'granted') return;
 
-    // Flush cache of previously scheduled notifications
+    // Flush cache of previously scheduled notifications with daily reminder IDs (101-105)
     const pending = await LocalNotifications.getPending();
-    if (pending.notifications.length > 0) {
-      await LocalNotifications.cancel({ notifications: pending.notifications });
+    const routineIds = [101, 102, 103, 104, 105];
+    const toCancel = pending.notifications.filter((n) => routineIds.includes(n.id));
+    if (toCancel.length > 0) {
+      await LocalNotifications.cancel({ notifications: toCancel });
     }
 
     // Schedule daily recurrent notifications
@@ -132,6 +142,87 @@ export async function initNativeNotifications() {
   }
 }
 
+/**
+ * Schedules OS-level native reminders for upcoming subscriptions without needing the app to be open.
+ * Uses exact reminder days configured per subscription at 09:00 AM.
+ * Formats texts cleanly without parentheses and with formatted currency.
+ */
+export async function scheduleAllSubscriptionReminders(
+  subscriptions: SubscriptionItem[],
+  currency = 'COP'
+) {
+  if (!Capacitor.isNativePlatform()) return;
+
+  try {
+    const perm = await LocalNotifications.requestPermissions();
+    if (perm.display !== 'granted') return;
+
+    // Get all pending and cancel existing subscription reminders (IDs >= 20000)
+    const pending = await LocalNotifications.getPending();
+    const subsPending = pending.notifications.filter((n) => n.id >= 20000 && n.id < 90000);
+    if (subsPending.length > 0) {
+      await LocalNotifications.cancel({ notifications: subsPending });
+    }
+
+    const now = new Date();
+    const newNotifications: any[] = [];
+
+    subscriptions.forEach((sub, index) => {
+      if (sub.status !== 'active') return;
+
+      const reminderDays = typeof sub.reminderDays === 'number' ? sub.reminderDays : 3;
+      const formattedPrice = formatAmount(sub.amount);
+
+      // Compute the next billing date for this subscription
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const billingDay = Math.min(Math.max(sub.billingDay || 1, 1), 28); // Cap at 28 to safely fit all months
+
+      // Candidate 1: this month
+      let targetBilling = new Date(currentYear, currentMonth, billingDay, 9, 0, 0, 0);
+      let alertDate = new Date(targetBilling.getTime() - reminderDays * 24 * 60 * 60 * 1000);
+
+      // If this month's alert date has already passed, schedule for next month
+      if (alertDate.getTime() <= now.getTime()) {
+        targetBilling = new Date(currentYear, currentMonth + 1, billingDay, 9, 0, 0, 0);
+        alertDate = new Date(targetBilling.getTime() - reminderDays * 24 * 60 * 60 * 1000);
+      }
+
+      if (alertDate.getTime() > now.getTime()) {
+        const diffDays = Math.max(0, Math.round((targetBilling.getTime() - alertDate.getTime()) / (24 * 60 * 60 * 1000)));
+        const bodyText =
+          diffDays === 0
+            ? `Tu suscripción a ${sub.name} vence hoy por un valor de $${formattedPrice} ${currency}.`
+            : `Tu suscripción a ${sub.name} renovará en ${diffDays} ${diffDays === 1 ? 'día' : 'días'} por un valor de $${formattedPrice} ${currency}.`;
+
+        newNotifications.push({
+          id: 20000 + (index % 60000),
+          title: `🔔 Recordatorio de Pago: ${sub.name}`,
+          body: bodyText,
+          schedule: {
+            at: alertDate,
+            allowWhileIdle: true,
+          },
+          sound: 'default',
+        });
+      }
+    });
+
+    if (newNotifications.length > 0) {
+      await LocalNotifications.schedule({
+        notifications: newNotifications,
+      });
+      console.log(`[Notifications] Programadas ${newNotifications.length} notificaciones de suscripción en segundo plano`);
+    }
+  } catch (error) {
+    console.warn('[Notifications] Error scheduling subscription reminders:', error);
+  }
+}
+
+/**
+ * Checks subscriptions and sends immediate notification if due today or within daysAhead.
+ * Format is completely free of parentheses.
+ */
 export function checkAndNotifyUpcomingSubscriptions(
   subscriptions: SubscriptionItem[],
   daysAheadOrCurrency: number | string = 3,
@@ -148,13 +239,19 @@ export function checkAndNotifyUpcomingSubscriptions(
     let diff = sub.billingDay - currentDay;
     if (diff < 0) diff += 30;
 
-    if (diff <= daysAhead && diff >= 0) {
+    const reminderDays = typeof sub.reminderDays === 'number' ? sub.reminderDays : daysAhead;
+
+    if (diff <= reminderDays && diff >= 0) {
+      const formattedPrice = formatAmount(sub.amount);
       const msg =
         diff === 0
-          ? `Tu suscripción a ${sub.name} vence HOY (${sub.amount} ${effectiveCurrency}).`
-          : `Tu suscripción a ${sub.name} renovará en ${diff} día(s) (${sub.amount} ${effectiveCurrency}).`;
+          ? `Tu suscripción a ${sub.name} vence hoy por un valor de $${formattedPrice} ${effectiveCurrency}.`
+          : `Tu suscripción a ${sub.name} renovará en ${diff} ${diff === 1 ? 'día' : 'días'} por un valor de $${formattedPrice} ${effectiveCurrency}.`;
 
       sendLocalNotification(`🔔 Recordatorio de Pago: ${sub.name}`, msg, sub.billingDay * 100);
     }
   });
+
+  // Also trigger OS-level scheduling so future dates are set in iOS system background
+  scheduleAllSubscriptionReminders(subscriptions, effectiveCurrency);
 }

@@ -2,6 +2,48 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v1.6.0] - 2026-09-08 (Notificaciones Nativas, Fotos HD en IndexedDB, Comidas Frecuentes, Logros con Sonido & Rediseño de TopBar)
+
+### 🔔 Notificaciones de Suscripciones
+- **Formato Limpio sin Paréntesis**:
+  - Se eliminaron los paréntesis de todos los textos de recordatorio de suscripciones.
+  - Se implementó formateo de moneda con separador de miles (ej: `Tu suscripción a Gimnasio vence hoy por un valor de $105.000 COP.` y `Tu suscripción a Apple Music renovará en 2 días por un valor de $9.900 COP.`).
+- **Programación Nativa en Segundo Plano**:
+  - Mediante `@capacitor/local-notifications`, las alertas se programan en el sistema operativo iOS a las 9:00 AM según los días de antelación (`reminderDays`) de cada suscripción, disparándose puntualmente sin necesidad de abrir la aplicación.
+
+### 📷 Almacenamiento de Fotos en HD & Nitidez Total
+- **Motor IndexedDB (`src/lib/imageStorage.ts`)**:
+  - Las fotos capturadas se almacenan a alta resolución (1200px, calidad 0.8) en la base de datos nativa `IndexedDB` del dispositivo, sorteando la cuota de 5MB de `localStorage`.
+  - La pantalla de detalle de comida (`MealDetailModal`) carga la imagen directamente en alta resolución sin pixelación.
+  - El modelo Gemini 3.5 Flash Lite recibe imágenes nítidas de alta fidelidad para calcular con máxima precisión porciones y macronutrientes.
+  - Se mantiene una miniatura optimizada (420px, calidad 0.65) en `localStorage` para carga instantánea de listas.
+
+### ⭐ Guardar en Comidas Frecuentes
+- **Toggle Directo en Escaneo**:
+  - Se agregó la opción "⭐ Guardar en Comidas Frecuentes" en el modal de captura (`MealCaptureModal`).
+  - Al escanear una comida, si se marca esta opción, se guarda automáticamente en `favoriteMeals` con sus macronutrientes calculados, permitiendo volver a consumirla desde la lista rápida con un solo toque y sin gastar cuota de API.
+
+### 🏆 Sistema de Logros Automático con Sonido Elegante
+- **Motor de Evaluación Automática (`src/lib/achievements.ts`)**:
+  - Los logros se evalúan y desbloquean en tiempo real al registrar entrenamientos, comidas, agua o rachas (ej: primer entrenamiento, primera comida, gigante de hierro, etc.).
+- **Sonido Elegante Apple Chime (`src/lib/audio.ts`)**:
+  - Síntesis de audio armónico mediante Web Audio API en tiempo real (acorde mayor aterciopelado con envolvente exponencial), sin descargas de archivos externos.
+- **Notificación Flotante de Celebración (`AchievementUnlockedToast.tsx`)**:
+  - Modal flotante superior con diseño Apple, icono animado, título, descripción y barra de tiempo decreciente.
+
+### 🧭 Reorganización de TopBar en RecompAI
+- **Acceso Rápido al HUB Principal**:
+  - Se añadió el botón `🏠 HUB` directamente en la barra superior para volver al launcher principal en 0ms.
+  - Se eliminó la rueda de engranaje redundante (accesible desde la pestaña "Perfil").
+  - Se unificaron las rachas de entrenamiento (`💪`) y nutrición (`🥑`) en una sola píldora compacta y elegante (`💪 Xd | 🥑 Yd`).
+
+### ⏱️ Notificaciones Internas con Barra de Progreso
+- **AlertToast con Texto Completo**:
+  - Se eliminó el truncamiento del mensaje para leer completas las recomendaciones de nutrición.
+  - Se integró una barra de progreso decreciente en la parte inferior animada por hardware a lo largo de los 5 segundos de duración.
+
+---
+
 ## 🐛 [v1.5.2] - 2026-09-08 (Fix Definitivo Modelos Gemini: gemini-3.5-flash-lite Activo & Verificado)
 
 ### 🔴 Corrección de Modelos de IA

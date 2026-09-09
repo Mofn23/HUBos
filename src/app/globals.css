@@ -922,3 +922,18 @@ input[type='number']::-webkit-outer-spin-button {
 input[type='number'] {
   -moz-appearance: textfield !important;
 }
+
+/* Decreasing progress bar animation for notifications */
+@keyframes shrinkWidth {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+.animate-shrink-width {
+  animation: shrinkWidth linear forwards;
+}
+

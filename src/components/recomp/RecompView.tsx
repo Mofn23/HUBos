@@ -20,6 +20,7 @@ import { MealsSection } from './MealsSection';
 import { TrainingSection } from './TrainingSection';
 import { ProfilePage } from './ProfilePage';
 import { AlertToast } from '../common/AlertToast';
+import { AchievementUnlockedToast } from './AchievementUnlockedToast';
 import {
   IconHome,
   IconDumbbell,
@@ -45,9 +46,15 @@ export const RecompView: React.FC = () => {
     achievements,
     addAlert,
     isModalOpen,
+    checkAchievements,
   } = useRecompStore();
 
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
+
+  // Auto-check achievements on load so already completed actions unlock
+  useEffect(() => {
+    checkAchievements();
+  }, [checkAchievements]);
 
   // Auto-select current date on launch or when returning to foreground
   useEffect(() => {
@@ -109,6 +116,9 @@ export const RecompView: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col px-4 pt-16 pb-28 overflow-y-auto no-scrollbar animate-fade-in relative">
+      {/* Achievement Unlocked Toast Notification */}
+      <AchievementUnlockedToast />
+
       {/* Dynamic Island In-App Alert */}
       <AlertToast />
 

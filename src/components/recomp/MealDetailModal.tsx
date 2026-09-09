@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MealItem, useRecompStore } from '@/stores/useRecompStore';
+import { getMealImage } from '@/lib/imageStorage';
 import { IconTrash } from '../common/Icons';
 
 interface MealDetailModalProps {
@@ -18,6 +19,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
   onDelete,
 }) => {
   const { setIsModalOpen } = useRecompStore();
+  const [hdPhoto, setHdPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -27,6 +29,16 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
       setIsModalOpen(false);
     };
   }, [isOpen, setIsModalOpen]);
+
+  useEffect(() => {
+    if (meal?.id) {
+      getMealImage(meal.id).then((img) => {
+        if (img) setHdPhoto(img);
+      });
+    } else {
+      setHdPhoto(null);
+    }
+  }, [meal?.id]);
 
   if (!isOpen || !meal) return null;
 
@@ -45,7 +57,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
   };
 
   const catInfo = getCategoryBadge(meal.category);
-  const photo = meal.imageUrl || meal.imageBase64;
+  const photo = hdPhoto || meal.imageUrl || meal.imageBase64;
 
   const handleDelete = () => {
     if (confirm(`¿Eliminar ${meal.name}?`)) {

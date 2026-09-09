@@ -495,16 +495,6 @@ Formato en Markdown claro con emojis.`;
         </div>
       </div>
 
-      {/* 12. Retornar al Launcher de HUBos */}
-      <div className="pt-4 text-center">
-        <button
-          onClick={() => setCurrentApp('hub')}
-          className="px-6 py-3 rounded-full bg-[#242426] border border-white/10 text-xs font-black text-[#8E8E93] hover:text-white active:scale-95 transition-all"
-        >
-          🚀 Volver al HUB Principal
-        </button>
-      </div>
-
       {/* Modal Añadir Suplemento */}
       {showAddSuppModal && (
         <div className="fixed inset-0 z-[9999] flex items-end justify-center">

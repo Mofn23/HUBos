@@ -38,12 +38,12 @@ export const AlertToast: React.FC = () => {
       style={{ top: 'calc(env(safe-area-inset-top, 20px) + 12px)' }}
     >
       <div
-        className={`pointer-events-auto max-w-sm w-full p-3.5 rounded-2xl border shadow-2xl backdrop-blur-xl flex items-center justify-between gap-3 animate-slide-down ${getAlertColor(
+        className={`pointer-events-auto relative max-w-sm w-full p-3.5 pb-4.5 rounded-2xl border shadow-2xl backdrop-blur-xl flex items-start justify-between gap-3 animate-slide-down overflow-hidden ${getAlertColor(
           activeAlert.type
         )}`}
       >
-        <div className="flex items-center gap-2.5 overflow-hidden">
-          <span className="text-xl shrink-0">
+        <div className="flex items-start gap-2.5 flex-1 min-w-0">
+          <span className="text-xl shrink-0 mt-0.5">
             {activeAlert.type === 'sodium'
               ? '🧂'
               : activeAlert.type === 'protein'
@@ -52,18 +52,29 @@ export const AlertToast: React.FC = () => {
               ? '💊'
               : '⚡'}
           </span>
-          <div className="overflow-hidden">
-            <h4 className="text-xs font-black text-white truncate">{activeAlert.title}</h4>
-            <p className="text-[11px] font-bold opacity-90 truncate">{activeAlert.message}</p>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-xs font-black text-white">{activeAlert.title}</h4>
+            <p className="text-[11px] font-semibold text-white/90 leading-snug mt-0.5 break-words">
+              {activeAlert.message}
+            </p>
           </div>
         </div>
 
         <button
           onClick={() => dismissAlert(activeAlert.id)}
-          className="text-xs font-black opacity-70 hover:opacity-100 px-2 py-1"
+          className="text-xs font-black opacity-70 hover:opacity-100 p-1 shrink-0 transition-opacity text-white"
+          aria-label="Cerrar alerta"
         >
           ✕
         </button>
+
+        {/* Decreasing progress bar indicator */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
+          <div
+            className="h-full bg-current animate-shrink-width"
+            style={{ animationDuration: '5000ms' }}
+          />
+        </div>
       </div>
     </div>
   );
