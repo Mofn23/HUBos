@@ -80,6 +80,46 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🚀 [v1.6.0] - 2026-09-09 (Lanzamiento Mayor: Nueva App de Horarios, Clases de Conducción, Rutinas & Gestor de Tareas)
+
+### 🌟 Nuevas Funcionalidades & Lógica de Negocio
+- **Lanzamiento de Horarios & Rutinas (`src/components/schedule/*`)**:
+  - Implementación completa de la nueva aplicación modular basada fielmente en el boceto en lápiz de iPad del usuario.
+  - **Cuadrícula Bidireccional 2D (`ScheduleGrid.tsx`)**:
+    - Fila de días deslizable horizontalmente (`LUNES` a `DOMINGO`) con auto-centrado en el día de hoy.
+    - Columna de horas deslizable verticalmente (`6:00 AM` a `10:00 PM`) con auto-centrado en la hora actual.
+    - Línea de tiempo real en vivo (indicador rojo) con el minuto exacto del día.
+    - Píldoras de materia con altura proporcional a la duración (1h, 2h, 3h, etc.) y franja vertical de color en el costado derecho.
+  - **Tarjetas Hero Superiores (`ScheduleHeroCards.tsx`)**:
+    - **Siguiente Clase**: Detección reactiva de la próxima clase del día con cuenta regresiva. Modo "En Vivo / Dynamic Island" cuando una clase está transcurriendo ahora mismo con barra de progreso en tiempo real y minutos restantes.
+    - **Pendientes**: Muestra el compromiso o tarea más cercana. Al tocarla, abre el Gestor de Tareas interactivo.
+  - **Botón Flotante Inferior Derecho `+` con Submenú Oscurecido (`ScheduleFabMenu.tsx`)**:
+    - Al tocar `+`, la app se atenúa con desenfoque (`backdrop-blur-md bg-black/75`) y despliega un menú popover interactivo con accesos directos para *Agregar Materia*, *Agregar Tarea* y *Escanear con Gemini IA*.
+  - **Modal Supercompleto de Creación de Materia (`AddClassModal.tsx`)**:
+    - Selector multi-día interactivo (`Lun`, `Mar`, `Mié`, `Jue`, `Vie`, `Sáb`, `Dom`) para reflejar la materia en todos los días seleccionados con un solo guardado.
+    - Selector de duración por píldoras (`1h`, `1.5h`, `2h`, `3h`, `4h`) con cálculo automático de hora final.
+    - Selector de colores Apple OLED (10 tonos) y emojis temáticos (conducción, estudio, sistemas, etc.).
+    - Escudo de Asistencia: Metas de clases totales (ej. 15 clases prácticas de manejo) o límite de faltas permitidas (universidad).
+  - **Gestor Interactivo de Tareas & Entregas (`TasksModal.tsx` & `AddTaskModal.tsx`)**:
+    - Pestañas de pendientes y completadas, vinculación a materias, prioridades (baja, media, alta 🔥) y fechas límites con selector rápido.
+  - **Detalle Extendido de Materia (`ClassDetailModal.tsx`)**:
+    - Al pulsar cualquier tarjeta en el grid, se abre el panel con toda la información, profesor, salón, notas rápidas de clase, tareas vinculadas y registro de asistencia.
+  - **Smart Schedule Scanner con Gemini IA (`ScheduleAiImportModal.tsx` & `src/lib/scheduleAiParser.ts`)**:
+    - Importación automática de horarios a partir de fotos/pantallazos de WhatsApp o texto libre utilizando Gemini AI.
+  - **Exportación Directa a Calendario iOS (`src/lib/calendarExport.ts`)**:
+    - Generación de archivos `.ics` compatibles con Apple Calendar y Google Calendar con repetición semanal y alertas 30 minutos antes.
+  - **Notificaciones Preventivas de 30 Minutos (`src/lib/scheduleNotifications.ts`)**:
+    - Cálculo y programación de recordatorios automáticos media hora antes de cada clase.
+
+### 🛠️ Mejoras y Cambios de Arquitectura
+- **Tienda Zustand Persistente (`src/stores/useScheduleStore.ts`)**:
+  - Manejo de perfiles (Universidad, Conducción, Rutinas, etc.), materias, ranuras de horario (`ClassSlot`), tareas y apuntes rápidos con persistencia en `localStorage`.
+- **Integración con HUBos Launcher (`useHubStore.ts`, `page.tsx`, `HubDashboard.tsx`)**:
+  - Registrado `'schedule'` en el tipo `AppModule`.
+  - Tarjeta interactiva de Horarios & Rutinas en el dashboard principal con telemetría en tiempo real (clase actual/próxima y contador de tareas).
+
+---
+
 ## 🚀 [v1.5.0] - 2026-08-25 (Actualización Mayor: Rutina Dinámica, Modal de Comidas, Motor de Rachas & Multi-Upload Symmetry)
 
 ### 🌟 Nuevas Funcionalidades & Lógica de Negocio

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
-export type AppModule = 'hub' | 'recomp' | 'subs';
+export type AppModule = 'hub' | 'recomp' | 'subs' | 'schedule';
 
 export interface HubQuickAction {
   id: string;

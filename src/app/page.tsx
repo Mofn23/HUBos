@@ -8,6 +8,7 @@ import { HubSettingsSheet } from '@/components/hub/HubSettingsSheet';
 import { HubQuickPromptSheet } from '@/components/hub/HubQuickPromptSheet';
 import { RecompView } from '@/components/recomp/RecompView';
 import { SubscriptionsView } from '@/components/subscriptions/SubscriptionsView';
+import { ScheduleView } from '@/components/schedule/ScheduleView';
 import { ToastNotification } from '@/components/common/ToastNotification';
 import { checkAndNotifyUpcomingSubscriptions } from '@/lib/notifications';
 
@@ -31,6 +32,7 @@ export default function Home() {
         {currentApp === 'hub' && <HubDashboard />}
         {currentApp === 'recomp' && <RecompView />}
         {currentApp === 'subs' && <SubscriptionsView />}
+        {currentApp === 'schedule' && <ScheduleView />}
       </div>
 
       {/* Global Bottom Sheets & Modals */}

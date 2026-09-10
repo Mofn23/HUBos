@@ -4,15 +4,21 @@ import React from 'react';
 import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { useSubsStore } from '@/stores/useSubsStore';
+import { useScheduleStore } from '@/stores/useScheduleStore';
 import { getGreeting, getTodayKey } from '@/lib/date';
 import { calculateDailyNutrition } from '@/lib/nutritionEngine';
 import { calculateFinancialSummary } from '@/lib/financialsEngine';
+import { findCurrentOrNextClass } from '@/lib/scheduleNotifications';
 import { IconSettings, IconSparkles } from '../common/Icons';
 
 export const HubDashboard: React.FC = () => {
   const { userName, setCurrentApp, setIsSettingsOpen } = useHubStore();
   const { meals, targetCalories, targetCarbs, targetProtein, waterLogs, streak } = useRecompStore();
   const { subscriptions } = useSubsStore();
+  const { subjects, tasks } = useScheduleStore();
+
+  const nextClass = findCurrentOrNextClass(subjects);
+  const pendingTasksCount = tasks.filter((t) => !t.completed).length;
 
   const todayKey = getTodayKey();
   const greeting = getGreeting();
@@ -178,6 +184,50 @@ export const HubDashboard: React.FC = () => {
             </span>
             <span className="px-2.5 py-1 rounded-full bg-[#242426] text-[#34C759]">
               {financials.activeCount} servicios activos
+            </span>
+          </div>
+        </div>
+
+        {/* App 3: Horarios & Rutinas */}
+        <div
+          onClick={() => setCurrentApp('schedule')}
+          className="p-5 rounded-[28px] bg-[#1C1C1E] border border-white/5 shadow-md cursor-pointer active:scale-[0.98] transition-all space-y-3.5 group hover:border-white/10"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3.5">
+              <div className="w-14 h-14 rounded-2xl bg-[#242426] border border-white/5 flex items-center justify-center text-3xl shadow-inner">
+                📅
+              </div>
+
+              <div>
+                <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">Horarios & Rutinas</h3>
+                <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
+                  Universidad, Conducción, Calendario & Tareas
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="px-4 py-1.5 rounded-full bg-[#34C759] text-black font-black text-xs shadow group-hover:scale-105 transition-transform"
+            >
+              Abrir →
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 text-xs font-bold text-[#8E8E93] pt-1 border-t border-white/5">
+            <span className="px-2.5 py-1 rounded-full bg-[#242426] text-[#F5F5F7]">
+              {nextClass.type === 'live'
+                ? `🔴 En curso: ${nextClass.subject?.name}`
+                : nextClass.type === 'upcoming'
+                ? `⏰ Próx: ${nextClass.subject?.name}`
+                : '🗓️ Sin clases hoy'}
+            </span>
+            <span className="px-2.5 py-1 rounded-full bg-[#242426] text-[#34C759]">
+              📝 {pendingTasksCount} pendiente{pendingTasksCount === 1 ? '' : 's'}
+            </span>
+            <span className="px-2.5 py-1 rounded-full bg-[#242426] text-[#8E8E93]">
+              {subjects.length} materias
             </span>
           </div>
         </div>
