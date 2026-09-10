@@ -2,6 +2,61 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+---
+
+## 🚀 [v1.7.0] - 2026-09-09 (Lanzamiento Mayor: Nueva App de Horarios, Clases de Conducción, Rutinas Semanales & Gestor Académico Inteligente)
+
+### 🌟 Nuevas Funcionalidades & Lógica de Negocio
+- **Lanzamiento de Horarios & Rutinas (`src/components/schedule/*`)**:
+  - Implementación completa de la nueva aplicación modular basada fielmente en el boceto en lápiz de iPad del usuario.
+  - **Cuadrícula Bidireccional 2D (`ScheduleGrid.tsx`)**:
+    - **Fila de Días Deslizable (`LUNES` a `DOMINGO`)**: Scroll horizontal fluido con auto-centrado en el día de hoy (`currentDay`). Indicador visual de desplazamiento hacia la izquierda para revelar Viernes, Sábado y Domingo.
+    - **Columna de Horas Deslizable (`6:00 AM` a `10:00 PM`)**: Scroll vertical sincronizado con auto-posicionamiento en la hora actual.
+    - **Línea de Tiempo Real en Vivo**: Indicador horizontal de color rojo coral con punto pulsante que recorre toda la cuadrícula marcando el minuto exacto del día.
+    - **Píldoras de Materia con Franja de Color Lateral**: Replicación exacta del diseño del boceto con una franja de color en el costado derecho como identificador cromático único de cada materia.
+    - **Altura Proporcional a la Duración**: Clases de 1 hora ocupan 1 ranura (`76px`), de 2 horas ocupan 2 ranuras completas (`152px`), y de 3 horas ocupan 3 ranuras completas (`228px`).
+  - **Tarjetas Hero Superiores (`ScheduleHeroCards.tsx`)**:
+    - **Siguiente Clase**: Detección reactiva de la próxima clase del día con cuenta regresiva en minutos. Si una clase está transcurriendo en el momento actual, muta dinámicamente al modo **"🔴 En Curso (Dynamic Island Style)"** con barra de progreso en tiempo real y tiempo restante.
+    - **PENDIENTES**: Muestra la entrega o compromiso más cercano con badge numérico. Al tocar la píldora, despliega el **Gestor Interactivo de Tareas**.
+  - **Botón Flotante Inferior Derecho `+` con Menú Desplegable (`ScheduleFabMenu.tsx`)**:
+    - Al presionar el botón `+`, **se atenúa y desenfoca toda la aplicación** (`backdrop-blur-md bg-black/75`) y brota un submenú popover interactivo con accesos directos para:
+      - 📚 **Agregar Materia**
+      - 📝 **Agregar Tarea / Pendiente**
+      - 🤖 **Escanear con Gemini IA ✨**
+  - **Modal Supercompleto de Creación de Materia (`AddClassModal.tsx`)**:
+    - **Selector Multi-Día Interactivo**: Selección simultánea de días (`[Lun]`, `[Mar]`, `[Mié]`, `[Jue]`, `[Vie]`, `[Sáb]`, `[Dom]`) para que una clase recurrente se refleje automáticamente en el horario semanal con un solo guardado.
+    - **Selector de Horario & Duración**: Selector de hora de inicio con píldoras de duración (`1 hora`, `1.5 hrs`, `2 horas`, `3 horas`, `4 horas`) y cálculo dinámico en tiempo real de la hora de finalización (ej: `07:00 → 09:00`).
+    - **Paleta de Colores Apple OLED**: 10 colores vibrantes para distinguir visualmente cada asignatura o actividad.
+    - **Selector de Emojis Temáticos**: Presets inmediatos para conducción (`🚗`), estudio (`📚`), sistemas (`💻`), ciencias (`🔬`), gimnasio (`💪`), etc., más soporte de emojis personalizados.
+    - **Campos de Aula, Instructor y Notas**: Ubicación física (ej: *Pista Norte Auto 04*, *Aula 304*), docente y apuntes.
+  - **Escudo de Asistencia & Control de Metas ("Attendance Shield")**:
+    - Diseñado tanto para **Conducción** (ej. meta de 15 clases prácticas requeridas para la licencia) como para la **Universidad** (ej. límite de 3 inasistencias permitidas).
+    - En el detalle de la materia (`ClassDetailModal.tsx`) se incluye barra de progreso porcentual y botones rápidos interactivos (`+ Registrar Asistencia Hoy` y `+ Registrar Falta`).
+  - **Gestor Interactivo de Tareas & Compromisos (`TasksModal.tsx` & `AddTaskModal.tsx`)**:
+    - Pestañas separadas de **Pendientes** y **Completadas**.
+    - Filtros por materia o vista general.
+    - Checkboxes táctiles con retroalimentación visual, niveles de prioridad (Baja, Media, Alta 🔥), fechas límites con accesos rápidos (*Hoy*, *Mañana*, *En 3 días*, *Próxima semana*).
+  - **Detalle Extendido de Materia (`ClassDetailModal.tsx`)**:
+    - Despliegue al hacer clic sobre cualquier tarjeta de clase: información completa, horarios recurrentes, tareas vinculadas, libreta de notas rápidas de clase (`quickNotes`) y opciones de edición/eliminación.
+  - **Smart Schedule Scanner con Gemini IA (`ScheduleAiImportModal.tsx` & `src/lib/scheduleAiParser.ts`)**:
+    - Importación automática de horarios a partir de fotos/pantallazos de WhatsApp o texto libre utilizando Gemini AI (`@google/generative-ai`), estructurando materias, días, horarios, colores y emojis en un solo toque.
+  - **Exportación Directa a Calendario iOS (`src/lib/calendarExport.ts`)**:
+    - Generación de archivos de calendario estándar `.ics` compatibles con Apple Calendar y Google Calendar, con repetición semanal y alarmas 30 minutos antes.
+  - **Notificaciones Nativas con 30 Minutos de Antelación (`src/lib/scheduleNotifications.ts`)**:
+    - Programación de avisos preventivos a través de `@capacitor/local-notifications` en segundo plano en iOS y Web Notifications en navegador.
+  - **Ajustes de Horarios (`ScheduleSettingsModal.tsx`)**:
+    - Configuración de tiempo de anticipación de alertas (15, 30, 45, 60 min), alerta nocturna de preparación de mochila (8:30 PM) y administración de perfiles (Universidad, Conducción, Gym).
+
+### 🛠️ Mejoras y Cambios de Arquitectura
+- **Tienda Zustand Persistente (`src/stores/useScheduleStore.ts`)**:
+  - Almacenamiento desacoplado en `hubos_schedule_store_v1` para perfiles, materias, ranuras multi-día (`ClassSlot`), tareas y notas con cero datos precargados a solicitud del usuario.
+- **Integración con HUBos Launcher (`useHubStore.ts`, `page.tsx`, `HubDashboard.tsx`)**:
+  - Adición del módulo `'schedule'` en `AppModule`.
+  - Tarjeta de acceso directo a **Horarios & Rutinas (`📅`)** en el launcher principal del HUB con telemetría en tiempo real (clase actual/próxima y contador de pendientes).
+  - Conmutación en 0ms en `page.tsx`.
+
+---
+
 ## 🚀 [v1.6.0] - 2026-09-08 (Notificaciones Nativas, Fotos HD en IndexedDB, Comidas Frecuentes, Logros con Sonido & Rediseño de TopBar)
 
 ### 🔔 Notificaciones de Suscripciones
@@ -77,46 +132,6 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 ### 🧹 Correcciones Menores
 - Fix en cleanup de `useEffect` en `MealCaptureModal` que podía ocultar la barra de navegación prematuramente.
 - Reset del input de archivo después de cada selección de foto para permitir re-selección del mismo archivo.
-
----
-
-## 🚀 [v1.6.0] - 2026-09-09 (Lanzamiento Mayor: Nueva App de Horarios, Clases de Conducción, Rutinas & Gestor de Tareas)
-
-### 🌟 Nuevas Funcionalidades & Lógica de Negocio
-- **Lanzamiento de Horarios & Rutinas (`src/components/schedule/*`)**:
-  - Implementación completa de la nueva aplicación modular basada fielmente en el boceto en lápiz de iPad del usuario.
-  - **Cuadrícula Bidireccional 2D (`ScheduleGrid.tsx`)**:
-    - Fila de días deslizable horizontalmente (`LUNES` a `DOMINGO`) con auto-centrado en el día de hoy.
-    - Columna de horas deslizable verticalmente (`6:00 AM` a `10:00 PM`) con auto-centrado en la hora actual.
-    - Línea de tiempo real en vivo (indicador rojo) con el minuto exacto del día.
-    - Píldoras de materia con altura proporcional a la duración (1h, 2h, 3h, etc.) y franja vertical de color en el costado derecho.
-  - **Tarjetas Hero Superiores (`ScheduleHeroCards.tsx`)**:
-    - **Siguiente Clase**: Detección reactiva de la próxima clase del día con cuenta regresiva. Modo "En Vivo / Dynamic Island" cuando una clase está transcurriendo ahora mismo con barra de progreso en tiempo real y minutos restantes.
-    - **Pendientes**: Muestra el compromiso o tarea más cercana. Al tocarla, abre el Gestor de Tareas interactivo.
-  - **Botón Flotante Inferior Derecho `+` con Submenú Oscurecido (`ScheduleFabMenu.tsx`)**:
-    - Al tocar `+`, la app se atenúa con desenfoque (`backdrop-blur-md bg-black/75`) y despliega un menú popover interactivo con accesos directos para *Agregar Materia*, *Agregar Tarea* y *Escanear con Gemini IA*.
-  - **Modal Supercompleto de Creación de Materia (`AddClassModal.tsx`)**:
-    - Selector multi-día interactivo (`Lun`, `Mar`, `Mié`, `Jue`, `Vie`, `Sáb`, `Dom`) para reflejar la materia en todos los días seleccionados con un solo guardado.
-    - Selector de duración por píldoras (`1h`, `1.5h`, `2h`, `3h`, `4h`) con cálculo automático de hora final.
-    - Selector de colores Apple OLED (10 tonos) y emojis temáticos (conducción, estudio, sistemas, etc.).
-    - Escudo de Asistencia: Metas de clases totales (ej. 15 clases prácticas de manejo) o límite de faltas permitidas (universidad).
-  - **Gestor Interactivo de Tareas & Entregas (`TasksModal.tsx` & `AddTaskModal.tsx`)**:
-    - Pestañas de pendientes y completadas, vinculación a materias, prioridades (baja, media, alta 🔥) y fechas límites con selector rápido.
-  - **Detalle Extendido de Materia (`ClassDetailModal.tsx`)**:
-    - Al pulsar cualquier tarjeta en el grid, se abre el panel con toda la información, profesor, salón, notas rápidas de clase, tareas vinculadas y registro de asistencia.
-  - **Smart Schedule Scanner con Gemini IA (`ScheduleAiImportModal.tsx` & `src/lib/scheduleAiParser.ts`)**:
-    - Importación automática de horarios a partir de fotos/pantallazos de WhatsApp o texto libre utilizando Gemini AI.
-  - **Exportación Directa a Calendario iOS (`src/lib/calendarExport.ts`)**:
-    - Generación de archivos `.ics` compatibles con Apple Calendar y Google Calendar con repetición semanal y alertas 30 minutos antes.
-  - **Notificaciones Preventivas de 30 Minutos (`src/lib/scheduleNotifications.ts`)**:
-    - Cálculo y programación de recordatorios automáticos media hora antes de cada clase.
-
-### 🛠️ Mejoras y Cambios de Arquitectura
-- **Tienda Zustand Persistente (`src/stores/useScheduleStore.ts`)**:
-  - Manejo de perfiles (Universidad, Conducción, Rutinas, etc.), materias, ranuras de horario (`ClassSlot`), tareas y apuntes rápidos con persistencia en `localStorage`.
-- **Integración con HUBos Launcher (`useHubStore.ts`, `page.tsx`, `HubDashboard.tsx`)**:
-  - Registrado `'schedule'` en el tipo `AppModule`.
-  - Tarjeta interactiva de Horarios & Rutinas en el dashboard principal con telemetría en tiempo real (clase actual/próxima y contador de tareas).
 
 ---
 
