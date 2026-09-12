@@ -4,6 +4,51 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
 
 ---
 
+## 🚀 [v1.8.0] - 2026-09-11 (Rediseño Total con Glassmorphism: HUB Principal, Píldoras Flotantes en Calendario & Minimalismo Absoluto en Horarios)
+
+### 🌟 Nuevas Funcionalidades & Experiencia de Usuario
+- **Instalación y Aplicación del Sistema de Diseño `glassmorphism`**:
+  - Implementación de la skill oficial de Glassmorphism con estética *liquid glass*, capas translúcidas esmeriladas (`backdrop-blur-2xl bg-white/[0.04]`), bordes luminosos superiores (`border-t-white/20 border-white/10`) y orbes de luz ambiental multicromática de fondo.
+  - Adición de tokens y clases de utilidad en `globals.css`: `.glass-surface`, `.glass-surface-elevated`, `.glass-pill`, `.glass-pill-active`, `.glass-floating-card` y sombras con halo de neón.
+
+- **Rediseño Completo del HUB Principal (`HubDashboard.tsx`)**:
+  - **Fondo Atmosférico Profundo**: Orbes radiales desenfocados (esmeralda, violeta y cian) que refractan luz realista a través de las superficies de cristal.
+  - **Bento Card de Estado Global**: Superficie de cristal translúcido con indicador de pulso en vivo para el ecosistema conectado y dos mini cápsulas de vidrio para RecompAI (kcal y glucógeno) y Suscripciones (gasto mensual y servicios activos).
+  - **Tarjetas Bento de Aplicaciones**: Tarjetas de cristal de lujo para Recomp AI, Suscripciones y Horarios & Rutinas con micro-píldoras de telemetría en tiempo real y botones con micro-animaciones en hover.
+  - **Tarjeta Inferior de Ajustes & Gemini IA**: Cápsula de cristal minimalista para configuración del sistema.
+
+- **Rediseño del Calendario con Píldoras Flotantes (`ScheduleGrid.tsx`)**:
+  - **Eliminación del Cuadro Rígido Mediocre**: Transformación total a un lienzo con **píldoras flotantes tridimensionales** con esquinas redondeadas (`rounded-[22px]`), bordes luminosos tintados con el color de la materia, cuerpo translúcido y sombra con glow de neón.
+  - **Selector de Modo de Vista con Píldora Segmentada**:
+    - **Vista Día (Cronograma Flotante)**: Experiencia móvil ultra-limpia y minimalista que lista las clases del día seleccionado como cápsulas flotantes verticales con hora, duración, docente, aula y chip de color.
+    - **Vista Semana (Matriz Panorámica Flotante)**: Cuadrícula panorámica con scroll suave donde las materias son cápsulas flotantes sobre guías translúcidas súper sutiles.
+  - **Selector Superior de Días en Píldoras de Cristal**: Cápsulas flotantes con conteo de clases y badge luminoso del día actual.
+
+- **Minimalismo y Eliminación de Saturación de Botones en Horarios (`ScheduleHeader.tsx`)**:
+  - Unificación de la cabecera en una sola fila compacta:
+    - Píldora de regreso `‹ HUB`.
+    - Píldora de fecha actual `🗓️ EEE, d MMM`.
+    - Botones compactos de cristal para `✨ IA` y `⚙️ Ajustes`.
+  - **Selector de Perfiles en Cápsula Segmentada de Vidrio Líquido**: Eliminación del texto redundante "Perfil:" reemplazándolo por un selector segmentado fluido estilo Apple iOS (`glass-pill-active`).
+
+- **Bento Cards Superiores de Horarios (`ScheduleHeroCards.tsx`)**:
+  - Tarjetas flotantes de cristal esmerilado para "Siguiente Clase / En Curso" (con barra de progreso dinámica estilo Dynamic Island) y "Pendientes" (con badge numérico translúcido y prioridad).
+
+- **Menú FAB Flotante (`ScheduleFabMenu.tsx`)**:
+  - Botón flotante `+` con acabado en cristal esmerilado y popover en cápsulas de vidrio líquido con desenfoque de fondo.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `src/app/globals.css` - Utilidades y tokens de Glassmorphism.
+- `[MODIFICADO]` `src/components/hub/HubDashboard.tsx` - Rediseño Bento Glassmorphism del HUB principal.
+- `[MODIFICADO]` `src/components/schedule/ScheduleHeader.tsx` - Cabecera minimalista y selector de perfiles segmentado.
+- `[MODIFICADO]` `src/components/schedule/ScheduleHeroCards.tsx` - Bento cards de siguiente clase y pendientes.
+- `[MODIFICADO]` `src/components/schedule/ScheduleGrid.tsx` - Calendario de píldoras flotantes con vista dual Día/Semana.
+- `[MODIFICADO]` `src/components/schedule/ScheduleFabMenu.tsx` - Botón de acción flotante y cápsulas de menú en cristal.
+- `[MODIFICADO]` `src/components/schedule/ScheduleView.tsx` - Orbes ambientales y ensamble general de la vista.
+- `[MODIFICADO]` `UPDATES.md` - Registro oficial de la versión v1.8.0.
+
+---
+
 ## 🚀 [v1.7.0] - 2026-09-09 (Lanzamiento Mayor: Nueva App de Horarios, Clases de Conducción, Rutinas Semanales & Gestor Académico Inteligente)
 
 ### 🌟 Nuevas Funcionalidades & Lógica de Negocio
