@@ -155,7 +155,7 @@ Formato en Markdown claro con emojis.`;
   const latestPhoto = photos[0];
 
   return (
-    <div className="space-y-4 pb-28 animate-fade-in relative z-10">
+    <div className="space-y-4 pb-36 animate-fade-in relative z-10">
       {/* Header */}
       <div>
         <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">

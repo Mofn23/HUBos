@@ -45,7 +45,7 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
         <div className="flex items-center justify-between gap-2">
           {/* Date Selector Pill (Glassmorphism) */}
           <button
-            className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-black text-[#F5F5F7] flex items-center gap-1.5 shadow-sm hover:border-white/30 active:scale-95 transition-all relative shrink-0"
+            className="glass-pill h-8 px-3.5 rounded-full text-xs font-black text-[#F5F5F7] inline-flex items-center gap-1.5 shadow-sm hover:border-white/30 active:scale-95 transition-all relative shrink-0"
             onClick={() => setIsDateModalOpen(true)}
             aria-label="Seleccionar fecha"
           >
@@ -60,7 +60,7 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
           <div className="flex items-center gap-2">
             {/* Unified Streaks Pill (Workout + Nutrition) */}
             <div
-              className="glass-surface px-3 py-1.5 rounded-full text-xs font-black shadow-sm flex items-center gap-2 border-t-white/20"
+              className="glass-pill h-8 px-3 rounded-full text-xs font-black shadow-sm inline-flex items-center gap-2"
               title="Rachas de Entrenamiento y Nutrición"
             >
               <div className="flex items-center gap-1">
@@ -79,7 +79,7 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
             {/* Return to HUB Button */}
             <button
               onClick={() => setCurrentApp('hub')}
-              className="glass-pill px-3 py-1.5 rounded-full flex items-center gap-1.5 hover:border-white/30 active:scale-95 transition-all text-xs font-black text-[#F5F5F7] shadow-sm group"
+              className="glass-pill h-8 px-3 rounded-full inline-flex items-center gap-1.5 hover:border-white/30 active:scale-95 transition-all text-xs font-black text-[#F5F5F7] shadow-sm group"
               title="Regresar al HUB principal"
               aria-label="Regresar al HUB"
             >

@@ -2,6 +2,49 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v1.9.1] - 2026-09-15 (Reorganización Minimalista de Comidas, Confinamiento de Píldoras y Rediseño Glassmorphism del Modal de Fechas)
+
+### 🌟 Nuevas Funcionalidades & Experiencia de Usuario
+- **Rediseño Glassmorphism del Modal de Selección de Fechas (`DateSelectionModal.tsx`)**:
+  - Transformación integral de la lámina inferior con la skill `glassmorphism`:
+    - Contenedor con `glass-surface-elevated rounded-t-[36px] backdrop-blur-3xl border-t border-white/20 shadow-2xl`.
+    - Tirador de hoja translúcido superior (`w-10 h-1.5 rounded-full bg-white/20`).
+    - Cabecera en cápsula de cristal con botón de cierre circular `✕` con micro-animaciones en hover y active.
+    - Fichas interactivas para **Hoy** y **Ayer** con `glass-pill` e indicador activo con halo esmeralda (`glass-pill-active border-[#34C759]/40 bg-[#34C759]/15 shadow-[0_0_20px_rgba(52,199,89,0.25)]`).
+    - Selector personalizado con píldora interactiva de fecha nativa y botón de retorno a hoy.
+- **Reorganización Minimalista de la Sección 2 (Comidas & Dieta - `MealsSection.tsx`)**:
+  - **Eliminación de Elementos Redundantes**: Se eliminó la tarjeta duplicada de fecha y las 4 cajas grandes vacías de desayuno, almuerzo, cena y snacks que saturaban la pantalla.
+  - **Hero Bento Card Unificada**:
+    - Telemetría en tiempo real: Calorías consumidas vs meta con barra de progreso luminosa bioluminiscente.
+    - Micro-píldoras de macronutrientes: Proteína, Carbos y Grasas en cápsulas translúcidas.
+    - **Acciones Rápidas Integradas**: Botón primario `✨ Escanear con IA` y secundario `+ Manual` alojados dentro de la tarjeta, eliminando por completo los botones flotantes que colisionaban con el dock.
+  - **Selector Segmentado por Tiempos de Comida**:
+    - Píldoras de cristal para alternar instantáneamente entre `Todos`, `Desayuno`, `Almuerzo`, `Cena` y `Snacks`.
+    - Estado vacío elegante y limpio cuando no hay registros para el filtro seleccionado.
+  - **Galería de Fotos Reales**:
+    - Visualización compacta de fotos capturadas al pie de la vista con marcos esmerilados y badges de calorías.
+
+### ⚡ Optimizaciones y Correcciones de Bugs
+- **Confinamiento Estricto de Píldoras de Comidas Frecuentes**:
+  - Aplicación de `max-w-[125px] truncate` y `inline-flex items-center` en `fav.name` para evitar que títulos extensos desborden la píldora o empujen los botones de acción fuera de la pantalla.
+- **Ajuste y Confinamiento del Dock Inferior (`RecompView.tsx`)**:
+  - Eliminación de `scale-105` en los botones activos de la barra de navegación para que la píldora activa permanezca 100% contenida y al ras dentro del dock sin sobresalir.
+- **Corrección de Espaciado Inferior (`pb-36`)**:
+  - Aumento del padding inferior a `pb-36` en `RecompView.tsx`, `MealsSection.tsx`, `ProfilePage.tsx` y `TrainingSection.tsx` para garantizar que el dock flotante nunca tape contenidos ni botones al deslizar hacia el final.
+- **Alineación Vertical Perfecta de Píldoras de Cabecera (`RecompHeader.tsx`)**:
+  - Unificación de altura (`h-8`) y alineación en línea en el selector de fecha, las rachas y el botón de retorno al HUB.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `src/components/recomp/DateSelectionModal.tsx` - Rediseño con Glassmorphism puro.
+- `[MODIFICADO]` `src/components/recomp/MealsSection.tsx` - Reorganización minimalista y confinamiento de píldoras.
+- `[MODIFICADO]` `src/components/recomp/RecompView.tsx` - Ajuste del dock inferior y padding pb-36.
+- `[MODIFICADO]` `src/components/recomp/RecompHeader.tsx` - Alineación h-8 en píldoras de cabecera.
+- `[MODIFICADO]` `src/components/recomp/ProfilePage.tsx` - Padding pb-36 para despeje del dock.
+- `[MODIFICADO]` `src/components/recomp/TrainingSection.tsx` - Padding pb-36 para despeje del dock.
+- `[MODIFICADO]` `Updates.md` - Registro oficial de la versión v1.9.1.
+
+---
+
 ## 🚀 [v1.9.0] - 2026-09-15 (Corrección Crítica de Loop de Logros, Restauración de Dock Inferior, Nueva Rutina Semanal y Rediseño Integral Glassmorphism de RecompAI)
 
 ### 🌟 Nuevas Funcionalidades & Experiencia de Usuario

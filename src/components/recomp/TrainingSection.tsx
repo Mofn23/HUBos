@@ -91,7 +91,7 @@ export const TrainingSection: React.FC = () => {
   };
 
   return (
-    <div className="space-y-5 pb-28 animate-fade-in relative z-10">
+    <div className="space-y-5 pb-36 animate-fade-in relative z-10">
       {/* 1. Header */}
       <div>
         <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">

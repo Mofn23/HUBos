@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { useRecompStore } from '@/stores/useRecompStore';
-import { getTodayKey, getYesterdayKey, formatDateSpanish } from '@/lib/date';
+import { getTodayKey, getYesterdayKey } from '@/lib/date';
 import { format, parseISO } from 'date-fns';
 import { es } from 'date-fns/locale';
 
@@ -34,47 +34,55 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-end justify-center">
-      {/* Backdrop */}
+      {/* Backdrop con desenfoque de cristal profundo */}
       <div
-        className="fixed inset-0 bg-black/85 backdrop-blur-md transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/75 backdrop-blur-xl transition-opacity animate-fade-in"
         onClick={onClose}
       />
 
-      {/* MonAI Bottom Sheet */}
+      {/* Glassmorphism Bottom Sheet */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4"
+        className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[36px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl backdrop-blur-3xl"
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Ambient Top Drag Indicator */}
+        <div className="w-10 h-1.5 rounded-full bg-white/20 mx-auto -mt-1 mb-2" />
+
         {/* Header */}
-        <div className="flex items-center justify-between pb-2">
+        <div className="flex items-center justify-between pb-1 border-b border-white/5">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">📅</span>
-            <h3 className="text-xl font-black text-[#F5F5F7]">Seleccionar Fecha</h3>
+            <span className="text-xl">🗓️</span>
+            <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">Seleccionar Fecha</h3>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
+            className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white hover:border-white/30 transition-colors active:scale-90"
+            aria-label="Cerrar modal"
           >
-            <span className="text-base font-bold">✕</span>
+            <span className="text-xs font-black">✕</span>
           </button>
         </div>
 
         {/* Option 1: HOY */}
         <button
           onClick={() => handleSelectDate(todayKey)}
-          className={`w-full p-4 rounded-[22px] border text-left flex items-center justify-between transition-all ${
+          className={`w-full p-4 rounded-[22px] text-left flex items-center justify-between transition-all ${
             isToday
-              ? 'bg-[#34C759]/12 border-[#34C759]'
-              : 'bg-[#1C1C1E] border-white/5 hover:bg-[#242426]'
+              ? 'glass-pill-active border-[#34C759]/40 bg-[#34C759]/15 shadow-[0_0_20px_rgba(52,199,89,0.25)]'
+              : 'glass-pill hover:border-white/25 active:scale-[0.99]'
           }`}
         >
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-full bg-[#2A2A2C] flex items-center justify-center text-xl shrink-0">
+            <div
+              className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0 ${
+                isToday ? 'bg-[#34C759]/20 text-[#34C759]' : 'glass-pill text-white/80'
+              }`}
+            >
               ☀️
             </div>
             <div>
               <div
-                className={`text-base font-extrabold ${
+                className={`text-sm font-black ${
                   isToday ? 'text-[#34C759]' : 'text-[#F5F5F7]'
                 }`}
               >
@@ -86,7 +94,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
             </div>
           </div>
           {isToday && (
-            <div className="w-6 h-6 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0">
+            <div className="w-6 h-6 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0 shadow-[0_0_10px_#34C759]">
               ✓
             </div>
           )}
@@ -95,19 +103,23 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
         {/* Option 2: AYER */}
         <button
           onClick={() => handleSelectDate(yesterdayKey)}
-          className={`w-full p-4 rounded-[22px] border text-left flex items-center justify-between transition-all ${
+          className={`w-full p-4 rounded-[22px] text-left flex items-center justify-between transition-all ${
             isYesterday
-              ? 'bg-[#34C759]/12 border-[#34C759]'
-              : 'bg-[#1C1C1E] border-white/5 hover:bg-[#242426]'
+              ? 'glass-pill-active border-[#34C759]/40 bg-[#34C759]/15 shadow-[0_0_20px_rgba(52,199,89,0.25)]'
+              : 'glass-pill hover:border-white/25 active:scale-[0.99]'
           }`}
         >
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-full bg-[#2A2A2C] flex items-center justify-center text-xl shrink-0">
+            <div
+              className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0 ${
+                isYesterday ? 'bg-[#34C759]/20 text-[#34C759]' : 'glass-pill text-white/80'
+              }`}
+            >
               ◀️
             </div>
             <div>
               <div
-                className={`text-base font-extrabold ${
+                className={`text-sm font-black ${
                   isYesterday ? 'text-[#34C759]' : 'text-[#F5F5F7]'
                 }`}
               >
@@ -119,21 +131,21 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
             </div>
           </div>
           {isYesterday && (
-            <div className="w-6 h-6 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0">
+            <div className="w-6 h-6 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0 shadow-[0_0_10px_#34C759]">
               ✓
             </div>
           )}
         </button>
 
         {/* Option 3: CALENDARIO PERSONALIZADO */}
-        <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-2">
-          <div className="flex items-center gap-2 text-xs font-extrabold text-[#8E8E93] uppercase tracking-wider">
+        <div className="glass-surface p-4 rounded-[22px] border-t-white/20 space-y-2">
+          <div className="flex items-center gap-2 text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
             <span>📅</span>
             <span>O ELIGE UNA FECHA ESPECÍFICA</span>
           </div>
 
           <div
-            className="w-full relative flex items-center justify-center py-3.5 px-4 rounded-xl bg-[#2A2A2C] text-[#F5F5F7] font-extrabold text-center cursor-pointer active:scale-[0.99] transition-transform"
+            className="w-full relative flex items-center justify-center py-3.5 px-4 rounded-xl glass-pill text-[#F5F5F7] font-black text-center cursor-pointer active:scale-[0.99] transition-transform hover:border-white/30"
             onClick={() => dateInputRef.current?.showPicker?.()}
           >
             <span className="capitalize">{formattedSelectedDate}</span>
@@ -153,7 +165,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
         {!isToday && (
           <button
             onClick={() => handleSelectDate(todayKey)}
-            className="w-full py-3.5 rounded-full bg-[#2A2A2C] border border-white/10 text-[#F5F5F7] font-extrabold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all"
+            className="glass-pill w-full py-3.5 rounded-full text-[#F5F5F7] font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all hover:border-white/30 shadow-md"
           >
             <span>🔄</span>
             <span>Volver a Hoy</span>

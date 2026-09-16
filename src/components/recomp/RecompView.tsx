@@ -115,7 +115,7 @@ export const RecompView: React.FC = () => {
   const selectedDayWater = waterLogs[selectedDate] || 0;
 
   return (
-    <div className="flex-1 flex flex-col px-4 pt-16 pb-28 overflow-y-auto no-scrollbar animate-fade-in relative">
+    <div className="flex-1 flex flex-col px-4 pt-16 pb-36 overflow-y-auto no-scrollbar animate-fade-in relative">
       {/* Ambient Radial Glowing Orbs for Glass Refraction */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
         <div className="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#34C759]/10 blur-[100px]" />
@@ -213,7 +213,7 @@ export const RecompView: React.FC = () => {
           <button
             className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
               currentTab === 'dashboard'
-                ? 'glass-pill-active text-[#34C759] shadow-md scale-105'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
             }`}
             onClick={() => setCurrentTab('dashboard')}
@@ -224,7 +224,7 @@ export const RecompView: React.FC = () => {
           <button
             className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
               currentTab === 'meals'
-                ? 'glass-pill-active text-[#34C759] shadow-md scale-105'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
             }`}
             onClick={() => setCurrentTab('meals')}
@@ -235,7 +235,7 @@ export const RecompView: React.FC = () => {
           <button
             className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
               currentTab === 'training'
-                ? 'glass-pill-active text-[#34C759] shadow-md scale-105'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
             }`}
             onClick={() => setCurrentTab('training')}
@@ -246,7 +246,7 @@ export const RecompView: React.FC = () => {
           <button
             className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
               currentTab === 'profile'
-                ? 'glass-pill-active text-[#34C759] shadow-md scale-105'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
                 : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
             }`}
             onClick={() => setCurrentTab('profile')}
