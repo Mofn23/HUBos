@@ -9,12 +9,12 @@ export interface DailyRoutineInfo {
 }
 
 /**
- * Returns the exact daily workout routine according to the user's weekly split:
- * - Lunes: Torso Hipertrofia
- * - Martes: Pierna Hipertrofia
- * - Miércoles: Descanso Activo
- * - Jueves: Torso Hipertrofia
- * - Viernes: Pierna Hipertrofia
+ * Returns the exact daily workout routine according to the user's updated weekly split:
+ * - Lunes: Jalón (Pull)
+ * - Martes: Empuje (Push)
+ * - Miércoles: Pierna
+ * - Jueves: Torso completo
+ * - Viernes: Pierna
  * - Sábado & Domingo: Descanso Activo
  */
 export function getDailyRoutine(dateStr: string): DailyRoutineInfo {
@@ -25,40 +25,40 @@ export function getDailyRoutine(dateStr: string): DailyRoutineInfo {
     switch (day) {
       case 1: // Lunes
         return {
-          title: 'Torso Hipertrofia',
-          subtitle: 'Pecho, Espalda & Brazos',
-          focus: 'Torso',
-          icon: '💪',
+          title: 'Jalón (Pull)',
+          subtitle: 'Espalda, Bíceps & Deltoides Posterior',
+          focus: 'Jalón',
+          icon: '🏋️‍♂️',
           isRest: false,
         };
       case 2: // Martes
         return {
-          title: 'Pierna Hipertrofia',
-          subtitle: 'Cuádriceps & Isquios',
-          focus: 'Pierna',
-          icon: '🦵',
+          title: 'Empuje (Push)',
+          subtitle: 'Pecho, Hombro & Tríceps',
+          focus: 'Empuje',
+          icon: '💪',
           isRest: false,
         };
       case 3: // Miércoles
         return {
-          title: 'Descanso Activo',
-          subtitle: 'Recuperación & Carga',
-          focus: 'Descanso',
-          icon: '🧘',
-          isRest: true,
+          title: 'Pierna',
+          subtitle: 'Cuádriceps, Femoral & Gemelos',
+          focus: 'Pierna',
+          icon: '🦵',
+          isRest: false,
         };
       case 4: // Jueves
         return {
-          title: 'Torso Hipertrofia',
-          subtitle: 'Pecho, Espalda & Brazos',
+          title: 'Torso Completo',
+          subtitle: 'Pecho, Espalda, Hombro & Brazos',
           focus: 'Torso',
-          icon: '💪',
+          icon: '🦍',
           isRest: false,
         };
       case 5: // Viernes
         return {
-          title: 'Pierna Hipertrofia',
-          subtitle: 'Cuádriceps & Isquios',
+          title: 'Pierna',
+          subtitle: 'Enfoque Glúteo, Femoral & Fuerza',
           focus: 'Pierna',
           icon: '🦵',
           isRest: false,
@@ -70,16 +70,16 @@ export function getDailyRoutine(dateStr: string): DailyRoutineInfo {
           title: 'Descanso Activo',
           subtitle: 'Recuperación & Movilidad',
           focus: 'Descanso',
-          icon: '😴',
+          icon: '🧘',
           isRest: true,
         };
     }
   } catch {
     return {
-      title: 'Torso Hipertrofia',
-      subtitle: 'Pecho, Espalda & Brazos',
-      focus: 'Torso',
-      icon: '💪',
+      title: 'Jalón (Pull)',
+      subtitle: 'Espalda, Bíceps & Deltoides Posterior',
+      focus: 'Jalón',
+      icon: '🏋️‍♂️',
       isRest: false,
     };
   }

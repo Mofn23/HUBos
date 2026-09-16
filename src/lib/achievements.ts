@@ -23,6 +23,9 @@ export const ALL_ACHIEVEMENT_DEFINITIONS: AchievementDefinition[] = [
   { id: 'protein-7', title: 'Fuerza Proteica', description: 'Cumpliste tu meta de proteína', icon: '🥩', category: 'nutrition' },
   { id: 'no-excuses', title: 'Cero Excusas', description: '5 entrenamientos completados', icon: '🎯', category: 'training' },
   { id: 'steel-constancy', title: 'Constancia de Acero', description: '10 entrenamientos registrados en tu bitácora', icon: '🛡️', category: 'training' },
+  { id: 't-rex', title: 'T-Rex Piernas', description: '3 entrenamientos de pierna completados', icon: '🦖', category: 'training' },
+  { id: 'night-owl', title: 'Noctámbulo', description: 'Entrenamiento registrado después de las 9:00 PM', icon: '🦉', category: 'special' },
+  { id: 'cardio-king', title: 'Cardio & Salud', description: '15 días activos de registro constante', icon: '🏃', category: 'special' },
 ];
 
 export interface AchievementEvaluationInput {
@@ -42,7 +45,9 @@ export function evaluateAchievements(input: AchievementEvaluationInput): Achieve
   const currentUnlockedMap = new Map<string, string | undefined>();
 
   achievements.forEach((a) => {
-    currentUnlockedMap.set(a.id, a.unlockedAt);
+    if (a.unlockedAt) {
+      currentUnlockedMap.set(a.id, a.unlockedAt);
+    }
   });
 
   const newlyUnlocked: AchievementItem[] = [];
@@ -75,7 +80,7 @@ export function evaluateAchievements(input: AchievementEvaluationInput): Achieve
       }
 
       case 'hydration-10': {
-        const days = Object.values(waterLogs).filter((glasses) => glasses >= 8);
+        const days = Object.values(waterLogs).filter((glasses) => glasses >= 10);
         return days.length >= 10;
       }
 
@@ -103,6 +108,26 @@ export function evaluateAchievements(input: AchievementEvaluationInput): Achieve
 
       case 'steel-constancy':
         return trainingLogs.length >= 10;
+
+      case 't-rex':
+        return trainingLogs.filter((t) =>
+          (t.title || '').toLowerCase().includes('pierna') ||
+          (t.muscleGroups || []).some((m) => m.toLowerCase().includes('pierna') || m.toLowerCase().includes('cuádriceps'))
+        ).length >= 3;
+
+      case 'night-owl':
+        return trainingLogs.some((t) => {
+          if (!t.id) return false;
+          try {
+            const hour = new Date(t.date).getHours();
+            return hour >= 21;
+          } catch {
+            return false;
+          }
+        });
+
+      case 'cardio-king':
+        return trainingLogs.length >= 15;
 
       default:
         return false;

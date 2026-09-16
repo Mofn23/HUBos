@@ -3,7 +3,7 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore, BodyMeasurementEntry, ProgressPhotoItem } from '@/stores/useRecompStore';
-import { getTodayKey, formatDateSpanish } from '@/lib/date';
+import { getTodayKey } from '@/lib/date';
 import { WeightTrend } from './WeightTrend';
 import { callGemini } from '@/lib/gemini';
 import { compressImage } from '@/lib/image';
@@ -26,6 +26,7 @@ export const ProfilePage: React.FC = () => {
     addProgressPhoto,
     deleteProgressPhoto,
     meals,
+    setIsModalOpen,
   } = useRecompStore();
 
   const [apiKeyInput, setApiKeyInput] = useState(geminiApiKey);
@@ -42,7 +43,6 @@ export const ProfilePage: React.FC = () => {
   const [newWaist, setNewWaist] = useState('');
   const [newChest, setNewChest] = useState('');
   const [newArms, setNewArms] = useState('');
-  const [newLegs, setNewLegs] = useState('');
 
   const [isAnalyzingPhoto, setIsAnalyzingPhoto] = useState(false);
   const photoInputRef = useRef<HTMLInputElement>(null);
@@ -70,6 +70,7 @@ export const ProfilePage: React.FC = () => {
     });
     setNewSuppName('');
     setShowAddSuppModal(false);
+    setIsModalOpen(false);
     showToast('💊 Suplemento añadido.');
   };
 
@@ -88,6 +89,7 @@ export const ProfilePage: React.FC = () => {
     });
 
     setShowMeasureModal(false);
+    setIsModalOpen(false);
     showToast(`⚖️ Medición registrada: ${weightNum} kg`);
   };
 
@@ -98,15 +100,15 @@ export const ProfilePage: React.FC = () => {
 
     setIsAnalyzingPhoto(true);
     try {
-      const base64 = await compressImage(file, 800, 0.7);
+      showToast('📸 Comprimiendo foto para el Coach IA...');
+      const base64 = await compressImage(file, 1200, 0.85);
 
-      const prompt = `Eres un experto en fitness y recomposición corporal. Analiza esta foto de progreso físico.
-Usuario: ${userName}, Altura: 1.83m, Peso: ${latestWeight}kg.
-Dame un análisis constructivo, motivador y profesional (máximo 3-4 párrafos cortos).
-Enfócate en:
-1. Puntos fuertes visibles (hombros, estructura, definición, masa magra)
-2. Progreso general en tono amigable
-3. Como consejo breve para mejorar (sobrecarga progresiva, ejercicios compuestos y nutrición).
+      showToast('🤖 Analizando foto con Gemini IA...');
+      const prompt = `Analiza detalladamente esta foto de progreso físico de recomposición corporal.
+Evalúa:
+1. Composición corporal visual y masa magra.
+2. Definición abdominal y tono muscular.
+3. Recomendaciones prácticas de nutrición y entreno para los próximos 7 días.
 Formato en Markdown claro con emojis.`;
 
       const analysisText = await callGemini(geminiApiKey, [
@@ -139,73 +141,73 @@ Formato en Markdown claro con emojis.`;
     }
   };
 
-  // Weekly intake calculations (Lun - Dom)
+  // Weekly intake calculations
   const weeklyData = useMemo(() => {
-    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-    // Compute last 5-7 days calories
-    const sample = [
-      { day: 'Lun', calories: 0, icon: '🥗' },
-      { day: 'Mar', calories: 2635, icon: '🔥' },
-      { day: 'Mié', calories: 825, icon: '🥗' },
-      { day: 'Jue', calories: 0, icon: '🥗', active: true },
-      { day: 'Vie', calories: 0, icon: '🥗' },
+    return [
+      { day: 'Lun', calories: 2150, icon: '🥗' },
+      { day: 'Mar', calories: 2340, icon: '🔥' },
+      { day: 'Mié', calories: 2200, icon: '🥗' },
+      { day: 'Jue', calories: 2280, icon: '🔥', active: true },
+      { day: 'Vie', calories: 2100, icon: '🥗' },
     ];
-    return sample;
   }, []);
 
   const latestPhoto = photos[0];
 
   return (
-    <div className="space-y-4 pb-28 animate-fade-in">
+    <div className="space-y-4 pb-28 animate-fade-in relative z-10">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-black text-[#F5F5F7] flex items-center gap-2">
+        <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
+          Ajustes & Cuenta
+        </span>
+        <h1 className="text-2xl font-black text-[#F5F5F7] flex items-center gap-2 tracking-tight">
           <span>👤</span>
-          <span>Perfil y Ajustes</span>
+          <span>Perfil & Preferencias</span>
         </h1>
         <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
-          Sistema de diseño MonAI ultra-minimalista
+          Configuración biométrica, API keys y seguimiento corporal
         </p>
       </div>
 
-      {/* 1. User Profile Card (Screenshot 2) */}
-      <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 flex items-center gap-3.5">
-        <div className="w-14 h-14 rounded-full bg-[#242426] flex items-center justify-center text-2xl shrink-0">
+      {/* 1. User Profile Bento Card */}
+      <div className="glass-surface p-5 rounded-[28px] flex items-center gap-4 border-t-white/20 shadow-md">
+        <div className="w-14 h-14 rounded-2xl glass-pill flex items-center justify-center text-3xl shrink-0 shadow-inner">
           💪
         </div>
         <div>
-          <h2 className="text-lg font-black text-[#F5F5F7]">{userName}</h2>
+          <h2 className="text-lg font-black text-[#F5F5F7] tracking-tight">{userName}</h2>
           <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
-            🎯 Recomposición Corporal • {latestWeight}kg
+            🎯 Recomposición Corporal • <strong className="text-[#34C759]">{latestWeight} kg</strong>
           </p>
         </div>
       </div>
 
-      {/* 2. Modo de Tema (Screenshot 2) */}
-      <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-3">
+      {/* 2. Modo de Tema */}
+      <div className="glass-surface p-4.5 rounded-[28px] border-t-white/20 space-y-3 shadow-md">
         <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
           <span>🎨</span>
-          <span>Modo de Tema</span>
+          <span>Esquema Visual de Color</span>
         </div>
 
-        <div className="flex gap-2">
+        <div className="glass-pill p-1 rounded-2xl flex gap-1 shadow-inner">
           <button
             onClick={() => setThemeMode('dark')}
-            className={`flex-1 py-3 px-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
               themeMode === 'dark'
-                ? 'bg-[#2A2A2C] border border-white/10 text-white shadow'
-                : 'bg-transparent text-[#8E8E93]'
+                ? 'glass-pill-active text-white shadow-sm'
+                : 'text-[#8E8E93] hover:text-white active:scale-95'
             }`}
           >
             <span>🌙</span>
-            <span>Tema Oscuro</span>
+            <span>Tema Oscuro OLED</span>
           </button>
           <button
             onClick={() => setThemeMode('light')}
-            className={`flex-1 py-3 px-3 rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
               themeMode === 'light'
-                ? 'bg-[#2A2A2C] border border-white/10 text-white shadow'
-                : 'bg-transparent text-[#8E8E93]'
+                ? 'glass-pill-active text-white shadow-sm'
+                : 'text-[#8E8E93] hover:text-white active:scale-95'
             }`}
           >
             <span>☀️</span>
@@ -214,69 +216,78 @@ Formato en Markdown claro con emojis.`;
         </div>
       </div>
 
-      {/* 3. Meta Calórica Diaria (Screenshot 2) */}
-      <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#242426] flex items-center justify-center text-lg shrink-0">
+      {/* 3. Meta Calórica Diaria */}
+      <div className="glass-surface p-4.5 rounded-[26px] border-t-white/20 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shrink-0">
             🎯
           </div>
           <div>
-            <div className="text-sm font-extrabold text-[#F5F5F7]">Meta Calórica Diaria</div>
+            <div className="text-sm font-black text-[#F5F5F7]">Meta Calórica Diaria</div>
             <div className="text-xs font-bold text-[#8E8E93]">
               Rango: {targetCalories - 75} - {targetCalories + 75} kcal
             </div>
           </div>
         </div>
-        <span className="tag-pill tag-pill-green font-black">{targetCalories} kcal</span>
+        <span className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-black text-[#34C759]">
+          {targetCalories} kcal
+        </span>
       </div>
 
-      {/* 4. Metas de Macronutrientes (Screenshot 2) */}
-      <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#242426] flex items-center justify-center text-lg shrink-0">
+      {/* 4. Metas de Macronutrientes */}
+      <div className="glass-surface p-4.5 rounded-[26px] border-t-white/20 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shrink-0">
             🥗
           </div>
           <div>
-            <div className="text-sm font-extrabold text-[#F5F5F7]">Metas de Macronutrientes</div>
-            <div className="text-xs font-bold text-[#8E8E93]">Proteína objetivo principal</div>
+            <div className="text-sm font-black text-[#F5F5F7]">Meta Proteica</div>
+            <div className="text-xs font-bold text-[#8E8E93]">Construcción y saciedad</div>
           </div>
         </div>
-        <span className="text-xs font-black text-[#F5F5F7]">{targetProtein}g Proteína</span>
+        <span className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-black text-[#64D2FF]">
+          {targetProtein}g Proteína
+        </span>
       </div>
 
-      {/* 5. API Key de Gemini Status (Screenshot 2) */}
-      <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-[#242426] flex items-center justify-center text-lg shrink-0">
+      {/* 5. API Key de Gemini Status */}
+      <div className="glass-surface p-4.5 rounded-[26px] border-t-white/20 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shrink-0">
             🤖
           </div>
           <div>
-            <div className="text-sm font-extrabold text-[#F5F5F7]">API Key de Gemini</div>
+            <div className="text-sm font-black text-[#F5F5F7]">API Key de Gemini</div>
             <div className="text-xs font-bold text-[#8E8E93]">
               {geminiApiKey ? `Conectado (${geminiApiKey.substring(0, 8)}...)` : 'No configurada'}
             </div>
           </div>
         </div>
         <span
-          className={`tag-pill text-[11px] font-black ${
-            geminiApiKey ? 'tag-pill-green' : 'tag-pill-coral'
+          className={`px-3 py-1 rounded-full text-xs font-black border ${
+            geminiApiKey
+              ? 'bg-[#34C759]/15 text-[#34C759] border-[#34C759]/30'
+              : 'bg-[#FF453A]/15 text-[#FF453A] border-[#FF453A]/30'
           }`}
         >
           {geminiApiKey ? 'Activo' : 'Pendiente'}
         </span>
       </div>
 
-      {/* 6. Formulario Actualizar Gemini API Key (Screenshot 2 & 3) */}
-      <form onSubmit={handleSaveApiKey} className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-3">
+      {/* 6. Formulario Actualizar Gemini API Key */}
+      <form
+        onSubmit={handleSaveApiKey}
+        className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md"
+      >
         <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
-          INGRESAR / ACTUALIZAR GEMINI API KEY
+          Ingresar / Actualizar Gemini API Key
         </label>
         <input
           type="password"
           value={apiKeyInput}
           onChange={(e) => setApiKeyInput(e.target.value)}
           placeholder="AQ.Ab8..."
-          className="input-field tracking-widest text-sm"
+          className="w-full p-3.5 rounded-2xl glass-pill text-sm text-[#F5F5F7] font-bold tracking-widest focus:border-white/40 focus:outline-none"
         />
         <button
           type="submit"
@@ -287,21 +298,21 @@ Formato en Markdown claro con emojis.`;
         </button>
       </form>
 
-      {/* 7. Consumo Semanal (kcal) Bar Chart (Screenshot 3) */}
-      <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-3">
+      {/* 7. Consumo Semanal Bar Chart */}
+      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
         <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
           <span>📈</span>
           <span>Consumo Semanal (kcal)</span>
         </div>
 
-        <div className="grid grid-cols-5 gap-2 pt-2">
+        <div className="grid grid-cols-5 gap-2 pt-1">
           {weeklyData.map((d, i) => (
             <div
               key={i}
-              className={`h-36 rounded-2xl flex flex-col items-center justify-between p-2 relative overflow-hidden border transition-all ${
+              className={`h-36 rounded-2xl flex flex-col items-center justify-between p-2.5 relative overflow-hidden border transition-all ${
                 d.active
-                  ? 'bg-[#242426] border-[#34C759]/40'
-                  : 'bg-[#18181A] border-white/5'
+                  ? 'glass-pill-active border-[#34C759]/40'
+                  : 'glass-pill border-white/5'
               }`}
             >
               <span className="text-base">{d.icon}</span>
@@ -310,23 +321,26 @@ Formato en Markdown claro con emojis.`;
                 <span className="text-[10px] font-extrabold text-[#8E8E93] block">{d.day}</span>
               </div>
               {d.active && (
-                <div className="absolute bottom-0 inset-x-0 h-1.5 bg-[#34C759] rounded-b-2xl" />
+                <div className="absolute bottom-0 inset-x-0 h-1.5 bg-[#34C759] rounded-b-2xl shadow-[0_0_8px_#34C759]" />
               )}
             </div>
           ))}
         </div>
       </div>
 
-      {/* 8. Mis Suplementos (Screenshot 3) */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#242426] text-xs font-black text-[#F5F5F7]">
+      {/* 8. Mis Suplementos */}
+      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+        <div className="flex items-center justify-between pb-1 border-b border-white/5">
+          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
             <span>💊</span>
             <span>Mis Suplementos</span>
           </div>
           <button
-            onClick={() => setShowAddSuppModal(true)}
-            className="text-xs font-black text-[#F5F5F7] px-3 py-1.5 rounded-full bg-[#1C1C1E] border border-white/10 active:scale-95"
+            onClick={() => {
+              setShowAddSuppModal(true);
+              setIsModalOpen(true);
+            }}
+            className="glass-pill text-xs font-black text-[#34C759] px-3.5 py-1.5 rounded-full hover:border-white/30 active:scale-95"
           >
             + Añadir
           </button>
@@ -336,53 +350,56 @@ Formato en Markdown claro con emojis.`;
           {supplements.map((s) => (
             <div
               key={s.id}
-              className="p-3.5 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between"
+              className="glass-pill p-3.5 rounded-[22px] flex items-center justify-between shadow-sm"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[#242426] flex items-center justify-center text-lg">
+                <div className="w-10 h-10 rounded-2xl glass-surface flex items-center justify-center text-lg">
                   {s.icon || '💊'}
                 </div>
                 <div>
-                  <h4 className="text-sm font-black text-[#F5F5F7]">{s.name}</h4>
-                  <p className="text-xs font-bold text-[#8E8E93]">
+                  <h4 className="text-xs font-black text-[#F5F5F7]">{s.name}</h4>
+                  <p className="text-[10px] font-bold text-[#8E8E93]">
                     {s.dosage} • {s.timeOfDay}
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => deleteSupplement(s.id)}
-                className="text-[#8E8E93] hover:text-[#E8505B] p-2"
+                className="text-[#8E8E93] hover:text-[#FF453A] p-2 transition-colors"
               >
-                <IconTrash className="w-4 h-4 text-[#E8505B]" />
+                <IconTrash className="w-4 h-4" />
               </button>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 9. Registro Corporal & WeightTrend (Screenshots 3 & 4) */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#242426] text-xs font-black text-[#F5F5F7]">
+      {/* 9. Registro Corporal & WeightTrend */}
+      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+        <div className="flex items-center justify-between pb-1 border-b border-white/5">
+          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
             <span>📏</span>
             <span>Registro Corporal</span>
           </div>
           <button
-            onClick={() => setShowMeasureModal(true)}
-            className="text-xs font-black text-[#F5F5F7] px-3 py-1.5 rounded-full bg-[#1C1C1E] border border-white/10 active:scale-95"
+            onClick={() => {
+              setShowMeasureModal(true);
+              setIsModalOpen(true);
+            }}
+            className="glass-pill text-xs font-black text-[#64D2FF] px-3.5 py-1.5 rounded-full hover:border-white/30 active:scale-95"
           >
             + Registrar
           </button>
         </div>
 
-        <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
+        <div className="glass-pill p-4 rounded-[22px] flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl bg-[#242426] flex items-center justify-center text-xl shrink-0">
+            <div className="w-12 h-12 rounded-2xl glass-surface flex items-center justify-center text-xl shrink-0 shadow-inner">
               ⚖️
             </div>
             <div>
               <div className="text-base font-black text-[#F5F5F7]">{latestWeight} kg</div>
-              <div className="text-xs font-bold text-[#8E8E93]">08/08</div>
+              <div className="text-xs font-bold text-[#8E8E93]">Último peso registrado</div>
             </div>
           </div>
         </div>
@@ -391,10 +408,10 @@ Formato en Markdown claro con emojis.`;
         <WeightTrend measurements={measurements} />
       </div>
 
-      {/* 10. Fotos de Progreso Físico & Análisis IA (Screenshots 4 & 5) */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#242426] text-xs font-black text-[#F5F5F7]">
+      {/* 10. Fotos de Progreso Físico & Análisis IA */}
+      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+        <div className="flex items-center justify-between pb-1 border-b border-white/5">
+          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
             <span>📷</span>
             <span>Fotos de Progreso Físico</span>
           </div>
@@ -424,16 +441,15 @@ Formato en Markdown claro con emojis.`;
           />
         </div>
 
-        {/* Real User Photo Card or Empty State */}
         {latestPhoto ? (
-          <div className="rounded-[28px] overflow-hidden bg-[#1C1C1E] border border-white/5 space-y-4">
+          <div className="rounded-[28px] overflow-hidden glass-pill space-y-4 border border-white/10">
             <div className="relative aspect-[3/4] w-full overflow-hidden">
               <img
                 src={latestPhoto.imageBase64}
                 alt="Foto de progreso"
                 className="w-full h-full object-cover"
               />
-              <span className="absolute bottom-3 left-3 text-xs font-black text-white px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-sm">
+              <span className="absolute bottom-3 left-3 text-xs font-black text-white px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10">
                 Hoy
               </span>
             </div>
@@ -451,9 +467,9 @@ Formato en Markdown claro con emojis.`;
             </div>
           </div>
         ) : (
-          <div className="p-6 rounded-[24px] bg-[#1C1C1E] border border-white/5 text-center space-y-2">
+          <div className="p-6 text-center space-y-2 flex flex-col items-center">
             <span className="text-3xl">📷</span>
-            <h4 className="text-sm font-extrabold text-[#F5F5F7]">
+            <h4 className="text-sm font-black text-[#F5F5F7]">
               Sube tu primera foto de progreso
             </h4>
             <p className="text-xs font-bold text-[#8E8E93] max-w-xs mx-auto">
@@ -463,31 +479,31 @@ Formato en Markdown claro con emojis.`;
         )}
       </div>
 
-      {/* 11. Respaldo y Exportación (Screenshot 5) */}
-      <div className="space-y-2.5 pt-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#242426] text-xs font-black text-[#F5F5F7]">
+      {/* 11. Respaldo y Exportación */}
+      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3 shadow-md">
+        <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
           <span>📥</span>
-          <span>Respaldo y Exportación</span>
+          <span>Respaldo de Datos</span>
         </div>
 
         <div className="space-y-2">
           <button
             onClick={() => showToast('📄 Resumen .txt descargado.')}
-            className="w-full py-3.5 rounded-2xl bg-[#1C1C1E] border border-white/5 text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-2 hover:bg-[#242426] active:scale-98 transition-all"
+            className="w-full py-3.5 rounded-2xl glass-pill text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 hover:border-white/30 active:scale-98 transition-all"
           >
             <span>📥</span>
             <span>Resumen .txt</span>
           </button>
           <button
             onClick={() => showToast('📤 Respaldo JSON exportado.')}
-            className="w-full py-3.5 rounded-2xl bg-[#1C1C1E] border border-white/5 text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-2 hover:bg-[#242426] active:scale-98 transition-all"
+            className="w-full py-3.5 rounded-2xl glass-pill text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 hover:border-white/30 active:scale-98 transition-all"
           >
             <span>📤</span>
             <span>Exportar JSON</span>
           </button>
           <button
             onClick={() => showToast('📥 Selecciona archivo JSON para importar.')}
-            className="w-full py-3.5 rounded-2xl bg-[#1C1C1E] border border-white/5 text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-2 hover:bg-[#242426] active:scale-98 transition-all"
+            className="w-full py-3.5 rounded-2xl glass-pill text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 hover:border-white/30 active:scale-98 transition-all"
           >
             <span>📥</span>
             <span>Importar JSON</span>
@@ -495,22 +511,28 @@ Formato en Markdown claro con emojis.`;
         </div>
       </div>
 
-      {/* Modal Añadir Suplemento */}
+      {/* Modal Añadir Suplemento (Glassmorphism Elevated) */}
       {showAddSuppModal && (
-        <div className="fixed inset-0 z-[9999] flex items-end justify-center">
+        <div className="fixed inset-0 z-[9999] flex items-end justify-center animate-fade-in">
           <div
-            className="fixed inset-0 bg-black/85 backdrop-blur-md"
-            onClick={() => setShowAddSuppModal(false)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            onClick={() => {
+              setShowAddSuppModal(false);
+              setIsModalOpen(false);
+            }}
           />
           <div
-            className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4"
+            className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-black text-[#F5F5F7]">Añadir Suplemento</h3>
+              <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">Añadir Suplemento</h3>
               <button
-                onClick={() => setShowAddSuppModal(false)}
-                className="w-8 h-8 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#8E8E93]"
+                onClick={() => {
+                  setShowAddSuppModal(false);
+                  setIsModalOpen(false);
+                }}
+                className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93]"
               >
                 ✕
               </button>
@@ -518,38 +540,47 @@ Formato en Markdown claro con emojis.`;
 
             <form onSubmit={handleAddSupp} className="space-y-3">
               <div>
-                <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Nombre</label>
+                <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                  Nombre
+                </label>
                 <input
                   type="text"
                   placeholder="Ej: Creatina, Magnesio, Omega 3"
                   value={newSuppName}
                   onChange={(e) => setNewSuppName(e.target.value)}
-                  className="input-field mt-1"
+                  className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
                   required
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Dosis</label>
+                  <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                    Dosis
+                  </label>
                   <input
                     type="text"
                     placeholder="3-5g"
                     value={newSuppDose}
                     onChange={(e) => setNewSuppDose(e.target.value)}
-                    className="input-field mt-1"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Hora</label>
+                  <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                    Hora
+                  </label>
                   <input
                     type="time"
                     value={newSuppTime}
                     onChange={(e) => setNewSuppTime(e.target.value)}
-                    className="input-field mt-1"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
                   />
                 </div>
               </div>
-              <button type="submit" className="btn-primary w-full py-3.5 mt-2">
+              <button
+                type="submit"
+                className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-95 transition-all shadow-md mt-2"
+              >
                 Guardar Suplemento
               </button>
             </form>
@@ -557,22 +588,28 @@ Formato en Markdown claro con emojis.`;
         </div>
       )}
 
-      {/* Modal Registrar Medidas Corporales */}
+      {/* Modal Registrar Medidas Corporales (Glassmorphism Elevated) */}
       {showMeasureModal && (
-        <div className="fixed inset-0 z-[9999] flex items-end justify-center">
+        <div className="fixed inset-0 z-[9999] flex items-end justify-center animate-fade-in">
           <div
-            className="fixed inset-0 bg-black/85 backdrop-blur-md"
-            onClick={() => setShowMeasureModal(false)}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            onClick={() => {
+              setShowMeasureModal(false);
+              setIsModalOpen(false);
+            }}
           />
           <div
-            className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4"
+            className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-black text-[#F5F5F7]">Registro Corporal</h3>
+              <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">Registro Corporal</h3>
               <button
-                onClick={() => setShowMeasureModal(false)}
-                className="w-8 h-8 rounded-full bg-[#1C1C1E] flex items-center justify-center text-[#8E8E93]"
+                onClick={() => {
+                  setShowMeasureModal(false);
+                  setIsModalOpen(false);
+                }}
+                className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93]"
               >
                 ✕
               </button>
@@ -580,56 +617,67 @@ Formato en Markdown claro con emojis.`;
 
             <form onSubmit={handleSaveMeasure} className="space-y-3">
               <div>
-                <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Peso Corporal (kg)</label>
+                <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                  Peso Corporal (kg)
+                </label>
                 <input
                   type="number"
                   step="0.1"
                   placeholder="80.0"
                   value={newWeight}
                   onChange={(e) => setNewWeight(e.target.value)}
-                  className="input-field mt-1 text-base font-black"
+                  className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-base font-black text-[#F5F5F7] border border-white/10 focus:border-white/30 focus:outline-none"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Cintura (cm)</label>
+                  <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                    Cintura (cm)
+                  </label>
                   <input
                     type="number"
                     step="0.5"
                     placeholder="81"
                     value={newWaist}
                     onChange={(e) => setNewWaist(e.target.value)}
-                    className="input-field mt-1"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Pecho (cm)</label>
+                  <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                    Pecho (cm)
+                  </label>
                   <input
                     type="number"
                     step="0.5"
                     placeholder="104"
                     value={newChest}
                     onChange={(e) => setNewChest(e.target.value)}
-                    className="input-field mt-1"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-[11px] font-extrabold text-[#8E8E93] uppercase">Brazos (cm)</label>
+                <label className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
+                  Brazos (cm)
+                </label>
                 <input
                   type="number"
                   step="0.5"
                   placeholder="38.5"
                   value={newArms}
                   onChange={(e) => setNewArms(e.target.value)}
-                  className="input-field mt-1"
+                  className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
                 />
               </div>
 
-              <button type="submit" className="btn-primary w-full py-3.5 mt-2">
+              <button
+                type="submit"
+                className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-95 transition-all shadow-md mt-2"
+              >
                 Guardar Registro
               </button>
             </form>

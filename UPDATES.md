@@ -2,6 +2,72 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v1.9.0] - 2026-09-15 (Corrección Crítica de Loop de Logros, Restauración de Dock Inferior, Nueva Rutina Semanal y Rediseño Integral Glassmorphism de RecompAI)
+
+### 🌟 Nuevas Funcionalidades & Experiencia de Usuario
+- **Rediseño Visual Integral con Glassmorphism en Toda la Suite RecompAI**:
+  - **Fondo Atmosférico Global (`RecompView.tsx`)**: Orbes radiales desenfocados en esmeralda, violeta y ámbar en capas `pointer-events-none` fijas que refractan brillo a través de todas las superficies.
+  - **Dock Flotante de Navegación de Cristal Líquido**: Barra inferior suspendida (`glass-surface-elevated rounded-full backdrop-blur-3xl border border-white/20`) con iconos esmerilados y píldora activa con halo luminiscente esmeralda.
+  - **Cabecera de Telemetría Rediseñada (`RecompHeader.tsx`)**: Cápsula de fecha y selector diario con estética de vidrio esmerilado, racha de fuego en vidrio líquido y botón de regreso al HUB.
+  - **Dashboard Diario (Sección 1)**:
+    - `CalorieRing.tsx`: Bento card de cristal esmerilado (`glass-surface rounded-[32px] p-6`) con selector de unidad de energía segmentado.
+    - `MacroBars.tsx`: Bento card con pistas translúcidas y barras de gradiente bioluminiscente para Proteína, Carbohidratos y Grasas.
+    - `GlycogenPumpMeter.tsx`: Medidor de bombeo muscular y glucógeno en cápsula esmerilada con halo de brillo reactivo.
+    - `QuickStatsRow.tsx`: Tres pods flotantes de cristal para la rutina del día, racha de gimnasio y telemetría calórica.
+    - `WaterTracker.tsx`: Bento card con 12 burbujas de vidrio esmerilado interactivas y botones táctiles de cristal.
+    - `SupplementTracker.tsx`: Fichas translúcidas con casillas interactivas en vidrio líquido.
+  - **Comidas & Nutrición (Sección 2)**:
+    - `MealsSection.tsx` & `MealLog.tsx`: Filtros por categoría en píldoras de cristal esmerilado, tarjetas de comidas con badges de macros y galería de fotos con marcos translúcidos.
+    - `MealCaptureModal.tsx` & `MealDetailModal.tsx`: Hojas modales elevadas de cristal con fondo ultra-desenfocado, visualización de fotos en alta resolución desde IndexedDB y micro-píldoras de nutrientes.
+  - **Entrenamiento (Sección 3)**:
+    - `TrainingSection.tsx`: Bento card con la nueva rutina de entrenamiento diario, tarjeta Symmetry AI en cristal violeta y registro de sesiones en cápsulas translúcidas.
+    - `MuscleHeatmap.tsx`: Contenedor de cristal esmerilado con mapa anatómico y píldoras luminosas de intensidad muscular.
+  - **Perfil & Metas (Sección 4)**:
+    - `ProfilePage.tsx`: Tarjetas bento de cristal esmerilado para objetivos de recomposición corporal, galería de progreso fotográfico y configuración de credenciales de IA.
+
+- **Actualización de la Rutina de Entrenamiento Semanal (`trainingSchedule.ts`)**:
+  - Adaptación exacta a la nueva distribución del usuario:
+    - **Lunes**: Jalón (Pull) — Espalda, Deltoides Posterior, Bíceps.
+    - **Martes**: Empuje (Push) — Pecho, Deltoides Anterior/Lateral, Tríceps.
+    - **Miércoles**: Pierna — Cuádriceps, Isquiotibiales, Glúteos, Pantorrillas.
+    - **Jueves**: Torso Completo — Espalda, Pecho, Hombros, Brazos.
+    - **Viernes**: Pierna — Enfoque Femoral, Glúteo, Gemelos, Aductores.
+    - **Sábado & Domingo**: Descanso Activo — Caminata 8-10k pasos, movilidad, recuperación.
+
+### ⚡ Optimizaciones y Correcciones de Bugs
+- **Corrección Definitiva del Bucle Infinito de Notificaciones de Logros**:
+  - Se subsanó la falta de persistencia de `unlockedAt` para logros no presentes en versiones anteriores de `localStorage` (`useRecompStore.ts`).
+  - Ahora `checkAchievements()` sincroniza contra el catálogo canónico completo (`ALL_ACHIEVEMENT_DEFINITIONS`), marcando y persistiendo `unlockedAt` de forma inmutable para que nunca se vuelvan a notificar en bucle.
+  - `evaluateAchievements()` descarta estrictamente cualquier logro que ya posea `unlockedAt`.
+- **Desbloqueo y Visualización del Catálogo Completo de Logros (`AchievementsGrid.tsx`)**:
+  - Despliegue de los 17 logros canónicos en fichas de cristal esmerilado translúcidas con badges de completado y modal informativo.
+- **Corrección de Desaparición del Dock Inferior al Registrar Comidas**:
+  - Corrección del ciclo de vida y limpieza de `isModalOpen` en `MealCaptureModal.tsx` para garantizar que la barra inferior (`RecompView.tsx`) permanezca siempre visible al cerrar o guardar la comida.
+- **Corrección de Firma de Argumentos en Análisis con Gemini**:
+  - Arreglo en la llamada a `parseMealWithGemini` pasando `(geminiApiKey, { text, imageBase64 })`.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `src/stores/useRecompStore.ts` - Corrección de persistencia de logros y prevención de loops.
+- `[MODIFICADO]` `src/lib/achievements.ts` - Catálogo canónico de 17 logros y evaluación idempotente.
+- `[MODIFICADO]` `src/lib/trainingSchedule.ts` - Nueva distribución de rutina semanal del usuario.
+- `[MODIFICADO]` `src/components/recomp/MealCaptureModal.tsx` - Corrección de ciclo de vida del dock y llamada a Gemini.
+- `[MODIFICADO]` `src/components/recomp/RecompView.tsx` - Orbes ambientales y dock flotante en cristal esmerilado.
+- `[MODIFICADO]` `src/components/recomp/RecompHeader.tsx` - Cabecera en cápsula de cristal con selector de fechas.
+- `[MODIFICADO]` `src/components/recomp/CalorieRing.tsx` - Bento card de calorías con selector de unidades.
+- `[MODIFICADO]` `src/components/recomp/MacroBars.tsx` - Bento card con pistas y barras de macronutrientes luminiscentes.
+- `[MODIFICADO]` `src/components/recomp/GlycogenPumpMeter.tsx` - Medidor de bombeo muscular y glucógeno esmerilado.
+- `[MODIFICADO]` `src/components/recomp/QuickStatsRow.tsx` - Pods flotantes de telemetría diaria.
+- `[MODIFICADO]` `src/components/recomp/WaterTracker.tsx` - Bento card con burbujas de agua de vidrio esmerilado.
+- `[MODIFICADO]` `src/components/recomp/SupplementTracker.tsx` - Tarjetas translúcidas con casillas interactivas.
+- `[MODIFICADO]` `src/components/recomp/AchievementsGrid.tsx` - Grilla completa de 17 logros en fichas de cristal.
+- `[MODIFICADO]` `src/components/recomp/MealsSection.tsx` - Sección de comidas con píldoras y galería de fotos.
+- `[MODIFICADO]` `src/components/recomp/MealLog.tsx` - Registro de comidas en tarjetas esmeriladas.
+- `[MODIFICADO]` `src/components/recomp/MealDetailModal.tsx` - Hoja modal elevada de fotos HD y desglose de macros.
+- `[MODIFICADO]` `src/components/recomp/TrainingSection.tsx` - Sección de entrenamiento con nueva rutina y Symmetry AI.
+- `[MODIFICADO]` `src/components/recomp/MuscleHeatmap.tsx` - Mapa muscular en contenedor de cristal esmerilado.
+- `[MODIFICADO]` `src/components/recomp/ProfilePage.tsx` - Perfil de usuario con tarjetas bento de cristal.
+- `[MODIFICADO]` `Updates.md` - Registro oficial de la versión v1.9.0.
+
 ---
 
 ## 🚀 [v1.8.0] - 2026-09-11 (Rediseño Total con Glassmorphism: HUB Principal, Píldoras Flotantes en Calendario & Minimalismo Absoluto en Horarios)

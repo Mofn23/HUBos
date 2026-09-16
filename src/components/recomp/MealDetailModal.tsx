@@ -24,6 +24,8 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
   useEffect(() => {
     if (isOpen) {
       setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
     }
     return () => {
       setIsModalOpen(false);
@@ -62,45 +64,54 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
   const handleDelete = () => {
     if (confirm(`¿Eliminar ${meal.name}?`)) {
       onDelete(meal.id);
+      setIsModalOpen(false);
       onClose();
     }
   };
 
-  return (
-    <div className="fixed inset-0 z-[99999] flex items-end justify-center">
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={onClose} />
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    onClose();
+  };
 
-      {/* MonAI Bottom Sheet */}
+  return (
+    <div className="fixed inset-0 z-[99999] flex items-end justify-center animate-fade-in">
+      {/* Backdrop */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
+        onClick={handleCloseModal}
+      />
+
+      {/* Bottom Sheet (Glassmorphism Elevated) */}
+      <div
+        className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-[#242426] text-xs font-black text-[#F5F5F7] flex items-center gap-1.5">
+            <span className="glass-pill px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7] flex items-center gap-1.5 shadow-sm">
               <span>{catInfo.icon}</span>
               <span>{catInfo.label}</span>
             </span>
             {meal.isAiGenerated && (
-              <span className="px-2 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] text-[10px] font-black">
-                ✨ Escaneo IA
+              <span className="px-2.5 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] border border-[#34C759]/25 text-[10px] font-black animate-pulse">
+                ✨ Escaneo con IA
               </span>
             )}
           </div>
 
           <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
+            onClick={handleCloseModal}
+            className="glass-pill w-9 h-9 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
           >
-            <span className="text-base font-bold">✕</span>
+            <span className="text-sm font-bold">✕</span>
           </button>
         </div>
 
-        {/* Meal Photo (if uploaded) */}
+        {/* Meal Photo HD */}
         {photo && (
-          <div className="relative w-full h-52 rounded-3xl overflow-hidden border border-white/10 shadow-lg">
+          <div className="relative w-full h-56 rounded-[28px] overflow-hidden border border-white/15 shadow-xl">
             <img
               src={photo}
               alt={meal.name}
@@ -109,8 +120,8 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
           </div>
         )}
 
-        {/* Title & Calories Banner */}
-        <div className="p-4 rounded-2xl bg-[#1C1C1E] border border-white/5 flex items-center justify-between shadow-sm">
+        {/* Title & Calories Card */}
+        <div className="glass-surface p-4.5 rounded-[24px] flex items-center justify-between border-t-white/20 shadow-sm">
           <div>
             <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">{meal.name}</h3>
             <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
@@ -118,24 +129,24 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
             </p>
           </div>
 
-          <div className="px-4 py-2 rounded-2xl bg-[#242426] border border-white/10 text-right">
-            <span className="text-base font-black text-[#34C759] block">
+          <div className="glass-pill px-4 py-2 rounded-2xl text-right">
+            <span className="text-base font-black text-[#34C759] block leading-none">
               {meal.calories}
             </span>
-            <span className="text-[10px] font-bold text-[#8E8E93] uppercase block">
+            <span className="text-[9px] font-black text-[#8E8E93] uppercase tracking-wider block mt-0.5">
               kcal
             </span>
           </div>
         </div>
 
-        {/* Macronutrient Breakdown Grid (4 Cards) */}
+        {/* Macronutrient Breakdown Grid */}
         <div className="grid grid-cols-3 gap-2.5">
           {/* Protein */}
-          <div className="p-3.5 rounded-2xl bg-[#1C1C1E] border border-white/5 text-center space-y-0.5 shadow-sm">
+          <div className="glass-surface p-3.5 rounded-[22px] text-center space-y-1 shadow-sm border-t-white/10">
             <span className="text-[10px] font-black text-[#8E8E93] uppercase tracking-wider block">
               Proteína
             </span>
-            <span className="text-base font-black text-[#34C759] block">
+            <span className="text-base font-black text-[#64D2FF] block">
               {meal.protein}g
             </span>
             <span className="text-[9px] font-bold text-[#8E8E93] block">
@@ -144,11 +155,11 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
           </div>
 
           {/* Carbs */}
-          <div className="p-3.5 rounded-2xl bg-[#1C1C1E] border border-white/5 text-center space-y-0.5 shadow-sm">
+          <div className="glass-surface p-3.5 rounded-[22px] text-center space-y-1 shadow-sm border-t-white/10">
             <span className="text-[10px] font-black text-[#8E8E93] uppercase tracking-wider block">
               Carbos
             </span>
-            <span className="text-base font-black text-[#0A84FF] block">
+            <span className="text-base font-black text-[#FFD60A] block">
               {meal.carbs}g
             </span>
             <span className="text-[9px] font-bold text-[#8E8E93] block">
@@ -157,11 +168,11 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
           </div>
 
           {/* Fat */}
-          <div className="p-3.5 rounded-2xl bg-[#1C1C1E] border border-white/5 text-center space-y-0.5 shadow-sm">
+          <div className="glass-surface p-3.5 rounded-[22px] text-center space-y-1 shadow-sm border-t-white/10">
             <span className="text-[10px] font-black text-[#8E8E93] uppercase tracking-wider block">
               Grasas
             </span>
-            <span className="text-base font-black text-[#FF9500] block">
+            <span className="text-base font-black text-[#DA8FFF] block">
               {meal.fat}g
             </span>
             <span className="text-[9px] font-bold text-[#8E8E93] block">
@@ -172,7 +183,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
 
         {/* Notes / Description */}
         {meal.notes && (
-          <div className="p-4 rounded-2xl bg-[#1C1C1E] border border-white/5 space-y-1.5">
+          <div className="glass-surface p-4 rounded-[22px] space-y-1 border-t-white/10">
             <span className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
               Descripción / Notas
             </span>
@@ -183,11 +194,11 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
         )}
 
         {/* Delete Action Button */}
-        <div className="pt-2 pb-4 flex justify-center">
+        <div className="pt-2 pb-2 flex justify-center">
           <button
             type="button"
             onClick={handleDelete}
-            className="px-6 py-3 rounded-full bg-[#E8505B]/15 border border-[#E8505B]/30 text-[#E8505B] font-black text-xs flex items-center gap-2 active:scale-95 transition-all"
+            className="px-6 py-2.5 rounded-full bg-[#FF453A]/15 border border-[#FF453A]/30 text-[#FF453A] font-black text-xs flex items-center gap-2 active:scale-95 transition-all shadow-sm"
           >
             <IconTrash className="w-4 h-4" />
             <span>Eliminar Comida</span>

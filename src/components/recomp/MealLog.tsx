@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { MealItem } from '@/stores/useRecompStore';
-import { IconPlus, IconTrash } from '../common/Icons';
+import { IconPlus } from '../common/Icons';
 import { MealDetailModal } from './MealDetailModal';
 
 interface MealLogProps {
@@ -30,23 +30,36 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
   };
 
   return (
-    <div className="mb-6">
-      {/* MonAI List Header */}
-      <div className="monai-list-header">
-        <div className="monai-list-header-pill">
-          <span>🍽️ Comidas de Hoy</span>
+    <div className="mb-8 space-y-3">
+      {/* Header */}
+      <div className="flex items-center justify-between px-1">
+        <div className="glass-pill px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+          <span>🍽️</span>
+          <span className="text-xs font-black text-[#F5F5F7]">Comidas de Hoy</span>
         </div>
-        <div className="monai-list-header-total">
-          Total: <strong className="text-[#F5F5F7]">{totalCalories} kcal</strong>
+        <div className="text-xs font-black text-[#8E8E93]">
+          Total: <strong className="text-[#F5F5F7] font-black">{totalCalories} kcal</strong>
         </div>
       </div>
 
       {/* Empty State or Meal List */}
       {meals.length === 0 ? (
-        <div className="card empty-state">
-          <span className="empty-state-emoji">🍽️</span>
-          <span className="empty-state-text">No has registrado comidas hoy.</span>
-          <button className="btn-primary mt-2" onClick={onAddMeal}>
+        <div className="glass-surface rounded-[28px] p-8 text-center space-y-3.5 flex flex-col items-center justify-center border-t-white/20">
+          <div className="w-14 h-14 rounded-2xl glass-pill flex items-center justify-center text-3xl shadow-inner">
+            🍽️
+          </div>
+          <div className="space-y-1">
+            <span className="text-sm font-black text-[#F5F5F7] block">
+              No has registrado comidas hoy
+            </span>
+            <span className="text-xs font-bold text-[#8E8E93] block">
+              Toca para tomar foto o describir tu comida con Gemini
+            </span>
+          </div>
+          <button
+            className="px-5 py-2.5 rounded-full bg-[#34C759] text-black font-black text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-all mt-1"
+            onClick={onAddMeal}
+          >
             <IconPlus className="w-4 h-4 stroke-[3]" />
             <span>Registrar Comida</span>
           </button>
@@ -61,10 +74,10 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
               <div
                 key={meal.id}
                 onClick={() => setSelectedMeal(meal)}
-                className="p-3.5 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between shadow-sm cursor-pointer hover:bg-[#242426] active:scale-[0.99] transition-all group"
+                className="glass-surface rounded-[24px] p-3.5 flex items-center justify-between shadow-sm cursor-pointer hover:border-white/25 active:scale-[0.99] transition-all group"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-12 h-12 rounded-2xl bg-[#242426] flex items-center justify-center text-xl shrink-0 overflow-hidden border border-white/5">
+                  <div className="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center text-xl shrink-0 overflow-hidden shadow-inner group-hover:scale-105 transition-transform">
                     {hasPhoto ? (
                       <img
                         src={meal.imageUrl || meal.imageBase64}
@@ -78,36 +91,32 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
 
                   <div className="overflow-hidden">
                     <div className="flex items-center gap-1.5">
-                      <h4 className="text-xs font-extrabold text-[#F5F5F7] truncate group-hover:text-[#34C759] transition-colors">
+                      <h4 className="text-xs font-black text-[#F5F5F7] truncate group-hover:text-white transition-colors">
                         {meal.name}
                       </h4>
                       {meal.isAiGenerated && (
-                        <span className="text-[9px] text-[#34C759] font-black">✨</span>
+                        <span className="text-[9px] text-[#34C759] font-black animate-pulse">✨</span>
                       )}
                     </div>
 
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="tag-pill tag-pill-green">{meal.protein}g P</span>
-                      <span className="tag-pill">{meal.carbs}g C</span>
-                      <span className="tag-pill">{meal.fat}g G</span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#0A84FF]/15 text-[#64D2FF] text-[10px] font-black border border-[#0A84FF]/25">
+                        {meal.protein}g P
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#FF9F0A]/15 text-[#FFD60A] text-[10px] font-black border border-[#FF9F0A]/25">
+                        {meal.carbs}g C
+                      </span>
+                      <span className="px-2 py-0.5 rounded-full bg-[#BF5AF2]/15 text-[#DA8FFF] text-[10px] font-black border border-[#BF5AF2]/25">
+                        {meal.fat}g G
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 shrink-0">
-                  <div className="px-3 py-1.5 rounded-full bg-[#1E1E20] text-xs font-black text-[#F5F5F7] border border-white/5">
+                <div className="flex items-center gap-2 shrink-0 pl-2">
+                  <div className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#F5F5F7]">
                     {meal.calories} kcal
                   </div>
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDeleteMeal(meal.id);
-                    }}
-                    className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center text-[#8E8E93] hover:text-[#E8505B] transition-colors"
-                  >
-                    <IconTrash className="w-3.5 h-3.5" />
-                  </button>
                 </div>
               </div>
             );
@@ -116,15 +125,17 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
       )}
 
       {/* Meal Detail Modal */}
-      <MealDetailModal
-        meal={selectedMeal}
-        isOpen={!!selectedMeal}
-        onClose={() => setSelectedMeal(null)}
-        onDelete={(id) => {
-          onDeleteMeal(id);
-          setSelectedMeal(null);
-        }}
-      />
+      {selectedMeal && (
+        <MealDetailModal
+          meal={selectedMeal}
+          isOpen={Boolean(selectedMeal)}
+          onClose={() => setSelectedMeal(null)}
+          onDelete={(id) => {
+            onDeleteMeal(id);
+            setSelectedMeal(null);
+          }}
+        />
+      )}
     </div>
   );
 };
