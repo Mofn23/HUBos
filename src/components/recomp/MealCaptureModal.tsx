@@ -82,11 +82,11 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         await saveMealImage(mealId, imageForApi);
       }
 
-      // Generate a sharp 420px preview thumbnail for fast list display in localStorage
+      // Generate an ultra-lightweight 160px thumbnail (~4-6KB) for instant saving in native storage
       let thumbnail: string | undefined;
       if (imageForApi) {
         try {
-          thumbnail = await createThumbnail(imageForApi, 420, 0.65);
+          thumbnail = await createThumbnail(imageForApi, 160, 0.5);
         } catch {
           thumbnail = undefined;
         }

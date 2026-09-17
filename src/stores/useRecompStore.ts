@@ -5,6 +5,7 @@ import { getTodayKey } from '@/lib/date';
 import { evaluateAchievements, ALL_ACHIEVEMENT_DEFINITIONS } from '@/lib/achievements';
 import { audioEngine } from '@/lib/audio';
 import { deleteMealImage } from '@/lib/imageStorage';
+import { nativeStorage } from '@/lib/nativeStorage';
 
 export type RecompTab = 'dashboard' | 'meals' | 'training' | 'progress' | 'coach' | 'profile';
 
@@ -515,31 +516,26 @@ export const useRecompStore = create<RecompState>()(
     }),
     {
       name: 'hubos_recomp_v1',
-      storage: createJSONStorage(() => ({
-        getItem: (name: string) => {
-          try {
-            return localStorage.getItem(name);
-          } catch (e) {
-            console.warn('[Storage] Error reading localStorage:', e);
-            return null;
-          }
-        },
-        setItem: (name: string, value: string) => {
-          try {
-            localStorage.setItem(name, value);
-          } catch (e: any) {
-            console.error('[Storage] QuotaExceededError or write failure:', e?.message || e);
-            // Don't crash — silently fail the persist so the app remains functional
-          }
-        },
-        removeItem: (name: string) => {
-          try {
-            localStorage.removeItem(name);
-          } catch (e) {
-            console.warn('[Storage] Error removing from localStorage:', e);
-          }
-        },
-      })),
+      storage: createJSONStorage(() => nativeStorage),
+      partialize: (state) => ({
+        selectedDate: state.selectedDate,
+        targetCalories: state.targetCalories,
+        targetProtein: state.targetProtein,
+        targetCarbs: state.targetCarbs,
+        targetFat: state.targetFat,
+        targetWaterGlasses: state.targetWaterGlasses,
+        meals: state.meals,
+        favoriteMeals: state.favoriteMeals,
+        trainingLogs: state.trainingLogs,
+        measurements: state.measurements,
+        supplements: state.supplements,
+        waterLogs: state.waterLogs,
+        photos: state.photos,
+        streak: state.streak,
+        nutritionStreak: state.nutritionStreak,
+        achievements: state.achievements,
+        coachMessages: state.coachMessages,
+      }),
     }
   )
 );

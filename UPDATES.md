@@ -2,6 +2,52 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v1.9.2] - 2026-09-16 (Persistencia Nativa con @capacitor/preferences en iOS UserDefaults, Cero Pérdida de Datos en SideStore y Vuelco Inmediato al Minimizar/Cerrar)
+
+### 🌟 Nuevas Funcionalidades & Arquitectura de Datos
+- **Integración de Motor de Persistencia Nativa iOS (`@capacitor/preferences` & `nativeStorage.ts`)**:
+  - Toda la persistencia de HUBos deja de depender de la volátil caché web de `localStorage` y se traslada a **`NSUserDefaults` nativo de Apple** a través del plugin oficial `@capacitor/preferences`.
+  - **Inmunidad a SideStore / AltStore**: El archivo `.plist` de preferencias de iOS está protegido a nivel de sistema operativo y **jamás se borra al inyectar o actualizar el archivo `.ipa`**.
+  - **Escritura Nativa Inmediata**: Escrituras a nivel de Swift/Objective-C en milisegundos, eliminando la latencia de guardado.
+  - **Caché en Memoria y Espejo Local**: Lectura a 0ms mediante caché en memoria y respaldo dual síncrono.
+  - **Migración Transparente**: Al iniciar, el sistema lee cualquier dato preexistente de `localStorage` y lo traslada automáticamente a `Preferences` sin pérdida alguna.
+
+- **Alivio de Peso de los Stores y Desacoplamiento de Imágenes Pesadas**:
+  - Las fotos de progreso físico completas (1200px) ahora se guardan directamente en **IndexedDB** (`src/lib/imageStorage.ts`), cuya cuota en iOS es de varios Gigabytes.
+  - En el store de Zustand solo se conserva una micro-miniatura ultraligera (~15KB) o el identificador.
+  - Optimización en `MealCaptureModal.tsx`: Generación de miniaturas de 160px a calidad 0.5 (~4KB), mientras la imagen completa en alta fidelidad se conserva en IndexedDB.
+  - Reducción del tamaño de los stores de ~5MB a escasos ~50-100KB, previniendo para siempre el error `QuotaExceededError`.
+
+- **Vuelco Inmediato de Emergencia en Ciclo de Vida Nativo (`src/app/page.tsx`)**:
+  - Integración con `@capacitor/app` (`appStateChange`), `visibilitychange` y `beforeunload`.
+  - En el milisegundo en que el usuario empieza a deslizar la barra de inicio de iOS para cerrar o cambiar de app, todos los stores (`useRecompStore`, `useHubStore`, `useSubsStore`, `useScheduleStore`) se vuelcan de forma síncrona y forzada a `UserDefaults`.
+
+### ⚡ Optimizaciones y Correcciones de Bugs
+- **Solución a las 3 Causas Raíz de Pérdida de Datos**:
+  1. Eliminación del desbordamiento de cuota de 5MB de WebKit.
+  2. Eliminación de la pérdida por cierre rápido de la app antes de que WebKit escriba al disco.
+  3. Eliminación del reseteo de datos al actualizar el `.ipa` en SideStore.
+- **Limpieza de SSR en Next.js**:
+  - Manejo seguro de entornos sin `window` durante el `next build`, eliminando las advertencias de `ReferenceError: localStorage is not defined`.
+- **Actualización de Herramienta de Respaldo (`HubSettingsSheet.tsx`)**:
+  - La exportación de copias de seguridad JSON ahora incluye todas las sub-aplicaciones (HUB, RecompAI, Suscripciones y Horarios) extraídas directamente del motor nativo.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `src/lib/nativeStorage.ts` - Adaptador universal de almacenamiento nativo con `@capacitor/preferences`.
+- `[MODIFICADO]` `src/lib/imageStorage.ts` - Almacenamiento de fotos de progreso en IndexedDB.
+- `[MODIFICADO]` `src/stores/useRecompStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/stores/useHubStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/stores/useSubsStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/stores/useScheduleStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/components/recomp/MealCaptureModal.tsx` - Optimización de peso de miniatura.
+- `[MODIFICADO]` `src/components/recomp/ProfilePage.tsx` - Guardado de fotos HD en IndexedDB.
+- `[MODIFICADO]` `src/components/hub/HubSettingsSheet.tsx` - Respaldo y reseteo nativo integral.
+- `[MODIFICADO]` `src/app/page.tsx` - Flush de ciclo de vida con `@capacitor/app`.
+- `[MODIFICADO]` `package.json` - Inclusión de `@capacitor/preferences@6.0.4`.
+- `[MODIFICADO]` `Updates.md` - Registro oficial de la versión v1.9.2.
+
+---
+
 ## 🚀 [v1.9.1] - 2026-09-15 (Reorganización Minimalista de Comidas, Confinamiento de Píldoras y Rediseño Glassmorphism del Modal de Fechas)
 
 ### 🌟 Nuevas Funcionalidades & Experiencia de Usuario

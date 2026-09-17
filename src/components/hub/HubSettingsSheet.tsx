@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useHubStore } from '@/stores/useHubStore';
 import { requestNotificationPermissions, sendLocalNotification } from '@/lib/notifications';
+import { nativeStorage, exportAllHubosData } from '@/lib/nativeStorage';
 import { IconSparkles, IconTrash, IconBell, IconRefresh } from '../common/Icons';
 
 export const HubSettingsSheet: React.FC = () => {
@@ -49,13 +50,11 @@ export const HubSettingsSheet: React.FC = () => {
     }
   };
 
-  const handleExportBackup = () => {
+  const handleExportBackup = async () => {
     const backupData = {
-      version: '1.4.1',
+      version: '1.9.2',
       exportedAt: new Date().toISOString(),
-      hub: localStorage.getItem('hubos_main_v1'),
-      recomp: localStorage.getItem('hubos_recomp_v1'),
-      subs: localStorage.getItem('hubos_subs_v1'),
+      data: await exportAllHubosData(),
     };
 
     const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
@@ -68,16 +67,17 @@ export const HubSettingsSheet: React.FC = () => {
     showToast('📦 Copia de seguridad exportada.');
   };
 
-  const handleResetData = (target: 'all' | 'recomp' | 'subs') => {
+  const handleResetData = async (target: 'all' | 'recomp' | 'subs') => {
     if (confirm(`¿Estás seguro de que deseas restablecer los datos de ${target}? Esta acción no se puede deshacer.`)) {
       if (target === 'recomp' || target === 'all') {
-        localStorage.removeItem('hubos_recomp_v1');
+        await nativeStorage.removeItem('hubos_recomp_v1');
       }
       if (target === 'subs' || target === 'all') {
-        localStorage.removeItem('hubos_subs_v1');
+        await nativeStorage.removeItem('hubos_subs_v1');
       }
       if (target === 'all') {
-        localStorage.removeItem('hubos_main_v1');
+        await nativeStorage.removeItem('hubos_main_v1');
+        await nativeStorage.removeItem('hubos_schedule_store_v1');
       }
       showToast('Datos restablecidos. Reiniciando...');
       setTimeout(() => window.location.reload(), 600);

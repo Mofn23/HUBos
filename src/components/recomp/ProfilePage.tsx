@@ -6,7 +6,8 @@ import { useRecompStore, BodyMeasurementEntry, ProgressPhotoItem } from '@/store
 import { getTodayKey } from '@/lib/date';
 import { WeightTrend } from './WeightTrend';
 import { callGemini } from '@/lib/gemini';
-import { compressImage } from '@/lib/image';
+import { compressImage, createThumbnail } from '@/lib/image';
+import { saveProgressPhoto } from '@/lib/imageStorage';
 import { IconTrash, IconCamera, IconSparkles, IconPlus } from '../common/Icons';
 
 export const ProfilePage: React.FC = () => {
@@ -121,10 +122,17 @@ Formato en Markdown claro con emojis.`;
         },
       ]);
 
-      const newPhoto: Omit<ProgressPhotoItem, 'id'> = {
+      const photoId = `photo-${Date.now()}`;
+      // Save full photo in IndexedDB (no 5MB quota)
+      await saveProgressPhoto(photoId, base64);
+      // Create light 360px thumbnail (~15-20KB) for fast list display in state
+      const thumbnail = await createThumbnail(base64, 360, 0.6);
+
+      const newPhoto: ProgressPhotoItem = {
+        id: photoId,
         date: todayKey,
         type: 'front',
-        imageBase64: base64,
+        imageBase64: thumbnail,
         aiAnalysis: analysisText,
       };
 
