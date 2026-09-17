@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import Model from 'react-body-highlighter';
-import type { IExerciseData } from 'react-body-highlighter';
+import type { IExerciseData, Muscle } from 'react-body-highlighter';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import {
   TIERS_CATALOG,
@@ -39,14 +39,14 @@ export const AnatomyRanksTab: React.FC = () => {
       if (config.highlighterMusclesFront.length > 0) {
         antData.push({
           name: `${config.name} (${tierInfo.label})`,
-          muscles: config.highlighterMusclesFront,
+          muscles: config.highlighterMusclesFront as Muscle[],
         });
       }
 
       if (config.highlighterMusclesBack.length > 0) {
         postData.push({
           name: `${config.name} (${tierInfo.label})`,
-          muscles: config.highlighterMusclesBack,
+          muscles: config.highlighterMusclesBack as Muscle[],
         });
       }
     });

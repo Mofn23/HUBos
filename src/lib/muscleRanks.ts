@@ -1,4 +1,5 @@
 import { MuscleTierName, MuscleTierInfo, SetLog } from '@/types/workout';
+import type { Muscle } from 'react-body-highlighter';
 
 export const TIERS_CATALOG: Record<MuscleTierName, MuscleTierInfo> = {
   hierro: {
@@ -122,8 +123,8 @@ export const ANATOMY_CONFIG: Record<
   {
     name: string;
     icon: string;
-    highlighterMusclesFront: string[];
-    highlighterMusclesBack: string[];
+    highlighterMusclesFront: Muscle[];
+    highlighterMusclesBack: Muscle[];
     // Standard relative strength multipliers (1RM / BW) for Gold (lvl 4) and Simétrico (lvl 10)
     multiplierGold: number;
     multiplierSymmetric: number;
