@@ -125,9 +125,9 @@ export const ANATOMY_CONFIG: Record<
     icon: string;
     highlighterMusclesFront: Muscle[];
     highlighterMusclesBack: Muscle[];
-    // Standard relative strength multipliers (1RM / BW) for Gold (lvl 4) and Simétrico (lvl 10)
-    multiplierGold: number;
-    multiplierSymmetric: number;
+    // Multiplicadores progresivos de peso corporal (BW) para niveles 2 a 10:
+    // [Cobre, Plata, Oro, Platino, Diamante, Zafiro, Legendario, Estético, Simétrico]
+    thresholds: number[];
   }
 > = {
   pecho: {
@@ -135,72 +135,64 @@ export const ANATOMY_CONFIG: Record<
     icon: '🛡️',
     highlighterMusclesFront: ['chest'],
     highlighterMusclesBack: [],
-    multiplierGold: 1.0,
-    multiplierSymmetric: 1.9,
+    // Oro = 0.90x BW (~70kg), Diamante = 1.35x BW (~100kg), Simétrico = 2.15x+ BW
+    thresholds: [0.45, 0.65, 0.90, 1.10, 1.35, 1.55, 1.75, 1.95, 2.15],
   },
   espalda: {
     name: 'Espalda & Dorsales',
     icon: '🦅',
     highlighterMusclesFront: [],
     highlighterMusclesBack: ['upper-back', 'lower-back', 'trapezius'],
-    multiplierGold: 1.3,
-    multiplierSymmetric: 2.4,
+    thresholds: [0.60, 0.85, 1.15, 1.40, 1.70, 1.95, 2.20, 2.45, 2.75],
   },
   hombros: {
     name: 'Deltoides (Hombros)',
     icon: '🥥',
     highlighterMusclesFront: ['front-deltoids'],
     highlighterMusclesBack: ['back-deltoids'],
-    multiplierGold: 0.65,
-    multiplierSymmetric: 1.25,
+    thresholds: [0.30, 0.42, 0.56, 0.70, 0.85, 1.00, 1.15, 1.30, 1.45],
   },
   biceps: {
     name: 'Bíceps & Antebrazos',
     icon: '💪',
     highlighterMusclesFront: ['biceps', 'forearm'],
     highlighterMusclesBack: [],
-    multiplierGold: 0.5,
-    multiplierSymmetric: 0.95,
+    thresholds: [0.25, 0.35, 0.45, 0.58, 0.70, 0.82, 0.94, 1.06, 1.18],
   },
   triceps: {
     name: 'Tríceps (Herradura)',
     icon: '⚡',
     highlighterMusclesFront: [],
     highlighterMusclesBack: ['triceps'],
-    multiplierGold: 0.55,
-    multiplierSymmetric: 1.05,
+    thresholds: [0.25, 0.38, 0.50, 0.65, 0.78, 0.92, 1.05, 1.18, 1.32],
   },
   piernas: {
     name: 'Cuádriceps & Femoral',
     icon: '🦵',
     highlighterMusclesFront: ['quadriceps'],
     highlighterMusclesBack: ['hamstring'],
-    multiplierGold: 1.4,
-    multiplierSymmetric: 2.5,
+    thresholds: [0.70, 0.95, 1.25, 1.55, 1.85, 2.15, 2.45, 2.75, 3.05],
   },
   gluteos: {
     name: 'Glúteos',
     icon: '🍑',
     highlighterMusclesFront: [],
     highlighterMusclesBack: ['gluteal'],
-    multiplierGold: 1.5,
-    multiplierSymmetric: 2.6,
+    thresholds: [0.75, 1.00, 1.30, 1.65, 1.95, 2.25, 2.55, 2.85, 3.15],
   },
   pantorrillas: {
     name: 'Pantorrillas (Gemelos)',
     icon: '💎',
     highlighterMusclesFront: ['calves'],
     highlighterMusclesBack: ['calves'],
-    multiplierGold: 1.2,
-    multiplierSymmetric: 2.2,
+    thresholds: [0.60, 0.85, 1.15, 1.45, 1.75, 2.05, 2.35, 2.65, 2.95],
   },
   abdomen: {
     name: 'Abdomen & Core',
     icon: '🍫',
     highlighterMusclesFront: ['abs', 'obliques'],
     highlighterMusclesBack: [],
-    multiplierGold: 0.4,
-    multiplierSymmetric: 0.85,
+    thresholds: [0.20, 0.30, 0.42, 0.55, 0.68, 0.80, 0.92, 1.05, 1.18],
   },
 };
 
@@ -216,23 +208,21 @@ export function getTierFor1RM(
     return TIERS_CATALOG.hierro;
   }
 
-  const weight = Math.max(45, userWeightKg || 75);
+  const weight = Math.max(50, userWeightKg || 75);
   const ratio = best1RM / weight;
   const config = ANATOMY_CONFIG[muscle];
+  const thresholds = config.thresholds;
 
-  // Ratio boundaries
-  const goldRatio = config.multiplierGold;
-  const symmRatio = config.multiplierSymmetric;
-
-  // Linear progression score from 1 to 10
-  const normalized = (ratio / symmRatio) * 10;
-  let level = Math.min(10, Math.max(1, Math.round(normalized)));
-
-  // If lifted equal or more than gold ratio, guarantee at least Gold (4)
-  if (ratio >= goldRatio && level < 4) {
-    level = 4;
+  let level = 1; // Hierro by default
+  for (let i = 0; i < thresholds.length; i++) {
+    if (ratio >= thresholds[i]) {
+      level = i + 2; // e.g. exceeds thresholds[0] -> level 2 (Cobre), etc.
+    } else {
+      break;
+    }
   }
 
+  level = Math.min(10, Math.max(1, level));
   const tierKey = TIER_ORDER[level - 1] || 'hierro';
   return TIERS_CATALOG[tierKey];
 }

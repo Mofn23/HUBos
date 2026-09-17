@@ -9,6 +9,7 @@ import { AnatomyRanksTab } from './AnatomyRanksTab';
 import { ProfileHistoryTab } from './ProfileHistoryTab';
 import { LiveWorkoutFullscreen } from './LiveWorkoutFullscreen';
 import { AiRoutineBuilderModal } from './AiRoutineBuilderModal';
+import { StartWorkoutModal } from './StartWorkoutModal';
 import { Exercise } from '@/types/workout';
 
 export type AesthetixTab = 'routines' | 'exercises' | 'ranks' | 'profile';
@@ -23,6 +24,7 @@ export const AesthetixView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AesthetixTab>('routines');
   const [isAiBuilderOpen, setIsAiBuilderOpen] = useState(false);
   const [isLiveWorkoutOpen, setIsLiveWorkoutOpen] = useState(false);
+  const [isStartWorkoutModalOpen, setIsStartWorkoutModalOpen] = useState(false);
 
   const handleStartSession = (routineId?: string, dayIndex?: number) => {
     startWorkout(routineId, dayIndex);
@@ -52,7 +54,13 @@ export const AesthetixView: React.FC = () => {
       <div className="relative z-10">
         <AesthetixHeader
           onOpenAiBuilder={() => setIsAiBuilderOpen(true)}
-          onOpenLiveWorkout={() => setIsLiveWorkoutOpen(true)}
+          onOpenLiveWorkout={() => {
+            if (activeSession) {
+              setIsLiveWorkoutOpen(true);
+            } else {
+              setIsStartWorkoutModalOpen(true);
+            }
+          }}
         />
       </div>
 
@@ -106,7 +114,7 @@ export const AesthetixView: React.FC = () => {
             if (activeSession) {
               setIsLiveWorkoutOpen(true);
             } else {
-              handleStartSession();
+              setIsStartWorkoutModalOpen(true);
             }
           }}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
@@ -143,6 +151,13 @@ export const AesthetixView: React.FC = () => {
           <span className="text-[10px]">Perfil</span>
         </button>
       </nav>
+
+      {/* Pre-Workout Start Selector Modal */}
+      <StartWorkoutModal
+        isOpen={isStartWorkoutModalOpen}
+        onClose={() => setIsStartWorkoutModalOpen(false)}
+        onStart={handleStartSession}
+      />
 
       {/* Fullscreen Live Workout Session Modal */}
       <LiveWorkoutFullscreen

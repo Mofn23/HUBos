@@ -40,6 +40,7 @@ interface AesthetixState {
   addSet: (exerciseIndex: number) => void;
   removeSet: (exerciseIndex: number, setIndex: number) => void;
   addExerciseToActiveSession: (exercise: { id: string; name: string; category?: string; target?: string }) => void;
+  removeExerciseFromActiveSession: (exerciseIndex: number) => void;
   
   // Rest Timer in Session
   triggerRestTimer: (seconds?: number) => void;
@@ -51,6 +52,7 @@ interface AesthetixState {
 
   // History & PRs
   history: WorkoutHistoryItem[];
+  deleteHistorySession: (sessionId: string) => void;
   prs: Record<string, PersonalRecord>;
 
   // Body Measurements & Profile
@@ -570,6 +572,23 @@ export const useAesthetixStore = create<AesthetixState>()(
         });
       },
 
+      removeExerciseFromActiveSession: (exerciseIndex) => {
+        const state = get();
+        if (!state.activeSession) return;
+        const updated = state.activeSession.exercises.filter((_, i) => i !== exerciseIndex);
+        const nextIndex = Math.min(
+          state.activeSession.currentExerciseIndex,
+          Math.max(0, updated.length - 1)
+        );
+        set({
+          activeSession: {
+            ...state.activeSession,
+            exercises: updated,
+            currentExerciseIndex: nextIndex,
+          },
+        });
+      },
+
       // Rest Timer Actions
       triggerRestTimer: (seconds) => {
         const state = get();
@@ -713,6 +732,11 @@ export const useAesthetixStore = create<AesthetixState>()(
       },
 
       history: [],
+      deleteHistorySession: (sessionId) => {
+        set((state) => ({
+          history: state.history.filter((item) => item.id !== sessionId),
+        }));
+      },
       prs: {},
 
       userWeightKg: 75,

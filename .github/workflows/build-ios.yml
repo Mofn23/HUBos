@@ -58,10 +58,10 @@ jobs:
       - name: Release IPA on GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.0.0
-          name: HUBos Super-App v2.0.0 (SideStore IPA)
+          tag_name: v2.1.0
+          name: HUBos Super-App v2.1.0 (SideStore IPA)
           body: |
-            ## 🚀 HUBos Super-App v2.0.0 (SideStore & AltStore Compatible)
+            ## 🚀 HUBos Super-App v2.1.0 (SideStore & AltStore Compatible)
             
             **HUBos** es un contenedor modular unificado para iOS que agrupa múltiples aplicaciones completas e independientes en un único archivo `.ipa`, permitiendo superar el límite estricto de 3 aplicaciones activas de SideStore / AltStore.
 

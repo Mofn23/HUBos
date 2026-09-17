@@ -26,6 +26,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
     updateSet,
     addSet,
     removeSet,
+    removeExerciseFromActiveSession,
     setCurrentExerciseIndex,
     triggerRestTimer,
     adjustRestTimer,
@@ -108,6 +109,31 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
     }
   };
 
+  const handleCancelWorkout = () => {
+    const confirmCancel = window.confirm(
+      '¿Estás seguro de que deseas cancelar la sesión? Todo el progreso no guardado de esta sesión se descartará.'
+    );
+    if (confirmCancel) {
+      cancelWorkout();
+      showToast('Entrenamiento cancelado.');
+      onClose();
+    }
+  };
+
+  const handleRemoveCurrentExercise = () => {
+    if (!activeSession || activeSession.exercises.length <= 1) {
+      showToast('No puedes quitar el único ejercicio. Si deseas salir, cancela la sesión.');
+      return;
+    }
+    const confirmRemove = window.confirm(
+      `¿Deseas quitar "${currentExercise.exerciseName}" de esta sesión?`
+    );
+    if (confirmRemove) {
+      removeExerciseFromActiveSession(activeSession.currentExerciseIndex);
+      showToast('Ejercicio eliminado de la sesión.');
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-[#0B0B0D] flex flex-col overflow-hidden text-[#F5F5F7] animate-fade-in">
       {/* Ambient background glow */}
@@ -117,20 +143,31 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
       </div>
 
       {/* Top Bar Navigation */}
-      <div className="relative z-10 px-4 pt-12 pb-3 flex items-center justify-between border-b border-white/10 glass-surface">
-        <button
-          onClick={onClose}
-          className="glass-pill h-8 px-3 rounded-full text-xs font-black text-[#8E8E93] hover:text-white flex items-center gap-1 active:scale-95 transition-all"
-        >
-          <span>⌄ Minimizar</span>
-        </button>
+      <div className="relative z-10 px-3 pt-12 pb-3 flex items-center justify-between border-b border-white/10 glass-surface">
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={onClose}
+            className="glass-pill h-8 px-2.5 rounded-full text-xs font-black text-[#8E8E93] hover:text-white flex items-center gap-1 active:scale-95 transition-all"
+            title="Minimizar sesión"
+          >
+            <span>⌄ Minimizar</span>
+          </button>
+
+          <button
+            onClick={handleCancelWorkout}
+            className="glass-pill h-8 px-2.5 rounded-full text-xs font-black text-[#FF453A] hover:bg-[#FF453A]/20 flex items-center gap-1 active:scale-95 transition-all border border-[#FF453A]/30"
+            title="Cancelar y descartar este entrenamiento"
+          >
+            <span>✕ Cancelar</span>
+          </button>
+        </div>
 
         <div className="flex flex-col items-center">
-          <span className="text-[11px] font-black uppercase tracking-widest text-[#34C759] flex items-center gap-1.5">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#34C759] flex items-center gap-1">
             <span className="w-2 h-2 rounded-full bg-[#34C759] animate-ping" />
-            <span>En vivo • {formatTime(elapsedSeconds)}</span>
+            <span>{formatTime(elapsedSeconds)}</span>
           </span>
-          <span className="text-xs font-bold text-[#8E8E93] truncate max-w-[180px]">
+          <span className="text-[11px] font-bold text-[#8E8E93] truncate max-w-[130px]">
             {activeSession.dayName || activeSession.routineName}
           </span>
         </div>
@@ -204,6 +241,14 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                   className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs disabled:opacity-30"
                 >
                   ›
+                </button>
+
+                <button
+                  onClick={handleRemoveCurrentExercise}
+                  title="Quitar este ejercicio"
+                  className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-[#FF453A] hover:border-[#FF453A]/40 transition-all ml-1"
+                >
+                  ✕
                 </button>
               </div>
             </div>

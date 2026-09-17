@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
+import { useHubStore } from '@/stores/useHubStore';
 import { WorkoutRoutine } from '@/types/workout';
+import { CustomRoutineModal } from './CustomRoutineModal';
 
 interface RoutinesTabProps {
   onStartSession: (routineId?: string, dayIndex?: number) => void;
@@ -13,12 +15,31 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
   onStartSession,
   onOpenAiBuilder,
 }) => {
-  const { routines, activeRoutineId, setActiveRoutineId } = useAesthetixStore();
+  const { routines, activeRoutineId, setActiveRoutineId, deleteRoutine } = useAesthetixStore();
+  const { showToast } = useHubStore();
+
+  const [isCustomRoutineModalOpen, setIsCustomRoutineModalOpen] = useState(false);
+  const [selectedDayIdx, setSelectedDayIdx] = useState(0);
 
   const activeRoutine =
     routines.find((r) => r.id === activeRoutineId) || routines[0];
 
-  const [selectedDayIdx, setSelectedDayIdx] = useState(0);
+  const handleDeleteCurrentRoutine = (routineId: string, name: string) => {
+    if (routines.length <= 1) {
+      showToast('Debes mantener al menos una rutina en tu biblioteca.');
+      return;
+    }
+    const confirmDelete = window.confirm(`¿Eliminar la rutina "${name}"?`);
+    if (confirmDelete) {
+      deleteRoutine(routineId);
+      const remaining = routines.filter((r) => r.id !== routineId);
+      if (remaining.length > 0) {
+        setActiveRoutineId(remaining[0].id);
+      }
+      setSelectedDayIdx(0);
+      showToast('Rutina eliminada.');
+    }
+  };
 
   if (!activeRoutine) {
     return (
@@ -44,6 +65,46 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
   return (
     <div className="space-y-4 animate-fade-in">
+      {/* 0. Routines Quick Switcher Bar */}
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between px-1">
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93]">
+            MIS RUTINAS ({routines.length})
+          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setIsCustomRoutineModalOpen(true)}
+              className="text-[11px] font-black text-[#34C759] hover:underline flex items-center gap-1"
+            >
+              <span>+ Manual (PPL x UL)</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {routines.map((r) => {
+            const isActive = r.id === activeRoutine.id;
+            return (
+              <button
+                key={r.id}
+                onClick={() => {
+                  setActiveRoutineId(r.id);
+                  setSelectedDayIdx(0);
+                }}
+                className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-black transition-all flex items-center gap-1.5 ${
+                  isActive
+                    ? 'bg-[#34C759] text-black shadow-md'
+                    : 'glass-pill text-[#8E8E93] hover:text-white'
+                }`}
+              >
+                <span>{isActive ? '⚡' : '📋'}</span>
+                <span className="truncate max-w-[140px]">{r.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {/* 1. Hero Bento Card: Active Routine */}
       <div className="glass-surface rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-4">
         <div className="flex items-center justify-between">
@@ -54,9 +115,20 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
             </span>
           </div>
 
-          <span className="px-3 py-1 rounded-full bg-[#34C759]/15 text-[#34C759] text-[11px] font-black border border-[#34C759]/25">
-            {activeRoutine.targetDaysPerWeek} Días / Sem
-          </span>
+          <div className="flex items-center gap-2">
+            {routines.length > 1 && (
+              <button
+                onClick={() => handleDeleteCurrentRoutine(activeRoutine.id, activeRoutine.name)}
+                className="text-[11px] font-bold text-[#8E8E93] hover:text-[#FF453A] transition-colors px-1"
+                title="Eliminar rutina"
+              >
+                🗑️
+              </button>
+            )}
+            <span className="px-3 py-1 rounded-full bg-[#34C759]/15 text-[#34C759] text-[11px] font-black border border-[#34C759]/25">
+              {activeRoutine.targetDaysPerWeek} Días / Sem
+            </span>
+          </div>
         </div>
 
         <div>
@@ -152,27 +224,58 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
         </div>
       )}
 
-      {/* 4. AI Generator Banner */}
-      <div
-        onClick={onOpenAiBuilder}
-        className="glass-surface rounded-[26px] p-4 flex items-center justify-between cursor-pointer hover:border-cyan-400/30 active:scale-98 transition-all group"
-      >
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[16px] bg-[#64D2FF]/15 border border-[#64D2FF]/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-            ✨
+      {/* 4. Action Banners: Manual Builder & AI Generator */}
+      <div className="space-y-3">
+        {/* Manual Custom Builder Banner */}
+        <div
+          onClick={() => setIsCustomRoutineModalOpen(true)}
+          className="glass-surface rounded-[26px] p-4 flex items-center justify-between cursor-pointer hover:border-[#34C759]/40 active:scale-98 transition-all group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-[16px] bg-[#34C759]/15 border border-[#34C759]/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              🛠️
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-[#F5F5F7]">Diseñar Rutina Manual (PPL x UL)</h4>
+              <p className="text-[11px] font-bold text-[#8E8E93]">
+                Personaliza días de la semana y ejercicios a medida
+              </p>
+            </div>
           </div>
-          <div>
-            <h4 className="text-xs font-black text-[#F5F5F7]">Generador Inteligente Gemini</h4>
-            <p className="text-[11px] font-bold text-[#8E8E93]">
-              Personaliza otra rutina adaptada a tus objetivos
-            </p>
-          </div>
+
+          <span className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#34C759]">
+            Diseñar
+          </span>
         </div>
 
-        <span className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#64D2FF]">
-          Crear
-        </span>
+        {/* AI Generator Banner */}
+        <div
+          onClick={onOpenAiBuilder}
+          className="glass-surface rounded-[26px] p-4 flex items-center justify-between cursor-pointer hover:border-cyan-400/30 active:scale-98 transition-all group"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-[16px] bg-[#64D2FF]/15 border border-[#64D2FF]/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
+              ✨
+            </div>
+            <div>
+              <h4 className="text-xs font-black text-[#F5F5F7]">Generador Inteligente Gemini</h4>
+              <p className="text-[11px] font-bold text-[#8E8E93]">
+                Crea una rutina personalizada con IA en segundos
+              </p>
+            </div>
+          </div>
+
+          <span className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#64D2FF]">
+            Crear
+          </span>
+        </div>
       </div>
+
+      {/* Custom Routine Designer Modal */}
+      <CustomRoutineModal
+        isOpen={isCustomRoutineModalOpen}
+        onClose={() => setIsCustomRoutineModalOpen(false)}
+      />
     </div>
   );
 };

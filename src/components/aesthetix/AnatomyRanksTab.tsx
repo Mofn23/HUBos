@@ -141,32 +141,58 @@ export const AnatomyRanksTab: React.FC = () => {
           Cada grupo muscular se ilumina según tu nivel de fuerza y récord estimado en el gimnasio.
         </p>
 
-        {/* Models Side by Side */}
-        <div className="flex justify-around items-center py-2">
-          <div className="w-[45%] flex flex-col items-center">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-1">
-              Frontal
+        {/* Models Side by Side with Guaranteed 1:2 Ratio Pedestal */}
+        <div className="grid grid-cols-2 gap-3 py-2">
+          <div className="glass-surface rounded-[24px] p-3 flex flex-col items-center border border-white/5 shadow-inner">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-2">
+              Vista Frontal
             </span>
-            <Model
-              type="anterior"
-              data={anteriorData}
-              highlightedColors={customColors}
-              style={{ width: '100%', height: 'auto', maxHeight: '240px' }}
-              svgStyle={{ fill: 'rgba(255, 255, 255, 0.08)' }}
-            />
+            <div className="w-full flex items-center justify-center h-[260px] py-1">
+              <Model
+                type="anterior"
+                data={anteriorData}
+                highlightedColors={customColors}
+                style={{
+                  width: '125px',
+                  height: '250px',
+                  margin: '0 auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                svgStyle={{
+                  fill: 'rgba(255, 255, 255, 0.08)',
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
+                }}
+              />
+            </div>
           </div>
 
-          <div className="w-[45%] flex flex-col items-center">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-1">
-              Posterior
+          <div className="glass-surface rounded-[24px] p-3 flex flex-col items-center border border-white/5 shadow-inner">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-2">
+              Vista Posterior
             </span>
-            <Model
-              type="posterior"
-              data={posteriorData}
-              highlightedColors={customColors}
-              style={{ width: '100%', height: 'auto', maxHeight: '240px' }}
-              svgStyle={{ fill: 'rgba(255, 255, 255, 0.08)' }}
-            />
+            <div className="w-full flex items-center justify-center h-[260px] py-1">
+              <Model
+                type="posterior"
+                data={posteriorData}
+                highlightedColors={customColors}
+                style={{
+                  width: '125px',
+                  height: '250px',
+                  margin: '0 auto',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+                svgStyle={{
+                  fill: 'rgba(255, 255, 255, 0.08)',
+                  overflow: 'visible',
+                  filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>

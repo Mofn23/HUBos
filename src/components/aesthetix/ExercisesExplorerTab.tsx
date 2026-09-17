@@ -26,8 +26,14 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
   const [page, setPage] = useState(1);
   const PAGE_SIZE = 30;
 
+  const [isMuscleDropdownOpen, setIsMuscleDropdownOpen] = useState(false);
+  const [isEquipmentDropdownOpen, setIsEquipmentDropdownOpen] = useState(false);
+
   const bodyParts = useMemo(() => getAvailableBodyParts(), []);
   const equipments = useMemo(() => getAvailableEquipment(), []);
+
+  const selectedBodyPartObj = bodyParts.find((b) => b.key === selectedBodyPart);
+  const selectedEquipmentObj = equipments.find((e) => e.key === selectedEquipment);
 
   const filteredExercises = useMemo(() => {
     return searchExercises(searchQuery, {
@@ -43,6 +49,25 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
   const handleOpenDetail = (ex: Exercise) => {
     setSelectedExercise(ex);
     setIsDetailOpen(true);
+  };
+
+  const handleSelectBodyPart = (key: string) => {
+    setSelectedBodyPart(key);
+    setIsMuscleDropdownOpen(false);
+    setPage(1);
+  };
+
+  const handleSelectEquipment = (key: string) => {
+    setSelectedEquipment(key);
+    setIsEquipmentDropdownOpen(false);
+    setPage(1);
+  };
+
+  const handleResetFilters = () => {
+    setSelectedBodyPart('all');
+    setSelectedEquipment('all');
+    setSearchQuery('');
+    setPage(1);
   };
 
   return (
@@ -70,81 +95,167 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
         )}
       </div>
 
-      {/* 2. Body Part Muscle Filter Pills (Horizontal Scroll) */}
-      <div className="space-y-1.5">
-        <span className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93] px-1">
-          GRUPO MUSCULAR
-        </span>
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+      {/* 2. Fast Dropdown Filter Buttons */}
+      <div className="space-y-2">
+        <div className="grid grid-cols-2 gap-2">
+          {/* Button 1: Grupo Muscular */}
           <button
+            type="button"
             onClick={() => {
-              setSelectedBodyPart('all');
-              setPage(1);
+              setIsMuscleDropdownOpen(!isMuscleDropdownOpen);
+              setIsEquipmentDropdownOpen(false);
             }}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-black transition-all ${
-              selectedBodyPart === 'all'
-                ? 'bg-[#34C759] text-black shadow-md'
-                : 'glass-pill text-[#8E8E93] hover:text-white'
+            className={`px-3.5 py-2.5 rounded-[20px] text-xs font-black transition-all flex items-center justify-between border ${
+              selectedBodyPart !== 'all'
+                ? 'bg-[#34C759]/20 border-[#34C759]/50 text-[#34C759] shadow-[0_0_15px_rgba(52,199,89,0.2)]'
+                : isMuscleDropdownOpen
+                ? 'bg-white/[0.12] border-white/30 text-white'
+                : 'glass-surface border-white/10 text-[#F5F5F7] hover:border-white/20'
             }`}
           >
-            Todos ({filteredExercises.length})
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="text-sm">💪</span>
+              <span className="truncate">
+                {selectedBodyPart === 'all'
+                  ? 'Músculo: Todos'
+                  : selectedBodyPartObj?.label || selectedBodyPart}
+              </span>
+            </div>
+            <span className="text-[10px] opacity-70 shrink-0 ml-1">
+              {isMuscleDropdownOpen ? '▲' : '▼'}
+            </span>
           </button>
 
-          {bodyParts.map((bp) => (
+          {/* Button 2: Equipamiento */}
+          <button
+            type="button"
+            onClick={() => {
+              setIsEquipmentDropdownOpen(!isEquipmentDropdownOpen);
+              setIsMuscleDropdownOpen(false);
+            }}
+            className={`px-3.5 py-2.5 rounded-[20px] text-xs font-black transition-all flex items-center justify-between border ${
+              selectedEquipment !== 'all'
+                ? 'bg-[#64D2FF]/20 border-[#64D2FF]/50 text-[#64D2FF] shadow-[0_0_15px_rgba(100,210,255,0.2)]'
+                : isEquipmentDropdownOpen
+                ? 'bg-white/[0.12] border-white/30 text-white'
+                : 'glass-surface border-white/10 text-[#F5F5F7] hover:border-white/20'
+            }`}
+          >
+            <div className="flex items-center gap-1.5 min-w-0">
+              <span className="text-sm">🏋️</span>
+              <span className="truncate">
+                {selectedEquipment === 'all'
+                  ? 'Equipo: Todos'
+                  : selectedEquipmentObj?.label || selectedEquipment}
+              </span>
+            </div>
+            <span className="text-[10px] opacity-70 shrink-0 ml-1">
+              {isEquipmentDropdownOpen ? '▲' : '▼'}
+            </span>
+          </button>
+        </div>
+
+        {/* Muscle Dropdown Popover List */}
+        {isMuscleDropdownOpen && (
+          <div className="glass-surface-elevated rounded-[24px] p-3 border border-white/20 shadow-2xl space-y-1 max-h-60 overflow-y-auto no-scrollbar animate-slide-up">
+            <div className="flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#8E8E93] border-b border-white/5 mb-1">
+              <span>Selecciona Grupo Muscular</span>
+              <span>Total: {bodyParts.reduce((a, b) => a + b.count, 0)}</span>
+            </div>
+
             <button
-              key={bp.key}
-              onClick={() => {
-                setSelectedBodyPart(bp.key);
-                setPage(1);
-              }}
-              className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-black transition-all ${
-                selectedBodyPart === bp.key
+              type="button"
+              onClick={() => handleSelectBodyPart('all')}
+              className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
+                selectedBodyPart === 'all'
                   ? 'bg-[#34C759] text-black shadow-md'
-                  : 'glass-pill text-[#8E8E93] hover:text-white'
+                  : 'text-[#F5F5F7] hover:bg-white/[0.08]'
               }`}
             >
-              {bp.label} ({bp.count})
+              <span>Todos los Músculos</span>
+              <span className="text-[11px] opacity-80">1.324 ejercicios</span>
             </button>
-          ))}
-        </div>
-      </div>
 
-      {/* 3. Equipment Filter Pills (Horizontal Scroll) */}
-      <div className="space-y-1.5">
-        <span className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93] px-1">
-          EQUIPAMIENTO
-        </span>
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-          <button
-            onClick={() => {
-              setSelectedEquipment('all');
-              setPage(1);
-            }}
-            className={`shrink-0 px-3 py-1 rounded-full text-[11px] font-bold transition-all ${
-              selectedEquipment === 'all'
-                ? 'bg-white/[0.18] text-white border border-white/30'
-                : 'glass-pill text-[#8E8E93]'
-            }`}
-          >
-            Todos
-          </button>
-          {equipments.map((eq) => (
+            {bodyParts.map((bp) => {
+              const isSelected = selectedBodyPart === bp.key;
+              return (
+                <button
+                  key={bp.key}
+                  type="button"
+                  onClick={() => handleSelectBodyPart(bp.key)}
+                  className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
+                    isSelected
+                      ? 'bg-[#34C759] text-black shadow-md'
+                      : 'text-[#F5F5F7] hover:bg-white/[0.08]'
+                  }`}
+                >
+                  <span className="capitalize">{bp.label}</span>
+                  <span className={`text-[11px] ${isSelected ? 'text-black/80' : 'text-[#8E8E93]'}`}>
+                    {bp.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Equipment Dropdown Popover List */}
+        {isEquipmentDropdownOpen && (
+          <div className="glass-surface-elevated rounded-[24px] p-3 border border-white/20 shadow-2xl space-y-1 max-h-60 overflow-y-auto no-scrollbar animate-slide-up">
+            <div className="flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#8E8E93] border-b border-white/5 mb-1">
+              <span>Selecciona Equipamiento</span>
+              <span>{equipments.length} Tipos</span>
+            </div>
+
             <button
-              key={eq.key}
-              onClick={() => {
-                setSelectedEquipment(eq.key);
-                setPage(1);
-              }}
-              className={`shrink-0 px-3 py-1 rounded-full text-[11px] font-bold transition-all ${
-                selectedEquipment === eq.key
-                  ? 'bg-white/[0.18] text-white border border-white/30'
-                  : 'glass-pill text-[#8E8E93]'
+              type="button"
+              onClick={() => handleSelectEquipment('all')}
+              className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
+                selectedEquipment === 'all'
+                  ? 'bg-[#64D2FF] text-black shadow-md'
+                  : 'text-[#F5F5F7] hover:bg-white/[0.08]'
               }`}
             >
-              {eq.label}
+              <span>Todo el Equipamiento</span>
+              <span className="text-[11px] opacity-80">Todos</span>
             </button>
-          ))}
-        </div>
+
+            {equipments.map((eq) => {
+              const isSelected = selectedEquipment === eq.key;
+              return (
+                <button
+                  key={eq.key}
+                  type="button"
+                  onClick={() => handleSelectEquipment(eq.key)}
+                  className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
+                    isSelected
+                      ? 'bg-[#64D2FF] text-black shadow-md'
+                      : 'text-[#F5F5F7] hover:bg-white/[0.08]'
+                  }`}
+                >
+                  <span className="capitalize">{eq.label}</span>
+                  {isSelected && <span>✓</span>}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Active Filter Chips & Reset */}
+        {(selectedBodyPart !== 'all' || selectedEquipment !== 'all' || searchQuery) && (
+          <div className="flex items-center justify-between px-1 text-[11px] text-[#8E8E93]">
+            <span>
+              Mostrando <strong className="text-white">{filteredExercises.length}</strong> ejercicios
+            </span>
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              className="text-[#FF453A] font-bold hover:underline"
+            >
+              Limpiar filtros ✕
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 4. Results Grid */}

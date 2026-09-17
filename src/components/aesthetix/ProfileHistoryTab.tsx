@@ -4,6 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { useHubStore } from '@/stores/useHubStore';
 import { saveProgressPhoto, getProgressPhoto } from '@/lib/imageStorage';
+import { WorkoutHistoryItem } from '@/types/workout';
+import { SessionDetailModal } from './SessionDetailModal';
 
 export const ProfileHistoryTab: React.FC = () => {
   const { userName, showToast } = useHubStore();
@@ -15,11 +17,13 @@ export const ProfileHistoryTab: React.FC = () => {
     userPhotoId,
     setUserPhotoId,
     history,
+    deleteHistorySession,
     prs,
   } = useAesthetixStore();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [isLogMeasureOpen, setIsLogMeasureOpen] = useState(false);
+  const [selectedSessionForDetail, setSelectedSessionForDetail] = useState<WorkoutHistoryItem | null>(null);
   const [newWeight, setNewWeight] = useState(userWeightKg.toString());
   const [newChest, setNewChest] = useState('');
   const [newArms, setNewArms] = useState('');
@@ -222,16 +226,24 @@ export const ProfileHistoryTab: React.FC = () => {
             {history.map((session) => (
               <div
                 key={session.id}
-                className="glass-surface rounded-[24px] p-4 border-t-white/10 space-y-3"
+                onClick={() => setSelectedSessionForDetail(session)}
+                className="glass-surface rounded-[24px] p-4 border-t-white/10 space-y-3 cursor-pointer hover:border-[#64D2FF]/40 active:scale-98 transition-all group shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-xs font-black text-[#F5F5F7]">{session.routineName}</h4>
+                    <h4 className="text-xs font-black text-[#F5F5F7] group-hover:text-[#64D2FF] transition-colors">
+                      {session.routineName}
+                    </h4>
                     <p className="text-[10px] font-bold text-[#34C759]">{session.dayName}</p>
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[10px] font-bold text-[#8E8E93]">
-                    {session.date}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[10px] font-bold text-[#8E8E93]">
+                      {session.date}
+                    </span>
+                    <span className="text-xs text-[#8E8E93] group-hover:text-white transition-colors">
+                      ›
+                    </span>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-3 text-xs pt-1 border-t border-white/5">
@@ -372,6 +384,14 @@ export const ProfileHistoryTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Detailed Session Inspection & AI Analysis Modal */}
+      <SessionDetailModal
+        isOpen={!!selectedSessionForDetail}
+        session={selectedSessionForDetail}
+        onClose={() => setSelectedSessionForDetail(null)}
+        onDelete={deleteHistorySession}
+      />
     </div>
   );
 };

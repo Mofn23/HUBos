@@ -2,6 +2,55 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.1.0] - 2026-09-17 (Aesthetix v2.1: Creador de Rutinas Personalizadas por Días, Selector Pre-Gym & Cancelación de Sesión, Dropdowns de Filtro Rápido, Heatmap Anatómico sin Recortes, Rangos Progresivos de Alta Exigencia e Historial con Análisis IA)
+
+### 🌟 Nuevas Funcionalidades & Perfeccionamiento de Aesthetix
+- **Control de Inicio & Cancelación en Gym en Vivo (`StartWorkoutModal.tsx` & `LiveWorkoutFullscreen.tsx`)**:
+  - Eliminado el auto-arranque accidental al pulsar "Gym en Vivo / Entrenar" desde el dock o encabezado.
+  - **Selector Pre-Entreno Inteligente (`StartWorkoutModal.tsx`)**: Modal de cristal translúcido que permite seleccionar qué rutina entrenar (rutina activa, rutinas secundarias o "Entrenamiento Libre"), qué día de la semana realizar, con previsualización de ejercicios antes de confirmar.
+  - Botón explícito y destacado **`⚡ Iniciar Entrenamiento`** y opción de cancelar/cerrar sin iniciar ninguna sesión.
+  - **Botón `✕ Cancelar Sesión` en Modo Fullscreen**: Permite cancelar el entrenamiento en vivo en cualquier momento con alerta de confirmación nativa para no perder datos por error.
+  - **Eliminación Individual de Ejercicios en Sesión Activa**: Botón `✕` en el visor de ejercicios para descartar un ejercicio particular sin interrumpir el resto de la sesión.
+- **Diseñador de Rutinas Personalizadas por Días (`CustomRoutineModal.tsx`)**:
+  - Creación manual completa de programas estructurados por días (ejemplo: **PPL x UL** - Push, Pull, Legs, Upper, Lower).
+  - Selector de plantillas de 1-tap: *PPL x UL (5 días)*, *Push-Pull-Legs (3 días)* o *Desde Cero*.
+  - Configuración detallada día a día: nombre del día, foco muscular, adición de ejercicios del catálogo de 1.324 mediante un buscador rápido integrado, definición de series objetivo, repeticiones personalizadas (ej. `8-10`, `12-15`) y tiempos de descanso (150s = 2:30m).
+  - Guardado y activación inmediata en el almacén de rutinas del usuario.
+- **Selector Rápido Multi-Rutina (`RoutinesTab.tsx`)**:
+  - Barra de conmutación de rutinas en la cabecera para alternar entre programas creados en 0ms y opción de eliminar rutinas obsoletas.
+- **Rediseño de Filtros por Dropdowns Flotantes (`ExercisesExplorerTab.tsx`)**:
+  - Reemplazadas las barras de desplazamiento horizontal por dos elegantes botones dropdown gemelos de cristal:
+    - **`💪 Grupo Muscular`**: Despliega un menú emergente con todos los grupos anatómicos traducidos al español y sus contadores en tiempo real.
+    - **`🏋️ Equipamiento`**: Despliega todas las variantes de equipo (mancuernas, barra, cables, peso corporal, máquinas).
+  - Selección instantánea en 1 tap con cierre automático y botón de limpieza de filtros.
+- **Corrección Visual del Heatmap Anatómico 2D (`AnatomyRanksTab.tsx`)**:
+  - Corregido el recorte de cabeza y pies en las siluetas frontal y posterior de `react-body-highlighter`.
+  - Contenedores de pedestal calibrados a la relación de aspecto 1:2 exacta (`viewBox="0 0 100 200"`), con altura de 260px y propiedad `overflow: visible` para visualización impecable sin desbordamientos en ningún modelo de iPhone.
+- **Ajuste y Exigencia Realista en el Sistema de Rangos Musculares (`src/lib/muscleRanks.ts`)**:
+  - Corregido el cálculo que otorgaba "Diamante" de forma prematura con un único ejercicio básico.
+  - Implementada una matriz de umbrales no lineales de fuerza relativa (ratio 1RM / Peso Corporal) por cada músculo:
+    - *Hierro* (< 0.45x), *Cobre* (0.45x - 0.65x), *Plata* (0.65x - 0.90x), *Oro* (0.90x - 1.10x), *Platino* (1.10x - 1.35x), *Diamante* (1.35x - 1.55x, requiriendo >100kg en press de banca para 75kg de peso corporal), hasta *Simétrico* (cúspide > 2.15x).
+- **Ventana de Detalle del Historial con Gemini IA & Eliminación (`SessionDetailModal.tsx` & `ProfileHistoryTab.tsx`)**:
+  - Cada sesión completada en el perfil ahora es táctil y abre una ficha de inspección técnica completa.
+  - Métricas bento: Duración, volumen levantado, total de series y PRs batidos.
+  - Desglose serie a serie de cada ejercicio con peso levantado, repeticiones y 1RM estimado.
+  - **Análisis Deportivo con Gemini IA (`callGemini`)**: Evaluación con un toque que diagnostica el estímulo hipertrófico, sugiere sobrecarga progresiva exacta para la próxima sesión y entrega el veredicto del entrenador.
+  - **Botón `🗑️ Eliminar Sesión`**: Permite borrar registros erróneos del historial con confirmación de seguridad.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `src/components/aesthetix/StartWorkoutModal.tsx` - Modal pre-inicio de sesión con selección de rutina/día.
+- `[CREADO]` `src/components/aesthetix/CustomRoutineModal.tsx` - Constructor de rutinas personalizadas por días con selector de ejercicios.
+- `[CREADO]` `src/components/aesthetix/SessionDetailModal.tsx` - Modal de detalle histórico con análisis IA y eliminación.
+- `[MODIFICADO]` `src/components/aesthetix/AesthetixView.tsx` - Integración de StartWorkoutModal y flujo de inicio controlado.
+- `[MODIFICADO]` `src/components/aesthetix/LiveWorkoutFullscreen.tsx` - Botón de cancelar sesión y borrado de ejercicios en vivo.
+- `[MODIFICADO]` `src/components/aesthetix/RoutinesTab.tsx` - Switcher de rutinas múltiples y accesos al diseñador manual.
+- `[MODIFICADO]` `src/components/aesthetix/ExercisesExplorerTab.tsx` - Dropdowns gemelos de cristal para filtros rápidos.
+- `[MODIFICADO]` `src/components/aesthetix/AnatomyRanksTab.tsx` - Dimensionamiento 1:2 sin recortes en cabeza/pies.
+- `[MODIFICADO]` `src/components/aesthetix/ProfileHistoryTab.tsx` - Tarjetas interactivas conectadas a SessionDetailModal.
+- `[MODIFICADO]` `src/lib/muscleRanks.ts` - Estándares de fuerza hipertrófica no lineales y exigentes.
+- `[MODIFICADO]` `src/stores/useAesthetixStore.ts` - Métodos `removeExerciseFromActiveSession` y `deleteHistorySession`.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Bump a v2.1.0 para compilación del IPA en GitHub Actions.
+
 ## 🚀 [v2.0.0] - 2026-09-17 (Lanzamiento Mayor de la Super-App de Entrenamiento Aesthetix: Catálogo de 1.324 Ejercicios con GIF, Generador con Gemini IA, Modo Gym Fullscreen con Descanso de 2:30 & Sistema de Rangos de Hierro a Simétrico)
 
 ### 🌟 Nuevas Funcionalidades & Arquitectura de la Nueva Sub-App
