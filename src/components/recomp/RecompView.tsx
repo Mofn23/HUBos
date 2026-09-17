@@ -51,7 +51,7 @@ export const RecompView: React.FC = () => {
 
   const [isMealModalOpen, setIsMealModalOpen] = useState(false);
 
-  // Auto-check achievements on load so already completed actions unlock
+  // Auto-check achievements on load so already completed actions unlock safely without loop
   useEffect(() => {
     checkAchievements();
   }, [checkAchievements]);
@@ -115,7 +115,14 @@ export const RecompView: React.FC = () => {
   const selectedDayWater = waterLogs[selectedDate] || 0;
 
   return (
-    <div className="flex-1 flex flex-col px-4 pt-16 pb-28 overflow-y-auto no-scrollbar animate-fade-in relative">
+    <div className="flex-1 flex flex-col px-4 pt-16 pb-36 overflow-y-auto no-scrollbar animate-fade-in relative">
+      {/* Ambient Radial Glowing Orbs for Glass Refraction */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#34C759]/10 blur-[100px]" />
+        <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[110px]" />
+        <div className="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-[#0A84FF]/10 blur-[100px]" />
+      </div>
+
       {/* Achievement Unlocked Toast Notification */}
       <AchievementUnlockedToast />
 
@@ -127,7 +134,7 @@ export const RecompView: React.FC = () => {
 
       {/* Sub-tab Views */}
       {currentTab === 'dashboard' && (
-        <div className="space-y-4">
+        <div className="space-y-4 relative z-10">
           {/* 2. TotalBlock Calorie Summary */}
           <CalorieRing
             consumed={nutrition.consumedCalories}
@@ -164,7 +171,7 @@ export const RecompView: React.FC = () => {
             onToggle={(id) => toggleSupplement(id, selectedDate)}
           />
 
-          {/* 8. Logros (5x4 Circles Grid with Green Glow) */}
+          {/* 8. Logros (Grid with Glassmorphism) */}
           <AchievementsGrid achievements={achievements} />
 
           {/* 9. Comidas del Día Seleccionado */}
@@ -176,49 +183,81 @@ export const RecompView: React.FC = () => {
         </div>
       )}
 
-      {currentTab === 'meals' && <MealsSection />}
-      {currentTab === 'training' && <TrainingSection />}
-      {currentTab === 'profile' && <ProfilePage />}
+      {currentTab === 'meals' && (
+        <div className="relative z-10">
+          <MealsSection />
+        </div>
+      )}
 
-      {/* Native Floating Bottom Nav Dock (Recomp Only - Automatically hidden when any modal is open) */}
+      {currentTab === 'training' && (
+        <div className="relative z-10">
+          <TrainingSection />
+        </div>
+      )}
+
+      {currentTab === 'profile' && (
+        <div className="relative z-10">
+          <ProfilePage />
+        </div>
+      )}
+
+      {/* Native Floating Bottom Nav Dock (Glassmorphism Elevated Capsule) */}
       <div
-        className={`monai-bottom-nav-container transition-all duration-300 ${
-          isModalOpen || isMealModalOpen ? 'opacity-0 pointer-events-none translate-y-24 scale-90' : 'opacity-100 translate-y-0 scale-100'
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+          isModalOpen || isMealModalOpen
+            ? 'opacity-0 pointer-events-none translate-y-24 scale-90'
+            : 'opacity-100 translate-y-0 scale-100'
         }`}
       >
-        <nav className="monai-bottom-nav">
+        <nav className="glass-surface-elevated rounded-full p-1.5 flex items-center gap-1 shadow-2xl backdrop-blur-3xl border border-white/20">
           <button
-            className={`monai-bottom-nav-item ${currentTab === 'dashboard' ? 'active' : ''}`}
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+              currentTab === 'dashboard'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+            }`}
             onClick={() => setCurrentTab('dashboard')}
             aria-label="Inicio"
           >
             <IconHome className="w-5 h-5" />
           </button>
           <button
-            className={`monai-bottom-nav-item ${currentTab === 'meals' ? 'active' : ''}`}
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+              currentTab === 'meals'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+            }`}
             onClick={() => setCurrentTab('meals')}
             aria-label="Comidas"
           >
-            <span className="text-lg">🍴</span>
+            <span className="text-lg leading-none">🍴</span>
           </button>
           <button
-            className={`monai-bottom-nav-item ${currentTab === 'training' ? 'active' : ''}`}
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+              currentTab === 'training'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+            }`}
             onClick={() => setCurrentTab('training')}
             aria-label="Entrenamiento"
           >
             <IconDumbbell className="w-5 h-5" />
           </button>
           <button
-            className={`monai-bottom-nav-item ${currentTab === 'profile' ? 'active' : ''}`}
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+              currentTab === 'profile'
+                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+            }`}
             onClick={() => setCurrentTab('profile')}
             aria-label="Perfil y Ajustes"
           >
-            <span className="text-lg">👤</span>
+            <span className="text-lg leading-none">👤</span>
           </button>
         </nav>
       </div>
 
-      {/* Meal Capture Modal with Gemini 2.0 */}
+      {/* Meal Capture Modal with Gemini */}
       <MealCaptureModal
         isOpen={isMealModalOpen}
         onClose={() => setIsMealModalOpen(false)}

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { nativeStorage } from '@/lib/nativeStorage';
 
 export interface ScheduleProfile {
   id: string;
@@ -222,7 +223,16 @@ export const useScheduleStore = create<ScheduleState>()(
     }),
     {
       name: 'hubos_schedule_store_v1',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => nativeStorage),
+      partialize: (state) => ({
+        profiles: state.profiles,
+        activeProfileId: state.activeProfileId,
+        subjects: state.subjects,
+        tasks: state.tasks,
+        notifyBeforeMinutes: state.notifyBeforeMinutes,
+        nightlyAlertEnabled: state.nightlyAlertEnabled,
+        quickNotes: state.quickNotes,
+      }),
     }
   )
 );

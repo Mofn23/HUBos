@@ -40,26 +40,27 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
 
   return (
     <>
-      <header className="mb-4">
-        {/* MonAI TopBar */}
-        <div className="monai-topbar flex items-center justify-between gap-2">
-          {/* Date Selector Pill */}
+      <header className="mb-4 space-y-2 relative z-20">
+        {/* Top Bar Row */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Date Selector Pill (Glassmorphism) */}
           <button
-            className="monai-topbar-pill relative shrink-0"
+            className="glass-pill h-8 px-3.5 rounded-full text-xs font-black text-[#F5F5F7] inline-flex items-center gap-1.5 shadow-sm hover:border-white/30 active:scale-95 transition-all relative shrink-0"
             onClick={() => setIsDateModalOpen(true)}
             aria-label="Seleccionar fecha"
           >
+            <span>🗓️</span>
             <span>{dateLabel}</span>
-            <span className="text-xs text-[#8E8E93]">∨</span>
+            <span className="text-[10px] text-[#8E8E93] ml-0.5">▾</span>
             {!isToday && (
-              <span className="absolute top-2.5 right-3 w-2 h-2 rounded-full bg-[#34C759] ring-2 ring-[#0B0B0D]" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#34C759] shadow-[0_0_8px_#34C759]" />
             )}
           </button>
 
           <div className="flex items-center gap-2">
             {/* Unified Streaks Pill (Workout + Nutrition) */}
             <div
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1C1C1E] border border-white/10 text-xs font-black shadow-sm"
+              className="glass-pill h-8 px-3 rounded-full text-xs font-black shadow-sm inline-flex items-center gap-2"
               title="Rachas de Entrenamiento y Nutrición"
             >
               <div className="flex items-center gap-1">
@@ -78,26 +79,29 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
             {/* Return to HUB Button */}
             <button
               onClick={() => setCurrentApp('hub')}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1C1C1E] hover:bg-[#252528] active:scale-95 border border-white/10 transition-all text-xs font-black text-[#F5F5F7]"
+              className="glass-pill h-8 px-3 rounded-full inline-flex items-center gap-1.5 hover:border-white/30 active:scale-95 transition-all text-xs font-black text-[#F5F5F7] shadow-sm group"
               title="Regresar al HUB principal"
               aria-label="Regresar al HUB"
             >
-              <span className="text-sm">🏠</span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93]">HUB</span>
+              <span className="text-sm leading-none group-hover:-translate-x-0.5 transition-transform">‹</span>
+              <span className="text-[11px] font-black tracking-tight">HUB</span>
             </button>
           </div>
         </div>
 
         {/* Greeting Sub-header */}
-        <div className="monai-greeting-row">
-          <span className="monai-greeting-text">
+        <div className="px-1 flex items-center justify-between">
+          <span className="text-xs font-bold text-[#8E8E93]">
             {greeting},{' '}
             <strong className="text-[#F5F5F7] font-black">{userName}</strong> 👋
             {!isToday && (
               <span className="text-xs text-[#34C759] font-black ml-2">
-                (Historial: {isYesterday ? 'Ayer' : selectedDate})
+                • {isYesterday ? 'Ayer' : selectedDate}
               </span>
             )}
+          </span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#636366]">
+            Recomp AI
           </span>
         </div>
       </header>

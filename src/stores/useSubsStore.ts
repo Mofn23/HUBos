@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { nativeStorage } from '@/lib/nativeStorage';
 
 export type SubFrequency = 'weekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'yearly';
 export type SubTab = 'all' | 'timeline' | 'insights' | 'cancellation';
@@ -213,7 +214,13 @@ export const useSubsStore = create<SubsState>()(
     }),
     {
       name: 'hubos_subs_v1',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => nativeStorage),
+      partialize: (state) => ({
+        monthlyBudget: state.monthlyBudget,
+        subscriptions: state.subscriptions,
+        paymentHistory: state.paymentHistory,
+        categories: state.categories,
+      }),
     }
   )
 );

@@ -2,6 +2,280 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.0.0] - 2026-09-17 (Lanzamiento Mayor de la Super-App de Entrenamiento Aesthetix: Catálogo de 1.324 Ejercicios con GIF, Generador con Gemini IA, Modo Gym Fullscreen con Descanso de 2:30 & Sistema de Rangos de Hierro a Simétrico)
+
+### 🌟 Nuevas Funcionalidades & Arquitectura de la Nueva Sub-App
+- **Lanzamiento de Aesthetix (`src/components/aesthetix/*`)**:
+  - Cuarta aplicación oficial integrada dentro del ecosistema modular de **HUBos**, diseñada bajo el sistema de diseño **Glassmorphism** y optimizada para pantallas OLED de iPhone.
+  - **Base de Datos Local de 1.324 Ejercicios (`src/data/exercises.json` & `src/lib/exercisesDb.ts`)**:
+    - Extracción e integración total del repositorio de referencia `hasaneyldrm/exercises-dataset`.
+    - Eliminación de idiomas innecesarios y optimización a un JSON de solo 2.9 MB con instrucciones y pasos paso a paso en **español (`es`)**, grupos musculares anatómicos, equipamiento y objetivos.
+    - Conexión a CDN de alta velocidad para miniaturas de 180x180 y animaciones GIF completas en bucle con caché automático en IndexedDB para funcionamiento 100% offline en el gimnasio.
+    - Filtros dinámicos por grupo muscular (Pectorales, Espalda, Hombros, Brazos, Piernas, Pantorrillas, Abdomen, etc.) y por equipamiento (Barra, Mancuerna, Polea, Peso Corporal, Máquinas).
+  - **Generador Inteligente de Rutinas con Gemini IA (`AiRoutineBuilderModal.tsx` & `workoutAiGenerator.ts`)**:
+    - Cuestionario guiado interactivo de 5 pasos: Objetivo (Hipertrofia, Fuerza, Estética clásica, Definición), frecuencia semanal (3 a 6 días), nivel, equipamiento y músculos de enfoque prioritario.
+    - Generación estructurada de rutinas mediante la API de Gemini (`generateContentWithFallback`), vinculando automáticamente los IDs de ejercicios existentes en el catálogo.
+    - Guardado y activación inmediata en el almacén de rutinas del usuario.
+  - **Modo Gimnasio Fullscreen en Vivo (`LiveWorkoutFullscreen.tsx`)**:
+    - Experiencia inmersiva a pantalla completa diseñada para usarse directamente en la sala de pesas.
+    - **Visualizador de Técnica**: Animación GIF del ejercicio actual visible en todo momento para verificar postura y rango de movimiento.
+    - Registro táctil de series: Peso en kg, repeticiones con botones rápidos `+` / `-`, y casilla de verificación de serie completada.
+    - **Calculadora de Discos Olímpica (`plateCalculator.ts`)**: Desglose instantáneo de discos por lado para barra de 20 kg (25kg, 20kg, 15kg, 10kg, 5kg, 2.5kg, 1.25kg).
+    - **Temporizador de Descanso de 2:30 (150 segundos)**: Brota automáticamente al marcar una serie hecha, con cuenta regresiva circular, botones rápidos `+10s` / `-10s` y alarma sonora con acorde aterciopelado mediante Web Audio API.
+    - Resumen post-entreno con celebración de Récords Personales (PRs), volumen total levantado (kg) y tiempo de sesión.
+  - **Sistema de Rangos Musculares (Hierro a Simétrico - `muscleRanks.ts` & `AnatomyRanksTab.tsx`)**:
+    - Escala de 10 rangos: **Hierro**, **Cobre**, **Plata**, **Oro**, **Platino**, **Diamante**, **Zafiro**, **Legendario**, **Estético** y **Simétrico** (cúspide).
+    - Algoritmo de 1RM estimado (fórmula Epley) comparado contra estándares de fuerza relativa respecto al peso corporal del atleta.
+    - **Modelo Anatómico 2D Interactivo**: Visualización frontal y posterior con `react-body-highlighter` donde cada grupo muscular se ilumina con el color y halo luminiscente de su rango correspondiente.
+    - Calculadora rápida de 1RM integrada.
+  - **Perfil del Atleta & Medidas Corporales (`ProfileHistoryTab.tsx`)**:
+    - Subida de foto de perfil almacenada en alta fidelidad en **IndexedDB** (`imageStorage.ts`) para mantener el estado de Zustand ultraligero.
+    - Registro antropométrico: Peso, bíceps, pecho, cintura, muslos y gemelos con histórico.
+    - Historial detallado de todas las sesiones completadas y marcas personales (PRs).
+  - **Sistema de Rachas Inteligente con Tolerancia de Descansos**:
+    - Racha flexible adaptada al objetivo semanal del usuario (ej. 5 días de entrenamiento con 2 días de descanso permitidos sin perder la racha).
+
+### 🛠️ Mejoras y Cambios de Arquitectura
+- **Zustand Store Desacoplado con Persistencia Nativa (`useAesthetixStore.ts`)**:
+  - Almacén en `hubos_aesthetix_v1` a través de `nativeStorage` hacia `NSUserDefaults` de iOS.
+  - Rutina starter preconfigurada de 5 días de hipertrofia (*Push / Pull / Legs / Torso / Pierna*).
+- **Vuelco Inmediato de Emergencia en Ciclo de Vida iOS (`src/app/page.tsx`)**:
+  - Inclusión de `useAesthetixStore` en el `flushAll` síncrono al minimizar o cerrar la app.
+- **Integración con HUBos Launcher (`HubDashboard.tsx`)**:
+  - Nueva Bento Card de **Aesthetix** con emoji temático `⚡`, telemetría en tiempo real (racha, rango físico actual y estado de sesión en curso) y transición en 0ms.
+- **Respaldo y Reset Integral (`HubSettingsSheet.tsx` & `nativeStorage.ts`)**:
+  - Exportación de copias de seguridad JSON y reinicio de fábrica incluyendo los datos de Aesthetix.
+- **Automatización CI/CD de GitHub Actions (`.github/workflows/build-ios.yml`)**:
+  - Actualización del tag y nombre de Release a **v2.0.0** para compilar y desplegar automáticamente el nuevo archivo `HUBos.ipa`.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `scripts/prepare-exercises.mjs` - Script de optimización de dataset.
+- `[CREADO]` `src/data/exercises.json` - Base de datos de 1.324 ejercicios en español.
+- `[CREADO]` `src/types/workout.ts` - Tipos y modelos de datos de Aesthetix.
+- `[CREADO]` `src/lib/exercisesDb.ts` - Buscador e indexador de ejercicios y medios.
+- `[CREADO]` `src/lib/muscleRanks.ts` - Motor de los 10 rangos y mapeo anatómico.
+- `[CREADO]` `src/lib/plateCalculator.ts` - Calculadora de discos para barra olímpica.
+- `[CREADO]` `src/lib/workoutAiGenerator.ts` - Prompt y generador de rutinas con Gemini IA.
+- `[CREADO]` `src/stores/useAesthetixStore.ts` - Store Zustand con persistencia nativa.
+- `[CREADO]` `src/components/aesthetix/AesthetixView.tsx` - Vista maestra de la app.
+- `[CREADO]` `src/components/aesthetix/AesthetixHeader.tsx` - Cabecera con retorno al HUB y racha.
+- `[CREADO]` `src/components/aesthetix/RoutinesTab.tsx` - Gestor de rutinas y días.
+- `[CREADO]` `src/components/aesthetix/ExercisesExplorerTab.tsx` - Explorador de 1.324 ejercicios con filtros.
+- `[CREADO]` `src/components/aesthetix/ExerciseDetailModal.tsx` - Detalle con GIF animado y pasos en español.
+- `[CREADO]` `src/components/aesthetix/LiveWorkoutFullscreen.tsx` - Modo gym fullscreen con descanso 2:30.
+- `[CREADO]` `src/components/aesthetix/AnatomyRanksTab.tsx` - Mapa 2D y sistema de rangos.
+- `[CREADO]` `src/components/aesthetix/ProfileHistoryTab.tsx` - Perfil, medidas, fotos e historial.
+- `[CREADO]` `src/components/aesthetix/AiRoutineBuilderModal.tsx` - Cuestionario guiado con Gemini IA.
+- `[MODIFICADO]` `src/lib/nativeStorage.ts` - Importación dinámica resiliente de Preferences y backup.
+- `[MODIFICADO]` `src/stores/useHubStore.ts` - Adición de 'aesthetix' a AppModule.
+- `[MODIFICADO]` `src/app/page.tsx` - Enrutador y flush de ciclo de vida nativo para Aesthetix.
+- `[MODIFICADO]` `src/components/hub/HubDashboard.tsx` - Bento Card y telemetría de Aesthetix.
+- `[MODIFICADO]` `src/components/hub/HubSettingsSheet.tsx` - Versión v2.0.0 y soporte en reset.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Release de GitHub Actions actualizado a v2.0.0.
+- `[MODIFICADO]` `UPDATES.md` - Registro oficial de la versión v2.0.0.
+
+---
+
+## 🚀 [v1.9.2] - 2026-09-16 (Persistencia Nativa con @capacitor/preferences en iOS UserDefaults, Cero Pérdida de Datos en SideStore y Vuelco Inmediato al Minimizar/Cerrar)
+
+### 🌟 Nuevas Funcionalidades & Arquitectura de Datos
+- **Integración de Motor de Persistencia Nativa iOS (`@capacitor/preferences` & `nativeStorage.ts`)**:
+  - Toda la persistencia de HUBos deja de depender de la volátil caché web de `localStorage` y se traslada a **`NSUserDefaults` nativo de Apple** a través del plugin oficial `@capacitor/preferences`.
+  - **Inmunidad a SideStore / AltStore**: El archivo `.plist` de preferencias de iOS está protegido a nivel de sistema operativo y **jamás se borra al inyectar o actualizar el archivo `.ipa`**.
+  - **Escritura Nativa Inmediata**: Escrituras a nivel de Swift/Objective-C en milisegundos, eliminando la latencia de guardado.
+  - **Caché en Memoria y Espejo Local**: Lectura a 0ms mediante caché en memoria y respaldo dual síncrono.
+  - **Migración Transparente**: Al iniciar, el sistema lee cualquier dato preexistente de `localStorage` y lo traslada automáticamente a `Preferences` sin pérdida alguna.
+
+- **Alivio de Peso de los Stores y Desacoplamiento de Imágenes Pesadas**:
+  - Las fotos de progreso físico completas (1200px) ahora se guardan directamente en **IndexedDB** (`src/lib/imageStorage.ts`), cuya cuota en iOS es de varios Gigabytes.
+  - En el store de Zustand solo se conserva una micro-miniatura ultraligera (~15KB) o el identificador.
+  - Optimización en `MealCaptureModal.tsx`: Generación de miniaturas de 160px a calidad 0.5 (~4KB), mientras la imagen completa en alta fidelidad se conserva en IndexedDB.
+  - Reducción del tamaño de los stores de ~5MB a escasos ~50-100KB, previniendo para siempre el error `QuotaExceededError`.
+
+- **Vuelco Inmediato de Emergencia en Ciclo de Vida Nativo (`src/app/page.tsx`)**:
+  - Integración con `@capacitor/app` (`appStateChange`), `visibilitychange` y `beforeunload`.
+  - En el milisegundo en que el usuario empieza a deslizar la barra de inicio de iOS para cerrar o cambiar de app, todos los stores (`useRecompStore`, `useHubStore`, `useSubsStore`, `useScheduleStore`) se vuelcan de forma síncrona y forzada a `UserDefaults`.
+
+### ⚡ Optimizaciones y Correcciones de Bugs
+- **Solución a las 3 Causas Raíz de Pérdida de Datos**:
+  1. Eliminación del desbordamiento de cuota de 5MB de WebKit.
+  2. Eliminación de la pérdida por cierre rápido de la app antes de que WebKit escriba al disco.
+  3. Eliminación del reseteo de datos al actualizar el `.ipa` en SideStore.
+- **Limpieza de SSR en Next.js**:
+  - Manejo seguro de entornos sin `window` durante el `next build`, eliminando las advertencias de `ReferenceError: localStorage is not defined`.
+- **Actualización de Herramienta de Respaldo (`HubSettingsSheet.tsx`)**:
+  - La exportación de copias de seguridad JSON ahora incluye todas las sub-aplicaciones (HUB, RecompAI, Suscripciones y Horarios) extraídas directamente del motor nativo.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `src/lib/nativeStorage.ts` - Adaptador universal de almacenamiento nativo con `@capacitor/preferences`.
+- `[MODIFICADO]` `src/lib/imageStorage.ts` - Almacenamiento de fotos de progreso en IndexedDB.
+- `[MODIFICADO]` `src/stores/useRecompStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/stores/useHubStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/stores/useSubsStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/stores/useScheduleStore.ts` - Migración a `nativeStorage` y `partialize`.
+- `[MODIFICADO]` `src/components/recomp/MealCaptureModal.tsx` - Optimización de peso de miniatura.
+- `[MODIFICADO]` `src/components/recomp/ProfilePage.tsx` - Guardado de fotos HD en IndexedDB.
+- `[MODIFICADO]` `src/components/hub/HubSettingsSheet.tsx` - Respaldo y reseteo nativo integral.
+- `[MODIFICADO]` `src/app/page.tsx` - Flush de ciclo de vida con `@capacitor/app`.
+- `[MODIFICADO]` `package.json` - Inclusión de `@capacitor/preferences@6.0.4`.
+- `[MODIFICADO]` `Updates.md` - Registro oficial de la versión v1.9.2.
+
+---
+
+## 🚀 [v1.9.1] - 2026-09-15 (Reorganización Minimalista de Comidas, Confinamiento de Píldoras y Rediseño Glassmorphism del Modal de Fechas)
+
+### 🌟 Nuevas Funcionalidades & Experiencia de Usuario
+- **Rediseño Glassmorphism del Modal de Selección de Fechas (`DateSelectionModal.tsx`)**:
+  - Transformación integral de la lámina inferior con la skill `glassmorphism`:
+    - Contenedor con `glass-surface-elevated rounded-t-[36px] backdrop-blur-3xl border-t border-white/20 shadow-2xl`.
+    - Tirador de hoja translúcido superior (`w-10 h-1.5 rounded-full bg-white/20`).
+    - Cabecera en cápsula de cristal con botón de cierre circular `✕` con micro-animaciones en hover y active.
+    - Fichas interactivas para **Hoy** y **Ayer** con `glass-pill` e indicador activo con halo esmeralda (`glass-pill-active border-[#34C759]/40 bg-[#34C759]/15 shadow-[0_0_20px_rgba(52,199,89,0.25)]`).
+    - Selector personalizado con píldora interactiva de fecha nativa y botón de retorno a hoy.
+- **Reorganización Minimalista de la Sección 2 (Comidas & Dieta - `MealsSection.tsx`)**:
+  - **Eliminación de Elementos Redundantes**: Se eliminó la tarjeta duplicada de fecha y las 4 cajas grandes vacías de desayuno, almuerzo, cena y snacks que saturaban la pantalla.
+  - **Hero Bento Card Unificada**:
+    - Telemetría en tiempo real: Calorías consumidas vs meta con barra de progreso luminosa bioluminiscente.
+    - Micro-píldoras de macronutrientes: Proteína, Carbos y Grasas en cápsulas translúcidas.
+    - **Acciones Rápidas Integradas**: Botón primario `✨ Escanear con IA` y secundario `+ Manual` alojados dentro de la tarjeta, eliminando por completo los botones flotantes que colisionaban con el dock.
+  - **Selector Segmentado por Tiempos de Comida**:
+    - Píldoras de cristal para alternar instantáneamente entre `Todos`, `Desayuno`, `Almuerzo`, `Cena` y `Snacks`.
+    - Estado vacío elegante y limpio cuando no hay registros para el filtro seleccionado.
+  - **Galería de Fotos Reales**:
+    - Visualización compacta de fotos capturadas al pie de la vista con marcos esmerilados y badges de calorías.
+
+### ⚡ Optimizaciones y Correcciones de Bugs
+- **Confinamiento Estricto de Píldoras de Comidas Frecuentes**:
+  - Aplicación de `max-w-[125px] truncate` y `inline-flex items-center` en `fav.name` para evitar que títulos extensos desborden la píldora o empujen los botones de acción fuera de la pantalla.
+- **Ajuste y Confinamiento del Dock Inferior (`RecompView.tsx`)**:
+  - Eliminación de `scale-105` en los botones activos de la barra de navegación para que la píldora activa permanezca 100% contenida y al ras dentro del dock sin sobresalir.
+- **Corrección de Espaciado Inferior (`pb-36`)**:
+  - Aumento del padding inferior a `pb-36` en `RecompView.tsx`, `MealsSection.tsx`, `ProfilePage.tsx` y `TrainingSection.tsx` para garantizar que el dock flotante nunca tape contenidos ni botones al deslizar hacia el final.
+- **Alineación Vertical Perfecta de Píldoras de Cabecera (`RecompHeader.tsx`)**:
+  - Unificación de altura (`h-8`) y alineación en línea en el selector de fecha, las rachas y el botón de retorno al HUB.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `src/components/recomp/DateSelectionModal.tsx` - Rediseño con Glassmorphism puro.
+- `[MODIFICADO]` `src/components/recomp/MealsSection.tsx` - Reorganización minimalista y confinamiento de píldoras.
+- `[MODIFICADO]` `src/components/recomp/RecompView.tsx` - Ajuste del dock inferior y padding pb-36.
+- `[MODIFICADO]` `src/components/recomp/RecompHeader.tsx` - Alineación h-8 en píldoras de cabecera.
+- `[MODIFICADO]` `src/components/recomp/ProfilePage.tsx` - Padding pb-36 para despeje del dock.
+- `[MODIFICADO]` `src/components/recomp/TrainingSection.tsx` - Padding pb-36 para despeje del dock.
+- `[MODIFICADO]` `Updates.md` - Registro oficial de la versión v1.9.1.
+
+---
+
+## 🚀 [v1.9.0] - 2026-09-15 (Corrección Crítica de Loop de Logros, Restauración de Dock Inferior, Nueva Rutina Semanal y Rediseño Integral Glassmorphism de RecompAI)
+
+### 🌟 Nuevas Funcionalidades & Experiencia de Usuario
+- **Rediseño Visual Integral con Glassmorphism en Toda la Suite RecompAI**:
+  - **Fondo Atmosférico Global (`RecompView.tsx`)**: Orbes radiales desenfocados en esmeralda, violeta y ámbar en capas `pointer-events-none` fijas que refractan brillo a través de todas las superficies.
+  - **Dock Flotante de Navegación de Cristal Líquido**: Barra inferior suspendida (`glass-surface-elevated rounded-full backdrop-blur-3xl border border-white/20`) con iconos esmerilados y píldora activa con halo luminiscente esmeralda.
+  - **Cabecera de Telemetría Rediseñada (`RecompHeader.tsx`)**: Cápsula de fecha y selector diario con estética de vidrio esmerilado, racha de fuego en vidrio líquido y botón de regreso al HUB.
+  - **Dashboard Diario (Sección 1)**:
+    - `CalorieRing.tsx`: Bento card de cristal esmerilado (`glass-surface rounded-[32px] p-6`) con selector de unidad de energía segmentado.
+    - `MacroBars.tsx`: Bento card con pistas translúcidas y barras de gradiente bioluminiscente para Proteína, Carbohidratos y Grasas.
+    - `GlycogenPumpMeter.tsx`: Medidor de bombeo muscular y glucógeno en cápsula esmerilada con halo de brillo reactivo.
+    - `QuickStatsRow.tsx`: Tres pods flotantes de cristal para la rutina del día, racha de gimnasio y telemetría calórica.
+    - `WaterTracker.tsx`: Bento card con 12 burbujas de vidrio esmerilado interactivas y botones táctiles de cristal.
+    - `SupplementTracker.tsx`: Fichas translúcidas con casillas interactivas en vidrio líquido.
+  - **Comidas & Nutrición (Sección 2)**:
+    - `MealsSection.tsx` & `MealLog.tsx`: Filtros por categoría en píldoras de cristal esmerilado, tarjetas de comidas con badges de macros y galería de fotos con marcos translúcidos.
+    - `MealCaptureModal.tsx` & `MealDetailModal.tsx`: Hojas modales elevadas de cristal con fondo ultra-desenfocado, visualización de fotos en alta resolución desde IndexedDB y micro-píldoras de nutrientes.
+  - **Entrenamiento (Sección 3)**:
+    - `TrainingSection.tsx`: Bento card con la nueva rutina de entrenamiento diario, tarjeta Symmetry AI en cristal violeta y registro de sesiones en cápsulas translúcidas.
+    - `MuscleHeatmap.tsx`: Contenedor de cristal esmerilado con mapa anatómico y píldoras luminosas de intensidad muscular.
+  - **Perfil & Metas (Sección 4)**:
+    - `ProfilePage.tsx`: Tarjetas bento de cristal esmerilado para objetivos de recomposición corporal, galería de progreso fotográfico y configuración de credenciales de IA.
+
+- **Actualización de la Rutina de Entrenamiento Semanal (`trainingSchedule.ts`)**:
+  - Adaptación exacta a la nueva distribución del usuario:
+    - **Lunes**: Jalón (Pull) — Espalda, Deltoides Posterior, Bíceps.
+    - **Martes**: Empuje (Push) — Pecho, Deltoides Anterior/Lateral, Tríceps.
+    - **Miércoles**: Pierna — Cuádriceps, Isquiotibiales, Glúteos, Pantorrillas.
+    - **Jueves**: Torso Completo — Espalda, Pecho, Hombros, Brazos.
+    - **Viernes**: Pierna — Enfoque Femoral, Glúteo, Gemelos, Aductores.
+    - **Sábado & Domingo**: Descanso Activo — Caminata 8-10k pasos, movilidad, recuperación.
+
+### ⚡ Optimizaciones y Correcciones de Bugs
+- **Corrección Definitiva del Bucle Infinito de Notificaciones de Logros**:
+  - Se subsanó la falta de persistencia de `unlockedAt` para logros no presentes en versiones anteriores de `localStorage` (`useRecompStore.ts`).
+  - Ahora `checkAchievements()` sincroniza contra el catálogo canónico completo (`ALL_ACHIEVEMENT_DEFINITIONS`), marcando y persistiendo `unlockedAt` de forma inmutable para que nunca se vuelvan a notificar en bucle.
+  - `evaluateAchievements()` descarta estrictamente cualquier logro que ya posea `unlockedAt`.
+- **Desbloqueo y Visualización del Catálogo Completo de Logros (`AchievementsGrid.tsx`)**:
+  - Despliegue de los 17 logros canónicos en fichas de cristal esmerilado translúcidas con badges de completado y modal informativo.
+- **Corrección de Desaparición del Dock Inferior al Registrar Comidas**:
+  - Corrección del ciclo de vida y limpieza de `isModalOpen` en `MealCaptureModal.tsx` para garantizar que la barra inferior (`RecompView.tsx`) permanezca siempre visible al cerrar o guardar la comida.
+- **Corrección de Firma de Argumentos en Análisis con Gemini**:
+  - Arreglo en la llamada a `parseMealWithGemini` pasando `(geminiApiKey, { text, imageBase64 })`.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `src/stores/useRecompStore.ts` - Corrección de persistencia de logros y prevención de loops.
+- `[MODIFICADO]` `src/lib/achievements.ts` - Catálogo canónico de 17 logros y evaluación idempotente.
+- `[MODIFICADO]` `src/lib/trainingSchedule.ts` - Nueva distribución de rutina semanal del usuario.
+- `[MODIFICADO]` `src/components/recomp/MealCaptureModal.tsx` - Corrección de ciclo de vida del dock y llamada a Gemini.
+- `[MODIFICADO]` `src/components/recomp/RecompView.tsx` - Orbes ambientales y dock flotante en cristal esmerilado.
+- `[MODIFICADO]` `src/components/recomp/RecompHeader.tsx` - Cabecera en cápsula de cristal con selector de fechas.
+- `[MODIFICADO]` `src/components/recomp/CalorieRing.tsx` - Bento card de calorías con selector de unidades.
+- `[MODIFICADO]` `src/components/recomp/MacroBars.tsx` - Bento card con pistas y barras de macronutrientes luminiscentes.
+- `[MODIFICADO]` `src/components/recomp/GlycogenPumpMeter.tsx` - Medidor de bombeo muscular y glucógeno esmerilado.
+- `[MODIFICADO]` `src/components/recomp/QuickStatsRow.tsx` - Pods flotantes de telemetría diaria.
+- `[MODIFICADO]` `src/components/recomp/WaterTracker.tsx` - Bento card con burbujas de agua de vidrio esmerilado.
+- `[MODIFICADO]` `src/components/recomp/SupplementTracker.tsx` - Tarjetas translúcidas con casillas interactivas.
+- `[MODIFICADO]` `src/components/recomp/AchievementsGrid.tsx` - Grilla completa de 17 logros en fichas de cristal.
+- `[MODIFICADO]` `src/components/recomp/MealsSection.tsx` - Sección de comidas con píldoras y galería de fotos.
+- `[MODIFICADO]` `src/components/recomp/MealLog.tsx` - Registro de comidas en tarjetas esmeriladas.
+- `[MODIFICADO]` `src/components/recomp/MealDetailModal.tsx` - Hoja modal elevada de fotos HD y desglose de macros.
+- `[MODIFICADO]` `src/components/recomp/TrainingSection.tsx` - Sección de entrenamiento con nueva rutina y Symmetry AI.
+- `[MODIFICADO]` `src/components/recomp/MuscleHeatmap.tsx` - Mapa muscular en contenedor de cristal esmerilado.
+- `[MODIFICADO]` `src/components/recomp/ProfilePage.tsx` - Perfil de usuario con tarjetas bento de cristal.
+- `[MODIFICADO]` `Updates.md` - Registro oficial de la versión v1.9.0.
+
+---
+
+## 🚀 [v1.8.0] - 2026-09-11 (Rediseño Total con Glassmorphism: HUB Principal, Píldoras Flotantes en Calendario & Minimalismo Absoluto en Horarios)
+
+### 🌟 Nuevas Funcionalidades & Experiencia de Usuario
+- **Instalación y Aplicación del Sistema de Diseño `glassmorphism`**:
+  - Implementación de la skill oficial de Glassmorphism con estética *liquid glass*, capas translúcidas esmeriladas (`backdrop-blur-2xl bg-white/[0.04]`), bordes luminosos superiores (`border-t-white/20 border-white/10`) y orbes de luz ambiental multicromática de fondo.
+  - Adición de tokens y clases de utilidad en `globals.css`: `.glass-surface`, `.glass-surface-elevated`, `.glass-pill`, `.glass-pill-active`, `.glass-floating-card` y sombras con halo de neón.
+
+- **Rediseño Completo del HUB Principal (`HubDashboard.tsx`)**:
+  - **Fondo Atmosférico Profundo**: Orbes radiales desenfocados (esmeralda, violeta y cian) que refractan luz realista a través de las superficies de cristal.
+  - **Bento Card de Estado Global**: Superficie de cristal translúcido con indicador de pulso en vivo para el ecosistema conectado y dos mini cápsulas de vidrio para RecompAI (kcal y glucógeno) y Suscripciones (gasto mensual y servicios activos).
+  - **Tarjetas Bento de Aplicaciones**: Tarjetas de cristal de lujo para Recomp AI, Suscripciones y Horarios & Rutinas con micro-píldoras de telemetría en tiempo real y botones con micro-animaciones en hover.
+  - **Tarjeta Inferior de Ajustes & Gemini IA**: Cápsula de cristal minimalista para configuración del sistema.
+
+- **Rediseño del Calendario con Píldoras Flotantes (`ScheduleGrid.tsx`)**:
+  - **Eliminación del Cuadro Rígido Mediocre**: Transformación total a un lienzo con **píldoras flotantes tridimensionales** con esquinas redondeadas (`rounded-[22px]`), bordes luminosos tintados con el color de la materia, cuerpo translúcido y sombra con glow de neón.
+  - **Selector de Modo de Vista con Píldora Segmentada**:
+    - **Vista Día (Cronograma Flotante)**: Experiencia móvil ultra-limpia y minimalista que lista las clases del día seleccionado como cápsulas flotantes verticales con hora, duración, docente, aula y chip de color.
+    - **Vista Semana (Matriz Panorámica Flotante)**: Cuadrícula panorámica con scroll suave donde las materias son cápsulas flotantes sobre guías translúcidas súper sutiles.
+  - **Selector Superior de Días en Píldoras de Cristal**: Cápsulas flotantes con conteo de clases y badge luminoso del día actual.
+
+- **Minimalismo y Eliminación de Saturación de Botones en Horarios (`ScheduleHeader.tsx`)**:
+  - Unificación de la cabecera en una sola fila compacta:
+    - Píldora de regreso `‹ HUB`.
+    - Píldora de fecha actual `🗓️ EEE, d MMM`.
+    - Botones compactos de cristal para `✨ IA` y `⚙️ Ajustes`.
+  - **Selector de Perfiles en Cápsula Segmentada de Vidrio Líquido**: Eliminación del texto redundante "Perfil:" reemplazándolo por un selector segmentado fluido estilo Apple iOS (`glass-pill-active`).
+
+- **Bento Cards Superiores de Horarios (`ScheduleHeroCards.tsx`)**:
+  - Tarjetas flotantes de cristal esmerilado para "Siguiente Clase / En Curso" (con barra de progreso dinámica estilo Dynamic Island) y "Pendientes" (con badge numérico translúcido y prioridad).
+
+- **Menú FAB Flotante (`ScheduleFabMenu.tsx`)**:
+  - Botón flotante `+` con acabado en cristal esmerilado y popover en cápsulas de vidrio líquido con desenfoque de fondo.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `src/app/globals.css` - Utilidades y tokens de Glassmorphism.
+- `[MODIFICADO]` `src/components/hub/HubDashboard.tsx` - Rediseño Bento Glassmorphism del HUB principal.
+- `[MODIFICADO]` `src/components/schedule/ScheduleHeader.tsx` - Cabecera minimalista y selector de perfiles segmentado.
+- `[MODIFICADO]` `src/components/schedule/ScheduleHeroCards.tsx` - Bento cards de siguiente clase y pendientes.
+- `[MODIFICADO]` `src/components/schedule/ScheduleGrid.tsx` - Calendario de píldoras flotantes con vista dual Día/Semana.
+- `[MODIFICADO]` `src/components/schedule/ScheduleFabMenu.tsx` - Botón de acción flotante y cápsulas de menú en cristal.
+- `[MODIFICADO]` `src/components/schedule/ScheduleView.tsx` - Orbes ambientales y ensamble general de la vista.
+- `[MODIFICADO]` `UPDATES.md` - Registro oficial de la versión v1.8.0.
+
 ---
 
 ## 🚀 [v1.7.0] - 2026-09-09 (Lanzamiento Mayor: Nueva App de Horarios, Clases de Conducción, Rutinas Semanales & Gestor Académico Inteligente)

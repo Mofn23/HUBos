@@ -2,9 +2,10 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { calculateWorkoutStreak, calculateNutritionStreak } from '@/lib/streak';
 import { getTodayKey } from '@/lib/date';
-import { evaluateAchievements } from '@/lib/achievements';
+import { evaluateAchievements, ALL_ACHIEVEMENT_DEFINITIONS } from '@/lib/achievements';
 import { audioEngine } from '@/lib/audio';
 import { deleteMealImage } from '@/lib/imageStorage';
+import { nativeStorage } from '@/lib/nativeStorage';
 
 export type RecompTab = 'dashboard' | 'meals' | 'training' | 'progress' | 'coach' | 'profile';
 
@@ -210,22 +211,13 @@ const DEFAULT_FAVORITES: FavoriteMealItem[] = [
   { id: 'fav-2', name: 'Salchipapa clásica', calories: 650, emoji: '🍟', carbs: 60, protein: 18, fat: 38 },
 ];
 
-const DEFAULT_ACHIEVEMENTS: AchievementItem[] = [
-  { id: 'first_workout', title: 'Primer Entrenamiento', description: '¡Completaste tu primer entrenamiento!', icon: '💪', category: 'training' },
-  { id: 'first_meal', title: 'Primera Comida', description: '¡Registraste tu primera comida con IA!', icon: '🍽️', category: 'nutrition' },
-  { id: 'iron-giant', title: 'Gigante de Hierro', description: 'Levantaste más de 5,000kg de volumen en una sesión', icon: '🌋', category: 'training' },
-  { id: 'star-chef', title: 'Cocinero Estrella', description: '10 comidas registradas con fotos para la IA', icon: '👨‍🍳', category: 'nutrition' },
-  { id: 'hydration-3', title: '3 Días Hidratado', description: '3 días cumpliendo tu meta de agua', icon: '💧', category: 'hydration' },
-  { id: 'hydration-7', title: 'Semana Hidratada', description: '7 días cumpliendo tu meta de agua', icon: '🌊', category: 'hydration' },
-  { id: 'hydration-10', title: '10 Días Hidratado', description: '10 días de hidratación impecable', icon: '🧊', category: 'hydration' },
-  { id: 'aquatic', title: 'Acuático', description: 'Tomaste 12 vasos de agua en un día', icon: '🐳', category: 'hydration' },
-  { id: 'streak-7', title: 'Semana Perfecta', description: 'Alcanzaste una racha de 7 días', icon: '🔥', category: 'streak' },
-  { id: 'streak-14', title: '2 Semanas Imparable', description: 'Alcanzaste una racha de 14 días', icon: '⚡', category: 'streak' },
-  { id: 'streak-30', title: 'Máquina 30 Días', description: '30 días consecutivos de constancia', icon: '🏆', category: 'streak' },
-  { id: 'protein-7', title: 'Fuerza Proteica', description: 'Cumpliste tu meta de proteína', icon: '🥩', category: 'nutrition' },
-  { id: 'no-excuses', title: 'Cero Excusas', description: '5 entrenamientos completados', icon: '🎯', category: 'training' },
-  { id: 'steel-constancy', title: 'Constancia de Acero', description: '10 entrenamientos registrados en tu bitácora', icon: '🛡️', category: 'training' },
-];
+const DEFAULT_ACHIEVEMENTS: AchievementItem[] = ALL_ACHIEVEMENT_DEFINITIONS.map((def) => ({
+  id: def.id,
+  title: def.title,
+  description: def.description,
+  icon: def.icon,
+  category: def.category,
+}));
 
 export const useRecompStore = create<RecompState>()(
   persist(
@@ -423,8 +415,33 @@ export const useRecompStore = create<RecompState>()(
 
       checkAchievements: () => {
         const state = get();
+        // 1. Build a complete map of all definitions, preserving any unlockedAt
+        const completeMap = new Map<string, AchievementItem>();
+        ALL_ACHIEVEMENT_DEFINITIONS.forEach((def) => {
+          completeMap.set(def.id, {
+            id: def.id,
+            title: def.title,
+            description: def.description,
+            icon: def.icon,
+            category: def.category,
+          });
+        });
+
+        // 2. Overlay existing stored achievements (preserving unlockedAt timestamps)
+        (state.achievements || []).forEach((a) => {
+          const existing = completeMap.get(a.id);
+          if (existing) {
+            completeMap.set(a.id, { ...existing, ...a });
+          } else {
+            completeMap.set(a.id, a);
+          }
+        });
+
+        const syncedAchievements = Array.from(completeMap.values());
+
+        // 3. Evaluate achievements against the synced state
         const newlyUnlocked = evaluateAchievements({
-          achievements: state.achievements,
+          achievements: syncedAchievements,
           trainingLogs: state.trainingLogs,
           meals: state.meals,
           waterLogs: state.waterLogs,
@@ -433,12 +450,17 @@ export const useRecompStore = create<RecompState>()(
         });
 
         if (newlyUnlocked.length > 0) {
-          const newMap = new Map(newlyUnlocked.map((a) => [a.id, a]));
-          set((s) => ({
-            achievements: s.achievements.map((a) => newMap.get(a.id) || a),
+          newlyUnlocked.forEach((unlocked) => {
+            completeMap.set(unlocked.id, unlocked);
+          });
+
+          set({
+            achievements: Array.from(completeMap.values()),
             recentlyUnlockedAchievement: newlyUnlocked[0],
-          }));
+          });
           audioEngine.playAchievementChime();
+        } else if (syncedAchievements.length !== (state.achievements || []).length) {
+          set({ achievements: syncedAchievements });
         }
       },
 
@@ -494,31 +516,26 @@ export const useRecompStore = create<RecompState>()(
     }),
     {
       name: 'hubos_recomp_v1',
-      storage: createJSONStorage(() => ({
-        getItem: (name: string) => {
-          try {
-            return localStorage.getItem(name);
-          } catch (e) {
-            console.warn('[Storage] Error reading localStorage:', e);
-            return null;
-          }
-        },
-        setItem: (name: string, value: string) => {
-          try {
-            localStorage.setItem(name, value);
-          } catch (e: any) {
-            console.error('[Storage] QuotaExceededError or write failure:', e?.message || e);
-            // Don't crash — silently fail the persist so the app remains functional
-          }
-        },
-        removeItem: (name: string) => {
-          try {
-            localStorage.removeItem(name);
-          } catch (e) {
-            console.warn('[Storage] Error removing from localStorage:', e);
-          }
-        },
-      })),
+      storage: createJSONStorage(() => nativeStorage),
+      partialize: (state) => ({
+        selectedDate: state.selectedDate,
+        targetCalories: state.targetCalories,
+        targetProtein: state.targetProtein,
+        targetCarbs: state.targetCarbs,
+        targetFat: state.targetFat,
+        targetWaterGlasses: state.targetWaterGlasses,
+        meals: state.meals,
+        favoriteMeals: state.favoriteMeals,
+        trainingLogs: state.trainingLogs,
+        measurements: state.measurements,
+        supplements: state.supplements,
+        waterLogs: state.waterLogs,
+        photos: state.photos,
+        streak: state.streak,
+        nutritionStreak: state.nutritionStreak,
+        achievements: state.achievements,
+        coachMessages: state.coachMessages,
+      }),
     }
   )
 );

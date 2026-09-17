@@ -97,6 +97,13 @@ export const ScheduleView: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col h-full px-4 pt-14 pb-4 overflow-hidden animate-fade-in space-y-3 relative">
+      {/* Ambient Radial Glowing Orbs for Frosted Glass Depth */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute -top-10 -right-10 w-72 h-72 rounded-full bg-[#0A84FF]/10 blur-[90px]" />
+        <div className="absolute top-1/2 -left-16 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[100px]" />
+        <div className="absolute -bottom-10 right-1/4 w-72 h-72 rounded-full bg-[#34C759]/10 blur-[90px]" />
+      </div>
+
       {/* 1. Header (Date pill, Hub return, Settings, Profiles) */}
       <ScheduleHeader
         onOpenSettings={() => setIsSettingsOpen(true)}

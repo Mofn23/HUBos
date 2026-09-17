@@ -7,13 +7,13 @@ import { useRecompStore } from '@/stores/useRecompStore';
 import { getMusclesForExercise } from '@/lib/muscleMap';
 
 const HIGHLIGHT_COLORS = [
-  '#34C759', // 1 set (Verde suave)
-  '#86E39E', // 2 sets (Verde claro)
-  '#FECA57', // 3 sets (Amarillo pastel)
-  '#FF9F43', // 4 sets (Naranja)
-  '#E8505B', // 5-6 sets (Coral / Rojo)
-  '#E8505B', // 6 sets
-  '#B82E3B', // 7+ sets (Rojo borgoña intenso - Fatiga Alta)
+  '#34C759', // 1 set
+  '#86E39E', // 2 sets
+  '#FECA57', // 3 sets
+  '#FF9F43', // 4 sets
+  '#FF453A', // 5-6 sets
+  '#FF453A', // 6 sets
+  '#B82E3B', // 7+ sets
 ];
 
 export const MuscleHeatmap: React.FC = () => {
@@ -29,7 +29,7 @@ export const MuscleHeatmap: React.FC = () => {
       const diffTime = Math.abs(now.getTime() - logDate.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-      // Solo acumulamos fatiga de los últimos 3 días (72 horas)
+      // Fatigue accumulated over the last 3 days (72 hours)
       if (diffDays <= 3) {
         log.exercises.forEach((ex) => {
           const muscles = getMusclesForExercise(ex.name);
@@ -51,95 +51,60 @@ export const MuscleHeatmap: React.FC = () => {
   }, [trainingLogs]);
 
   return (
-    <div
-      className="card"
-      style={{
-        background: 'var(--surface)',
-        borderRadius: '24px',
-        padding: '20px',
-        border: '1px solid var(--border-subtle)',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: '8px',
-        }}
-      >
-        <div
-          style={{
-            fontSize: '1.06rem',
-            fontWeight: 800,
-            color: 'var(--text-primary)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-          }}
-        >
-          <span>🔥</span>
-          <span>Mapa de Fatiga Muscular</span>
+    <div className="glass-surface rounded-[28px] p-5 border-t-white/20 shadow-lg space-y-3">
+      <div className="flex items-center justify-between pb-1 border-b border-white/5">
+        <div className="flex items-center gap-2">
+          <span className="text-base">🔥</span>
+          <span className="text-xs font-black text-[#F5F5F7]">Mapa de Fatiga Muscular</span>
         </div>
-        <span className="tag-pill tag-pill-coral">Últimas 72h</span>
+        <span className="px-2.5 py-0.5 rounded-full bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/25 text-[10px] font-black">
+          Últimas 72h
+        </span>
       </div>
 
-      <p
-        style={{
-          fontSize: '0.87rem',
-          fontWeight: 700,
-          color: 'var(--text-secondary)',
-          marginBottom: '16px',
-          lineHeight: 1.4,
-        }}
-      >
-        Seguimiento de fatiga acumulada en los últimos 3 días.
+      <p className="text-xs font-bold text-[#8E8E93] leading-relaxed">
+        Seguimiento visual de la fatiga acumulada en los últimos 3 días.
       </p>
 
-      {/* Renderizado del Cuerpo Humano (Vista Anterior y Posterior) con react-body-highlighter */}
-      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
+      {/* Anterior & Posterior Model */}
+      <div className="flex justify-around items-center py-2">
         {/* VISTA FRONTAL */}
-        <div style={{ width: '45%' }}>
+        <div className="w-[44%]">
           <Model
             type="anterior"
             data={fatigueData}
             highlightedColors={HIGHLIGHT_COLORS}
             style={{ width: '100%', height: 'auto' }}
-            svgStyle={{ fill: 'var(--surface-elevated)' }}
+            svgStyle={{ fill: 'rgba(255, 255, 255, 0.08)' }}
           />
         </div>
 
         {/* VISTA TRASERA */}
-        <div style={{ width: '45%' }}>
+        <div className="w-[44%]">
           <Model
             type="posterior"
             data={fatigueData}
             highlightedColors={HIGHLIGHT_COLORS}
             style={{ width: '100%', height: 'auto' }}
-            svgStyle={{ fill: 'var(--surface-elevated)' }}
+            svgStyle={{ fill: 'rgba(255, 255, 255, 0.08)' }}
           />
         </div>
       </div>
 
-      {/* Leyenda de Colores */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '8px',
-          marginTop: '16px',
-          flexWrap: 'wrap',
-        }}
-      >
-        <span className="tag-pill">0 (Descansado)</span>
-        <span className="tag-pill tag-pill-green">1-2 Series</span>
-        <span
-          className="tag-pill"
-          style={{ background: 'rgba(254, 202, 87, 0.16)', color: '#FECA57' }}
-        >
+      {/* Legend */}
+      <div className="flex justify-center gap-1.5 pt-1 flex-wrap">
+        <span className="glass-pill px-2.5 py-0.5 rounded-full text-[10px] font-black text-[#8E8E93]">
+          0 (Descansado)
+        </span>
+        <span className="px-2.5 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] border border-[#34C759]/25 text-[10px] font-black">
+          1-2 Series
+        </span>
+        <span className="px-2.5 py-0.5 rounded-full bg-[#FECA57]/15 text-[#FECA57] border border-[#FECA57]/25 text-[10px] font-black">
           3-5 Series
         </span>
-        <span className="tag-pill tag-pill-coral">6+ Series (Fatiga Alta)</span>
+        <span className="px-2.5 py-0.5 rounded-full bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/25 text-[10px] font-black">
+          6+ Series
+        </span>
       </div>
     </div>
   );

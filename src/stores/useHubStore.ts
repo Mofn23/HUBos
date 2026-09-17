@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { nativeStorage } from '@/lib/nativeStorage';
 
-export type AppModule = 'hub' | 'recomp' | 'subs' | 'schedule';
+export type AppModule = 'hub' | 'recomp' | 'subs' | 'schedule' | 'aesthetix';
 
 export interface HubQuickAction {
   id: string;
@@ -73,7 +74,14 @@ export const useHubStore = create<HubState>()(
     }),
     {
       name: 'hubos_main_v1',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => nativeStorage),
+      partialize: (state) => ({
+        currentApp: state.currentApp,
+        geminiApiKey: state.geminiApiKey,
+        userName: state.userName,
+        currency: state.currency,
+        notificationsEnabled: state.notificationsEnabled,
+      }),
     }
   )
 );

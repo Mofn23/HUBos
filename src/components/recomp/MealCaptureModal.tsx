@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
+import { useHubStore } from '@/stores/useHubStore';
 import { parseMealWithGemini } from '@/lib/gemini';
-import { getTodayKey } from '@/lib/date';
 import { compressImage, createThumbnail } from '@/lib/image';
 import { saveMealImage } from '@/lib/imageStorage';
-import { IconSparkles } from '../common/Icons';
+import { getTodayKey } from '@/lib/date';
+import { IconCamera, IconSparkles } from '../common/Icons';
 
 interface MealCaptureModalProps {
   isOpen: boolean;
@@ -15,13 +15,11 @@ interface MealCaptureModalProps {
 }
 
 export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onClose }) => {
-  const { geminiApiKey, showToast } = useHubStore();
   const { addMeal, addFavoriteMeal, selectedDate, setIsModalOpen } = useRecompStore();
+  const { geminiApiKey, showToast } = useHubStore();
 
   const [category, setCategory] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('almuerzo');
-  // Full HD compressed image for Gemini API and IndexedDB storage
   const [imageForApi, setImageForApi] = useState<string | null>(null);
-  // Preview for display in the modal UI
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [description, setDescription] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
@@ -29,14 +27,15 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Synchronize modal open state with Zustand store to manage bottom nav visibility
   useEffect(() => {
     if (isOpen) {
       setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
     }
     return () => {
-      if (!isOpen) {
-        setIsModalOpen(false);
-      }
+      setIsModalOpen(false);
     };
   }, [isOpen, setIsModalOpen]);
 
@@ -64,30 +63,30 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
   const handleAnalyze = async () => {
     if (!description.trim() && !imageForApi) {
-      showToast('Toma una foto o escribe una descripción de tu comida.');
+      showToast('Por favor toma una foto o escribe qué vas a comer.');
       return;
     }
 
     setIsLoading(true);
     try {
+      showToast('🤖 Analizando comida con Gemini...');
       const result = await parseMealWithGemini(geminiApiKey, {
         text: description.trim() || undefined,
         imageBase64: imageForApi || undefined,
       });
 
-      // Generate a stable ID for the meal
-      const mealId = `meal-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+      const mealId = `meal-${Date.now()}`;
 
       // Save high-resolution image to IndexedDB (unlimited iPhone storage quota)
       if (imageForApi) {
         await saveMealImage(mealId, imageForApi);
       }
 
-      // Generate a sharp 420px preview thumbnail for fast list display in localStorage
+      // Generate an ultra-lightweight 160px thumbnail (~4-6KB) for instant saving in native storage
       let thumbnail: string | undefined;
       if (imageForApi) {
         try {
-          thumbnail = await createThumbnail(imageForApi, 420, 0.65);
+          thumbnail = await createThumbnail(imageForApi, 160, 0.5);
         } catch {
           thumbnail = undefined;
         }
@@ -135,6 +134,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
 
       showToast(`✅ ${mealName} (${calories} kcal) registrada${isFavorite ? ' y agregada a Frecuentes' : ''}.`);
       resetForm();
+      setIsModalOpen(false);
       onClose();
     } catch (err: any) {
       console.error('Meal AI parsing error:', err);
@@ -168,35 +168,40 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   ];
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-end justify-center">
+    <div className="fixed inset-0 z-[99999] flex items-end justify-center animate-fade-in">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/90 backdrop-blur-md"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"
         onClick={handleClose}
       />
 
-      {/* Bottom Sheet Modal */}
+      {/* Bottom Sheet Modal (Glassmorphism Elevated) */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-black text-[#F5F5F7]">Escaneo IA</h2>
+          <div>
+            <span className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+              REGISTRO FOTOGRÁFICO
+            </span>
+            <h2 className="text-2xl font-black text-[#F5F5F7] tracking-tight">Escaneo con IA</h2>
+          </div>
           <button
             onClick={handleClose}
-            className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
+            className="glass-pill w-10 h-10 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white hover:border-white/30 active:scale-95 transition-all"
           >
             <span className="text-base font-bold">✕</span>
           </button>
         </div>
 
-        {/* Category Selection */}
+        {/* Category Selection (Segmented Glass Pills) */}
         <div className="space-y-2">
           <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
-            CATEGORÍA
+            Categoría
           </label>
-          <div className="flex gap-2">
+          <div className="glass-surface p-1 rounded-2xl flex gap-1.5 shadow-inner">
             {categories.map((c) => {
               const isActive = category === c.key;
               return (
@@ -204,14 +209,14 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                   key={c.key}
                   type="button"
                   onClick={() => setCategory(c.key)}
-                  className={`flex-1 py-2.5 px-2 rounded-2xl text-xs font-black flex items-center justify-center gap-1.5 transition-all ${
+                  className={`flex-1 py-2 px-1.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all ${
                     isActive
-                      ? 'bg-[#242426] border border-white/15 text-[#F5F5F7] shadow-sm'
-                      : 'bg-transparent text-[#8E8E93] hover:text-[#F5F5F7]'
+                      ? 'glass-pill-active text-[#F5F5F7] shadow-sm scale-100'
+                      : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
                   }`}
                 >
                   <span className="text-sm">{c.icon}</span>
-                  <span>{c.label}</span>
+                  <span className="truncate">{c.label}</span>
                 </button>
               );
             })}
@@ -221,7 +226,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         {/* Photo Upload Dashed Container */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="relative w-full h-56 rounded-3xl border-2 border-dashed border-white/15 bg-[#1C1C1E] flex flex-col items-center justify-center cursor-pointer hover:border-white/25 active:scale-[0.99] transition-all overflow-hidden group"
+          className="relative w-full h-56 rounded-[28px] border-2 border-dashed border-white/20 glass-surface flex flex-col items-center justify-center cursor-pointer hover:border-white/40 active:scale-[0.99] transition-all overflow-hidden group shadow-inner"
         >
           {imagePreview ? (
             <div className="relative w-full h-full">
@@ -237,21 +242,21 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                   setImageForApi(null);
                   setImagePreview(null);
                 }}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/75 backdrop-blur-sm text-white flex items-center justify-center text-xs"
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/75 backdrop-blur-sm text-white flex items-center justify-center text-xs shadow-lg hover:scale-110 active:scale-95 transition-transform"
               >
                 ✕
               </button>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 text-center px-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#242426] flex items-center justify-center text-2xl text-[#8E8E93]">
+              <div className="w-14 h-14 rounded-2xl glass-pill flex items-center justify-center text-2xl text-[#8E8E93] group-hover:scale-110 group-hover:text-white transition-all shadow-sm">
                 📷
               </div>
-              <span className="text-sm font-extrabold text-[#F5F5F7]">
+              <span className="text-sm font-black text-[#F5F5F7]">
                 Toca para tomar foto de tu plato
               </span>
               <span className="text-[11px] font-semibold text-[#8E8E93]">
-                Alta resolución HD para cálculo exacto de macros
+                Alta resolución HD para cálculo exacto de macros con Gemini
               </span>
             </div>
           )}
@@ -266,11 +271,11 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Description Text Box */}
-        <div className="p-4 rounded-2xl bg-[#1C1C1E] border border-white/5">
+        <div className="p-3.5 rounded-2xl glass-surface border border-white/10 focus-within:border-white/30 transition-all">
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            placeholder="Descripción del plato (ej: Pollo 200g con arroz)..."
+            placeholder="Descripción del plato (ej: Pollo 200g con arroz y aguacate)..."
             rows={2}
             className="w-full bg-transparent text-sm text-[#F5F5F7] placeholder-[#636366] font-bold focus:outline-none resize-none"
           />
@@ -283,7 +288,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           className={`w-full py-3 px-4 rounded-2xl flex items-center justify-between border transition-all active:scale-[0.99] ${
             isFavorite
               ? 'bg-[#FFD60A]/10 border-[#FFD60A]/40 text-[#FFD60A]'
-              : 'bg-[#1C1C1E] border-white/5 text-[#8E8E93] hover:text-[#F5F5F7]'
+              : 'glass-surface border-white/10 text-[#8E8E93] hover:text-[#F5F5F7]'
           }`}
         >
           <div className="flex items-center gap-2.5 text-xs font-black">
@@ -302,22 +307,22 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         </button>
 
         {/* Action Button */}
-        <div className="pt-1 pb-8">
+        <div className="pt-1 pb-4">
           <button
             type="button"
             onClick={handleAnalyze}
             disabled={isLoading || (!description.trim() && !imageForApi)}
-            className="w-full py-4.5 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all disabled:opacity-40"
+            className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40"
           >
             {isLoading ? (
               <>
-                <IconSparkles className="w-5 h-5 animate-spin" />
-                <span>Analizando con Gemini 3.5...</span>
+                <IconSparkles className="w-5 h-5 animate-spin text-black" />
+                <span>Analizando con Gemini...</span>
               </>
             ) : (
               <>
                 <IconSparkles className="w-5 h-5 text-black" />
-                <span>Analizar Comida</span>
+                <span>Analizar Comida con IA</span>
               </>
             )}
           </button>
