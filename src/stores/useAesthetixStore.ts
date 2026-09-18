@@ -42,6 +42,8 @@ interface AesthetixState {
   removeSet: (exerciseIndex: number, setIndex: number) => void;
   addExerciseToActiveSession: (exercise: { id: string; name: string; category?: string; target?: string }) => void;
   removeExerciseFromActiveSession: (exerciseIndex: number) => void;
+  replaceExerciseInActiveSession: (exerciseIndex: number, newExercise: { id: string; name: string; category?: string; target?: string }) => void;
+  setExerciseNotes: (exerciseIndex: number, notes: string) => void;
   
   // Rest Timer in Session
   triggerRestTimer: (seconds?: number) => void;
@@ -818,6 +820,46 @@ export const useAesthetixStore = create<AesthetixState>()(
             ...state.activeSession,
             exercises: updated,
             currentExerciseIndex: nextIndex,
+          },
+        });
+      },
+
+      replaceExerciseInActiveSession: (exerciseIndex, newExercise) => {
+        const state = get();
+        if (!state.activeSession) return;
+        const updatedExercises = [...state.activeSession.exercises];
+        const oldEx = updatedExercises[exerciseIndex];
+        if (!oldEx) return;
+
+        const replaced: SessionExerciseLog = {
+          ...oldEx,
+          exerciseId: newExercise.id,
+          exerciseName: newExercise.name,
+          category: newExercise.category || oldEx.category,
+          target: newExercise.target || oldEx.target,
+        };
+
+        updatedExercises[exerciseIndex] = replaced;
+        set({
+          activeSession: {
+            ...state.activeSession,
+            exercises: updatedExercises,
+          },
+        });
+      },
+
+      setExerciseNotes: (exerciseIndex, notes) => {
+        const state = get();
+        if (!state.activeSession) return;
+        const updatedExercises = [...state.activeSession.exercises];
+        const oldEx = updatedExercises[exerciseIndex];
+        if (!oldEx) return;
+
+        updatedExercises[exerciseIndex] = { ...oldEx, notes };
+        set({
+          activeSession: {
+            ...state.activeSession,
+            exercises: updatedExercises,
           },
         });
       },

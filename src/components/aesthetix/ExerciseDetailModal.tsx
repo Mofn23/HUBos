@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Exercise } from '@/types/workout';
 import { getExerciseMediaUrls, BODY_PART_TRANSLATIONS, EQUIPMENT_TRANSLATIONS } from '@/lib/exercisesDb';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface ExerciseDetailModalProps {
   exercise: Exercise | null;
@@ -20,6 +21,8 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
   const [activeMediaTab, setActiveMediaTab] = useState<'gif' | 'image'>('gif');
   const [imgLoaded, setImgLoaded] = useState(false);
 
+  useScrollLock(isOpen);
+
   if (!isOpen || !exercise) return null;
 
   const { imageUrl, gifUrl } = getExerciseMediaUrls(exercise);
@@ -32,10 +35,17 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
       <div
         className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity"
         onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
       />
 
       {/* Sheet Content */}
-      <div className="relative w-full max-w-lg glass-surface-elevated rounded-t-[36px] max-h-[92vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up">
+      <div
+        className="relative w-full max-w-lg glass-surface-elevated rounded-t-[36px] max-h-[92vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         {/* Handle */}
         <div className="w-full flex items-center justify-center pt-3 pb-1">
           <div className="w-10 h-1.5 rounded-full bg-white/20" />

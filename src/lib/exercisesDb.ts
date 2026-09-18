@@ -41,17 +41,34 @@ export function getExerciseById(id: string): Exercise | undefined {
   return allExercises.find((ex) => ex.id === id);
 }
 
-export function getExerciseMediaUrls(exercise: { image?: string; gif_url?: string }): {
+export function getExerciseMediaUrls(exercise?: { image?: string; gif_url?: string } | null): {
   imageUrl: string;
   gifUrl: string;
 } {
-  const imgPath = exercise.image || '';
-  const gifPath = exercise.gif_url || '';
+  if (!exercise) return { imageUrl: '', gifUrl: '' };
+  const imgPath = (exercise.image || '').trim();
+  const gifPath = (exercise.gif_url || '').trim();
 
   return {
-    imageUrl: imgPath.startsWith('http') ? imgPath : `${BASE_RAW_URL}/${imgPath}`,
-    gifUrl: gifPath.startsWith('http') ? gifPath : `${BASE_RAW_URL}/${gifPath}`,
+    imageUrl: imgPath
+      ? imgPath.startsWith('http')
+        ? imgPath
+        : `${BASE_RAW_URL}/${imgPath.replace(/^\/+/, '')}`
+      : '',
+    gifUrl: gifPath
+      ? gifPath.startsWith('http')
+        ? gifPath
+        : `${BASE_RAW_URL}/${gifPath.replace(/^\/+/, '')}`
+      : '',
   };
+}
+
+export function getExerciseImageUrl(exercise?: { image?: string; gif_url?: string } | null): string {
+  return getExerciseMediaUrls(exercise).imageUrl;
+}
+
+export function getExerciseGifUrl(exercise?: { image?: string; gif_url?: string } | null): string {
+  return getExerciseMediaUrls(exercise).gifUrl;
 }
 
 export function searchExercises(

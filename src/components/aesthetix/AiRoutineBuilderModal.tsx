@@ -5,6 +5,7 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { generateRoutineWithAI } from '@/lib/workoutAiGenerator';
 import { WorkoutRoutine } from '@/types/workout';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface AiRoutineBuilderModalProps {
   isOpen: boolean;
@@ -17,6 +18,8 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
 }) => {
   const { geminiApiKey, showToast } = useHubStore();
   const { addRoutine, setWorkoutDaysTarget } = useAesthetixStore();
+
+  useScrollLock(isOpen);
 
   const [step, setStep] = useState<number>(1);
   const [goal, setGoal] = useState<string>('Hipertrofia & Masa Muscular');
@@ -66,9 +69,19 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center animate-fade-in">
-      <div className="fixed inset-0 bg-black/75 backdrop-blur-md" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/75 backdrop-blur-md"
+        onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      />
 
-      <div className="relative w-full max-w-lg glass-surface-elevated rounded-t-[36px] max-h-[90vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up">
+      <div
+        className="relative w-full max-w-lg glass-surface-elevated rounded-t-[36px] max-h-[90vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         {/* Handle */}
         <div className="w-full flex items-center justify-center pt-3 pb-1">
           <div className="w-10 h-1.5 rounded-full bg-white/20" />

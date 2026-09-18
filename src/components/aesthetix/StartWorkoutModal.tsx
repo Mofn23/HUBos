@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface StartWorkoutModalProps {
   isOpen: boolean;
@@ -15,6 +16,9 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
   onStart,
 }) => {
   const { routines, activeRoutineId } = useAesthetixStore();
+
+  // Prevent background scroll bleed in iOS
+  useScrollLock(isOpen);
 
   const [selectedRoutineId, setSelectedRoutineId] = useState<string>(
     activeRoutineId || (routines[0]?.id ?? 'free')
@@ -42,10 +46,17 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
       <div
         className="fixed inset-0 bg-black/80 backdrop-blur-md"
         onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
       />
 
       {/* Glass Modal Card */}
-      <div className="relative w-full max-w-md glass-surface-elevated rounded-t-[36px] sm:rounded-[36px] p-6 z-10 border-t sm:border border-white/20 shadow-2xl space-y-5 animate-slide-up max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div
+        className="relative w-full max-w-md glass-surface-elevated rounded-t-[36px] sm:rounded-[36px] p-6 z-10 border-t sm:border border-white/20 shadow-2xl space-y-5 animate-slide-up max-h-[90vh] overflow-y-auto no-scrollbar overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2.5">

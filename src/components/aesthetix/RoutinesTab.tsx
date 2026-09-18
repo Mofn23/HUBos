@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { useHubStore } from '@/stores/useHubStore';
 import { WorkoutRoutine, Exercise } from '@/types/workout';
-import { getExerciseById, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
+import { getExerciseById, getExerciseMediaUrls, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
+import { useScrollLock } from '@/lib/useScrollLock';
 import { CustomRoutineModal } from './CustomRoutineModal';
 
 interface RoutinesTabProps {
@@ -22,6 +23,9 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
   const [isCustomRoutineModalOpen, setIsCustomRoutineModalOpen] = useState(false);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
   const [selectedExerciseModal, setSelectedExerciseModal] = useState<Exercise | null>(null);
+
+  // Lock background scrolling in iOS WebKit when modal is open
+  useScrollLock(!!selectedExerciseModal || isCustomRoutineModalOpen);
 
   const activeRoutine =
     routines.find((r) => r.id === activeRoutineId) || routines[0];
@@ -209,16 +213,29 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
                 >
                   {/* Exercise Thumbnail / GIF */}
                   <div className="w-12 h-12 rounded-[16px] bg-white/[0.04] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 relative">
-                    {dbEx?.image ? (
-                      <img
-                        src={dbEx.image}
-                        alt={ex.name}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span className="text-base">🏋️</span>
-                    )}
+                    {(() => {
+                      const media = dbEx ? getExerciseMediaUrls(dbEx) : null;
+                      return media?.imageUrl ? (
+                        <img
+                          src={media.imageUrl}
+                          alt={ex.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          onError={(e) => {
+                            (e.currentTarget as HTMLElement).style.display = 'none';
+                            const parent = (e.currentTarget as HTMLElement).parentElement;
+                            if (parent && !parent.querySelector('.img-fallback')) {
+                              const fallback = document.createElement('span');
+                              fallback.className = 'text-base img-fallback';
+                              fallback.innerText = '🏋️';
+                              parent.appendChild(fallback);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <span className="text-base">🏋️</span>
+                      );
+                    })()}
                     <span className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-[8px] text-[#34C759] font-mono">
                       {eIdx + 1}
                     </span>
@@ -304,10 +321,17 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
       {selectedExerciseModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
           <div
-            className="fixed inset-0 bg-black/80"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setSelectedExerciseModal(null)}
+            onTouchMove={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           />
-          <div className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+          <div
+            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            onTouchMove={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
               <div className="min-w-0 flex-1">
                 <h3 className="text-sm font-black text-[#F5F5F7] capitalize truncate">
@@ -326,18 +350,27 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar">
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar overscroll-contain">
               {/* High-res GIF / Image Preview */}
-              <div className="w-full aspect-video rounded-[20px] bg-black/40 overflow-hidden flex items-center justify-center border border-white/10 relative">
-                {selectedExerciseModal.gif_url || selectedExerciseModal.image ? (
-                  <img
-                    src={selectedExerciseModal.gif_url || selectedExerciseModal.image}
-                    alt={selectedExerciseModal.name}
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <span className="text-3xl">🏋️</span>
-                )}
+              <div className="w-full aspect-video rounded-[20px] bg-black/60 overflow-hidden flex items-center justify-center border border-white/10 relative">
+                {(() => {
+                  const media = getExerciseMediaUrls(selectedExerciseModal);
+                  const src = media.gifUrl || media.imageUrl;
+                  return src ? (
+                    <img
+                      src={src}
+                      alt={selectedExerciseModal.name}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        if (media.imageUrl && e.currentTarget.src !== media.imageUrl) {
+                          e.currentTarget.src = media.imageUrl;
+                        }
+                      }}
+                    />
+                  ) : (
+                    <span className="text-3xl">🏋️</span>
+                  );
+                })()}
               </div>
 
               {/* Steps / Instructions */}

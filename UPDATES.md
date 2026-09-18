@@ -2,6 +2,24 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.3.0] - 2026-09-17 (Aesthetix v2.3: Rediseño Gym en Vivo Estilo Symmetry, Bolas Superiores de Ejercicios, GIF Grande OLED, Bloqueo de Scroll en Modales iOS y Corrección de Imágenes [?])
+
+### 🌟 Nuevas Funcionalidades & Perfeccionamiento de Experiencia
+- **Rediseño Completo de la Pantalla de Entrenamiento ("Gym en Vivo") Inspirado en Symmetry (`LiveWorkoutFullscreen.tsx`)**:
+  - **Top Bar Symmetry**: Botón de minimizar `⌄` a la izquierda, cronómetro digital central en tiempo real (`0:01`) y botón `Terminar` en píldora oscura con acento esmeralda, más menú de opciones discretas (cancelar entreno o quitar ejercicio).
+  - **Carrusel Superior de Bolas ("Burbujas de Ejercicios")**: Fila horizontal de círculos con la miniatura de cada ejercicio. El ejercicio activo resalta con un anillo luminoso blanco (`ring-2 ring-white scale-105`), y al tocar cualquier bola se conmuta inmediatamente a dicho ejercicio.
+  - **Visualizador Central de GIF en Grande sobre Fondo Negro Puro**: Animación biomecánica amplia y limpia sobre fondo OLED negro `#000000` sin cajas grises constreñidas ni etiquetas invasivas.
+  - **Fila de Acciones Rápidas**: Insignia del rango muscular de Symmetry, botón `▶ Tutorial` con técnica paso a paso en español, botón `🔄 Reemplazar` para sustituir el ejercicio por cualquiera de los 1.324 del catálogo en 1 toque, y botón `✎ Notas` para apuntar ajustes de máquina y sensaciones.
+  - **Tabla de Series Symmetry**: Formato exacto con columnas `SERIE`, `PREVIA` (con récord o carga histórica previa `65 x 12`), `KG` en bloque numérico oscuro, `REPES` y botón circular de check `✓` (que se ilumina en verde esmeralda y dispara el descanso de 2:30 min).
+  - **Botón Ancho `+ Añadir serie`**: Botón oscuro a lo ancho de la pantalla estilo oficial Symmetry.
+- **Bloqueo Total de Scroll y Fuga de Gestos en iOS WebKit (`src/lib/useScrollLock.ts`)**:
+  - Creado el hook `useScrollLock` para fijar el scroll de `body` y el viewport en iOS cada vez que un modal está abierto.
+  - Aplicado `overflow-hidden` a `AesthetixView` ante cualquier modal activo, eliminando por completo que la pantalla trasera se desplace o rebote al deslizar dentro de un menú.
+  - Contención de overscroll (`overscroll-contain`) y cancelación de propagación de eventos táctiles (`onTouchMove`) en backdrops y contenedores de todos los modales (`StartWorkoutModal`, `CustomRoutineModal`, `ExerciseDetailModal`, `SessionDetailModal`, `BodyScanModal`, `SymmetryImportModal`, `LiveWorkoutFullscreen`).
+- **Corrección Definitiva del Bug Visual de Imágenes `[?]` en iOS**:
+  - Reemplazadas las rutas relativas locales por enlaces absolutos al CDN oficial de ejercicios en `exercisesDb.ts` (`getExerciseMediaUrls`, `getExerciseImageUrl`, `getExerciseGifUrl`).
+  - Añadido manejador `onError` en `RoutinesTab.tsx` y `CustomRoutineModal.tsx` que garantiza que nunca se renderice el icono de imagen rota de iOS (`[?]`), utilizando el icono elegante `🏋️` como respaldo.
+
 ## 🚀 [v2.2.0] - 2026-09-17 (Aesthetix v2.2: Corrección del Freeze en iOS, Protocolo Oficial PPL x UL con GIFs, Sistema Oficial de 25 Rangos Symmetry con Insignias, Volumen Acumulado 1.1 M kg, Escaneo Físico IA e Importador OCR)
 
 ### 🌟 Nuevas Funcionalidades, Correcciones Críticas & Datos Symmetry

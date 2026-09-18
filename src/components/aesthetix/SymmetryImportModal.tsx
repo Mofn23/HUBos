@@ -6,6 +6,7 @@ import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { generateContentWithFallback } from '@/lib/gemini';
 import { WorkoutHistoryItem, SessionExerciseLog, SetLog } from '@/types/workout';
 import { searchExercises } from '@/lib/exercisesDb';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface SymmetryImportModalProps {
   isOpen: boolean;
@@ -29,6 +30,8 @@ export const SymmetryImportModal: React.FC<SymmetryImportModalProps> = ({
 }) => {
   const { geminiApiKey, showToast } = useHubStore();
   const { addHistoricalWorkout } = useAesthetixStore();
+
+  useScrollLock(isOpen);
 
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [mimeType, setMimeType] = useState('image/jpeg');
@@ -184,9 +187,19 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
-      <div className="fixed inset-0 bg-black/80" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-md"
+        onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      />
 
-      <div className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+      <div
+        className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">

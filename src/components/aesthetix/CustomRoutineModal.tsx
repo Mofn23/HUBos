@@ -4,7 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { useHubStore } from '@/stores/useHubStore';
 import { WorkoutRoutine, RoutineDay, RoutineExercise, Exercise } from '@/types/workout';
-import { getAllExercises, searchExercises, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
+import { getAllExercises, searchExercises, getExerciseMediaUrls, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface CustomRoutineModalProps {
   isOpen: boolean;
@@ -17,6 +18,9 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
 }) => {
   const { addRoutine, setActiveRoutineId } = useAesthetixStore();
   const { showToast } = useHubStore();
+
+  // Lock background scroll in iOS WebKit
+  useScrollLock(isOpen);
 
   // Modal navigation view: 'editor' or 'catalog'
   const [currentView, setCurrentView] = useState<'editor' | 'catalog'>('editor');
@@ -238,10 +242,20 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
       {/* Backdrop (single layer, prevents WebKit blur deadlock) */}
-      <div className="fixed inset-0 bg-black/80" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      />
 
       {/* Main Single Modal Container */}
-      <div className="relative w-full max-w-lg glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[90vh] flex flex-col">
+      <div
+        className="relative w-full max-w-lg glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[90vh] flex flex-col overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         
         {/* ======================================================== */}
         {/* VIEW 1: ROUTINE EDITOR                                  */}
@@ -619,16 +633,29 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                     >
                       {/* Exercise Thumbnail / GIF */}
                       <div className="w-12 h-12 rounded-[14px] bg-white/[0.04] overflow-hidden flex items-center justify-center shrink-0 border border-white/10">
-                        {dbEx.image ? (
-                          <img
-                            src={dbEx.image}
-                            alt={dbEx.name}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                          />
-                        ) : (
-                          <span className="text-base">🏋️</span>
-                        )}
+                        {(() => {
+                          const media = getExerciseMediaUrls(dbEx);
+                          return media.imageUrl ? (
+                            <img
+                              src={media.imageUrl}
+                              alt={dbEx.name}
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              onError={(e) => {
+                                (e.currentTarget as HTMLElement).style.display = 'none';
+                                const parent = (e.currentTarget as HTMLElement).parentElement;
+                                if (parent && !parent.querySelector('.img-fallback')) {
+                                  const fallback = document.createElement('span');
+                                  fallback.className = 'text-base img-fallback';
+                                  fallback.innerText = '🏋️';
+                                  parent.appendChild(fallback);
+                                }
+                              }}
+                            />
+                          ) : (
+                            <span className="text-base">🏋️</span>
+                          );
+                        })()}
                       </div>
 
                       {/* Info */}

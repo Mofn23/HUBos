@@ -12,6 +12,7 @@ import {
   calculate1RM,
   getAllRanksCatalog,
 } from '@/lib/muscleRanks';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 export const AnatomyRanksTab: React.FC = () => {
   const { getMuscleTiers, getOverallRank, userWeightKg, setUserWeightKg } = useAesthetixStore();
@@ -23,6 +24,8 @@ export const AnatomyRanksTab: React.FC = () => {
   const [calcReps, setCalcReps] = useState<string>('8');
   const [isCalcOpen, setIsCalcOpen] = useState(false);
   const [isGlobalRanksOpen, setIsGlobalRanksOpen] = useState(false);
+
+  useScrollLock(isCalcOpen || isGlobalRanksOpen);
 
   // Map tiers to react-body-highlighter datasets
   const { anteriorData, posteriorData, customColors } = useMemo(() => {
@@ -326,9 +329,19 @@ export const AnatomyRanksTab: React.FC = () => {
       {/* 4. Global Ranks Modal (Symmetry 25-Tier Scale) */}
       {isGlobalRanksOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
-          <div className="fixed inset-0 bg-black/80" onClick={() => setIsGlobalRanksOpen(false)} />
+          <div
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setIsGlobalRanksOpen(false)}
+            onTouchMove={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          />
 
-          <div className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+          <div
+            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            onTouchMove={(e) => e.stopPropagation()}
+          >
             {/* Header */}
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
               <div>

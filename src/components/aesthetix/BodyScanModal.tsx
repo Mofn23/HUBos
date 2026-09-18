@@ -5,6 +5,7 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { generateContentWithFallback } from '@/lib/gemini';
 import { saveProgressPhoto } from '@/lib/imageStorage';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface BodyScanModalProps {
   isOpen: boolean;
@@ -24,6 +25,8 @@ interface ScanResult {
 export const BodyScanModal: React.FC<BodyScanModalProps> = ({ isOpen, onClose }) => {
   const { geminiApiKey, showToast } = useHubStore();
   const { setUserPhotoId } = useAesthetixStore();
+
+  useScrollLock(isOpen);
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedMimeType, setSelectedMimeType] = useState<string>('image/jpeg');
@@ -124,9 +127,19 @@ NO añadas texto antes ni después. Solo el JSON.`;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
-      <div className="fixed inset-0 bg-black/80" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+        onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      />
 
-      <div className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[88vh] flex flex-col">
+      <div
+        className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[88vh] flex flex-col overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">

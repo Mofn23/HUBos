@@ -58,27 +58,33 @@ jobs:
       - name: Release IPA on GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.2.0
-          name: HUBos Super-App v2.2.0 (SideStore IPA)
+          tag_name: v2.3.0
+          name: HUBos Super-App v2.3.0 (SideStore IPA)
           body: |
-            ## 🚀 HUBos Super-App v2.2.0 (SideStore & AltStore Compatible)
+            ## 🚀 HUBos Super-App v2.3.0 (SideStore & AltStore Compatible)
             
             **HUBos** es un contenedor modular unificado para iOS que agrupa múltiples aplicaciones completas e independientes en un único archivo `.ipa`, permitiendo superar el límite estricto de 3 aplicaciones activas de SideStore / AltStore.
 
-            ### 🌟 Novedades en Aesthetix v2.2:
-            - **Solución Definitiva al Bloqueo de Teclado en iOS**: Conmutación de pantalla fluida sin modales superpuestos que previene el freeze de WebKit.
-            - **Protocolo Personalizado PPL x UL**: Rutina oficial de 5 días de Samuel con 27 ejercicios exactos y visualización de GIFs animados en el catálogo y días de entrenamiento.
-            - **Sistema de Rangos Symmetry (25 Niveles)**: De Hierro I a Simétrico (Top 1%) con insignias oficiales, percentiles globales y líneas anatómicas exactas (Rubí II, Esmeralda II, Diamante II).
-            - **Volumen Histórico Acumulado (1,1 M kg / 1.100.000 kg)**, 112 entrenos, 204 PRs y racha de 7 días.
-            - **Escaneo Físico IA con Gemini Vision**: Diagnóstico de simetría (0-100), porcentaje graso, ratio V-Taper y prescripción de entrenamiento.
-            - **Lector de Capturas Symmetry con OCR IA**: Importación automática de entrenos y PRs desde capturas de pantalla.
+            ### 🌟 Novedades en Aesthetix v2.3:
+            - **Rediseño Completo de Gym en Vivo (Estilo Symmetry & Glassmorphism)**:
+              - Carrusel superior de bolas ("burbujas de ejercicios") con miniaturas y selección activa con anillo luminoso.
+              - Visualizador central con animación GIF grande sobre fondo negro puro OLED sin recuadros grises.
+              - Fila de acciones rápidas: insignia de rango, botón `▶ Tutorial` con técnica guiada, `🔄 Reemplazar` ejercicio y `✎ Notas`.
+              - Tabla de series con columnas `SERIE`, `PREVIA`, `KG`, `REPES` y botón circular de check `✓` reactivo.
+              - Botón ancho `+ Añadir serie` al estilo oficial de Symmetry.
+            - **Bloqueo Total de Scroll de Fondo en iOS (WebKit)**:
+              - Aislamiento de gestos táctiles y contención de overscroll en todos los modales para evitar que la pantalla trasera se desplace o rebote.
+            - **Corrección Definitiva de Imágenes de Ejercicios**:
+              - Enlace absoluto al CDN con fallback inteligente anti-error, eliminando el icono `[?]` de iOS.
+            - **Protocolo PPL x UL & Rangos Symmetry (25 Niveles)**:
+              - Rutina oficial de 5 días de Samuel con 27 ejercicios y volumen acumulado anual de 1,1 M kg (+1,1 M% ↑).
 
             ### 📦 Módulos Incluidos en este Release:
             1. **🏠 HUB Launcher Dashboard**: Panel central con telemetría en vivo, acceso rápido con IA (Gemini 2.0 Flash) y conmutador flotante con 0ms de latencia.
             2. **🥑 Módulo RecompAI**: Conteo de calorías, distribución de macros, escáner de fotos/texto con IA, auditoría de capturas Symmetry, medidor de glucógeno y mapa de calor muscular.
             3. **📺 Módulo Subscriptions**: Gestor integral de suscripciones estilo MonAI/DinER, métricas de gasto mensual/anual, calendario de cobros, alertas de renovación y guías de cancelación en 1 tap.
             4. **📅 Módulo Horarios & Rutinas**: Matriz 2D de clases y conducción, Attendance Shield, gestor de tareas y sincronización .ics.
-            5. **⚡ Módulo Aesthetix v2.2**: Hipertrofia & Fuerza, catálogo de 1.324 ejercicios con animaciones GIF, modo gimnasio fullscreen con descanso de 2:30 min, generador IA, protocolo PPL x UL, y sistema de rangos Symmetry.
+            5. **⚡ Módulo Aesthetix v2.3**: Hipertrofia & Fuerza estilo Symmetry, catálogo de 1.324 ejercicios con animaciones GIF, modo gimnasio con descanso de 2:30 min, generador IA, protocolo PPL x UL, y sistema de rangos Symmetry.
             
             ### 📲 Instrucciones de Instalación en iPhone:
             1. Descarga el archivo `HUBos.ipa` adjunto abajo en tu iPhone.

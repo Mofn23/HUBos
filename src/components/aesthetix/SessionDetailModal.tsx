@@ -5,6 +5,7 @@ import { WorkoutHistoryItem } from '@/types/workout';
 import { useHubStore } from '@/stores/useHubStore';
 import { calculate1RM } from '@/lib/muscleRanks';
 import { callGemini } from '@/lib/gemini';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 interface SessionDetailModalProps {
   isOpen: boolean;
@@ -22,6 +23,8 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({
   const { geminiApiKey, showToast } = useHubStore();
   const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
+
+  useScrollLock(isOpen);
 
   if (!isOpen || !session) return null;
 
@@ -92,10 +95,17 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
       <div
         className="fixed inset-0 bg-black/85 backdrop-blur-md"
         onClick={onClose}
+        onTouchMove={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
       />
 
       {/* Main Glass Modal Card */}
-      <div className="relative w-full max-w-lg glass-surface-elevated rounded-[36px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-hidden text-[#F5F5F7]">
+      <div
+        className="relative w-full max-w-lg glass-surface-elevated rounded-[36px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-hidden text-[#F5F5F7] overscroll-contain"
+        onTouchMove={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="flex items-start justify-between pb-3 border-b border-white/10 shrink-0">
           <div>

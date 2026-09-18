@@ -11,6 +11,7 @@ import { LiveWorkoutFullscreen } from './LiveWorkoutFullscreen';
 import { AiRoutineBuilderModal } from './AiRoutineBuilderModal';
 import { StartWorkoutModal } from './StartWorkoutModal';
 import { Exercise } from '@/types/workout';
+import { useScrollLock } from '@/lib/useScrollLock';
 
 export type AesthetixTab = 'routines' | 'exercises' | 'ranks' | 'profile';
 
@@ -25,6 +26,9 @@ export const AesthetixView: React.FC = () => {
   const [isAiBuilderOpen, setIsAiBuilderOpen] = useState(false);
   const [isLiveWorkoutOpen, setIsLiveWorkoutOpen] = useState(false);
   const [isStartWorkoutModalOpen, setIsStartWorkoutModalOpen] = useState(false);
+
+  const isAnyModalOpen = isStartWorkoutModalOpen || isLiveWorkoutOpen || isAiBuilderOpen;
+  useScrollLock(isAnyModalOpen);
 
   const handleStartSession = (routineId?: string, dayIndex?: number) => {
     startWorkout(routineId, dayIndex);
@@ -42,7 +46,11 @@ export const AesthetixView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col px-4 pt-12 pb-36 overflow-y-auto no-scrollbar animate-fade-in space-y-4 relative">
+    <div
+      className={`flex-1 flex flex-col px-4 pt-12 pb-36 ${
+        isAnyModalOpen ? 'overflow-hidden' : 'overflow-y-auto'
+      } no-scrollbar animate-fade-in space-y-4 relative`}
+    >
       {/* Ambient Radial Glowing Orbs for Frosted Glass Depth */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
         <div className="absolute -top-16 -right-16 w-80 h-80 rounded-full bg-[#64D2FF]/10 blur-[110px]" />
