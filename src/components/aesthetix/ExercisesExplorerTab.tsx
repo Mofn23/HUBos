@@ -286,11 +286,12 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
                   className="glass-surface rounded-[24px] p-3 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all flex flex-col justify-between space-y-2 group shadow-sm hover:shadow-[0_8px_25px_rgba(52,199,89,0.12)]"
                 >
                   {/* Thumbnail */}
-                  <div className="w-full aspect-square rounded-[18px] bg-black/40 border border-white/10 overflow-hidden flex items-center justify-center p-2 shadow-inner group-hover:scale-105 transition-transform">
+                  <div className="w-full aspect-square rounded-[18px] bg-[#000000] border border-white/10 overflow-hidden flex items-center justify-center p-2 shadow-inner group-hover:scale-105 transition-transform relative">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.05)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
                     <img
                       src={imageUrl}
                       alt={exercise.name}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain relative z-10 exercise-media-dark"
                       loading="lazy"
                     />
                   </div>

@@ -111,12 +111,13 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
               </button>
             </div>
 
-            {/* Media Container */}
-            <div className="w-full max-w-[280px] aspect-square rounded-[22px] overflow-hidden bg-black/40 border border-white/10 flex items-center justify-center relative shadow-inner">
+            {/* Media Container (Pure Black OLED background + Inverted Dark Mode styling) */}
+            <div className="w-full max-w-[280px] aspect-square rounded-[22px] overflow-hidden bg-[#000000] border border-white/10 flex items-center justify-center relative shadow-inner">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.06)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
               <img
                 src={activeMediaTab === 'gif' ? gifUrl : imageUrl}
                 alt={exercise.name}
-                className="w-full h-full object-contain p-2"
+                className="w-full h-full object-contain p-2 relative z-10 exercise-media-dark"
                 loading="lazy"
                 onLoad={() => setImgLoaded(true)}
               />

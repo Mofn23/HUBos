@@ -212,14 +212,14 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
                   className="glass-surface p-2.5 rounded-[22px] flex items-center justify-between gap-3 cursor-pointer hover:border-[#34C759]/40 active:scale-98 transition-all"
                 >
                   {/* Exercise Thumbnail / GIF */}
-                  <div className="w-12 h-12 rounded-[16px] bg-white/[0.04] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 relative">
+                  <div className="w-12 h-12 rounded-[16px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 relative p-0.5">
                     {(() => {
                       const media = dbEx ? getExerciseMediaUrls(dbEx) : null;
                       return media?.imageUrl ? (
                         <img
                           src={media.imageUrl}
                           alt={ex.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain exercise-media-dark"
                           loading="lazy"
                           onError={(e) => {
                             (e.currentTarget as HTMLElement).style.display = 'none';
@@ -352,7 +352,8 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
             <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar overscroll-contain">
               {/* High-res GIF / Image Preview */}
-              <div className="w-full aspect-video rounded-[20px] bg-black/60 overflow-hidden flex items-center justify-center border border-white/10 relative">
+              <div className="w-full aspect-video rounded-[20px] bg-[#000000] overflow-hidden flex items-center justify-center border border-white/10 relative">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.06)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
                 {(() => {
                   const media = getExerciseMediaUrls(selectedExerciseModal);
                   const src = media.gifUrl || media.imageUrl;
@@ -360,7 +361,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
                     <img
                       src={src}
                       alt={selectedExerciseModal.name}
-                      className="w-full h-full object-contain"
+                      className="w-full h-full object-contain p-2 relative z-10 exercise-media-dark"
                       onError={(e) => {
                         if (media.imageUrl && e.currentTarget.src !== media.imageUrl) {
                           e.currentTarget.src = media.imageUrl;

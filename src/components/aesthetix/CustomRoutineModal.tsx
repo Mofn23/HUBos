@@ -632,14 +632,14 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                       className="glass-surface p-2.5 rounded-[18px] flex items-center justify-between gap-3 hover:border-[#34C759]/50 cursor-pointer active:scale-98 transition-all"
                     >
                       {/* Exercise Thumbnail / GIF */}
-                      <div className="w-12 h-12 rounded-[14px] bg-white/[0.04] overflow-hidden flex items-center justify-center shrink-0 border border-white/10">
+                      <div className="w-12 h-12 rounded-[14px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 p-0.5">
                         {(() => {
                           const media = getExerciseMediaUrls(dbEx);
                           return media.imageUrl ? (
                             <img
                               src={media.imageUrl}
                               alt={dbEx.name}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-contain exercise-media-dark"
                               loading="lazy"
                               onError={(e) => {
                                 (e.currentTarget as HTMLElement).style.display = 'none';

@@ -1007,3 +1007,23 @@ input[type='number'] {
   box-shadow: 0 0 35px -5px rgba(191, 90, 242, 0.25);
 }
 
+/* ========================================================
+   Symmetry-style Dark Media Inversion for Exercise GIFs & Images
+   - Inverts white background to pure OLED #000000
+   - Transforms red muscle highlights into electric cyan/blue
+   - Keeps anatomical linework crisp white/silver
+   - Enhances contrast and sharpens edges for 180px assets
+   ======================================================== */
+.exercise-media-dark {
+  filter: invert(1) contrast(1.18) brightness(1.05);
+  mix-blend-mode: screen;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+.exercise-media-dark-subtle {
+  filter: invert(1) contrast(1.12) brightness(1.02);
+  mix-blend-mode: screen;
+  image-rendering: -webkit-optimize-contrast;
+}
+

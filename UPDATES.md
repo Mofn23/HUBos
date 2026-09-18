@@ -2,6 +2,31 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.4.0] - 2026-09-17 (Aesthetix v2.4: Fondo Negro Puro OLED #000000 y Estética Symmetry en Todos los GIFs e Ilustraciones de Ejercicios)
+
+### 🌟 Nuevas Funcionalidades & Perfeccionamiento Visual
+- **Fondo Negro Puro OLED (`#000000`) Integrado Idéntico a Symmetry (`LiveWorkoutFullscreen.tsx`)**:
+  - Eliminados los fondos blancos y cajas cuadradas en los GIFs e ilustraciones de ejercicios.
+  - Diseñada e implementada la clase maestra `.exercise-media-dark` en `globals.css`:
+    - Inversión cromática exacta (`filter: invert(1)`): convierte los fondos blancos en negro puro (`#000000`), las líneas anatómicas en perfiles metálicos blanco/plata y los resaltados musculares rojos en un resplandor cian/azul biomecánico (`#00FFFF`), el color insignia de Symmetry.
+    - Modo de fusión de pantalla (`mix-blend-mode: screen`): absorbe y diluye cualquier artefacto residual o borde de compresión directamente sobre el fondo negro de la pantalla.
+    - Calibración de contraste y brillo (`contrast(1.18) brightness(1.05)`): incrementa la nitidez, elimina el ruido visual y hace resaltar la musculatura trabajada.
+    - Renderizado hiper-nítido para pantallas Retina en iOS (`image-rendering: -webkit-optimize-contrast` y `crisp-edges`): elimina el efecto borroso de la interpolación bilineal al escalar los recursos.
+- **Carrusel Superior de Bolas ("Burbujas de Ejercicios") con Fondo Negro**:
+  - Las miniaturas circulares de los ejercicios de la sesión se integran al 100% sobre el fondo `#000000`, mostrando el atleta biomecánico con los músculos activos iluminados en cian sin bordes blancos.
+- **Aura Sutil Biomecánica Trasera**:
+  - Añadido un resplandor radial suave cian (`radial-gradient`) detrás del GIF central en el entrenamiento en vivo y en los visores de técnica, aportando profundidad y una estética inmersiva sin perder el minimalismo extremo.
+- **Unificación Visual en Todos los Módulos de Ejercicios**:
+  - Aplicado el renderizado oscuro en:
+    - Pantalla principal de Gym en Vivo (`LiveWorkoutFullscreen.tsx`).
+    - Modal de tutorial y técnica de ejecución (`LiveWorkoutFullscreen.tsx`).
+    - Buscador rápido de sustitución de ejercicio (`LiveWorkoutFullscreen.tsx`).
+    - Visor detallado de ejercicio y técnica (`ExerciseDetailModal.tsx`).
+    - Lista de ejercicios de los días del protocolo (`RoutinesTab.tsx`).
+    - Modal de vista previa en la pestaña de rutinas (`RoutinesTab.tsx`).
+    - Creador y editor de rutinas personalizadas (`CustomRoutineModal.tsx`).
+    - Catálogo y explorador de los 1.324 ejercicios (`ExercisesExplorerTab.tsx`).
+
 ## 🚀 [v2.3.0] - 2026-09-17 (Aesthetix v2.3: Rediseño Gym en Vivo Estilo Symmetry, Bolas Superiores de Ejercicios, GIF Grande OLED, Bloqueo de Scroll en Modales iOS y Corrección de Imágenes [?])
 
 ### 🌟 Nuevas Funcionalidades & Perfeccionamiento de Experiencia

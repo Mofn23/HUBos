@@ -280,7 +280,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               >
                 {/* Circular Bubble Avatar */}
                 <div
-                  className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center p-1 bg-black transition-all ${
+                  className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center p-1.5 bg-[#000000] transition-all ${
                     isCurrent
                       ? 'ring-2 ring-white ring-offset-2 ring-offset-black shadow-[0_0_20px_rgba(255,255,255,0.4)]'
                       : 'border border-white/20'
@@ -290,7 +290,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                     <img
                       src={bubbleMedia.imageUrl}
                       alt={ex.exerciseName}
-                      className="w-full h-full object-contain pointer-events-none"
+                      className="w-full h-full object-contain pointer-events-none exercise-media-dark"
                       loading="lazy"
                       onError={(e) => {
                         (e.currentTarget as HTMLElement).style.display = 'none';
@@ -320,13 +320,22 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
         {/* Large Central Animated Figure (Pure Black Seamless OLED Background) */}
         {currentExercise && (
           <div className="w-full h-64 sm:h-72 bg-[#000000] flex items-center justify-center relative overflow-hidden rounded-[24px]">
+            {/* Subtle Biomechanical Glow behind the figure */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.07)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
             {media?.gifUrl || media?.imageUrl ? (
-              <img
-                src={media.gifUrl || media.imageUrl}
-                alt={currentExercise.exerciseName}
-                className="w-full h-full object-contain pointer-events-none"
-                loading="eager"
-              />
+              <div className="relative w-full max-w-[280px] h-full flex items-center justify-center p-2">
+                <img
+                  src={media.gifUrl || media.imageUrl}
+                  alt={currentExercise.exerciseName}
+                  className="w-full h-full object-contain pointer-events-none exercise-media-dark"
+                  loading="eager"
+                  onError={(e) => {
+                    if (media.imageUrl && e.currentTarget.src !== media.imageUrl) {
+                      e.currentTarget.src = media.imageUrl;
+                    }
+                  }}
+                />
+              </div>
             ) : (
               <div className="w-28 h-28 rounded-full bg-white/[0.04] flex items-center justify-center border border-white/10">
                 <span className="text-4xl">🏋️</span>
@@ -621,12 +630,13 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar overscroll-contain">
-              <div className="w-full aspect-video rounded-[20px] bg-black overflow-hidden flex items-center justify-center border border-white/10">
+              <div className="w-full aspect-video rounded-[20px] bg-[#000000] overflow-hidden flex items-center justify-center border border-white/10 relative">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.06)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
                 {media?.gifUrl || media?.imageUrl ? (
                   <img
                     src={media.gifUrl || media.imageUrl}
                     alt={dbExercise.name}
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain p-2 relative z-10 exercise-media-dark"
                   />
                 ) : (
                   <span className="text-3xl">🏋️</span>
@@ -726,12 +736,12 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                     }}
                     className="glass-surface p-2.5 rounded-[18px] flex items-center justify-between gap-3 hover:border-[#34C759]/50 cursor-pointer active:scale-98 transition-all"
                   >
-                    <div className="w-10 h-10 rounded-[12px] bg-black overflow-hidden flex items-center justify-center shrink-0 border border-white/10">
+                    <div className="w-10 h-10 rounded-[12px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 p-0.5">
                       {candMedia.imageUrl ? (
                         <img
                           src={candMedia.imageUrl}
                           alt={cand.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-contain exercise-media-dark"
                           loading="lazy"
                         />
                       ) : (
