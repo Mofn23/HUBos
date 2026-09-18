@@ -10,6 +10,7 @@ import {
   ANATOMY_CONFIG,
   AnatomicalMuscle,
   calculate1RM,
+  getAllRanksCatalog,
 } from '@/lib/muscleRanks';
 
 export const AnatomyRanksTab: React.FC = () => {
@@ -21,6 +22,7 @@ export const AnatomyRanksTab: React.FC = () => {
   const [calcWeight, setCalcWeight] = useState<string>('80');
   const [calcReps, setCalcReps] = useState<string>('8');
   const [isCalcOpen, setIsCalcOpen] = useState(false);
+  const [isGlobalRanksOpen, setIsGlobalRanksOpen] = useState(false);
 
   // Map tiers to react-body-highlighter datasets
   const { anteriorData, posteriorData, customColors } = useMemo(() => {
@@ -29,7 +31,7 @@ export const AnatomyRanksTab: React.FC = () => {
     const colorsList: string[] = [];
 
     (Object.keys(ANATOMY_CONFIG) as AnatomicalMuscle[]).forEach((muscle) => {
-      const tierInfo = muscleTiers[muscle] || TIERS_CATALOG.hierro;
+      const tierInfo = muscleTiers[muscle] || TIERS_CATALOG.rubi_2;
       const config = ANATOMY_CONFIG[muscle];
 
       if (!colorsList.includes(tierInfo.color)) {
@@ -60,13 +62,15 @@ export const AnatomyRanksTab: React.FC = () => {
     return calculate1RM(w, r);
   }, [calcWeight, calcReps]);
 
+  const allRanksDesc = useMemo(() => getAllRanksCatalog('desc'), []);
+
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* 1. Overall Rank Hero Bento Card */}
+      {/* 1. Overall Rank Hero Bento Card (Symmetry OLED Style) */}
       <div
-        className="glass-surface rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-3 relative overflow-hidden"
+        className="glass-surface rounded-[30px] p-5 border-t-white/20 shadow-2xl space-y-4 relative overflow-hidden"
         style={{
-          boxShadow: `0 10px 40px -10px ${overall.overallTier.color}33`,
+          boxShadow: `0 12px 40px -10px ${overall.overallTier.color}40`,
         }}
       >
         <div className="flex items-center justify-between">
@@ -76,38 +80,63 @@ export const AnatomyRanksTab: React.FC = () => {
               style={{ backgroundColor: overall.overallTier.color }}
             />
             <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
-              Rango Físico Global
+              RANGO SYMMETRY
             </span>
           </div>
 
-          <span
-            className="px-3 py-1 rounded-full text-xs font-black border backdrop-blur-md"
+          <button
+            type="button"
+            onClick={() => setIsGlobalRanksOpen(true)}
+            className="px-3 py-1 rounded-full text-xs font-black border backdrop-blur-md transition-all active:scale-95 flex items-center gap-1.5 hover:bg-white/10"
             style={{
               backgroundColor: `${overall.overallTier.color}20`,
               color: overall.overallTier.color,
               borderColor: `${overall.overallTier.color}40`,
             }}
           >
-            Nivel {overall.overallTier.level} / 10
-          </span>
+            <span>Rangos Globales</span>
+            <span>→</span>
+          </button>
         </div>
 
-        <div>
-          <h2
-            className="text-2xl font-black tracking-tight"
-            style={{ color: overall.overallTier.color }}
+        <div className="flex items-center justify-between gap-3">
+          <div className="space-y-1 min-w-0 flex-1">
+            <h2
+              className="text-3xl font-black tracking-tight uppercase truncate"
+              style={{ color: overall.overallTier.color }}
+            >
+              {overall.overallTier.label}
+            </h2>
+            <p className="text-xs font-bold text-[#E5E5EA]">
+              {overall.overallTier.percentile
+                ? `Eres parte del ${overall.overallTier.percentile.toLowerCase()} más fuerte`
+                : overall.overallTier.description}
+            </p>
+            <p className="text-[11px] font-bold text-[#8E8E93]">
+              Nivel {overall.overallTier.level} / 25 • {overall.overallTier.description}
+            </p>
+          </div>
+
+          {/* Rank Badge Graphic */}
+          <div
+            onClick={() => setIsGlobalRanksOpen(true)}
+            className="w-16 h-16 rounded-[22px] bg-white/[0.04] p-1.5 flex items-center justify-center shrink-0 border border-white/15 cursor-pointer active:scale-95 transition-transform"
+            style={{
+              boxShadow: `0 0 20px ${overall.overallTier.color}40`,
+            }}
           >
-            Rango {overall.overallTier.label}
-          </h2>
-          <p className="text-xs font-bold text-[#8E8E93] mt-1 leading-relaxed">
-            {overall.overallTier.description}
-          </p>
+            <img
+              src={overall.overallTier.badgeImage || '/ranks/rubi_2.png'}
+              alt={overall.overallTier.label}
+              className="w-full h-full object-contain"
+            />
+          </div>
         </div>
 
         {/* Progress bar to next tier */}
         <div className="space-y-1.5 pt-1">
           <div className="flex items-center justify-between text-[11px] font-bold">
-            <span className="text-[#8E8E93]">Progreso al siguiente rango</span>
+            <span className="text-[#8E8E93]">Progreso al siguiente escalón</span>
             <span className="font-mono text-[#F5F5F7] font-black">
               {overall.progressToNext}%
             </span>
@@ -117,7 +146,7 @@ export const AnatomyRanksTab: React.FC = () => {
             <div
               className="h-full rounded-full transition-all duration-500 shadow-sm"
               style={{
-                width: `${Math.max(5, overall.progressToNext)}%`,
+                width: `${Math.max(8, overall.progressToNext)}%`,
                 backgroundColor: overall.overallTier.color,
               }}
             />
@@ -138,10 +167,10 @@ export const AnatomyRanksTab: React.FC = () => {
         </div>
 
         <p className="text-xs text-[#8E8E93] leading-relaxed">
-          Cada grupo muscular se ilumina según tu nivel de fuerza y récord estimado en el gimnasio.
+          Cada grupo muscular se ilumina con el tono exacto de tu rango en Symmetry.
         </p>
 
-        {/* Models Side by Side with Guaranteed 1:2 Ratio Pedestal */}
+        {/* Models Side by Side */}
         <div className="grid grid-cols-2 gap-3 py-2">
           <div className="glass-surface rounded-[24px] p-3 flex flex-col items-center border border-white/5 shadow-inner">
             <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-2">
@@ -197,11 +226,11 @@ export const AnatomyRanksTab: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Muscle Group Tiers Breakdown Grid */}
+      {/* 3. Muscle Group Tiers Breakdown Grid with Badges */}
       <div className="space-y-2">
         <div className="px-1 flex items-center justify-between">
           <h3 className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
-            DESGLOSE POR GRUPO MUSCULAR
+            RANKINGS MUSCULARES
           </h3>
           <button
             onClick={() => setIsCalcOpen(!isCalcOpen)}
@@ -250,74 +279,132 @@ export const AnatomyRanksTab: React.FC = () => {
         <div className="grid grid-cols-1 gap-2">
           {(Object.keys(ANATOMY_CONFIG) as AnatomicalMuscle[]).map((muscle) => {
             const config = ANATOMY_CONFIG[muscle];
-            const tierInfo = muscleTiers[muscle] || TIERS_CATALOG.hierro;
+            const tierInfo = muscleTiers[muscle] || TIERS_CATALOG.rubi_2;
 
             return (
               <div
                 key={muscle}
-                className="glass-surface rounded-[22px] p-3.5 flex items-center justify-between border-t-white/10"
+                className="glass-surface rounded-[22px] p-3 flex items-center justify-between border-t-white/10 gap-3"
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-xl">{config.icon}</span>
-                  <div>
-                    <h4 className="text-xs font-black text-[#F5F5F7]">{config.name}</h4>
-                    <p className="text-[10px] font-bold text-[#8E8E93]">
-                      Nivel {tierInfo.level} • {tierInfo.description}
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <span className="text-xl shrink-0">{config.icon}</span>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-xs font-black text-[#F5F5F7] truncate">{config.name}</h4>
+                    <p className="text-[10px] font-bold text-[#8E8E93] truncate">
+                      {tierInfo.percentile ? `${tierInfo.percentile} • ` : ''}{tierInfo.description}
                     </p>
                   </div>
                 </div>
 
-                <span
-                  className="px-3 py-1 rounded-full text-xs font-black border"
-                  style={{
-                    backgroundColor: `${tierInfo.color}15`,
-                    color: tierInfo.color,
-                    borderColor: `${tierInfo.color}35`,
-                  }}
-                >
-                  {tierInfo.label}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 4. Tier Ladder Catalog */}
-      <div className="glass-surface rounded-[28px] p-4 border-t-white/10 space-y-3">
-        <h4 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
-          Jerarquía de Rangos (Hierro a Simétrico)
-        </h4>
-
-        <div className="grid grid-cols-2 gap-2">
-          {TIER_ORDER.map((tierKey) => {
-            const tier = TIERS_CATALOG[tierKey];
-            const isCurrent = overall.overallTier.tier === tier.tier;
-
-            return (
-              <div
-                key={tierKey}
-                className={`p-2.5 rounded-[18px] flex items-center gap-2 border transition-all ${
-                  isCurrent
-                    ? 'glass-pill-active border-white/40'
-                    : 'bg-white/[0.02] border-white/5'
-                }`}
-              >
-                <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: tier.color }}
-                />
-                <div className="overflow-hidden">
-                  <span className="text-xs font-black text-[#F5F5F7] block truncate">
-                    {tier.label}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span
+                    className="px-2.5 py-1 rounded-full text-[11px] font-black border"
+                    style={{
+                      backgroundColor: `${tierInfo.color}15`,
+                      color: tierInfo.color,
+                      borderColor: `${tierInfo.color}35`,
+                    }}
+                  >
+                    {tierInfo.label}
                   </span>
-                  <span className="text-[9px] font-bold text-[#8E8E93]">Nivel {tier.level}</span>
+
+                  {/* Muscle Rank Badge Thumbnail */}
+                  <div className="w-8 h-8 rounded-full bg-white/[0.04] p-1 flex items-center justify-center border border-white/10 shrink-0">
+                    <img
+                      src={tierInfo.badgeImage || '/ranks/rubi_2.png'}
+                      alt={tierInfo.label}
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
       </div>
+
+      {/* 4. Global Ranks Modal (Symmetry 25-Tier Scale) */}
+      {isGlobalRanksOpen && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
+          <div className="fixed inset-0 bg-black/80" onClick={() => setIsGlobalRanksOpen(false)} />
+
+          <div className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
+              <div>
+                <h3 className="text-sm font-black text-[#F5F5F7]">Rangos Globales</h3>
+                <p className="text-[10px] font-bold text-[#8E8E93]">
+                  Escala oficial de fuerza y simetría
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsGlobalRanksOpen(false)}
+                className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* List of 25 Ranks */}
+            <div className="flex-1 overflow-y-auto space-y-2 pr-1 no-scrollbar">
+              {allRanksDesc.map((tier) => {
+                const isCurrent = overall.overallTier.tier === tier.tier;
+                return (
+                  <div
+                    key={tier.tier}
+                    className={`p-3 rounded-[20px] flex items-center justify-between gap-3 border transition-all ${
+                      isCurrent
+                        ? 'bg-[#F43F5E]/15 border-[#F43F5E]/60 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
+                        : 'glass-surface border-white/5'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-[14px] bg-white/[0.04] p-1 flex items-center justify-center shrink-0 border border-white/10">
+                        <img
+                          src={tier.badgeImage || '/ranks/rubi_2.png'}
+                          alt={tier.label}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+
+                      <div>
+                        <p
+                          className="text-xs font-black"
+                          style={{ color: isCurrent ? tier.color : '#F5F5F7' }}
+                        >
+                          {tier.label}
+                        </p>
+                        <p className="text-[10px] font-bold text-[#8E8E93]">
+                          {tier.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <span
+                        className="text-xs font-mono font-black"
+                        style={{ color: isCurrent ? tier.color : '#8E8E93' }}
+                      >
+                        {tier.percentile || `Nivel ${tier.level}`}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsGlobalRanksOpen(false)}
+              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

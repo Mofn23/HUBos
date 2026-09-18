@@ -111,6 +111,32 @@ export interface BodyMeasurement {
 }
 
 export type MuscleTierName =
+  | 'hierro_1'
+  | 'hierro_2'
+  | 'hierro_3'
+  | 'bronce_1'
+  | 'bronce_2'
+  | 'bronce_3'
+  | 'plata_1'
+  | 'plata_2'
+  | 'plata_3'
+  | 'oro_1'
+  | 'oro_2'
+  | 'oro_3'
+  | 'rubi_1'
+  | 'rubi_2'
+  | 'rubi_3'
+  | 'esmeralda_1'
+  | 'esmeralda_2'
+  | 'esmeralda_3'
+  | 'diamante_1'
+  | 'diamante_2'
+  | 'diamante_3'
+  | 'campeon_1'
+  | 'campeon_2'
+  | 'campeon_3'
+  | 'simetrico'
+  // Legacy aliases
   | 'hierro'
   | 'cobre'
   | 'plata'
@@ -119,14 +145,16 @@ export type MuscleTierName =
   | 'diamante'
   | 'zafiro'
   | 'legendario'
-  | 'estetico'
-  | 'simetrico';
+  | 'estetico';
 
 export interface MuscleTierInfo {
   tier: MuscleTierName;
   label: string;
+  sublevel?: string; // 'I' | 'II' | 'III' | ''
+  percentile?: string; // e.g. "Top 27%"
   color: string;
   glowClass: string;
-  level: number; // 1 to 10
+  level: number; // 1 to 25
   description: string;
+  badgeImage?: string; // e.g. "/ranks/rubi_2.png"
 }

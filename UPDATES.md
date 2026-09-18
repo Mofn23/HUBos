@@ -2,6 +2,69 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.2.0] - 2026-09-17 (Aesthetix v2.2: Corrección del Freeze en iOS, Protocolo Oficial PPL x UL con GIFs, Sistema Oficial de 25 Rangos Symmetry con Insignias, Volumen Acumulado 175k kg, Escaneo Físico IA e Importador OCR)
+
+### 🌟 Nuevas Funcionalidades, Correcciones Críticas & Datos Symmetry
+- **Corrección Crítica de Bloqueo / Freeze de Teclado en iOS (`CustomRoutineModal.tsx`)**:
+  - Resuelto el bloqueo total de WebKit en iOS donde al pulsar "Añadir Ejercicio desde Catálogo" la app dejaba de responder a pulsaciones o escritura.
+  - Eliminado el renderizado de modales anidados (`fixed inset-0 backdrop-blur`) superpuestos con `autoFocus`.
+  - Reemplazado por una arquitectura de navegación interna fluida de dos vistas (`view: 'editor' | 'catalog'`) dentro del mismo contenedor con una sola capa de fondo.
+  - Añadidas miniaturas visuales de los 1.324 ejercicios en el buscador de catálogo con botón de adición rápida `+` y selector por grupo muscular.
+- **Protocolo Personalizado PPL x UL Configurado por Defecto (`useAesthetixStore.ts`)**:
+  - Eliminada la rutina genérica de prueba (`routine_starter_5day`) y activada la rutina oficial de 5 días de Samuel como protocolo principal (`routine_ppl_x_up`):
+    - **Lunes - PUSH**: Press banca plano (3x8), Press militar mancuernas (3x8), Aperturas PeckDeck (3x8), Elevaciones laterales (4x8), Fondos en máquina (2x8), Extensión de tríceps barra V (3x10).
+    - **Martes - PULL**: Jalón unilateral polea (3x8), Remo en barra T (3x8), FacePulls polea (3x10), Curl Predicador Máquina (3x8), Curl martillo en polea (3x8), Pájaros en PeckDeck (3x8).
+    - **Miércoles - Pierna y Abdomen**: Prensa 45° (3x8), Curl femoral sentado (3x8), Extensión de cuádriceps (3x8), Abductores máquina (3x8), Elevación de talones máquina (3x10), Crunch en polea (3x10), Elevaciones de piernas paralelas (3x10).
+    - **Jueves - Upper**: Press banca inclinado con mancuernas (3x8), Press banca en multipower (3x8), Jalón al pecho prono (3x8), Remo con apoyo en el pecho máquina (3x8), Elevaciones laterales con mancuernas (4x8).
+    - **Viernes - Lower**: Sentadilla libre (3x8), Peso muerto rumano con mancuernas (3x8), Aductores máquina (3x8), Curl femoral tumbado (3x8).
+  - Los 27 ejercicios están mapeados con sus IDs oficiales para cargar GIFs animados y descripciones técnicas completas.
+- **Visualización de GIFs y Miniaturas en la Pestaña de Rutinas (`RoutinesTab.tsx`)**:
+  - En la sección "Días del protocolo", cada ejercicio cuenta ahora con su respectiva miniatura/GIF animado en un marco redondeado de cristal.
+  - Al pulsar sobre cualquier tarjeta de ejercicio, se abre un visor interactivo a pantalla completa con el GIF animado en alta definición y los pasos de ejecución técnica en español.
+- **Sistema Completo de 25 Rangos Symmetry con Insignias Oficiales (`src/lib/muscleRanks.ts`, `AnatomyRanksTab.tsx` & `public/ranks/`)**:
+  - Integrada la jerarquía exacta de Symmetry compuesta por 9 ligas y 25 rangos:
+    - *Hierro I, II, III* (Top 100% - 86%)
+    - *Bronce I, II, III* (Top 79% - 67%)
+    - *Plata I, II, III* (Top 61% - 50%)
+    - *Oro I, II, III* (Top 45% - 35%)
+    - *Rubí I, II, III* (Top 31% - 23%)
+    - *Esmeralda I, II, III* (Top 20% - 14%)
+    - *Diamante I, II, III* (Top 11% - 7%)
+    - *Campeón I, II, III* (Top 5% - 3%)
+    - *Simétrico* (Top 1% supremo)
+  - Extraídas las 25 insignias con transparencia alfa en `public/ranks/` (.png y .webp).
+  - Configurados los rangos basales reales de Samuel procedentes de Symmetry:
+    - Rango Global: **Rubí II** (Top 27% más fuerte)
+    - Pecho: **Esmeralda II** (Top 17%)
+    - Espalda: **Rubí II** (Top 27%)
+    - Hombros: **Rubí I** (Top 31%)
+    - Brazos: **Esmeralda II** (Tríceps Diamante II, Antebrazos Esmeralda II, Bíceps Rubí III)
+    - Piernas: **Rubí II** (Aductores Diamante I, Abductores Esmeralda III, Cuádriceps Rubí II, Gemelos Oro II, Femoral Oro II)
+    - Abdominales: **Oro II** (Top 40%)
+  - **Modal de Rangos Globales**: Vista detallada con las 25 insignias y percentiles, destacando el rango actual del usuario.
+- **Registro de Volumen Acumulado & Métricas Históricas (`ProfileHistoryTab.tsx` & `useAesthetixStore.ts`)**:
+  - Nueva tarjeta Hero Bento en el perfil con el total histórico de volumen levantado (**175 mil kg** acumulados), 112 entrenamientos realizados, 204 récords personales y racha de 7 días de fuego.
+  - Sembrados los PRs de las capturas de Symmetry (Press Inclinado 45kgx11, Giro Ruso 11kgx25, Crunch 0kgx10, Elevaciones Laterales 14kgx10, Press Hombro Sentado 30kgx9, Jalón Agarre Cerrado 65kgx12, Fondos Tríceps 100kgx12, Curl EZ 30kgx10, Prensa 240kgx10).
+- **Escaneo Corporal con Gemini Vision (`BodyScanModal.tsx`)**:
+  - Diagnóstico físico inteligente: el usuario sube o toma una foto de su físico y Gemini Vision calcula el *Symmetry Score* (0 a 100), grasa corporal estimada %, ratio V-Taper, grupos dominantes vs rezagados y recomendaciones de entrenamiento.
+- **Importador Inteligente de Capturas Symmetry (`SymmetryImportModal.tsx`)**:
+  - Permite cargar cualquier captura de pantalla de entrenos o PRs de Symmetry; Gemini Vision transcribe automáticamente los ejercicios, series, repeticiones y kilajes, sumándolos al historial y recalculando el volumen.
+- **Limpieza de Recursos**:
+  - Eliminado el directorio temporal de capturas (`progreso temp/`) para optimizar el espacio de la aplicación y mantener el paquete IPA ligero.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `public/ranks/*` - 25 insignias oficiales de Symmetry con fondo transparente.
+- `[CREADO]` `src/components/aesthetix/BodyScanModal.tsx` - Escáner físico de simetría con Gemini Vision.
+- `[CREADO]` `src/components/aesthetix/SymmetryImportModal.tsx` - Importador inteligente de capturas Symmetry.
+- `[MODIFICADO]` `src/components/aesthetix/CustomRoutineModal.tsx` - Eliminación de modales anidados y fix al teclado en iOS.
+- `[MODIFICADO]` `src/components/aesthetix/RoutinesTab.tsx` - Miniaturas visuales y visor interactivo de GIFs por ejercicio.
+- `[MODIFICADO]` `src/components/aesthetix/AnatomyRanksTab.tsx` - Visualización de insignias Symmetry y modal de 25 rangos globales.
+- `[MODIFICADO]` `src/components/aesthetix/ProfileHistoryTab.tsx` - Bento de volumen acumulado (175k kg) y accesos a escaneo/importación.
+- `[MODIFICADO]` `src/lib/muscleRanks.ts` - Escala oficial de 25 rangos Symmetry, insignias y basales de Samuel.
+- `[MODIFICADO]` `src/stores/useAesthetixStore.ts` - Definición de PPL x UL, purga de rutina antigua, volumen acumulado y PRs.
+- `[MODIFICADO]` `src/types/workout.ts` - Tipado para 25 rangos e insignias.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Bump a v2.2.0 para compilación del IPA en GitHub Actions.
+
 ## 🚀 [v2.1.0] - 2026-09-17 (Aesthetix v2.1: Creador de Rutinas Personalizadas por Días, Selector Pre-Gym & Cancelación de Sesión, Dropdowns de Filtro Rápido, Heatmap Anatómico sin Recortes, Rangos Progresivos de Alta Exigencia e Historial con Análisis IA)
 
 ### 🌟 Nuevas Funcionalidades & Perfeccionamiento de Aesthetix

@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { useHubStore } from '@/stores/useHubStore';
-import { WorkoutRoutine } from '@/types/workout';
+import { WorkoutRoutine, Exercise } from '@/types/workout';
+import { getExerciseById, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
 import { CustomRoutineModal } from './CustomRoutineModal';
 
 interface RoutinesTabProps {
@@ -20,6 +21,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
   const [isCustomRoutineModalOpen, setIsCustomRoutineModalOpen] = useState(false);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
+  const [selectedExerciseModal, setSelectedExerciseModal] = useState<Exercise | null>(null);
 
   const activeRoutine =
     routines.find((r) => r.id === activeRoutineId) || routines[0];
@@ -197,29 +199,50 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
           </div>
 
           <div className="space-y-2">
-            {selectedDay.exercises.map((ex, eIdx) => (
-              <div
-                key={ex.id || eIdx}
-                className="glass-pill p-3 rounded-[20px] flex items-center justify-between"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-full bg-white/[0.08] flex items-center justify-center text-xs font-black text-[#8E8E93]">
-                    {eIdx + 1}
-                  </span>
-                  <div>
-                    <p className="text-xs font-black text-[#F5F5F7] capitalize">{ex.name}</p>
-                    <p className="text-[10px] font-bold text-[#8E8E93]">
-                      Descanso: <span className="text-[#34C759]">{ex.restSeconds}s (2:30m)</span>
-                      {ex.notes && <span> • {ex.notes}</span>}
-                    </p>
+            {selectedDay.exercises.map((ex, eIdx) => {
+              const dbEx = getExerciseById(ex.exerciseId);
+              return (
+                <div
+                  key={ex.id || eIdx}
+                  onClick={() => dbEx && setSelectedExerciseModal(dbEx)}
+                  className="glass-surface p-2.5 rounded-[22px] flex items-center justify-between gap-3 cursor-pointer hover:border-[#34C759]/40 active:scale-98 transition-all"
+                >
+                  {/* Exercise Thumbnail / GIF */}
+                  <div className="w-12 h-12 rounded-[16px] bg-white/[0.04] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 relative">
+                    {dbEx?.image ? (
+                      <img
+                        src={dbEx.image}
+                        alt={ex.name}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="text-base">🏋️</span>
+                    )}
+                    <span className="absolute bottom-0.5 right-0.5 w-3.5 h-3.5 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center text-[8px] text-[#34C759] font-mono">
+                      {eIdx + 1}
+                    </span>
+                  </div>
+
+                  {/* Exercise Info */}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-black text-[#F5F5F7] capitalize truncate">{ex.name}</p>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#8E8E93] mt-0.5">
+                      <span className="text-[#34C759]">{ex.restSeconds}s descanso</span>
+                      <span>•</span>
+                      <span className="text-[#64D2FF] capitalize">
+                        {dbEx?.target || ex.target || 'Músculo'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Sets x Reps Pill */}
+                  <div className="px-2.5 py-1.5 rounded-full bg-white/[0.06] text-xs font-mono font-black text-[#64D2FF] shrink-0 border border-white/5">
+                    {ex.targetSets} x {ex.targetReps}
                   </div>
                 </div>
-
-                <div className="px-2.5 py-1 rounded-full bg-white/[0.06] text-xs font-mono font-black text-[#64D2FF]">
-                  {ex.targetSets} x {ex.targetReps}
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
@@ -276,6 +299,78 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
         isOpen={isCustomRoutineModalOpen}
         onClose={() => setIsCustomRoutineModalOpen(false)}
       />
+
+      {/* Exercise Detail GIF & Instructions Modal */}
+      {selectedExerciseModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
+          <div
+            className="fixed inset-0 bg-black/80"
+            onClick={() => setSelectedExerciseModal(null)}
+          />
+          <div className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-black text-[#F5F5F7] capitalize truncate">
+                  {selectedExerciseModal.name}
+                </h3>
+                <p className="text-[11px] font-bold text-[#34C759] capitalize">
+                  {BODY_PART_TRANSLATIONS[selectedExerciseModal.body_part] || selectedExerciseModal.body_part} • {selectedExerciseModal.target}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedExerciseModal(null)}
+                className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white shrink-0 ml-2"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar">
+              {/* High-res GIF / Image Preview */}
+              <div className="w-full aspect-video rounded-[20px] bg-black/40 overflow-hidden flex items-center justify-center border border-white/10 relative">
+                {selectedExerciseModal.gif_url || selectedExerciseModal.image ? (
+                  <img
+                    src={selectedExerciseModal.gif_url || selectedExerciseModal.image}
+                    alt={selectedExerciseModal.name}
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <span className="text-3xl">🏋️</span>
+                )}
+              </div>
+
+              {/* Steps / Instructions */}
+              <div className="space-y-2">
+                <h4 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
+                  Técnica de Ejecución
+                </h4>
+                {selectedExerciseModal.steps_es && selectedExerciseModal.steps_es.length > 0 ? (
+                  <ol className="space-y-1.5 list-decimal list-inside text-xs text-[#E5E5EA] font-medium leading-relaxed">
+                    {selectedExerciseModal.steps_es.map((step, sIdx) => (
+                      <li key={sIdx} className="pl-1">
+                        {step}
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="text-xs text-[#8E8E93] leading-relaxed">
+                    {selectedExerciseModal.instructions_es || 'Mantén la postura controlada y rango de movimiento completo.'}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setSelectedExerciseModal(null)}
+              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

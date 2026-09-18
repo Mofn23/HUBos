@@ -18,6 +18,7 @@ import {
   calculateOverallRank,
   mapTargetToAnatomy,
   TIERS_CATALOG,
+  SAMUEL_BASELINE_RANKS,
 } from '@/lib/muscleRanks';
 import { getExerciseById, getAllExercises } from '@/lib/exercisesDb';
 
@@ -53,7 +54,15 @@ interface AesthetixState {
   // History & PRs
   history: WorkoutHistoryItem[];
   deleteHistorySession: (sessionId: string) => void;
+  addHistoricalWorkout: (item: WorkoutHistoryItem) => void;
   prs: Record<string, PersonalRecord>;
+
+  // Cumulative Volume & Symmetry Data
+  importedVolumeKg: number;
+  setImportedVolumeKg: (vol: number) => void;
+  totalWorkoutsCount: number;
+  setTotalWorkoutsCount: (count: number) => void;
+  getTotalLifetimeVolumeKg: () => number;
 
   // Body Measurements & Profile
   userWeightKg: number;
@@ -83,290 +92,514 @@ interface AesthetixState {
   getOverallRank: () => { overallTier: MuscleTierInfo; averageLevel: number; progressToNext: number };
 }
 
-// Built-in starter routine (5 days)
-const DEFAULT_AESTHETIX_ROUTINE: WorkoutRoutine = {
-  id: 'routine_starter_5day',
-  name: 'Aesthetix 5-Day Hypertrophy Split',
-  description: 'Distribución de hipertrofia y fuerza con volumen optimizado y descanso de 2:30 min.',
+// User's exact 5-day routine (PPL x UL) configured exercise by exercise
+export const PPL_X_UP_ROUTINE: WorkoutRoutine = {
+  id: 'routine_ppl_x_up',
+  name: 'Protocolo PPL x UL',
+  description: 'Rutina oficial de 5 días: Push, Pull, Pierna & Abdomen, Upper, Lower con volumen óptimo.',
   splitType: 'push_pull_legs',
   targetDaysPerWeek: 5,
   createdAt: '2026-09-17T00:00:00.000Z',
   days: [
     {
       id: 'day_push',
-      dayName: 'Día 1 - Empuje (Push)',
-      focus: 'Pectorales, Deltoides Anterior/Lateral y Tríceps',
+      dayName: 'Lunes - PUSH',
+      focus: 'Pecho, Hombro y Tríceps',
       exercises: [
         {
-          id: 'ex_p1',
+          id: 'p1',
           exerciseId: '0025',
-          name: 'Barbell bench press',
-          targetSets: 4,
-          targetReps: '6-8',
+          name: 'Press banca plano',
+          targetSets: 3,
+          targetReps: '8',
           targetRpe: 8.5,
           restSeconds: 150,
-          notes: 'Pausa de 1 segundo en el pecho. Rango completo.',
           category: 'chest',
           target: 'pectorals',
+          notes: 'Rango completo y retracción escapular.',
         },
         {
-          id: 'ex_p2',
-          exerciseId: '0314',
-          name: 'Incline dumbbell press',
+          id: 'p2',
+          exerciseId: '0405',
+          name: 'Press militar con mancuernas',
           targetSets: 3,
-          targetReps: '8-10',
-          targetRpe: 8,
+          targetReps: '8',
+          targetRpe: 8.5,
           restSeconds: 150,
-          notes: 'Banco a 30 grados. Enfoque en haz clavicular.',
-          category: 'chest',
-          target: 'pectorals',
-        },
-        {
-          id: 'ex_p3',
-          exerciseId: '0334',
-          name: 'Dumbbell lateral raise',
-          targetSets: 4,
-          targetReps: '12-15',
-          targetRpe: 9,
-          restSeconds: 90,
-          notes: 'Escapula deprimida, elevar en plano escapular.',
           category: 'shoulders',
           target: 'delts',
+          notes: 'Sentado en banco a 80°, bajada profunda.',
         },
         {
-          id: 'ex_p4',
-          exerciseId: '0200',
-          name: 'Cable pushdown',
+          id: 'p3',
+          exerciseId: '0596',
+          name: 'Aperturas en PeckDeck',
           targetSets: 3,
-          targetReps: '10-12',
-          targetRpe: 8.5,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 120,
+          category: 'chest',
+          target: 'pectorals',
+          notes: 'Pausa de 1s en máxima contracción.',
+        },
+        {
+          id: 'p4',
+          exerciseId: '0334',
+          name: 'Elevaciones laterales con mancuernas',
+          targetSets: 4,
+          targetReps: '8',
+          targetRpe: 9,
           restSeconds: 90,
-          notes: 'Bloqueo firme abajo con la cabeza lateral del tríceps.',
+          category: 'shoulders',
+          target: 'delts',
+          notes: 'En plano escapular sin balanceo del torso.',
+        },
+        {
+          id: 'p5',
+          exerciseId: '0009',
+          name: 'Fondos en máquina',
+          targetSets: 2,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 120,
+          category: 'chest',
+          target: 'pectorals',
+          notes: 'Ligera inclinación hacia adelante.',
+        },
+        {
+          id: 'p6',
+          exerciseId: '0201',
+          name: 'Extensión de tríceps barra V',
+          targetSets: 3,
+          targetReps: '10',
+          targetRpe: 9,
+          restSeconds: 90,
           category: 'upper arms',
           target: 'triceps',
+          notes: 'Bloqueo firme abajo con barra en V.',
         },
       ],
     },
     {
       id: 'day_pull',
-      dayName: 'Día 2 - Jalón (Pull)',
-      focus: 'Dorsales, Espalda Alta, Deltoides Posterior y Bíceps',
+      dayName: 'Martes - PULL',
+      focus: 'Espalda & Bíceps',
       exercises: [
         {
-          id: 'ex_pl1',
-          exerciseId: '0027',
-          name: 'Barbell bent over row',
-          targetSets: 4,
-          targetReps: '6-8',
+          id: 'pl1',
+          exerciseId: '2330',
+          name: 'Jalón unilateral polea',
+          targetSets: 3,
+          targetReps: '8',
           targetRpe: 8.5,
           restSeconds: 150,
-          notes: 'Espalda neutra a 45°. Tirar hacia la cadera.',
+          category: 'back',
+          target: 'lats',
+          notes: 'Máximo estiramiento dorsal arriba.',
+        },
+        {
+          id: 'pl2',
+          exerciseId: '0606',
+          name: 'Remo en barra T',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 8.5,
+          restSeconds: 150,
           category: 'back',
           target: 'upper back',
+          notes: 'Torso fijo a 45 grados, codos guiados hacia la cadera.',
         },
         {
-          id: 'ex_pl2',
-          exerciseId: '0150',
-          name: 'Lat pulldown',
-          targetSets: 4,
-          targetReps: '8-10',
-          targetRpe: 8,
-          restSeconds: 150,
-          notes: 'Codos apuntando hacia adentro, conexión mente-músculo.',
-          category: 'back',
-          target: 'lats',
-        },
-        {
-          id: 'ex_pl3',
-          exerciseId: '0300',
-          name: 'Dumbbell bicep curl',
+          id: 'pl3',
+          exerciseId: '0233',
+          name: 'FacePulls polea',
           targetSets: 3,
-          targetReps: '10-12',
-          targetRpe: 8.5,
-          restSeconds: 90,
-          notes: 'Supinación controlada en el punto máximo.',
-          category: 'upper arms',
-          target: 'biceps',
-        },
-        {
-          id: 'ex_pl4',
-          exerciseId: '0400',
-          name: 'Face pull',
-          targetSets: 3,
-          targetReps: '12-15',
+          targetReps: '10',
           targetRpe: 9,
           restSeconds: 90,
-          notes: 'Rotación externa al final hacia la frente.',
           category: 'shoulders',
           target: 'delts',
+          notes: 'Tirón a la frente con rotación externa.',
+        },
+        {
+          id: 'pl4',
+          exerciseId: '0592',
+          name: 'Curl Predicador Máquina',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 120,
+          category: 'upper arms',
+          target: 'biceps',
+          notes: 'Aislamiento estricto de bíceps sin despegue de axilas.',
+        },
+        {
+          id: 'pl5',
+          exerciseId: '0165',
+          name: 'Curl martillo en polea',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 90,
+          category: 'upper arms',
+          target: 'biceps',
+          notes: 'Con cuerda para braquial y antebrazo.',
+        },
+        {
+          id: 'pl6',
+          exerciseId: '0602',
+          name: 'Pájaros en PeckDeck',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 90,
+          category: 'shoulders',
+          target: 'delts',
+          notes: 'Apertura posterior para deltoides posterior.',
         },
       ],
     },
     {
-      id: 'day_legs',
-      dayName: 'Día 3 - Pierna Potencia',
-      focus: 'Cuádriceps, Isquiotibiales, Glúteos y Gemelos',
+      id: 'day_legs_abs',
+      dayName: 'Miércoles - Pierna y Abdomen',
+      focus: 'Piernas completas & Core',
       exercises: [
         {
-          id: 'ex_lg1',
-          exerciseId: '0043',
-          name: 'Barbell full squat',
-          targetSets: 4,
-          targetReps: '6-8',
-          targetRpe: 8.5,
-          restSeconds: 150,
-          notes: 'Profundidad paralela o profunda, talones anclados.',
-          category: 'upper legs',
-          target: 'quads',
-        },
-        {
-          id: 'ex_lg2',
-          exerciseId: '0500',
-          name: 'Leg press',
+          id: 'lg1',
+          exerciseId: '0739',
+          name: 'Prensa',
           targetSets: 3,
-          targetReps: '10-12',
-          targetRpe: 8,
-          restSeconds: 150,
-          notes: 'Descenso controlado, sin hiperextender rodillas.',
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 180,
           category: 'upper legs',
           target: 'quads',
+          notes: 'Prensa 45°, pies al ancho de hombros.',
         },
         {
-          id: 'ex_lg3',
-          exerciseId: '0600',
-          name: 'Lying leg curl',
-          targetSets: 4,
-          targetReps: '10-12',
+          id: 'lg2',
+          exerciseId: '0599',
+          name: 'Curl femoral sentado',
+          targetSets: 3,
+          targetReps: '8',
           targetRpe: 9,
-          restSeconds: 90,
-          notes: 'Aislamiento de isquiosurales con contracción de 1s.',
+          restSeconds: 120,
           category: 'upper legs',
           target: 'hamstrings',
+          notes: 'Rodillas fijadas bajo el soporte.',
         },
         {
-          id: 'ex_lg4',
-          exerciseId: '0700',
-          name: 'Standing calf raise',
-          targetSets: 4,
-          targetReps: '12-15',
+          id: 'lg3',
+          exerciseId: '0585',
+          name: 'Extensión de cuádriceps',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 120,
+          category: 'upper legs',
+          target: 'quads',
+          notes: 'Pausa de 1 segundo arriba.',
+        },
+        {
+          id: 'lg4',
+          exerciseId: '0597',
+          name: 'Abductores',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 8.5,
+          restSeconds: 90,
+          category: 'upper legs',
+          target: 'abductors',
+          notes: 'Apertura controlada en máquina.',
+        },
+        {
+          id: 'lg5',
+          exerciseId: '0605',
+          name: 'Elevación de talones máquina',
+          targetSets: 3,
+          targetReps: '10',
           targetRpe: 9,
           restSeconds: 90,
-          notes: 'Máximo estiramiento abajo y subida explosiva.',
           category: 'lower legs',
           target: 'calves',
-        },
-      ],
-    },
-    {
-      id: 'day_torso',
-      dayName: 'Día 4 - Torso Estético',
-      focus: 'Densidad de Pectorales, Espalda y Brazos',
-      exercises: [
-        {
-          id: 'ex_t1',
-          exerciseId: '0314',
-          name: 'Incline dumbbell press',
-          targetSets: 4,
-          targetReps: '8-10',
-          targetRpe: 8.5,
-          restSeconds: 150,
-          notes: 'Carga pesada con técnica estricta.',
-          category: 'chest',
-          target: 'pectorals',
+          notes: 'Estiramiento profundo en cada repetición.',
         },
         {
-          id: 'ex_t2',
-          exerciseId: '0150',
-          name: 'Lat pulldown',
-          targetSets: 4,
-          targetReps: '8-10',
-          targetRpe: 8.5,
-          restSeconds: 150,
-          notes: 'Agarre neutro cerrado para máxima activación dorsal.',
-          category: 'back',
-          target: 'lats',
-        },
-        {
-          id: 'ex_t3',
-          exerciseId: '0334',
-          name: 'Dumbbell lateral raise',
-          targetSets: 4,
-          targetReps: '15',
+          id: 'lg6',
+          exerciseId: '0175',
+          name: 'Crunch en polea',
+          targetSets: 3,
+          targetReps: '10',
           targetRpe: 9,
           restSeconds: 90,
-          notes: 'Hombros 3D. Control excéntrico.',
-          category: 'shoulders',
-          target: 'delts',
-        },
-        {
-          id: 'ex_t4',
-          exerciseId: '0031',
-          name: 'Barbell curl',
-          targetSets: 3,
-          targetReps: '8-10',
-          targetRpe: 8.5,
-          restSeconds: 90,
-          notes: 'Bíceps estricto sin balanceo del torso.',
-          category: 'upper arms',
-          target: 'biceps',
-        },
-      ],
-    },
-    {
-      id: 'day_lower_arms',
-      dayName: 'Día 5 - Pierna Enfoque Glúteo & Isquios',
-      focus: 'Cadena Posterior y Abdomen',
-      exercises: [
-        {
-          id: 'ex_la1',
-          exerciseId: '0032',
-          name: 'Romanian deadlift',
-          targetSets: 4,
-          targetReps: '8-10',
-          targetRpe: 8.5,
-          restSeconds: 150,
-          notes: 'Empujar la cadera hacia atrás. Estiramiento masivo.',
-          category: 'upper legs',
-          target: 'hamstrings',
-        },
-        {
-          id: 'ex_la2',
-          exerciseId: '0800',
-          name: 'Barbell hip thrust',
-          targetSets: 4,
-          targetReps: '10-12',
-          targetRpe: 9,
-          restSeconds: 150,
-          notes: 'Pausa de 2 segundos arriba apretando glúteos.',
-          category: 'upper legs',
-          target: 'glutes',
-        },
-        {
-          id: 'ex_la3',
-          exerciseId: '0001',
-          name: '3/4 sit-up',
-          targetSets: 3,
-          targetReps: '15-20',
-          targetRpe: 8.5,
-          restSeconds: 60,
-          notes: 'Flexión espinal controlada. Tensión continua.',
           category: 'waist',
           target: 'abs',
+          notes: 'Arrodillado con cuerda, flexión espinal pura.',
+        },
+        {
+          id: 'lg7',
+          exerciseId: '2963',
+          name: 'Elevaciones de piernas paralelas',
+          targetSets: 3,
+          targetReps: '10',
+          targetRpe: 8.5,
+          restSeconds: 90,
+          category: 'waist',
+          target: 'abs',
+          notes: 'En silla romana, elevación recta controlada.',
+        },
+      ],
+    },
+    {
+      id: 'day_upper',
+      dayName: 'Jueves - Upper',
+      focus: 'Torso Superior Completo',
+      exercises: [
+        {
+          id: 'u1',
+          exerciseId: '0314',
+          name: 'Press de banca inclinado con mancuernas',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 150,
+          category: 'chest',
+          target: 'pectorals',
+          notes: 'Banco a 30°, empuje potente.',
+        },
+        {
+          id: 'u2',
+          exerciseId: '0748',
+          name: 'Press banca plano en multipower',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 8.5,
+          restSeconds: 150,
+          category: 'chest',
+          target: 'pectorals',
+          notes: 'Trayectoria vertical fija, bajada al esternón.',
+        },
+        {
+          id: 'u3',
+          exerciseId: '0150',
+          name: 'Jalón al pecho agarre prono',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 8.5,
+          restSeconds: 150,
+          category: 'back',
+          target: 'lats',
+          notes: 'Barra ancha prono, llevar a la clavícula.',
+        },
+        {
+          id: 'u4',
+          exerciseId: '1350',
+          name: 'Remo con apoyo en el pecho máquina',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 8.5,
+          restSeconds: 150,
+          category: 'back',
+          target: 'upper back',
+          notes: 'Pecho bien apoyado, tracción escapular.',
+        },
+        {
+          id: 'u5',
+          exerciseId: '0334',
+          name: 'Elevaciones laterales con mancuernas',
+          targetSets: 4,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 90,
+          category: 'shoulders',
+          target: 'delts',
+          notes: 'Enfoque en deltoides lateral sin balanceo.',
+        },
+      ],
+    },
+    {
+      id: 'day_lower',
+      dayName: 'Viernes - Lower',
+      focus: 'Cadena Posterior & Cuádriceps',
+      exercises: [
+        {
+          id: 'lw1',
+          exerciseId: '0043',
+          name: 'Sentadilla libre',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 180,
+          category: 'upper legs',
+          target: 'glutes',
+          notes: 'Barra tras nuca, profundidad paralela estricta.',
+        },
+        {
+          id: 'lw2',
+          exerciseId: '1459',
+          name: 'Peso muerto rumano con mancuernas',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 150,
+          category: 'upper legs',
+          target: 'glutes',
+          notes: 'Bisagra de cadera, tensión pura en isquiosurales.',
+        },
+        {
+          id: 'lw3',
+          exerciseId: '0598',
+          name: 'Aductores',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 8.5,
+          restSeconds: 90,
+          category: 'upper legs',
+          target: 'adductors',
+          notes: 'Cierre firme en máquina de aducción.',
+        },
+        {
+          id: 'lw4',
+          exerciseId: '0586',
+          name: 'Curl femoral tumbado',
+          targetSets: 3,
+          targetReps: '8',
+          targetRpe: 9,
+          restSeconds: 120,
+          category: 'upper legs',
+          target: 'hamstrings',
+          notes: 'Cadera pegada al banco en todo el recorrido.',
         },
       ],
     },
   ],
 };
 
+// Seed PRs from Samuel's Symmetry screenshots
+const SAMUEL_INITIAL_PRS: Record<string, PersonalRecord> = {
+  '0314': {
+    exerciseId: '0314',
+    exerciseName: 'Press De Banca Inclinado (Mancuerna)',
+    maxWeightKg: 45,
+    maxReps: 11,
+    estimated1RM: 61.5,
+    date: '2026-09-17',
+  },
+  '0334': {
+    exerciseId: '0334',
+    exerciseName: 'Elevaciones Laterales (Mancuerna)',
+    maxWeightKg: 14,
+    maxReps: 10,
+    estimated1RM: 18.7,
+    date: '2026-09-15',
+  },
+  '0405': {
+    exerciseId: '0405',
+    exerciseName: 'Press De Hombros Sentado (Mancuerna)',
+    maxWeightKg: 30,
+    maxReps: 9,
+    estimated1RM: 39.0,
+    date: '2026-09-15',
+  },
+  '0150': {
+    exerciseId: '0150',
+    exerciseName: 'Jalón Al Pecho Agarre Cerrado (Polea)',
+    maxWeightKg: 65,
+    maxReps: 12,
+    estimated1RM: 91.0,
+    date: '2026-09-14',
+  },
+  '0009': {
+    exerciseId: '0009',
+    exerciseName: 'Fondos De Tríceps Agarre Cerrado',
+    maxWeightKg: 100,
+    maxReps: 12,
+    estimated1RM: 140.0,
+    date: '2026-09-11',
+  },
+  '0070': {
+    exerciseId: '0070',
+    exerciseName: 'Curl De Bíceps (Barra EZ)',
+    maxWeightKg: 30,
+    maxReps: 10,
+    estimated1RM: 40.0,
+    date: '2026-09-10',
+  },
+  '0025': {
+    exerciseId: '0025',
+    exerciseName: 'Press De Banca Plano',
+    maxWeightKg: 95,
+    maxReps: 8,
+    estimated1RM: 120.3,
+    date: '2026-09-08',
+  },
+  '0596': {
+    exerciseId: '0596',
+    exerciseName: 'Aperturas De PeckDeck',
+    maxWeightKg: 85,
+    maxReps: 10,
+    estimated1RM: 113.3,
+    date: '2026-09-05',
+  },
+  '0739': {
+    exerciseId: '0739',
+    exerciseName: 'Prensa Inclinada 45°',
+    maxWeightKg: 240,
+    maxReps: 10,
+    estimated1RM: 320.0,
+    date: '2026-09-04',
+  },
+  '0598': {
+    exerciseId: '0598',
+    exerciseName: 'Aductores (Máquina)',
+    maxWeightKg: 80,
+    maxReps: 10,
+    estimated1RM: 106.7,
+    date: '2026-09-03',
+  },
+  '0597': {
+    exerciseId: '0597',
+    exerciseName: 'Abductores (Máquina)',
+    maxWeightKg: 70,
+    maxReps: 10,
+    estimated1RM: 93.3,
+    date: '2026-09-03',
+  },
+  '0605': {
+    exerciseId: '0605',
+    exerciseName: 'Elevación De Talones (Máquina)',
+    maxWeightKg: 90,
+    maxReps: 12,
+    estimated1RM: 126.0,
+    date: '2026-09-02',
+  },
+  '0599': {
+    exerciseId: '0599',
+    exerciseName: 'Curl Femoral Sentado',
+    maxWeightKg: 60,
+    maxReps: 10,
+    estimated1RM: 80.0,
+    date: '2026-09-01',
+  },
+  '0175': {
+    exerciseId: '0175',
+    exerciseName: 'Crunch Abdominal / Giro Ruso',
+    maxWeightKg: 11,
+    maxReps: 25,
+    estimated1RM: 20.2,
+    date: '2026-09-16',
+  },
+};
+
 export const useAesthetixStore = create<AesthetixState>()(
   persist(
     (set, get) => ({
-      routines: [DEFAULT_AESTHETIX_ROUTINE],
-      activeRoutineId: 'routine_starter_5day',
+      routines: [PPL_X_UP_ROUTINE],
+      activeRoutineId: 'routine_ppl_x_up',
 
       addRoutine: (routine) =>
         set((state) => ({
-          routines: [routine, ...state.routines],
+          routines: [routine, ...state.routines.filter((r) => r.id !== routine.id)],
           activeRoutineId: routine.id,
         })),
 
@@ -388,20 +621,21 @@ export const useAesthetixStore = create<AesthetixState>()(
 
       startWorkout: (routineId, dayIndex = 0) => {
         const state = get();
-        const rId = routineId || state.activeRoutineId || state.routines[0]?.id;
-        const routine = state.routines.find((r) => r.id === rId) || state.routines[0];
-
-        if (!routine) return;
+        const routine =
+          (routineId && state.routines.find((r) => r.id === routineId)) ||
+          state.routines.find((r) => r.id === state.activeRoutineId) ||
+          state.routines[0] ||
+          PPL_X_UP_ROUTINE;
 
         const day = routine.days[dayIndex] || routine.days[0];
+        const exercises = day?.exercises || [];
 
-        const sessionExercises: SessionExerciseLog[] = (day?.exercises || []).map((ex) => {
-          // Pre-populate with target sets
+        const sessionExercises: SessionExerciseLog[] = exercises.map((ex) => {
           const initialSets: SetLog[] = Array.from({ length: ex.targetSets || 3 }).map((_, i) => ({
             id: `set_${Date.now()}_${i}`,
             setNumber: i + 1,
             weightKg: 0,
-            reps: 10,
+            reps: 8,
             completed: false,
           }));
 
@@ -439,9 +673,9 @@ export const useAesthetixStore = create<AesthetixState>()(
           category: ex.category || 'chest',
           target: ex.target || 'pectorals',
           sets: [
-            { id: `set_${Date.now()}_1`, setNumber: 1, weightKg: 0, reps: 10, completed: false },
-            { id: `set_${Date.now()}_2`, setNumber: 2, weightKg: 0, reps: 10, completed: false },
-            { id: `set_${Date.now()}_3`, setNumber: 3, weightKg: 0, reps: 10, completed: false },
+            { id: `set_${Date.now()}_1`, setNumber: 1, weightKg: 0, reps: 8, completed: false },
+            { id: `set_${Date.now()}_2`, setNumber: 2, weightKg: 0, reps: 8, completed: false },
+            { id: `set_${Date.now()}_3`, setNumber: 3, weightKg: 0, reps: 8, completed: false },
           ],
         }));
 
@@ -483,7 +717,6 @@ export const useAesthetixStore = create<AesthetixState>()(
         exercise.sets = updatedSets;
         updatedExercises[exerciseIndex] = exercise;
 
-        // Auto-trigger rest timer when marking a set completed
         let triggerTimer = false;
         if (!prevCompleted && data.completed === true) {
           triggerTimer = true;
@@ -519,7 +752,7 @@ export const useAesthetixStore = create<AesthetixState>()(
           id: `set_${Date.now()}`,
           setNumber: exercise.sets.length + 1,
           weightKg: lastSet ? lastSet.weightKg : 0,
-          reps: lastSet ? lastSet.reps : 10,
+          reps: lastSet ? lastSet.reps : 8,
           completed: false,
         };
 
@@ -558,9 +791,9 @@ export const useAesthetixStore = create<AesthetixState>()(
           category: exercise.category || 'chest',
           target: exercise.target || 'pectorals',
           sets: [
-            { id: `set_${Date.now()}_1`, setNumber: 1, weightKg: 0, reps: 10, completed: false },
-            { id: `set_${Date.now()}_2`, setNumber: 2, weightKg: 0, reps: 10, completed: false },
-            { id: `set_${Date.now()}_3`, setNumber: 3, weightKg: 0, reps: 10, completed: false },
+            { id: `set_${Date.now()}_1`, setNumber: 1, weightKg: 0, reps: 8, completed: false },
+            { id: `set_${Date.now()}_2`, setNumber: 2, weightKg: 0, reps: 8, completed: false },
+            { id: `set_${Date.now()}_3`, setNumber: 3, weightKg: 0, reps: 8, completed: false },
           ],
         };
 
@@ -705,14 +938,11 @@ export const useAesthetixStore = create<AesthetixState>()(
 
           if (diffDays === 0) {
             // Same day, streak unchanged
-          } else if (diffDays === 1) {
-            // Consecutive day
-            streak += 1;
-          } else if (diffDays <= 3) {
-            // Allowed rest days (e.g. weekend rest) - doesn't break streak!
+          } else if (diffDays === 1 || diffDays <= 3) {
+            // Consecutive or normal rest window
             streak += 1;
           } else {
-            // Streak broken
+            // Streak reset
             streak = 1;
           }
         }
@@ -726,6 +956,7 @@ export const useAesthetixStore = create<AesthetixState>()(
           currentStreak: streak,
           longestStreak: longest,
           lastWorkoutDate: dateStr,
+          totalWorkoutsCount: (state.totalWorkoutsCount || 112) + 1,
         });
 
         return historyItem;
@@ -737,7 +968,28 @@ export const useAesthetixStore = create<AesthetixState>()(
           history: state.history.filter((item) => item.id !== sessionId),
         }));
       },
-      prs: {},
+      addHistoricalWorkout: (item) => {
+        set((state) => ({
+          history: [item, ...state.history],
+          totalWorkoutsCount: (state.totalWorkoutsCount || 112) + 1,
+        }));
+      },
+
+      prs: SAMUEL_INITIAL_PRS,
+
+      // Cumulative Volume & Symmetry Data
+      importedVolumeKg: 175000,
+      setImportedVolumeKg: (vol) => set({ importedVolumeKg: vol }),
+      totalWorkoutsCount: 112,
+      setTotalWorkoutsCount: (count) => set({ totalWorkoutsCount: count }),
+      getTotalLifetimeVolumeKg: () => {
+        const state = get();
+        const historyVol = (state.history || []).reduce(
+          (sum, h) => sum + (h.totalVolumeKg || 0),
+          0
+        );
+        return (state.importedVolumeKg || 175000) + historyVol;
+      },
 
       userWeightKg: 75,
       setUserWeightKg: (weight) => set({ userWeightKg: weight }),
@@ -758,9 +1010,9 @@ export const useAesthetixStore = create<AesthetixState>()(
       workoutDaysTarget: 5,
       setWorkoutDaysTarget: (days) => set({ workoutDaysTarget: days }),
 
-      currentStreak: 1,
-      longestStreak: 1,
-      lastWorkoutDate: null,
+      currentStreak: 7,
+      longestStreak: 14,
+      lastWorkoutDate: '2026-09-17',
 
       restTimerDefault: 150,
       setRestTimerDefault: (sec) => set({ restTimerDefault: sec }),
@@ -771,7 +1023,7 @@ export const useAesthetixStore = create<AesthetixState>()(
       weightUnit: 'kg',
       setWeightUnit: (unit) => set({ weightUnit: unit }),
 
-      // Dynamic Tier Calculation
+      // Dynamic Tier Calculation with Symmetry Baselines
       getMuscleTiers: () => {
         const state = get();
         const prs = state.prs;
@@ -799,8 +1051,11 @@ export const useAesthetixStore = create<AesthetixState>()(
         });
 
         const tiers: Record<AnatomicalMuscle, MuscleTierInfo> = {} as any;
-        (Object.keys(muscle1RMs) as AnatomicalMuscle[]).forEach((muscle) => {
-          tiers[muscle] = getTierFor1RM(muscle, muscle1RMs[muscle], weight);
+        (Object.keys(SAMUEL_BASELINE_RANKS) as AnatomicalMuscle[]).forEach((muscle) => {
+          const calculated = getTierFor1RM(muscle, muscle1RMs[muscle], weight);
+          const baseline = SAMUEL_BASELINE_RANKS[muscle];
+          // Preserve baseline if calculated level is lower
+          tiers[muscle] = (calculated.level >= baseline.level) ? calculated : baseline;
         });
 
         return tiers;
@@ -815,11 +1070,51 @@ export const useAesthetixStore = create<AesthetixState>()(
     {
       name: 'hubos_aesthetix_v1',
       storage: createJSONStorage(() => nativeStorage),
+      // Automatically migrate routines on rehydration to ensure PPL x UL is active
+      // and obsolete starter routine is purged
+      merge: (persistedState: any, currentState) => {
+        const merged = { ...currentState, ...(persistedState || {}) };
+        if (merged.routines) {
+          // Remove old starter routine
+          merged.routines = merged.routines.filter(
+            (r: WorkoutRoutine) => r.id !== 'routine_starter_5day'
+          );
+          // If PPL_X_UP_ROUTINE is not present, add it
+          if (!merged.routines.some((r: WorkoutRoutine) => r.id === 'routine_ppl_x_up')) {
+            merged.routines.unshift(PPL_X_UP_ROUTINE);
+          }
+        } else {
+          merged.routines = [PPL_X_UP_ROUTINE];
+        }
+
+        if (
+          !merged.activeRoutineId ||
+          merged.activeRoutineId === 'routine_starter_5day' ||
+          !merged.routines.some((r: WorkoutRoutine) => r.id === merged.activeRoutineId)
+        ) {
+          merged.activeRoutineId = 'routine_ppl_x_up';
+        }
+
+        if (!merged.importedVolumeKg) {
+          merged.importedVolumeKg = 175000;
+        }
+
+        if (!merged.totalWorkoutsCount) {
+          merged.totalWorkoutsCount = 112;
+        }
+
+        // Merge baseline PRs
+        merged.prs = { ...SAMUEL_INITIAL_PRS, ...(merged.prs || {}) };
+
+        return merged;
+      },
       partialize: (state) => ({
         routines: state.routines,
         activeRoutineId: state.activeRoutineId,
         history: state.history,
         prs: state.prs,
+        importedVolumeKg: state.importedVolumeKg,
+        totalWorkoutsCount: state.totalWorkoutsCount,
         userWeightKg: state.userWeightKg,
         measurements: state.measurements,
         userPhotoId: state.userPhotoId,
@@ -830,7 +1125,7 @@ export const useAesthetixStore = create<AesthetixState>()(
         restTimerDefault: state.restTimerDefault,
         soundEnabled: state.soundEnabled,
         weightUnit: state.weightUnit,
-        activeSession: state.activeSession, // persists active gym session even if app is closed!
+        activeSession: state.activeSession,
       }),
     }
   )
