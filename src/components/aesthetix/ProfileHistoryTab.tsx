@@ -175,20 +175,22 @@ export const ProfileHistoryTab: React.FC = () => {
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#34C759] shadow-[0_0_8px_#34C759]" />
             <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
-              Volumen Acumulado de Cargas
+              Volumen Acumulado (Año)
             </span>
           </div>
           <span className="text-[11px] font-black text-[#34C759] font-mono">
-            +189% ↑ mes
+            +1,1 M% ↑
           </span>
         </div>
 
         <div className="flex items-baseline gap-2">
           <span className="text-3xl font-black text-[#F5F5F7] font-mono tracking-tight">
-            {Math.round(getTotalLifetimeVolumeKg() / 1000)} mil kg
+            {getTotalLifetimeVolumeKg() >= 1000000
+              ? `${(getTotalLifetimeVolumeKg() / 1000000).toFixed(1).replace('.', ',')} M kg`
+              : `${Math.round(getTotalLifetimeVolumeKg() / 1000)} mil kg`}
           </span>
           <span className="text-xs font-bold text-[#8E8E93]">
-            ({getTotalLifetimeVolumeKg().toLocaleString('es-ES')} kg totales)
+            ({getTotalLifetimeVolumeKg().toLocaleString('es-ES')} kg anuales)
           </span>
         </div>
 

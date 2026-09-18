@@ -2,7 +2,7 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
-## 🚀 [v2.2.0] - 2026-09-17 (Aesthetix v2.2: Corrección del Freeze en iOS, Protocolo Oficial PPL x UL con GIFs, Sistema Oficial de 25 Rangos Symmetry con Insignias, Volumen Acumulado 175k kg, Escaneo Físico IA e Importador OCR)
+## 🚀 [v2.2.0] - 2026-09-17 (Aesthetix v2.2: Corrección del Freeze en iOS, Protocolo Oficial PPL x UL con GIFs, Sistema Oficial de 25 Rangos Symmetry con Insignias, Volumen Acumulado 1.1 M kg, Escaneo Físico IA e Importador OCR)
 
 ### 🌟 Nuevas Funcionalidades, Correcciones Críticas & Datos Symmetry
 - **Corrección Crítica de Bloqueo / Freeze de Teclado en iOS (`CustomRoutineModal.tsx`)**:
@@ -43,7 +43,7 @@ Este documento lleva el registro cronológico completo de todas las versiones, m
     - Abdominales: **Oro II** (Top 40%)
   - **Modal de Rangos Globales**: Vista detallada con las 25 insignias y percentiles, destacando el rango actual del usuario.
 - **Registro de Volumen Acumulado & Métricas Históricas (`ProfileHistoryTab.tsx` & `useAesthetixStore.ts`)**:
-  - Nueva tarjeta Hero Bento en el perfil con el total histórico de volumen levantado (**175 mil kg** acumulados), 112 entrenamientos realizados, 204 récords personales y racha de 7 días de fuego.
+  - Nueva tarjeta Hero Bento en el perfil con el total histórico de volumen levantado (**1,1 M kg / 1.100.000 kg** acumulados en el año con +1,1 M% de incremento), 112 entrenamientos realizados, 204 récords personales y racha de 7 días de fuego.
   - Sembrados los PRs de las capturas de Symmetry (Press Inclinado 45kgx11, Giro Ruso 11kgx25, Crunch 0kgx10, Elevaciones Laterales 14kgx10, Press Hombro Sentado 30kgx9, Jalón Agarre Cerrado 65kgx12, Fondos Tríceps 100kgx12, Curl EZ 30kgx10, Prensa 240kgx10).
 - **Escaneo Corporal con Gemini Vision (`BodyScanModal.tsx`)**:
   - Diagnóstico físico inteligente: el usuario sube o toma una foto de su físico y Gemini Vision calcula el *Symmetry Score* (0 a 100), grasa corporal estimada %, ratio V-Taper, grupos dominantes vs rezagados y recomendaciones de entrenamiento.

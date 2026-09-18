@@ -978,7 +978,7 @@ export const useAesthetixStore = create<AesthetixState>()(
       prs: SAMUEL_INITIAL_PRS,
 
       // Cumulative Volume & Symmetry Data
-      importedVolumeKg: 175000,
+      importedVolumeKg: 1100000,
       setImportedVolumeKg: (vol) => set({ importedVolumeKg: vol }),
       totalWorkoutsCount: 112,
       setTotalWorkoutsCount: (count) => set({ totalWorkoutsCount: count }),
@@ -988,7 +988,7 @@ export const useAesthetixStore = create<AesthetixState>()(
           (sum, h) => sum + (h.totalVolumeKg || 0),
           0
         );
-        return (state.importedVolumeKg || 175000) + historyVol;
+        return (state.importedVolumeKg || 1100000) + historyVol;
       },
 
       userWeightKg: 75,
@@ -1095,8 +1095,8 @@ export const useAesthetixStore = create<AesthetixState>()(
           merged.activeRoutineId = 'routine_ppl_x_up';
         }
 
-        if (!merged.importedVolumeKg) {
-          merged.importedVolumeKg = 175000;
+        if (!merged.importedVolumeKg || merged.importedVolumeKg === 175000) {
+          merged.importedVolumeKg = 1100000;
         }
 
         if (!merged.totalWorkoutsCount) {
