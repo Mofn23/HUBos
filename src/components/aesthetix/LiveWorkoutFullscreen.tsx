@@ -13,6 +13,12 @@ import {
 import { calculatePlates } from '@/lib/plateCalculator';
 import { WorkoutHistoryItem, Exercise } from '@/types/workout';
 import { useScrollLock } from '@/lib/useScrollLock';
+import {
+  playSetCompleteSound,
+  playRestTimerFinishedSound,
+  playPersonalRecordSound,
+} from '@/lib/soundEffects';
+import { WorkoutSummaryCelebrationModal } from './WorkoutSummaryCelebrationModal';
 
 interface LiveWorkoutFullscreenProps {
   isOpen: boolean;
@@ -44,6 +50,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
     soundEnabled,
     prs,
     getMuscleTiers,
+    recordPrDirectly,
   } = useAesthetixStore();
 
   useScrollLock(isOpen);
@@ -84,23 +91,8 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
 
       if (left <= 0) {
         stopRestTimer();
-        if (soundEnabled && typeof window !== 'undefined') {
-          try {
-            const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-            if (AudioCtx) {
-              const ctx = new AudioCtx();
-              const osc = ctx.createOscillator();
-              const gain = ctx.createGain();
-              osc.type = 'sine';
-              osc.frequency.setValueAtTime(880, ctx.currentTime);
-              gain.gain.setValueAtTime(0.2, ctx.currentTime);
-              gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
-              osc.connect(gain);
-              gain.connect(ctx.destination);
-              osc.start();
-              osc.stop(ctx.currentTime + 0.8);
-            }
-          } catch {}
+        if (soundEnabled) {
+          playRestTimerFinishedSound();
         }
         showToast('⏰ ¡Tiempo de descanso completado! A por la siguiente serie 💪');
       }
@@ -173,6 +165,26 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
     updateSet(activeSession.currentExerciseIndex, setIndex, { completed: willBeCompleted });
 
     if (willBeCompleted) {
+      if (soundEnabled) {
+        playSetCompleteSound();
+      }
+
+      // Real-time PR Detection
+      if (set.weightKg > 0 && set.reps > 0) {
+        const result = recordPrDirectly(
+          currentExercise.exerciseId,
+          currentExercise.exerciseName,
+          set.weightKg,
+          set.reps
+        );
+        if (result.isNewPr) {
+          if (soundEnabled) {
+            playPersonalRecordSound();
+          }
+          showToast(`🏆 ¡Nuevo Récord Personal! ${currentExercise.exerciseName}: ${set.weightKg} kg`);
+        }
+      }
+
       triggerRestTimer(150); // 2:30 min rest timer
     }
   };
@@ -192,19 +204,29 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#000000] flex flex-col overflow-hidden text-[#F5F5F7] animate-fade-in overscroll-contain select-none">
+    <div className="fixed inset-0 z-[60] bg-[#000000] flex flex-col overflow-hidden text-[#F5F5F7] animate-fade-in overscroll-contain select-none">
       {/* ======================================================== */}
       {/* 1. TOP HEADER BAR (Symmetry Style)                       */}
       {/* ======================================================== */}
-      <div className="relative z-20 px-4 pt-12 pb-3 flex items-center justify-between border-b border-white/5 bg-[#000000]/90 backdrop-blur-xl">
+      <div className="relative z-20 px-4 pt-[max(env(safe-area-inset-top),44px)] pb-3 flex items-center justify-between border-b border-white/5 bg-[#000000]">
         {/* Left: Minimize button */}
         <div className="flex items-center gap-2">
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-sm text-[#F5F5F7] active:scale-95 transition-all"
+            className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white active:scale-95 transition-all shadow-sm"
             title="Minimizar sesión"
           >
-            <span className="text-base leading-none">⌄</span>
+            <svg
+              className="w-4 h-4 text-white"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </button>
 
           {/* Three dots options menu */}
@@ -261,8 +283,8 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
       {/* ======================================================== */}
       {/* 2. TOP EXERCISE BUBBLES CAROUSEL ("Las Bolas de Arriba") */}
       {/* ======================================================== */}
-      <div className="relative z-10 px-3 py-3 border-b border-white/5 bg-[#000000]">
-        <div className="flex items-center gap-3.5 overflow-x-auto no-scrollbar px-1 py-1">
+      <div className="relative z-10 px-3 py-2 border-b border-white/5 bg-[#000000] overflow-visible">
+        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar px-3 py-3.5 min-h-[96px]">
           {activeSession.exercises.map((ex, idx) => {
             const isCurrent = idx === activeSession.currentExerciseIndex;
             const completedSets = ex.sets.filter((s) => s.completed).length;
@@ -274,7 +296,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               <button
                 key={idx}
                 onClick={() => setCurrentExerciseIndex(idx)}
-                className={`shrink-0 relative transition-all duration-200 group flex flex-col items-center ${
+                className={`shrink-0 relative transition-all duration-200 group flex flex-col items-center p-1 ${
                   isCurrent ? 'scale-105' : 'opacity-50 hover:opacity-85'
                 }`}
               >
@@ -282,7 +304,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                 <div
                   className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center p-1.5 bg-[#000000] transition-all ${
                     isCurrent
-                      ? 'ring-2 ring-white ring-offset-2 ring-offset-black shadow-[0_0_20px_rgba(255,255,255,0.4)]'
+                      ? 'ring-2 ring-white ring-offset-2 ring-offset-black shadow-[0_0_25px_rgba(255,255,255,0.45)]'
                       : 'border border-white/20'
                   }`}
                 >
@@ -303,7 +325,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
 
                 {/* Completed Badge Indicator */}
                 {isAllDone && (
-                  <span className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-[#34C759] text-black text-[9px] font-black flex items-center justify-center shadow-md">
+                  <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#34C759] text-black text-[9px] font-black flex items-center justify-center shadow-md">
                     ✓
                   </span>
                 )}
@@ -823,62 +845,13 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
       {/* 9. FINISHED WORKOUT CELEBRATION MODAL                     */}
       {/* ======================================================== */}
       {completedSummary && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
-          <div className="fixed inset-0 bg-black/90 backdrop-blur-xl" />
-          <div className="relative w-full max-w-sm glass-surface-elevated rounded-[36px] p-6 z-10 border border-[#34C759]/40 text-center space-y-4 shadow-[0_0_50px_rgba(52,199,89,0.3)] animate-scale-up overscroll-contain">
-            <div className="w-16 h-16 rounded-full bg-[#34C759]/20 border border-[#34C759]/40 flex items-center justify-center text-3xl mx-auto">
-              🏆
-            </div>
-
-            <div>
-              <span className="text-[11px] font-black uppercase tracking-widest text-[#34C759]">
-                ¡Sesión Completada!
-              </span>
-              <h2 className="text-xl font-black text-[#F5F5F7] mt-1">
-                {completedSummary.routineName}
-              </h2>
-              <p className="text-xs font-bold text-[#8E8E93]">{completedSummary.dayName}</p>
-            </div>
-
-            <div className="grid grid-cols-3 gap-2 py-2">
-              <div className="glass-pill p-2.5 rounded-[18px]">
-                <p className="text-[10px] font-bold text-[#8E8E93]">Duración</p>
-                <p className="text-sm font-black text-[#F5F5F7]">
-                  {completedSummary.durationMinutes}m
-                </p>
-              </div>
-              <div className="glass-pill p-2.5 rounded-[18px]">
-                <p className="text-[10px] font-bold text-[#8E8E93]">Volumen</p>
-                <p className="text-sm font-black text-[#34C759]">
-                  {completedSummary.totalVolumeKg}kg
-                </p>
-              </div>
-              <div className="glass-pill p-2.5 rounded-[18px]">
-                <p className="text-[10px] font-bold text-[#8E8E93]">Series</p>
-                <p className="text-sm font-black text-[#64D2FF]">
-                  {completedSummary.totalSets}
-                </p>
-              </div>
-            </div>
-
-            {completedSummary.prCount > 0 && (
-              <div className="p-3 rounded-[18px] bg-[#FFD60A]/15 border border-[#FFD60A]/30 text-xs text-[#FFD60A] font-black flex items-center justify-center gap-1.5">
-                <span>🔥</span>
-                <span>¡{completedSummary.prCount} Nuevos Récords Personales (PR) batidos!</span>
-              </div>
-            )}
-
-            <button
-              onClick={() => {
-                setCompletedSummary(null);
-                onClose();
-              }}
-              className="w-full py-3.5 rounded-full bg-[#34C759] text-black font-black text-xs shadow-lg active:scale-95 transition-all"
-            >
-              Volver al HUB de Aesthetix
-            </button>
-          </div>
-        </div>
+        <WorkoutSummaryCelebrationModal
+          summary={completedSummary}
+          onClose={() => {
+            setCompletedSummary(null);
+            onClose();
+          }}
+        />
       )}
     </div>
   );

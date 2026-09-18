@@ -37,6 +37,7 @@ interface HubState {
   // Active toast
   toastMessage: string | null;
   showToast: (msg: string) => void;
+  dismissToast: () => void;
 }
 
 const DEFAULT_GEMINI_KEY =
@@ -67,9 +68,9 @@ export const useHubStore = create<HubState>()(
       toastMessage: null,
       showToast: (msg) => {
         set({ toastMessage: msg });
-        setTimeout(() => {
-          set((state) => (state.toastMessage === msg ? { toastMessage: null } : {}));
-        }, 3000);
+      },
+      dismissToast: () => {
+        set({ toastMessage: null });
       },
     }),
     {

@@ -20,6 +20,7 @@ export const AesthetixView: React.FC = () => {
     activeSession,
     startWorkout,
     addExerciseToActiveSession,
+    activeModalCount,
   } = useAesthetixStore();
 
   const [activeTab, setActiveTab] = useState<AesthetixTab>('routines');
@@ -27,7 +28,8 @@ export const AesthetixView: React.FC = () => {
   const [isLiveWorkoutOpen, setIsLiveWorkoutOpen] = useState(false);
   const [isStartWorkoutModalOpen, setIsStartWorkoutModalOpen] = useState(false);
 
-  const isAnyModalOpen = isStartWorkoutModalOpen || isLiveWorkoutOpen || isAiBuilderOpen;
+  const isAnyModalOpen =
+    isStartWorkoutModalOpen || isLiveWorkoutOpen || isAiBuilderOpen || activeModalCount > 0;
   useScrollLock(isAnyModalOpen);
 
   const handleStartSession = (routineId?: string, dayIndex?: number) => {
@@ -91,7 +93,11 @@ export const AesthetixView: React.FC = () => {
       </div>
 
       {/* Floating Bottom Glass Navigation Dock */}
-      <nav className="fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto glass-surface-elevated rounded-full p-1.5 flex items-center justify-around border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-3xl">
+      <nav
+        className={`fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto glass-surface-elevated rounded-full p-1.5 flex items-center justify-around border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-3xl transition-all duration-300 ${
+          isAnyModalOpen ? 'translate-y-28 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
+        }`}
+      >
         <button
           onClick={() => setActiveTab('routines')}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${

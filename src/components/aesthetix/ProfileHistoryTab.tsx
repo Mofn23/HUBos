@@ -24,9 +24,12 @@ export const ProfileHistoryTab: React.FC = () => {
     currentStreak,
     totalWorkoutsCount,
     getTotalLifetimeVolumeKg,
+    openModal,
+    closeModal,
   } = useAesthetixStore();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [showAllPrs, setShowAllPrs] = useState(false);
   const [isLogMeasureOpen, setIsLogMeasureOpen] = useState(false);
   const [isBodyScanOpen, setIsBodyScanOpen] = useState(false);
   const [isSymmetryImportOpen, setIsSymmetryImportOpen] = useState(false);
@@ -37,6 +40,18 @@ export const ProfileHistoryTab: React.FC = () => {
   const [newWaist, setNewWaist] = useState('');
   const [newThighs, setNewThighs] = useState('');
   const [newCalves, setNewCalves] = useState('');
+
+  const isAnyProfileModalOpen =
+    isLogMeasureOpen || isBodyScanOpen || isSymmetryImportOpen || !!selectedSessionForDetail;
+
+  useEffect(() => {
+    if (isAnyProfileModalOpen) {
+      openModal();
+      return () => {
+        closeModal();
+      };
+    }
+  }, [isAnyProfileModalOpen, openModal, closeModal]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -88,6 +103,7 @@ export const ProfileHistoryTab: React.FC = () => {
   };
 
   const prList = Object.values(prs);
+  const displayedPrs = showAllPrs ? prList : prList.slice(0, 4);
 
   return (
     <div className="space-y-4 animate-fade-in">
@@ -256,26 +272,39 @@ export const ProfileHistoryTab: React.FC = () => {
             Aún no has registrado récords. Inicia una sesión en el gimnasio para comenzar tu historial.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-2.5">
-            {prList.map((pr) => (
-              <div
-                key={pr.exerciseId}
-                className="glass-pill p-3 rounded-[20px] space-y-1 border-t-white/15"
-              >
-                <span className="text-xs font-black text-[#F5F5F7] capitalize block truncate">
-                  {pr.exerciseName}
-                </span>
-                <div className="flex items-baseline justify-between">
-                  <span className="text-base font-black text-[#FFD60A] font-mono">
-                    {pr.maxWeightKg} kg
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-2.5">
+              {displayedPrs.map((pr) => (
+                <div
+                  key={pr.exerciseId}
+                  className="glass-pill p-3 rounded-[20px] space-y-1 border-t-white/15"
+                >
+                  <span className="text-xs font-black text-[#F5F5F7] capitalize block truncate">
+                    {pr.exerciseName}
                   </span>
-                  <span className="text-[10px] font-bold text-[#8E8E93]">x {pr.maxReps} reps</span>
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-base font-black text-[#FFD60A] font-mono">
+                      {pr.maxWeightKg} kg
+                    </span>
+                    <span className="text-[10px] font-bold text-[#8E8E93]">x {pr.maxReps} reps</span>
+                  </div>
+                  <div className="text-[9px] font-bold text-[#34C759]">
+                    1RM Est: {pr.estimated1RM} kg • {pr.date}
+                  </div>
                 </div>
-                <div className="text-[9px] font-bold text-[#34C759]">
-                  1RM Est: {pr.estimated1RM} kg • {pr.date}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {prList.length > 4 && (
+              <button
+                type="button"
+                onClick={() => setShowAllPrs(!showAllPrs)}
+                className="w-full py-2.5 px-3 rounded-[18px] bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] active:scale-98 transition-all flex items-center justify-center gap-2 text-xs font-black text-[#64D2FF]"
+              >
+                <span>{showAllPrs ? 'Mostrar menos' : `Mostrar más (${prList.length - 4} restantes)`}</span>
+                <span className="text-sm leading-none">{showAllPrs ? '⌃' : '⌄'}</span>
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -358,12 +387,12 @@ export const ProfileHistoryTab: React.FC = () => {
 
       {/* Log Measurement Modal */}
       {isLogMeasureOpen && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center animate-fade-in">
+        <div className="fixed inset-0 z-[70] flex items-end justify-center animate-fade-in">
           <div
-            className="fixed inset-0 bg-black/75 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
             onClick={() => setIsLogMeasureOpen(false)}
           />
-          <div className="relative w-full max-w-sm glass-surface-elevated rounded-t-[32px] p-5 z-10 border-t border-white/20 space-y-3 animate-slide-up">
+          <div className="relative w-full max-w-sm glass-surface-elevated rounded-t-[36px] p-5 pb-[max(env(safe-area-inset-bottom),28px)] z-10 border-t border-white/20 shadow-2xl space-y-3 animate-slide-up">
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
               <h3 className="text-sm font-black text-[#F5F5F7]">Registrar Peso & Medidas</h3>
               <button

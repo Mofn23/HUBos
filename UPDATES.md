@@ -2,6 +2,59 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.5.0] - 2026-09-18 (HUBos & Aesthetix v2.5: Notificaciones con Barra de Tiempo, Audio Biomecánico Web Audio, Detección de PRs en Vivo, Resumen con Sobrecarga Progresiva IA, Auto-Ocultamiento de Dock y Modelo Anatómico Oficial Symmetry)
+
+### 🌟 Nuevas Funcionalidades, Experiencia de Audio & Correcciones Visuales
+- **Notificaciones In-App con Barra de Tiempo Decreciente Animada (`ToastNotification.tsx` & `globals.css`)**:
+  - Resuelto de raíz el bug donde las notificaciones (ej. "Entrenamiento Cancelado") permanecían estáticas en pantalla.
+  - Temporizador reactivo de 3.5 segundos con barra inferior interactiva que se encoge suavemente al 0% con la animación `@keyframes shrinkWidth` (`.animate-shrink-width`).
+  - Botón táctil manual de descarte `✕` y variantes de diseño estilizadas: Oro para Récords Personales (`#FFD60A`), Rubí para cancelaciones/errores (`#FF453A`) y Esmeralda para confirmaciones exitosas (`#34C759`).
+- **Gym en Vivo con Cero Filtraciones Visuales & Alineación Geométrica (`LiveWorkoutFullscreen.tsx`)**:
+  - Eliminado el gap superior que dejaba ver el menú de fondo: configurado con fondo puro negro OLED `#000000` y `pt-[max(env(safe-area-inset-top),44px)]` con `z-[60]` para cubrir el 100% del viewport y la barra de estado de iOS.
+  - Botón de minimizar centrado: reemplazado el caracter `⌄` desfasado por un icono SVG geométricamente centrado.
+  - Carrusel de ejercicios con holgura ampliada (`min-h-[96px]`, `py-3.5 px-3` y `overflow-visible`), permitiendo que el anillo blanco de selección activa (`ring-2 ring-white scale-105`) se aprecie 100% circular y nítido sin cortes en los bordes.
+- **Motor de Audio Biomecánico Nativo con Cero Dependencias (`src/lib/soundEffects.ts`)**:
+  - Síntesis de sonido en tiempo real con Web Audio API (100% offline, 0 archivos de audio externos, latencia imperceptible):
+    - `playSetCompleteSound()`: Click/tic nítido y táctil de interruptor biomecánico al marcar una serie completada.
+    - `playRestTimerFinishedSound()`: Doble chime armónico de campana de gimnasio (587Hz $\rightarrow$ 880Hz) al concluir los 2:30 min de descanso.
+    - `playPersonalRecordSound()`: Fanfarria ascendente en arpegio mayor ante la consecución de un nuevo récord.
+    - Vibración háptica sincronizada en dispositivos iOS/Android compatibles (`navigator.vibrate`).
+- **Detección Automática de Récords Personales (PR) en Tiempo Real (`useAesthetixStore.ts` & `LiveWorkoutFullscreen.tsx`)**:
+  - Al introducir un peso o repeticiones en una serie que supere la mejor marca histórica registrada para dicho ejercicio, el sistema detecta el hito de inmediato, actualiza el registro en `prs`, dispara la fanfarria sonora y muestra un toast dorado conmemorativo.
+- **Resumen Celebratorio de Sesión con IA y Memoria Histórica (`WorkoutSummaryCelebrationModal.tsx`)**:
+  - Al pulsar "Terminar", la sesión ya no se cierra bruscamente.
+  - Se despliega una pantalla de celebración con confeti de cristal, halo bioluminiscente, métricas de la sesión (volumen acumulado, duración y series) y racha actualizada a **7 días**.
+  - **Diagnóstico de Sobrecarga Progresiva con IA**: Compara peso y repeticiones ejercicio por ejercicio contra la sesión anterior del mismo día en el historial, destacando ganancias porcentuales y mejoras en 1RM.
+- **Auto-Ocultamiento Inteligente del Dock de Navegación (`AesthetixView.tsx`)**:
+  - Conexión del contador global de modales activos (`activeModalCount`). Cada vez que se despliega cualquier modal o bottom sheet (como "Registrar Peso & Medidas", "Detalle de Sesión", etc.), el dock inferior flotante se oculta suavemente (`translate-y-28 opacity-0 pointer-events-none`) para no tapar los controles inferiores.
+- **Récords Personales Colapsables en Perfil (`ProfileHistoryTab.tsx`)**:
+  - La sección de PRs en el perfil ahora muestra un límite por defecto de 4 tarjetas bento con un botón interactivo *"Mostrar más (X restantes) ⌄"* / *"Mostrar menos ⌃"*, manteniendo la interfaz compacta y limpia.
+- **Modelo Anatómico Humano Oficial Symmetry & Visor de Ejercicios por Músculo (`SymmetryAnatomyModel.tsx` & `SymmetryMuscleDetailSheet.tsx`)**:
+  - Reemplazo total de `react-body-highlighter`:
+  - **Silueta Atlética SVG de Alta Precisión**: Fondo negro OLED `#000000`, contornos definidos en blanco puro (`stroke="white" strokeWidth="2"`), y vistas frontal y posterior lado a lado en perfecta alineación horizontal.
+  - **Mapeo Cromático por Rango Real**: Cada grupo muscular se rellena con el color exacto de la liga de Symmetry que ostenta el atleta (Pectorales = Esmeralda II, Deltoides = Rubí I, Tríceps = Diamante II, Espalda = Rubí II, Piernas = Rubí II & Diamante, Abdomen = Oro II, etc.).
+  - **Lámina de Detalle Muscular (Estilo Symmetry Oficial)**: Al pulsar cualquier músculo de la silueta o cualquier fila de la lista, se abre una lámina que exhibe el nombre del grupo, la insignia oficial de rango y un carrusel horizontal con los ejercicios que lo estimulan, sus GIFs en modo oscuro y sus rangos individuales.
+- **Racha de 7 Días & Métricas Sincronizadas**:
+  - Racha de fuego establecida en 7 días con 112 entrenamientos y 1,1 M kg de volumen anual acumulado (+1,1 M% ↑).
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `src/lib/soundEffects.ts` - Motor de audio Web Audio API con síntesis de tic de serie, chime de descanso y fanfarria de PR.
+- `[CREADO]` `src/components/aesthetix/WorkoutSummaryCelebrationModal.tsx` - Resumen de fin de entreno con sobrecarga progresiva IA y confeti.
+- `[CREADO]` `src/components/aesthetix/SymmetryAnatomyModel.tsx` - Silueta atlética SVG interactiva frontal y posterior con colores por liga.
+- `[CREADO]` `src/components/aesthetix/SymmetryMuscleDetailSheet.tsx` - Visor de ejercicios por grupo muscular con insignias y rangos individuales.
+- `[MODIFICADO]` `src/app/globals.css` - Animación `@keyframes shrinkWidth` para temporizador de toasts.
+- `[MODIFICADO]` `src/components/common/ToastNotification.tsx` - Reconstrucción con auto-dismiss a 3.5s, barra animada y soporte de PRs.
+- `[MODIFICADO]` `src/components/aesthetix/LiveWorkoutFullscreen.tsx` - Cero fugas de fondo, botón centrado, carrusel sin cortes, audio y detección de PR.
+- `[MODIFICADO]` `src/components/aesthetix/AesthetixView.tsx` - Ocultamiento reactivo del dock flotante y bloqueo de scroll con `activeModalCount`.
+- `[MODIFICADO]` `src/components/aesthetix/ProfileHistoryTab.tsx` - PRs limitados a 4 con toggle "Mostrar más" y elevación de z-index en medidas.
+- `[MODIFICADO]` `src/components/aesthetix/AnatomyRanksTab.tsx` - Sustitución del modelo anterior por `SymmetryAnatomyModel` y conexión con la lámina de detalle.
+- `[MODIFICADO]` `src/stores/useHubStore.ts` - Soporte de `dismissToast` reactivo.
+- `[MODIFICADO]` `src/stores/useAesthetixStore.ts` - Racha de 7 días, `activeModalCount`, `recordPrDirectly` y comparativa histórica de sobrecarga progresiva.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Bump a v2.5.0 para generación automática de la Release en GitHub Actions.
+- `[MODIFICADO]` `UPDATES.md` - Documentación completa de la versión v2.5.0.
+
+---
+
 ## 🚀 [v2.4.0] - 2026-09-17 (Aesthetix v2.4: Fondo Negro Puro OLED #000000 y Estética Symmetry en Todos los GIFs e Ilustraciones de Ejercicios)
 
 ### 🌟 Nuevas Funcionalidades & Perfeccionamiento Visual

@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useMemo, useState } from 'react';
-import Model from 'react-body-highlighter';
-import type { IExerciseData, Muscle } from 'react-body-highlighter';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import {
   TIERS_CATALOG,
@@ -13,9 +11,18 @@ import {
   getAllRanksCatalog,
 } from '@/lib/muscleRanks';
 import { useScrollLock } from '@/lib/useScrollLock';
+import { SymmetryAnatomyModel } from './SymmetryAnatomyModel';
+import { SymmetryMuscleDetailSheet } from './SymmetryMuscleDetailSheet';
 
 export const AnatomyRanksTab: React.FC = () => {
-  const { getMuscleTiers, getOverallRank, userWeightKg, setUserWeightKg } = useAesthetixStore();
+  const {
+    getMuscleTiers,
+    getOverallRank,
+    userWeightKg,
+    setUserWeightKg,
+    openModal,
+    closeModal,
+  } = useAesthetixStore();
 
   const muscleTiers = getMuscleTiers();
   const overall = getOverallRank();
@@ -24,40 +31,20 @@ export const AnatomyRanksTab: React.FC = () => {
   const [calcReps, setCalcReps] = useState<string>('8');
   const [isCalcOpen, setIsCalcOpen] = useState(false);
   const [isGlobalRanksOpen, setIsGlobalRanksOpen] = useState(false);
+  const [selectedMuscleForDetail, setSelectedMuscleForDetail] = useState<AnatomicalMuscle | null>(
+    null
+  );
 
-  useScrollLock(isCalcOpen || isGlobalRanksOpen);
+  useScrollLock(isCalcOpen || isGlobalRanksOpen || !!selectedMuscleForDetail);
 
-  // Map tiers to react-body-highlighter datasets
-  const { anteriorData, posteriorData, customColors } = useMemo(() => {
-    const antData: IExerciseData[] = [];
-    const postData: IExerciseData[] = [];
-    const colorsList: string[] = [];
-
-    (Object.keys(ANATOMY_CONFIG) as AnatomicalMuscle[]).forEach((muscle) => {
-      const tierInfo = muscleTiers[muscle] || TIERS_CATALOG.rubi_2;
-      const config = ANATOMY_CONFIG[muscle];
-
-      if (!colorsList.includes(tierInfo.color)) {
-        colorsList.push(tierInfo.color);
-      }
-
-      if (config.highlighterMusclesFront.length > 0) {
-        antData.push({
-          name: `${config.name} (${tierInfo.label})`,
-          muscles: config.highlighterMusclesFront as Muscle[],
-        });
-      }
-
-      if (config.highlighterMusclesBack.length > 0) {
-        postData.push({
-          name: `${config.name} (${tierInfo.label})`,
-          muscles: config.highlighterMusclesBack as Muscle[],
-        });
-      }
-    });
-
-    return { anteriorData: antData, posteriorData: postData, customColors: colorsList };
-  }, [muscleTiers]);
+  useEffect(() => {
+    if (isGlobalRanksOpen || !!selectedMuscleForDetail) {
+      openModal();
+      return () => {
+        closeModal();
+      };
+    }
+  }, [isGlobalRanksOpen, selectedMuscleForDetail, openModal, closeModal]);
 
   const estimated1RMCalc = useMemo(() => {
     const w = parseFloat(calcWeight) || 0;
@@ -157,9 +144,9 @@ export const AnatomyRanksTab: React.FC = () => {
         </div>
       </div>
 
-      {/* 2. Interactive 2D Anatomical Human Model */}
-      <div className="glass-surface-elevated rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-3">
-        <div className="flex items-center justify-between pb-1 border-b border-white/5">
+      {/* 2. Interactive 2D Anatomical Human Model (Official Symmetry OLED Model) */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
             <span className="text-base">🧬</span>
             <h3 className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
@@ -169,64 +156,11 @@ export const AnatomyRanksTab: React.FC = () => {
           <span className="text-[10px] font-bold text-[#8E8E93]">Color = Rango Muscular</span>
         </div>
 
-        <p className="text-xs text-[#8E8E93] leading-relaxed">
-          Cada grupo muscular se ilumina con el tono exacto de tu rango en Symmetry.
-        </p>
-
-        {/* Models Side by Side */}
-        <div className="grid grid-cols-2 gap-3 py-2">
-          <div className="glass-surface rounded-[24px] p-3 flex flex-col items-center border border-white/5 shadow-inner">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-2">
-              Vista Frontal
-            </span>
-            <div className="w-full flex items-center justify-center h-[260px] py-1">
-              <Model
-                type="anterior"
-                data={anteriorData}
-                highlightedColors={customColors}
-                style={{
-                  width: '125px',
-                  height: '250px',
-                  margin: '0 auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                svgStyle={{
-                  fill: 'rgba(255, 255, 255, 0.08)',
-                  overflow: 'visible',
-                  filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="glass-surface rounded-[24px] p-3 flex flex-col items-center border border-white/5 shadow-inner">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] mb-2">
-              Vista Posterior
-            </span>
-            <div className="w-full flex items-center justify-center h-[260px] py-1">
-              <Model
-                type="posterior"
-                data={posteriorData}
-                highlightedColors={customColors}
-                style={{
-                  width: '125px',
-                  height: '250px',
-                  margin: '0 auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                svgStyle={{
-                  fill: 'rgba(255, 255, 255, 0.08)',
-                  overflow: 'visible',
-                  filter: 'drop-shadow(0 2px 8px rgba(0,0,0,0.4))',
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        <SymmetryAnatomyModel
+          muscleTiers={muscleTiers}
+          onSelectMuscle={(muscle) => setSelectedMuscleForDetail(muscle)}
+          selectedMuscle={selectedMuscleForDetail}
+        />
       </div>
 
       {/* 3. Muscle Group Tiers Breakdown Grid with Badges */}
@@ -287,14 +221,18 @@ export const AnatomyRanksTab: React.FC = () => {
             return (
               <div
                 key={muscle}
-                className="glass-surface rounded-[22px] p-3 flex items-center justify-between border-t-white/10 gap-3"
+                onClick={() => setSelectedMuscleForDetail(muscle)}
+                className="glass-surface rounded-[22px] p-3 flex items-center justify-between border-t-white/10 gap-3 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all group"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <span className="text-xl shrink-0">{config.icon}</span>
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-xs font-black text-[#F5F5F7] truncate">{config.name}</h4>
+                    <h4 className="text-xs font-black text-[#F5F5F7] group-hover:text-white truncate">
+                      {config.name}
+                    </h4>
                     <p className="text-[10px] font-bold text-[#8E8E93] truncate">
-                      {tierInfo.percentile ? `${tierInfo.percentile} • ` : ''}{tierInfo.description}
+                      {tierInfo.percentile ? `${tierInfo.percentile} • ` : ''}
+                      {tierInfo.description}
                     </p>
                   </div>
                 </div>
@@ -319,6 +257,10 @@ export const AnatomyRanksTab: React.FC = () => {
                       className="w-full h-full object-contain"
                     />
                   </div>
+
+                  <span className="text-xs text-[#8E8E93] group-hover:text-white transition-colors pl-0.5">
+                    ›
+                  </span>
                 </div>
               </div>
             );
@@ -418,6 +360,12 @@ export const AnatomyRanksTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* 5. Symmetry Muscle Detail Sheet (Image 5) */}
+      <SymmetryMuscleDetailSheet
+        muscle={selectedMuscleForDetail}
+        onClose={() => setSelectedMuscleForDetail(null)}
+      />
     </div>
   );
 };

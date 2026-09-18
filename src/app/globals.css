@@ -1027,3 +1027,19 @@ input[type='number'] {
   image-rendering: -webkit-optimize-contrast;
 }
 
+/* ========================================================
+   Countdown Timer Progress Bar for Toasts & In-App Alerts
+   ======================================================== */
+@keyframes shrinkWidth {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.animate-shrink-width {
+  animation: shrinkWidth linear forwards;
+}
+

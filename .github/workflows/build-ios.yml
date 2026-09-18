@@ -58,26 +58,37 @@ jobs:
       - name: Release IPA on GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.3.0
-          name: HUBos Super-App v2.3.0 (SideStore IPA)
+          tag_name: v2.5.0
+          name: HUBos Super-App v2.5.0 (SideStore IPA)
           body: |
-            ## 🚀 HUBos Super-App v2.3.0 (SideStore & AltStore Compatible)
+            ## 🚀 HUBos Super-App v2.5.0 (SideStore & AltStore Compatible)
             
             **HUBos** es un contenedor modular unificado para iOS que agrupa múltiples aplicaciones completas e independientes en un único archivo `.ipa`, permitiendo superar el límite estricto de 3 aplicaciones activas de SideStore / AltStore.
 
-            ### 🌟 Novedades en Aesthetix v2.3:
-            - **Rediseño Completo de Gym en Vivo (Estilo Symmetry & Glassmorphism)**:
-              - Carrusel superior de bolas ("burbujas de ejercicios") con miniaturas y selección activa con anillo luminoso.
-              - Visualizador central con animación GIF grande sobre fondo negro puro OLED sin recuadros grises.
-              - Fila de acciones rápidas: insignia de rango, botón `▶ Tutorial` con técnica guiada, `🔄 Reemplazar` ejercicio y `✎ Notas`.
-              - Tabla de series con columnas `SERIE`, `PREVIA`, `KG`, `REPES` y botón circular de check `✓` reactivo.
-              - Botón ancho `+ Añadir serie` al estilo oficial de Symmetry.
-            - **Bloqueo Total de Scroll de Fondo en iOS (WebKit)**:
-              - Aislamiento de gestos táctiles y contención de overscroll en todos los modales para evitar que la pantalla trasera se desplace o rebote.
-            - **Corrección Definitiva de Imágenes de Ejercicios**:
-              - Enlace absoluto al CDN con fallback inteligente anti-error, eliminando el icono `[?]` de iOS.
-            - **Protocolo PPL x UL & Rangos Symmetry (25 Niveles)**:
-              - Rutina oficial de 5 días de Samuel con 27 ejercicios y volumen acumulado anual de 1,1 M kg (+1,1 M% ↑).
+            ### 🌟 Novedades en HUBos & Aesthetix v2.5.0:
+            - **Notificaciones In-App con Barra de Tiempo Animada (`ToastNotification.tsx`)**:
+              - Temporizador automático de 3.5s con barra decreciente interactiva estilo RecompAI.
+              - Eliminado el bug de notificaciones permanentes. Botón de descarte manual `✕`.
+            - **Gym en Vivo con Cero Filtraciones (`LiveWorkoutFullscreen.tsx`)**:
+              - Fondo negro puro OLED `#000000` con `pt-[max(env(safe-area-inset-top),44px)]` cubriendo el 100% de la pantalla y la barra de estado de iOS.
+              - Botón de minimizar perfectamente centrado y carrusel de ejercicios con margen vertical generoso para anillos circulares sin cortes.
+            - **Motor de Audio Biomecánico Nativo (`soundEffects.ts`)**:
+              - Efecto sonoro "tic" táctil al completar una serie.
+              - Chime armónico doble de campana de gimnasio al finalizar los 2:30 min de descanso.
+              - Fanfarria de arpegio ascendente al superar un récord personal (PR).
+            - **Detección de Récords Personales (PR) en Tiempo Real**:
+              - Detección instantánea durante el entreno al superar cargas anteriores, con toast dorado conmemorativo y fanfarria auditiva.
+            - **Resumen Celebratorio de Entrenamiento con IA y Memoria (`WorkoutSummaryCelebrationModal.tsx`)**:
+              - Modal de finalización con confeti, métricas de volumen y series, racha actualizada a 7 días y análisis IA de sobrecarga progresiva comparando peso y reps contra la sesión anterior del mismo día.
+            - **Dock de Navegación con Auto-Ocultamiento Inteligente**:
+              - El dock inferior flotante se oculta automáticamente (`translate-y-28 opacity-0`) cada vez que se abre cualquier modal o bottom sheet, evitando colisiones con hojas como "Registrar Peso & Medidas".
+            - **Récords Personales Colapsables en Perfil**:
+              - Visualización de 4 PRs por defecto con botón interactivo de expansión/colapso.
+            - **Modelo Anatómico Humano Oficial Symmetry & Visor de Ejercicios (`SymmetryAnatomyModel.tsx` & `SymmetryMuscleDetailSheet.tsx`)**:
+              - Silueta atlética SVG de alta precisión sobre fondo OLED negro con contornos blancos definidos.
+              - Vistas frontal y posterior alineadas lado a lado, iluminando cada grupo muscular con el color específico de su liga en Symmetry.
+              - Al pulsar cualquier músculo (o tarjeta de la lista), se despliega la lámina de detalle con la insignia oficial y las tarjetas de ejercicios con sus respectivos rangos individuales.
+            - **Racha de 7 Días Configurada**: Racha activa fijada en 7 días con 112 entrenamientos y 1,1 M kg anuales.
 
             ### 📦 Módulos Incluidos en este Release:
             1. **🏠 HUB Launcher Dashboard**: Panel central con telemetría en vivo, acceso rápido con IA (Gemini 2.0 Flash) y conmutador flotante con 0ms de latencia.

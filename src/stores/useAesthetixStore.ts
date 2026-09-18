@@ -89,7 +89,19 @@ interface AesthetixState {
   weightUnit: 'kg' | 'lbs';
   setWeightUnit: (unit: 'kg' | 'lbs') => void;
 
+  // Active modal tracking for scroll lock and navigation dock auto-hide
+  activeModalCount: number;
+  openModal: () => void;
+  closeModal: () => void;
+
   // Computed / Helpers
+  recordPrDirectly: (
+    exerciseId: string,
+    exerciseName: string,
+    weightKg: number,
+    reps: number
+  ) => { isNewPr: boolean; previousMax: number };
+  getPreviousSessionForDay: (routineName?: string, dayName?: string) => WorkoutHistoryItem | null;
   getMuscleTiers: () => Record<AnatomicalMuscle, MuscleTierInfo>;
   getOverallRank: () => { overallTier: MuscleTierInfo; averageLevel: number; progressToNext: number };
 }
@@ -1064,6 +1076,52 @@ export const useAesthetixStore = create<AesthetixState>()(
 
       weightUnit: 'kg',
       setWeightUnit: (unit) => set({ weightUnit: unit }),
+
+      activeModalCount: 0,
+      openModal: () => set((s) => ({ activeModalCount: s.activeModalCount + 1 })),
+      closeModal: () => set((s) => ({ activeModalCount: Math.max(0, s.activeModalCount - 1) })),
+
+      recordPrDirectly: (exerciseId, exerciseName, weightKg, reps) => {
+        const state = get();
+        if (weightKg <= 0 || reps <= 0) return { isNewPr: false, previousMax: 0 };
+        const estimated1RM = calculate1RM(weightKg, reps);
+        const currentPr = state.prs[exerciseId];
+        const previousMax = currentPr?.maxWeightKg || 0;
+
+        // Is it a genuine new personal record?
+        const isBetterWeight = weightKg > previousMax;
+        const isBetter1RM = !currentPr || estimated1RM > currentPr.estimated1RM;
+
+        if (isBetterWeight || isBetter1RM) {
+          const dateStr = new Date().toISOString().split('T')[0];
+          const newPr: PersonalRecord = {
+            exerciseId,
+            exerciseName,
+            maxWeightKg: Math.max(weightKg, previousMax),
+            maxReps: reps,
+            estimated1RM: Math.max(estimated1RM, currentPr?.estimated1RM || 0),
+            date: dateStr,
+          };
+          set({
+            prs: {
+              ...state.prs,
+              [exerciseId]: newPr,
+            },
+          });
+          return { isNewPr: true, previousMax };
+        }
+        return { isNewPr: false, previousMax };
+      },
+
+      getPreviousSessionForDay: (routineName, dayName) => {
+        const state = get();
+        const found = state.history.find(
+          (h) =>
+            (!routineName || h.routineName === routineName) &&
+            (!dayName || h.dayName === dayName)
+        );
+        return found || null;
+      },
 
       // Dynamic Tier Calculation with Symmetry Baselines
       getMuscleTiers: () => {
