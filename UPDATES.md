@@ -2,6 +2,47 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.6.0] - 2026-09-20 (HUBos v2.6: Migración Integral de Sistema de Diseño a Claymorphism 3D Táctil)
+
+### 🌟 Rediseño Visual & Nueva Arquitectura Claymorphism
+- **Instalación Oficial de la Skill `claymorphism` y Retiro de `glassmorphism`**:
+  - Sustitución completa de las directrices y assets de diseño: se instaló la skill oficial en `.agents/skills/claymorphism/` y se eliminó la skill anterior de `glassmorphism`.
+  - Transición desde el estilo de vidrio translúcido hacia una estética tridimensional moderna, inflada, mullida y táctil tipo plastilina/arcilla mate (*Claymorphism*).
+- **Tokens y Clases Maestras Claymorphism en `globals.css`**:
+  - **Superficies Base 3D (`.clay-surface`, `.clay-surface-elevated`)**:
+    - Fondos oscuros mate elegantes (`#191922`, `#20202B`).
+    - Sistema de doble sombra interior: resalte de luz cenital arriba-izquierda (`inset 2px 2px 5px rgba(255, 255, 255, 0.10)`) y hendidura de profundidad abajo-derecha (`inset -3px -3px 7px rgba(0, 0, 0, 0.55)`).
+    - Sombras exteriores suaves y multicapa para una sensación de volumen y flotabilidad orgánica (`0 14px 30px -6px rgba(0, 0, 0, 0.55)`).
+  - **Píldoras y Controles Táctiles (`.clay-pill`, `.clay-pill-active`)**:
+    - Acabados redondeados con feedback físico de compresión al presionar (`:active { transform: scale(0.96) }`) con inversión de sombras para simular deformación elástica.
+  - **Botones Volumétricos de Alta Intensidad Cromática**:
+    - `.clay-btn-emerald` (`#16A34A`): Botón de acción principal, inicio de entrenamientos y confirmaciones.
+    - `.clay-btn-primary` (`#3B82F6`): Acciones destacadas y selector de apps activas.
+    - `.clay-btn-coral` (`#DC2626`): Botón de Gym en Vivo y acciones críticas con pulso de advertencia.
+    - `.clay-btn-amber` (`#D97706`) & `.clay-btn-purple` (`#9333EA`): Acentos temáticos para métricas, suscripciones y rangos.
+  - **Estrategia de Compatibilidad Universal (Aliasing)**:
+    - Se aliaron las clases heredadas `.glass-*` directamente hacia sus equivalentes `.clay-*`, logrando que más de 40 componentes en todas las sub-apps (RecompAI, Suscripciones, Horarios y Aesthetix) adoptasen instantáneamente la volumetría de arcilla sin roturas ni regresiones visuales.
+- **Rediseño del Dashboard Central de HUBos (`HubDashboard.tsx`)**:
+  - Conversión del Bento Grid principal: tarjetas de aplicaciones modulares (RecompAI, Suscripciones, Horarios, Aesthetix) actualizadas con radios generosos `rounded-[32px]`, píldoras de volumen y botones esponjosos `clay-btn-emerald` con estado hover/press.
+  - Reemplazo de halos de vidrio translúcido por iluminación difusa volumétrica adaptada a cada app.
+  - Tarjeta de utilidades de sistema y Gemini IA modernizada con botones táctiles.
+- **Rediseño de Barras de Navegación Flotantes**:
+  - `FloatingHubBar.tsx`: Cápsula de navegación flotante convertida en `.clay-surface-elevated` con estado activo `.clay-btn-primary` y disparador rápido de IA `.clay-btn-emerald`.
+  - `AesthetixView.tsx`: Dock de navegación inferior flotante actualizado a `.clay-surface-elevated` y `.clay-pill-active` con acentos cromáticos individuales.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `.agents/skills/claymorphism/SKILL.md` - Directrices oficiales del sistema de diseño Claymorphism.
+- `[CREADO]` `.agents/skills/claymorphism/DESIGN.md` - Definición de tokens cromáticos, tipografía y escalas.
+- `[ELIMINADO]` `.agents/skills/glassmorphism/` - Retiro definitivo de la skill obsoleta.
+- `[MODIFICADO]` `src/app/globals.css` - Implementación de tokens de doble sombra, elevaciones y botones claymorphism.
+- `[MODIFICADO]` `src/components/navigation/FloatingHubBar.tsx` - Navegación global adaptada a claymorphism táctil.
+- `[MODIFICADO]` `src/components/hub/HubDashboard.tsx` - Dashboard principal con bento cards y píldoras claymorphic.
+- `[MODIFICADO]` `src/components/aesthetix/AesthetixView.tsx` - Dock flotante inferior actualizado con píldoras táctiles.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Actualización de versión de release a v2.6.0.
+- `[MODIFICADO]` `UPDATES.md` - Registro detallado de la versión v2.6.0.
+
+---
+
 ## 🚀 [v2.5.0] - 2026-09-18 (HUBos & Aesthetix v2.5: Notificaciones con Barra de Tiempo, Audio Biomecánico Web Audio, Detección de PRs en Vivo, Resumen con Sobrecarga Progresiva IA, Auto-Ocultamiento de Dock y Modelo Anatómico Oficial Symmetry)
 
 ### 🌟 Nuevas Funcionalidades, Experiencia de Audio & Correcciones Visuales

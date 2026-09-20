@@ -1,34 +1,33 @@
 ---
-name: glassmorphism
-description: Frosted glass effect with translucent layers, subtle blur, and luminous borders for depth and modern elegance.
+name: claymorphism
+description: Soft, rounded 3D-like shapes mimicking malleable clay with playful, puffy elements and colorful surfaces.
 license: MIT
 metadata:
   author: typeui.sh
 ---
 
 <!-- TYPEUI_SH_MANAGED_START -->
-# Glassmorphism Design System Skill (Universal)
+# claymorphism Design System Skill (Universal)
 
 ## Mission
-You are an expert design-system guideline author for Glassmorphism.
+You are an expert design-system guideline author for claymorphism.
 Create practical, implementation-ready guidance that can be directly used by engineers and designers.
 
 ## Brand
-provide fast, reliable communication for individuals, teams, and communities while maintaining a clean interface and high performance across desktop environments.
+a modern UI trend characterized by soft, rounded, 3D-like, "puffy" shapes that mimic malleable, colorful clay.
 
 ## Style Foundations
-- Visual style: clean, high-contrast, bold, enterprise, liquidglass effect, glassmorphism
-- Typography scale: mobile-first compact scale | Fonts: primary=Plus Jakarta Sans, display=Plus Jakarta Sans, mono=JetBrains Mono | weights=100, 200, 300, 400, 500, 600, 700, 800, 900
-- Color palette: primary, neutral, success, warning, danger, info, surface/subtle layers | Tokens: primary=#1856FF, secondary=#3A344E, success=#07CA6B, warning=#E89558, danger=#EA2143, surface=#FFFFFF, text=#141414
-- Spacing scale: comfortable density mode
+- Visual style: modern, high-contrast, playful
+- Typography scale: desktop-first expressive scale | Fonts: primary=Montserrat, display=Poppins, mono=JetBrains Mono | weights=100, 200, 300, 400, 500, 600, 700, 800, 900
+- Color palette: primary, neutral, success, warning, danger | Tokens: primary=#3B82F6, secondary=#FFFFFF, success=#16A34A, warning=#D97706, danger=#DC2626, surface=#FFFFFF, text=#1C398E
+- Spacing scale: 4/8/12/16/24/32
 
-- bento cards
 
 ## Accessibility
 WCAG 2.2 AA, keyboard-first interactions, visible focus states
 
 ## Writing Tone
-concise, confident, helpful, clear, friendly, professional
+concise, confident, helpful
 
 ## Rules: Do
 - prefer semantic tokens over raw values
@@ -38,7 +37,6 @@ concise, confident, helpful, clear, friendly, professional
 ## Rules: Don't
 - avoid low contrast text
 - avoid inconsistent spacing rhythm
-- avoid decorative motion without purpose
 - avoid ambiguous labels
 - avoid mixing multiple visual metaphors
 

@@ -938,73 +938,212 @@ input[type='number'] {
 }
 
 /* ============================================
-   Glassmorphism Design System (v1.8.0)
+   Claymorphism Design System (v2.6.0)
+   Soft, rounded 3D-like shapes mimicking malleable clay with
+   playful, puffy elements, dual inner shadows and rich tactile surfaces.
    ============================================ */
+
+/* 1. Base Clay Surfaces */
+.clay-surface,
 .glass-surface {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  background: #191922;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 
+    inset 2px 2px 5px rgba(255, 255, 255, 0.10),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
+    0 14px 30px -6px rgba(0, 0, 0, 0.55),
+    0 6px 14px -2px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
 }
 
+.clay-surface-elevated,
 .glass-surface-elevated {
-  background: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-top: 1px solid rgba(255, 255, 255, 0.24);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+  background: #20202B;
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 2.5px 2.5px 6px rgba(255, 255, 255, 0.14),
+    inset -4px -4px 9px rgba(0, 0, 0, 0.65),
+    0 20px 42px -6px rgba(0, 0, 0, 0.65),
+    0 8px 18px -3px rgba(0, 0, 0, 0.45);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
 }
 
+/* 2. Clay Pills & Interactive Tiles */
+.clay-pill,
 .glass-pill {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: #22222E;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 
+    inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.12),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+    0 6px 14px -2px rgba(0, 0, 0, 0.35);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.clay-pill:active,
 .glass-pill:active {
   transform: scale(0.96);
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.65),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
+.clay-pill-active,
 .glass-pill-active {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-top: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: #2C2C3C;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.22),
+    inset -2px -2px 5px rgba(0, 0, 0, 0.5),
+    0 6px 18px -2px rgba(0, 0, 0, 0.45);
 }
 
+/* 3. Clay Floating Cards */
+.clay-floating-card,
 .glass-floating-card {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-top: 1px solid rgba(255, 255, 255, 0.20);
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  background: #1D1D27;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
+    0 16px 32px -6px rgba(0, 0, 0, 0.55);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
 }
 
+.clay-floating-card:hover,
 .glass-floating-card:hover {
-  border-color: rgba(255, 255, 255, 0.22);
-  box-shadow: 0 14px 36px -5px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 
+    inset 2px 2px 6px rgba(255, 255, 255, 0.18),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
+    0 22px 44px -8px rgba(0, 0, 0, 0.65);
 }
 
+/* 4. Colorful Puffy Clay Buttons */
+.clay-btn-primary {
+  background: #3B82F6;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
+    0 8px 20px -4px rgba(59, 130, 246, 0.5);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clay-btn-primary:active {
+  transform: scale(0.96);
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
+    0 3px 8px rgba(59, 130, 246, 0.3);
+}
+
+.clay-btn-emerald {
+  background: #16A34A;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
+    0 8px 20px -4px rgba(22, 163, 74, 0.5);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clay-btn-emerald:active {
+  transform: scale(0.96);
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
+    0 3px 8px rgba(22, 163, 74, 0.3);
+}
+
+.clay-btn-coral {
+  background: #DC2626;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
+    0 8px 20px -4px rgba(220, 38, 38, 0.5);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clay-btn-coral:active {
+  transform: scale(0.96);
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
+    0 3px 8px rgba(220, 38, 38, 0.3);
+}
+
+.clay-btn-amber {
+  background: #D97706;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
+    0 8px 20px -4px rgba(217, 119, 6, 0.5);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clay-btn-amber:active {
+  transform: scale(0.96);
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
+    0 3px 8px rgba(217, 119, 6, 0.3);
+}
+
+.clay-btn-purple {
+  background: #9333EA;
+  color: #FFFFFF;
+  border-radius: 9999px;
+  box-shadow: 
+    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
+    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
+    0 8px 20px -4px rgba(147, 51, 234, 0.5);
+  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.clay-btn-purple:active {
+  transform: scale(0.96);
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
+    0 3px 8px rgba(147, 51, 234, 0.3);
+}
+
+/* 5. Clay Glow / Aura Shadows */
+.clay-glow-emerald,
 .glass-glow-emerald {
-  box-shadow: 0 0 35px -5px rgba(52, 199, 89, 0.25);
+  box-shadow: 
+    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
+    0 12px 30px -4px rgba(22, 163, 74, 0.4);
 }
 
+.clay-glow-cyan,
 .glass-glow-cyan {
-  box-shadow: 0 0 35px -5px rgba(100, 210, 255, 0.25);
+  box-shadow: 
+    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
+    0 12px 30px -4px rgba(59, 130, 246, 0.4);
 }
 
+.clay-glow-purple,
 .glass-glow-purple {
-  box-shadow: 0 0 35px -5px rgba(191, 90, 242, 0.25);
+  box-shadow: 
+    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
+    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
+    0 12px 30px -4px rgba(147, 51, 234, 0.4);
 }
 
 /* ========================================================
@@ -1025,21 +1164,5 @@ input[type='number'] {
   filter: invert(1) contrast(1.12) brightness(1.02);
   mix-blend-mode: screen;
   image-rendering: -webkit-optimize-contrast;
-}
-
-/* ========================================================
-   Countdown Timer Progress Bar for Toasts & In-App Alerts
-   ======================================================== */
-@keyframes shrinkWidth {
-  from {
-    width: 100%;
-  }
-  to {
-    width: 0%;
-  }
-}
-
-.animate-shrink-width {
-  animation: shrinkWidth linear forwards;
 }
 

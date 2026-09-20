@@ -92,9 +92,9 @@ export const AesthetixView: React.FC = () => {
         {activeTab === 'profile' && <ProfileHistoryTab />}
       </div>
 
-      {/* Floating Bottom Glass Navigation Dock */}
+      {/* Floating Bottom Clay Navigation Dock */}
       <nav
-        className={`fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto glass-surface-elevated rounded-full p-1.5 flex items-center justify-around border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.6)] backdrop-blur-3xl transition-all duration-300 ${
+        className={`fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto clay-surface-elevated rounded-full p-1.5 flex items-center justify-around transition-all duration-300 ${
           isAnyModalOpen ? 'translate-y-28 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
         }`}
       >
@@ -102,7 +102,7 @@ export const AesthetixView: React.FC = () => {
           onClick={() => setActiveTab('routines')}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
             activeTab === 'routines'
-              ? 'glass-pill-active text-[#34C759] border-[#34C759]/40 shadow-[0_0_15px_rgba(52,199,89,0.25)]'
+              ? 'clay-pill-active text-[#16A34A]'
               : 'text-[#8E8E93] hover:text-white'
           }`}
         >
@@ -114,7 +114,7 @@ export const AesthetixView: React.FC = () => {
           onClick={() => setActiveTab('exercises')}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
             activeTab === 'exercises'
-              ? 'glass-pill-active text-[#64D2FF] border-[#64D2FF]/40 shadow-[0_0_15px_rgba(100,210,255,0.25)]'
+              ? 'clay-pill-active text-[#3B82F6]'
               : 'text-[#8E8E93] hover:text-white'
           }`}
         >
@@ -131,9 +131,9 @@ export const AesthetixView: React.FC = () => {
               setIsStartWorkoutModalOpen(true);
             }
           }}
-          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
+          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 cursor-pointer ${
             activeSession
-              ? 'bg-[#FF375F] text-white shadow-[0_0_20px_rgba(255,55,95,0.5)] animate-pulse'
+              ? 'clay-btn-coral animate-pulse'
               : 'text-[#8E8E93] hover:text-white'
           }`}
         >
@@ -145,7 +145,7 @@ export const AesthetixView: React.FC = () => {
           onClick={() => setActiveTab('ranks')}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
             activeTab === 'ranks'
-              ? 'glass-pill-active text-[#FFD60A] border-[#FFD60A]/40 shadow-[0_0_15px_rgba(255,214,10,0.25)]'
+              ? 'clay-pill-active text-[#D97706]'
               : 'text-[#8E8E93] hover:text-white'
           }`}
         >
@@ -157,7 +157,7 @@ export const AesthetixView: React.FC = () => {
           onClick={() => setActiveTab('profile')}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
             activeTab === 'profile'
-              ? 'glass-pill-active text-[#BF5AF2] border-[#BF5AF2]/40 shadow-[0_0_15px_rgba(191,90,242,0.25)]'
+              ? 'clay-pill-active text-[#9333EA]'
               : 'text-[#8E8E93] hover:text-white'
           }`}
         >

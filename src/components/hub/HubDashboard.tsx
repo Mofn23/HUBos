@@ -36,18 +36,18 @@ export const HubDashboard: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col px-4 pt-16 pb-16 overflow-y-auto no-scrollbar animate-fade-in space-y-6 relative">
-      {/* Ambient Radial Glowing Orbs for Frosted Glass Refraction */}
+      {/* Ambient Soft Clay Lighting */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
-        <div className="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#34C759]/10 blur-[100px]" />
-        <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[110px]" />
-        <div className="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-[#0A84FF]/10 blur-[100px]" />
+        <div className="absolute -top-20 -left-20 w-96 h-96 rounded-full bg-[#16A34A]/5 blur-[120px]" />
+        <div className="absolute top-1/3 -right-20 w-96 h-96 rounded-full bg-[#3B82F6]/5 blur-[130px]" />
+        <div className="absolute -bottom-20 left-1/4 w-96 h-96 rounded-full bg-[#9333EA]/5 blur-[120px]" />
       </div>
 
       {/* 1. Top Header */}
       <div className="flex items-center justify-between relative z-10">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="inline-block w-2 h-2 rounded-full bg-[#34C759] shadow-[0_0_10px_#34C759]" />
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#16A34A] shadow-[0_0_10px_#16A34A]" />
             <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
               HUBos Suite
             </span>
@@ -62,7 +62,7 @@ export const HubDashboard: React.FC = () => {
 
         <button
           onClick={() => setIsSettingsOpen(true)}
-          className="glass-pill w-11 h-11 rounded-full flex items-center justify-center text-[#F5F5F7] hover:text-white hover:border-white/30 active:scale-90 transition-all shadow-md group"
+          className="clay-pill w-11 h-11 rounded-full flex items-center justify-center text-[#F5F5F7] hover:text-white active:scale-90 transition-all shadow-md group"
           title="Ajustes de HUBos"
         >
           <IconSettings className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
@@ -70,18 +70,18 @@ export const HubDashboard: React.FC = () => {
       </div>
 
       {/* 2. Global Status Bento Card */}
-      <div className="glass-surface rounded-[30px] p-5 space-y-4 relative z-10 border-t-white/20">
+      <div className="clay-surface rounded-[32px] p-5 space-y-4 relative z-10">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#34C759] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#34C759] shadow-[0_0_8px_#34C759]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16A34A] opacity-75" />
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#16A34A] shadow-[0_0_8px_#16A34A]" />
             </span>
             <span className="text-xs font-black text-[#F5F5F7] tracking-tight">
               Ecosistema Modular Conectado
             </span>
           </div>
-          <span className="px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-[#34C759] text-[11px] font-black backdrop-blur-md">
+          <span className="px-3 py-1 rounded-full clay-pill text-[#16A34A] text-[11px] font-black">
             SideStore IPA
           </span>
         </div>
@@ -90,7 +90,7 @@ export const HubDashboard: React.FC = () => {
         <div className="grid grid-cols-2 gap-3">
           <div
             onClick={() => setCurrentApp('recomp')}
-            className="glass-pill p-4 rounded-[22px] cursor-pointer hover:border-white/25 active:scale-98 transition-all space-y-1.5 group"
+            className="clay-pill p-4 rounded-[24px] cursor-pointer active:scale-98 transition-all space-y-1.5 group"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#8E8E93]">RecompAI</span>
@@ -100,7 +100,7 @@ export const HubDashboard: React.FC = () => {
               {Math.max(0, nutrition.calorieDifference)}{' '}
               <span className="text-xs font-bold text-[#8E8E93]">kcal rest.</span>
             </div>
-            <span className="text-[11px] font-black text-[#34C759] block truncate">
+            <span className="text-[11px] font-black text-[#16A34A] block truncate">
               {nutrition.status === 'deficit'
                 ? 'Déficit'
                 : nutrition.status === 'surplus'
@@ -112,7 +112,7 @@ export const HubDashboard: React.FC = () => {
 
           <div
             onClick={() => setCurrentApp('subs')}
-            className="glass-pill p-4 rounded-[22px] cursor-pointer hover:border-white/25 active:scale-98 transition-all space-y-1.5 group"
+            className="clay-pill p-4 rounded-[24px] cursor-pointer active:scale-98 transition-all space-y-1.5 group"
           >
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#8E8E93]">Suscripciones</span>
@@ -136,16 +136,16 @@ export const HubDashboard: React.FC = () => {
         <span className="text-[10px] font-bold text-[#636366]">4 activas</span>
       </div>
 
-      {/* 4. App Cards List (Bento Frosted Glass) */}
+      {/* 4. App Cards List (Claymorphism Bento) */}
       <div className="space-y-4 relative z-10">
         {/* App 1: Recomp AI */}
         <div
           onClick={() => setCurrentApp('recomp')}
-          className="glass-surface rounded-[30px] p-5 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_12px_40px_rgba(52,199,89,0.15)]"
+          className="clay-surface rounded-[32px] p-5 cursor-pointer active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_16px_36px_rgba(22,163,74,0.22)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-[22px] bg-white/[0.06] border border-white/15 backdrop-blur-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
+              <div className="w-14 h-14 rounded-[22px] clay-pill flex items-center justify-center text-3xl group-hover:scale-105 transition-transform">
                 🥑
               </div>
 
@@ -159,20 +159,20 @@ export const HubDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-4 py-2 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md group-hover:scale-105 transition-transform flex items-center gap-1">
+            <div className="clay-btn-emerald px-4 py-2 text-xs font-black flex items-center gap-1 cursor-pointer group-hover:scale-105 transition-transform">
               <span>Abrir</span>
               <span className="font-bold">→</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-white/5">
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
               💪 Racha: {streak?.currentStreak || 1}d
             </span>
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
               💧 {todayWater} / 10 vasos
             </span>
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#34C759]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#16A34A]">
               🎯 {targetCalories} kcal
             </span>
           </div>
@@ -181,11 +181,11 @@ export const HubDashboard: React.FC = () => {
         {/* App 2: Suscripciones */}
         <div
           onClick={() => setCurrentApp('subs')}
-          className="glass-surface rounded-[30px] p-5 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_12px_40px_rgba(191,90,242,0.15)]"
+          className="clay-surface rounded-[32px] p-5 cursor-pointer active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_16px_36px_rgba(147,51,234,0.22)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-[22px] bg-white/[0.06] border border-white/15 backdrop-blur-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
+              <div className="w-14 h-14 rounded-[22px] clay-pill flex items-center justify-center text-3xl group-hover:scale-105 transition-transform">
                 📺
               </div>
 
@@ -199,17 +199,17 @@ export const HubDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-4 py-2 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md group-hover:scale-105 transition-transform flex items-center gap-1">
+            <div className="clay-btn-emerald px-4 py-2 text-xs font-black flex items-center gap-1 cursor-pointer group-hover:scale-105 transition-transform">
               <span>Abrir</span>
               <span className="font-bold">→</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-white/5">
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
               💳 {formattedMonthly} / mes
             </span>
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#34C759]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#16A34A]">
               {financials.activeCount} servicios activos
             </span>
           </div>
@@ -218,11 +218,11 @@ export const HubDashboard: React.FC = () => {
         {/* App 3: Horarios & Rutinas */}
         <div
           onClick={() => setCurrentApp('schedule')}
-          className="glass-surface rounded-[30px] p-5 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_12px_40px_rgba(10,132,255,0.15)]"
+          className="clay-surface rounded-[32px] p-5 cursor-pointer active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_16px_36px_rgba(59,130,246,0.22)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-[22px] bg-white/[0.06] border border-white/15 backdrop-blur-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
+              <div className="w-14 h-14 rounded-[22px] clay-pill flex items-center justify-center text-3xl group-hover:scale-105 transition-transform">
                 📅
               </div>
 
@@ -236,24 +236,24 @@ export const HubDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-4 py-2 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md group-hover:scale-105 transition-transform flex items-center gap-1">
+            <div className="clay-btn-emerald px-4 py-2 text-xs font-black flex items-center gap-1 cursor-pointer group-hover:scale-105 transition-transform">
               <span>Abrir</span>
               <span className="font-bold">→</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-white/5">
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
               {nextClass.type === 'live'
                 ? `🔴 En curso: ${nextClass.subject?.name}`
                 : nextClass.type === 'upcoming'
                 ? `⏰ Próx: ${nextClass.subject?.name}`
                 : '🗓️ Sin clases hoy'}
             </span>
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#34C759]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#16A34A]">
               📝 {pendingTasksCount} pendiente{pendingTasksCount === 1 ? '' : 's'}
             </span>
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#8E8E93]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#8E8E93]">
               {subjects.length} materias
             </span>
           </div>
@@ -262,11 +262,11 @@ export const HubDashboard: React.FC = () => {
         {/* App 4: Aesthetix (Gym, 1.324 Ejercicios, Modo Gym & Rangos) */}
         <div
           onClick={() => setCurrentApp('aesthetix')}
-          className="glass-surface rounded-[30px] p-5 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_12px_40px_rgba(255,55,95,0.18)]"
+          className="clay-surface rounded-[32px] p-5 cursor-pointer active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_16px_36px_rgba(220,38,38,0.22)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-[22px] bg-white/[0.06] border border-white/15 backdrop-blur-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-105 transition-transform">
+              <div className="w-14 h-14 rounded-[22px] clay-pill flex items-center justify-center text-3xl group-hover:scale-105 transition-transform">
                 ⚡
               </div>
 
@@ -280,33 +280,33 @@ export const HubDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="px-4 py-2 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md group-hover:scale-105 transition-transform flex items-center gap-1">
+            <div className="clay-btn-emerald px-4 py-2 text-xs font-black flex items-center gap-1 cursor-pointer group-hover:scale-105 transition-transform">
               <span>Abrir</span>
               <span className="font-bold">→</span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 border-t border-white/5">
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#FF9500]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#D97706]">
               🔥 Racha: {aesthetixStreak}d
             </span>
             <span
-              className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black"
+              className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black"
               style={{ color: aesthetixRank.overallTier.color }}
             >
               👑 Rango: {aesthetixRank.overallTier.label}
             </span>
-            <span className="glass-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#64D2FF]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#3B82F6]">
               {aesthetixActiveSession ? '🔴 Sesión en curso' : '1.324 ejercicios'}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 5. System Utilities Card (Glassmorphism Minimalist) */}
-      <div className="glass-surface rounded-[26px] p-4.5 flex items-center justify-between relative z-10">
+      {/* 5. System Utilities Card (Claymorphism Minimalist) */}
+      <div className="clay-surface rounded-[26px] p-4.5 flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[16px] bg-white/[0.06] border border-white/10 flex items-center justify-center text-lg">
+          <div className="w-10 h-10 rounded-[16px] clay-pill flex items-center justify-center text-lg">
             ⚙️
           </div>
           <div>
@@ -317,7 +317,7 @@ export const HubDashboard: React.FC = () => {
 
         <button
           onClick={() => setIsSettingsOpen(true)}
-          className="glass-pill px-4 py-2 rounded-full text-xs font-black text-[#34C759] hover:text-white hover:border-white/30 active:scale-95 transition-all"
+          className="clay-btn-emerald px-4 py-2 text-xs font-black hover:brightness-110 active:scale-95 transition-all cursor-pointer"
         >
           Ajustes
         </button>
