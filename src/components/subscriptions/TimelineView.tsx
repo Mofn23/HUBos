@@ -20,7 +20,7 @@ export const TimelineView: React.FC = () => {
         <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
           Calendario Mensual de Cobros
         </h3>
-        <span className="text-[11px] text-[#34C759] font-bold">Día actual: {currentDay}</span>
+        <span className="text-[11px] text-[#DE7356] font-bold">Día actual: {currentDay}</span>
       </div>
 
       <div className="space-y-2.5">
@@ -31,22 +31,22 @@ export const TimelineView: React.FC = () => {
           return (
             <div
               key={sub.id}
-              className={`p-4 rounded-[22px] border flex items-center justify-between transition-all ${
+              className={`p-4 rounded-[22px] flex items-center justify-between transition-all ${
                 isToday
-                  ? 'bg-[#34C759]/10 border-[#34C759]/40 shadow-lg'
+                  ? 'clay-surface-elevated border border-[#DE7356]/40 shadow-[0_12px_30px_rgba(222,115,86,0.25)]'
                   : isPassed
-                  ? 'bg-[#141416] border-white/5 opacity-60'
-                  : 'bg-[#1C1C1E] border-white/5'
+                  ? 'clay-surface opacity-60'
+                  : 'clay-surface'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-11 h-11 rounded-2xl flex flex-col items-center justify-center font-bold ${
                     isToday
-                      ? 'bg-[#34C759] text-black shadow-md'
+                      ? 'clay-btn-accent text-white shadow-md'
                       : isPassed
-                      ? 'bg-white/5 text-[#8E8E93]'
-                      : 'bg-[#242426] text-[#F5F5F7]'
+                      ? 'clay-pill text-[#8E8E93]'
+                      : 'clay-pill text-[#F5F5F7]'
                   }`}
                 >
                   <span className="text-[8px] uppercase font-black">Día</span>
@@ -74,7 +74,7 @@ export const TimelineView: React.FC = () => {
                     paySubscription(sub.id);
                     showToast(`✅ Pago registrado: ${sub.name}`);
                   }}
-                  className="w-8 h-8 rounded-full bg-[#242426] hover:bg-[#34C759] hover:text-black flex items-center justify-center text-[#8E8E93] active:scale-90 transition-all"
+                  className="clay-pill w-9 h-9 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#DE7356] active:scale-90 transition-all cursor-pointer"
                   title="Marcar como pagado"
                 >
                   <IconCheck className="w-4 h-4" />

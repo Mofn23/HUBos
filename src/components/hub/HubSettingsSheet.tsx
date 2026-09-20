@@ -90,9 +90,9 @@ export const HubSettingsSheet: React.FC = () => {
       {/* Backdrop */}
       <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={() => setIsSettingsOpen(false)} />
 
-      {/* MonAI Settings Sheet */}
+      {/* Claymorphism Settings Sheet */}
       <div
-        className="relative bg-[#121214] border-t border-white/10 w-full max-w-md rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative clay-surface-elevated rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -105,7 +105,7 @@ export const HubSettingsSheet: React.FC = () => {
           </div>
           <button
             onClick={() => setIsSettingsOpen(false)}
-            className="w-10 h-10 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors"
+            className="w-10 h-10 rounded-full clay-pill flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-95 transition-all cursor-pointer"
           >
             <span className="text-base font-bold">✕</span>
           </button>
@@ -113,7 +113,7 @@ export const HubSettingsSheet: React.FC = () => {
 
         <form onSubmit={handleSaveGeneral} className="space-y-4 pt-1">
           {/* Card 1: User & Currency */}
-          <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-3">
+          <div className="p-4.5 rounded-[24px] clay-surface space-y-3">
             <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
               <span>👤</span>
               <span>Perfil y Moneda</span>
@@ -126,7 +126,7 @@ export const HubSettingsSheet: React.FC = () => {
                   type="text"
                   value={tempName}
                   onChange={(e) => setTempName(e.target.value)}
-                  className="input-field text-sm font-black"
+                  className="clay-pill px-3.5 py-2.5 text-sm font-black w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
                 />
               </div>
 
@@ -135,27 +135,27 @@ export const HubSettingsSheet: React.FC = () => {
                 <select
                   value={tempCurrency}
                   onChange={(e) => setTempCurrency(e.target.value)}
-                  className="input-field text-xs font-black h-12"
+                  className="clay-pill px-3 py-2.5 text-xs font-black w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
                 >
-                  <option value="COP">COP ($)</option>
-                  <option value="USD">USD ($)</option>
-                  <option value="EUR">EUR (€)</option>
-                  <option value="MXN">MXN ($)</option>
+                  <option value="COP" className="bg-[#191922] text-[#F5F5F7]">COP ($)</option>
+                  <option value="USD" className="bg-[#191922] text-[#F5F5F7]">USD ($)</option>
+                  <option value="EUR" className="bg-[#191922] text-[#F5F5F7]">EUR (€)</option>
+                  <option value="MXN" className="bg-[#191922] text-[#F5F5F7]">MXN ($)</option>
                 </select>
               </div>
             </div>
           </div>
 
           {/* Card 2: Gemini API Key */}
-          <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-2.5">
+          <div className="p-4.5 rounded-[24px] clay-surface space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
-                <IconSparkles className="w-4 h-4 text-[#34C759]" />
+                <IconSparkles className="w-4 h-4 text-[#DE7356]" />
                 <span>API Key de Gemini</span>
               </div>
               <span
-                className={`tag-pill text-[10px] font-black ${
-                  tempApiKey ? 'tag-pill-green' : 'tag-pill-coral'
+                className={`clay-pill px-3 py-1 text-[10px] font-black ${
+                  tempApiKey ? 'text-[#DE7356]' : 'text-[#DC2626]'
                 }`}
               >
                 {tempApiKey ? 'Activo' : 'Pendiente'}
@@ -167,14 +167,14 @@ export const HubSettingsSheet: React.FC = () => {
               value={tempApiKey}
               onChange={(e) => setTempApiKey(e.target.value)}
               placeholder="AQ.Ab8..."
-              className="input-field tracking-widest text-xs"
+              className="clay-pill px-3.5 py-2.5 tracking-widest text-xs w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
             />
           </div>
 
           {/* Card 3: Notificaciones */}
-          <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
+          <div className="p-4.5 rounded-[24px] clay-surface flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#242426] flex items-center justify-center text-base">
+              <div className="w-10 h-10 rounded-full clay-pill flex items-center justify-center text-base">
                 🔔
               </div>
               <div>
@@ -186,14 +186,14 @@ export const HubSettingsSheet: React.FC = () => {
             <button
               type="button"
               onClick={handleTestNotification}
-              className="px-3 py-1.5 rounded-full bg-[#242426] border border-white/10 text-xs font-black text-[#34C759] active:scale-90 transition-transform"
+              className="clay-pill px-3.5 py-2 text-xs font-black text-[#DE7356] active:scale-90 transition-transform cursor-pointer"
             >
               Probar
             </button>
           </div>
 
           {/* Card 4: Backup y Limpieza */}
-          <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-2.5">
+          <div className="p-4.5 rounded-[24px] clay-surface space-y-2.5">
             <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
               <span>📦</span>
               <span>Copias de Seguridad & Datos</span>
@@ -203,7 +203,7 @@ export const HubSettingsSheet: React.FC = () => {
               <button
                 type="button"
                 onClick={handleExportBackup}
-                className="py-2.5 px-2 rounded-xl bg-[#242426] text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                className="clay-pill py-2.5 px-2 text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
               >
                 <span>📤</span>
                 <span>Exportar</span>
@@ -212,7 +212,7 @@ export const HubSettingsSheet: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleResetData('all')}
-                className="py-2.5 px-2 rounded-xl bg-[#242426] text-xs font-extrabold text-[#E8505B] flex items-center justify-center gap-1.5 active:scale-95 transition-all"
+                className="clay-pill py-2.5 px-2 text-xs font-extrabold text-[#DC2626] flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
               >
                 <IconTrash className="w-3.5 h-3.5" />
                 <span>Restablecer</span>
@@ -224,7 +224,7 @@ export const HubSettingsSheet: React.FC = () => {
           <div className="pt-2 pb-6">
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] active:scale-95 transition-all"
+              className="clay-btn-emerald w-full py-4 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer"
             >
               <span>✓</span>
               <span>Guardar Ajustes</span>

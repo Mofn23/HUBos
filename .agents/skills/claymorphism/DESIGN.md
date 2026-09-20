@@ -3,12 +3,13 @@ name: Claymorphism
 colors:
   primary: "#3B82F6"
   secondary: "#FFFFFF"
-  success: "#16A34A"
+  success: "#DE7356"
+  accent: "#DE7356"
   warning: "#D97706"
   danger: "#DC2626"
-  surface: "#FFFFFF"
-  text: "#1C398E"
-  neutral: "#FFFFFF"
+  surface: "#191922"
+  text: "#F5F5F7"
+  neutral: "#20202B"
 typography:
   h1:
     fontFamily: "Poppins"

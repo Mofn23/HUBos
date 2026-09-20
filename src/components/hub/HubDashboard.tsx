@@ -100,7 +100,7 @@ export const HubDashboard: React.FC = () => {
               {Math.max(0, nutrition.calorieDifference)}{' '}
               <span className="text-xs font-bold text-[#8E8E93]">kcal rest.</span>
             </div>
-            <span className="text-[11px] font-black text-[#16A34A] block truncate">
+            <span className="text-[11px] font-black text-[#DE7356] block truncate">
               {nutrition.status === 'deficit'
                 ? 'Déficit'
                 : nutrition.status === 'surplus'
@@ -141,7 +141,7 @@ export const HubDashboard: React.FC = () => {
         {/* App 1: Recomp AI */}
         <div
           onClick={() => setCurrentApp('recomp')}
-          className="clay-surface rounded-[32px] p-5 cursor-pointer active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_16px_36px_rgba(22,163,74,0.22)]"
+          className="clay-surface rounded-[32px] p-5 cursor-pointer active:scale-[0.98] transition-all space-y-4 group hover:shadow-[0_16px_36px_rgba(222,115,86,0.25)]"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3.5">
@@ -172,7 +172,7 @@ export const HubDashboard: React.FC = () => {
             <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
               💧 {todayWater} / 10 vasos
             </span>
-            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#16A34A]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#DE7356]">
               🎯 {targetCalories} kcal
             </span>
           </div>
@@ -209,7 +209,7 @@ export const HubDashboard: React.FC = () => {
             <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
               💳 {formattedMonthly} / mes
             </span>
-            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#16A34A]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#DE7356]">
               {financials.activeCount} servicios activos
             </span>
           </div>
@@ -250,7 +250,7 @@ export const HubDashboard: React.FC = () => {
                 ? `⏰ Próx: ${nextClass.subject?.name}`
                 : '🗓️ Sin clases hoy'}
             </span>
-            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#16A34A]">
+            <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#DE7356]">
               📝 {pendingTasksCount} pendiente{pendingTasksCount === 1 ? '' : 's'}
             </span>
             <span className="clay-pill shrink-0 px-3 py-1 rounded-full text-xs font-black text-[#8E8E93]">

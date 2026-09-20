@@ -102,7 +102,7 @@ export const AesthetixView: React.FC = () => {
           onClick={() => setActiveTab('routines')}
           className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
             activeTab === 'routines'
-              ? 'clay-pill-active text-[#16A34A]'
+              ? 'clay-pill-active text-[#DE7356]'
               : 'text-[#8E8E93] hover:text-white'
           }`}
         >

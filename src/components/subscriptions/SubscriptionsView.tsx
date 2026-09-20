@@ -47,7 +47,7 @@ export const SubscriptionsView: React.FC = () => {
         {/* Return to HUB Button */}
         <button
           onClick={() => setCurrentApp('hub')}
-          className="px-4 py-2.5 rounded-full bg-[#1C1C1E] border border-white/10 text-sm font-black text-[#F5F5F7] flex items-center gap-2 active:scale-95 transition-transform"
+          className="clay-pill px-4 py-2.5 rounded-full text-sm font-black text-[#F5F5F7] flex items-center gap-2 active:scale-95 transition-transform cursor-pointer"
         >
           <span>🏠</span>
           <span>Volver al HUB</span>
@@ -56,7 +56,7 @@ export const SubscriptionsView: React.FC = () => {
         {/* Top Right Settings Icon */}
         <button
           onClick={() => setIsSettingsOpen(true)}
-          className="w-11 h-11 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#F5F5F7] hover:text-white active:scale-95 transition-all shadow-sm"
+          className="clay-pill w-11 h-11 rounded-full flex items-center justify-center text-[#F5F5F7] hover:text-white active:scale-95 transition-all cursor-pointer"
           title="Ajustes de Suscripciones"
         >
           <IconSettings className="w-5 h-5" />
@@ -66,7 +66,7 @@ export const SubscriptionsView: React.FC = () => {
       {/* 2. Two Side-by-Side Financial Cost Cards */}
       <div className="grid grid-cols-2 gap-3">
         {/* Costo Mensual */}
-        <div className="p-5 rounded-[26px] bg-[#1C1C1E] border border-white/5 space-y-1 shadow-sm">
+        <div className="clay-surface p-5 rounded-[28px] space-y-1">
           <span className="text-xs font-bold text-[#8E8E93]">Costo Mensual</span>
           <div className="text-2xl font-black text-[#F5F5F7] tracking-tight">
             {formattedMonthly}
@@ -75,7 +75,7 @@ export const SubscriptionsView: React.FC = () => {
         </div>
 
         {/* Costo Anual */}
-        <div className="p-5 rounded-[26px] bg-[#1C1C1E] border border-white/5 space-y-1 shadow-sm">
+        <div className="clay-surface p-5 rounded-[28px] space-y-1">
           <span className="text-xs font-bold text-[#8E8E93]">Costo Anual</span>
           <div className="text-2xl font-black text-[#F5F5F7] tracking-tight">
             {formattedYearly}
@@ -92,10 +92,10 @@ export const SubscriptionsView: React.FC = () => {
             <button
               key={t.id}
               onClick={() => setCurrentTab(t.id)}
-              className={`px-4 py-2.5 rounded-full text-xs font-black flex items-center gap-1.5 whitespace-nowrap transition-all active:scale-95 shrink-0 min-h-[38px] ${
+              className={`px-4 py-2.5 rounded-full text-xs font-black flex items-center gap-1.5 whitespace-nowrap transition-all active:scale-95 shrink-0 min-h-[38px] cursor-pointer ${
                 isActive
-                  ? 'bg-[#34C759] text-white shadow-md'
-                  : 'bg-[#1C1C1E] border border-white/5 text-[#8E8E93] hover:text-[#F5F5F7]'
+                  ? 'clay-btn-accent text-white'
+                  : 'clay-pill text-[#8E8E93] hover:text-[#F5F5F7]'
               }`}
             >
               <span>{t.label}</span>
@@ -108,7 +108,7 @@ export const SubscriptionsView: React.FC = () => {
       {/* 4. Big Add Subscription Button */}
       <button
         onClick={handleOpenAdd}
-        className="w-full py-4 rounded-2xl bg-[#1C1C1E] border border-white/10 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-98 transition-all shadow-sm"
+        className="clay-btn-accent w-full py-4 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-98 transition-all cursor-pointer"
       >
         <span className="text-base font-bold">+</span>
         <span>Agregar Suscripción</span>

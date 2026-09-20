@@ -25,7 +25,7 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
 
   if (subscriptions.length === 0) {
     return (
-      <div className="p-8 rounded-[28px] bg-[#1C1C1E] border border-dashed border-white/10 text-center text-xs text-[#8E8E93] space-y-2">
+      <div className="p-8 rounded-[28px] clay-surface text-center text-xs text-[#8E8E93] space-y-2">
         <span className="text-3xl">📺</span>
         <h4 className="text-sm font-extrabold text-[#F5F5F7]">Sin suscripciones activas</h4>
         <p>Presiona el botón "+ Agregar Suscripción" para añadir tus servicios recurrentes.</p>
@@ -41,11 +41,11 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
         return (
           <div
             key={sub.id}
-            className="p-4 rounded-[26px] bg-[#1C1C1E] border border-white/5 shadow-md flex items-center justify-between transition-all"
+            className="p-4.5 rounded-[26px] clay-surface flex items-center justify-between transition-all"
           >
             {/* Left: Icon & Details */}
             <div className="flex items-center gap-3.5">
-              <div className="w-14 h-14 rounded-2xl bg-[#242426] border border-white/5 flex items-center justify-center text-2xl shrink-0 shadow-inner">
+              <div className="w-14 h-14 rounded-2xl clay-pill flex items-center justify-center text-2xl shrink-0">
                 {sub.emoji || '📺'}
               </div>
 
@@ -59,7 +59,7 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
 
             {/* Right: Amount & Action Buttons */}
             <div className="flex flex-col items-end gap-2 shrink-0">
-              <span className="text-base font-black text-[#E8505B] tracking-tight">
+              <span className="text-base font-black text-[#DC2626] tracking-tight">
                 -{formattedAmount}
               </span>
 
@@ -67,7 +67,7 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
                 <button
                   type="button"
                   onClick={() => handlePay(sub)}
-                  className="px-3.5 py-1 rounded-full bg-[#34C759] text-white font-black text-xs shadow active:scale-90 transition-transform"
+                  className="clay-btn-accent px-3.5 py-1 text-white font-black text-xs active:scale-90 transition-transform cursor-pointer"
                 >
                   Pagar
                 </button>
@@ -75,7 +75,7 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
                 <button
                   type="button"
                   onClick={() => onEdit(sub)}
-                  className="text-[#8E8E93] hover:text-white p-1"
+                  className="clay-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white cursor-pointer"
                   title="Editar"
                 >
                   <IconEdit className="w-4 h-4" />
@@ -84,7 +84,7 @@ export const SubscriptionList: React.FC<SubscriptionListProps> = ({ onEdit }) =>
                 <button
                   type="button"
                   onClick={() => handleDelete(sub.id, sub.name)}
-                  className="text-[#8E8E93] hover:text-[#E8505B] p-1"
+                  className="clay-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#DC2626] cursor-pointer"
                   title="Eliminar"
                 >
                   <IconTrash className="w-4 h-4" />

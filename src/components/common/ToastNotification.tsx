@@ -35,7 +35,7 @@ export const ToastNotification: React.FC = () => {
             ? 'bg-[#1C1A14]/95 border-[#FFD60A]/40 text-[#FFD60A] shadow-[0_10px_35px_rgba(255,214,10,0.25)]'
             : isCancelOrError
             ? 'bg-[#1C1415]/95 border-[#FF453A]/30 text-[#FF453A] shadow-[0_10px_35px_rgba(255,69,58,0.2)]'
-            : 'bg-[#141A16]/95 border-[#34C759]/30 text-[#34C759] shadow-[0_10px_35px_rgba(52,199,89,0.2)]'
+            : 'bg-[#1D1816]/95 border-[#DE7356]/40 text-[#DE7356] shadow-[0_10px_35px_rgba(222,115,86,0.25)]'
         }`}
       >
         <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -45,7 +45,7 @@ export const ToastNotification: React.FC = () => {
                 ? 'bg-[#FFD60A] text-black shadow-[0_0_12px_rgba(255,214,10,0.6)]'
                 : isCancelOrError
                 ? 'bg-[#FF453A] text-white'
-                : 'bg-[#34C759] text-black'
+                : 'bg-[#DE7356] text-white'
             }`}
           >
             {isPr ? '🏆' : isCancelOrError ? '✕' : <IconCheck className="w-3.5 h-3.5 stroke-[3]" />}
@@ -58,7 +58,7 @@ export const ToastNotification: React.FC = () => {
 
         <button
           onClick={dismissToast}
-          className="w-6 h-6 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white shrink-0 active:scale-90 transition-all"
+          className="w-6 h-6 rounded-full clay-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white shrink-0 active:scale-90 transition-all cursor-pointer"
           aria-label="Cerrar notificación"
         >
           ✕
@@ -68,7 +68,7 @@ export const ToastNotification: React.FC = () => {
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10">
           <div
             className={`h-full animate-shrink-width ${
-              isPr ? 'bg-[#FFD60A]' : isCancelOrError ? 'bg-[#FF453A]' : 'bg-[#34C759]'
+              isPr ? 'bg-[#FFD60A]' : isCancelOrError ? 'bg-[#FF453A]' : 'bg-[#DE7356]'
             }`}
             style={{ animationDuration: '3500ms' }}
           />

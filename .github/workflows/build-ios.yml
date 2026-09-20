@@ -58,25 +58,22 @@ jobs:
       - name: Release IPA on GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.6.0
-          name: HUBos Super-App v2.6.0 (SideStore IPA)
+          tag_name: v2.6.1
+          name: HUBos Super-App v2.6.1 (SideStore IPA)
           body: |
-            ## 🚀 HUBos Super-App v2.6.0 (SideStore & AltStore Compatible)
+            ## 🚀 HUBos Super-App v2.6.1 (SideStore & AltStore Compatible)
             
             **HUBos** es un contenedor modular unificado para iOS que agrupa múltiples aplicaciones completas e independientes en un único archivo `.ipa`, permitiendo superar el límite estricto de 3 aplicaciones activas de SideStore / AltStore.
 
-            ### 🌟 Novedades en HUBos & Aesthetix v2.6.0:
-            - **Migración Completa de Sistema de Diseño a Claymorphism Oficial**:
-              - Reemplazo total del estilo Glassmorphism por Claymorphism (superficies 3D suaves, táctiles y maleables con doble sombra interior y compresión física al presionar).
-              - Eliminada definitivamente la skill de Glassmorphism e integrada la nueva skill `.agents/skills/claymorphism/`.
-              - Nuevas clases maestras: `.clay-surface`, `.clay-surface-elevated`, `.clay-pill`, `.clay-pill-active`, y botones de arcilla inflada (`.clay-btn-emerald`, `.clay-btn-primary`, `.clay-btn-coral`, `.clay-btn-amber`, `.clay-btn-purple`).
-              - Aliasing universal en `globals.css` garantizando consistencia y volumetría táctil instantánea en todas las sub-apps sin roturas.
-            - **Rediseño del Dashboard Central (`HubDashboard.tsx`)**:
-              - Bento Grid renovado con bordes orgánicos `rounded-[32px]`, píldoras de telemetría y botones esponjosos `clay-btn-emerald`.
-            - **Rediseño de Barras de Navegación Flotantes**:
-              - `FloatingHubBar.tsx` y el dock inferior de `AesthetixView.tsx` adaptados con elevación tridimensional y píldoras táctiles interactivas.
-            - **Consistencia Visual con Symmetry en Aesthetix**:
-              - Fondos negros puros OLED `#000000`, medios anatómicos nítidos, audio biomecánico nativo y temporizador de toasts animados con barra de progreso.
+            ### 🌟 Novedades en HUBos v2.6.1:
+            - **Nuevo Acento Cromático Anaranjado Cálido (`#DE7356`)**:
+              - Transición global de todos los acentos y botones principales hacia el color anaranjado cálido `#DE7356` con doble sombra interna e iluminación táctil.
+            - **Rediseño Claymorphism Completo en Ajustes (`HubSettingsSheet.tsx`)**:
+              - Hoja modal superior en `.clay-surface-elevated`, tarjetas bento `.clay-surface`, inputs táctiles y botón de guardado en arcilla inflada.
+            - **Rediseño Claymorphism Integral en Suscripciones (`src/components/subscriptions/`)**:
+              - Overhaul estético en todas las vistas: `SubscriptionsView`, `SubscriptionList`, `SubscriptionModal`, `TimelineView`, `InsightsView`, `CancellationView` y `HeroFinancials`.
+            - **Toasts In-App Estilizados con Acento Anaranjado**:
+              - Notificaciones exitosas armonizadas con el tema anaranjado `#DE7356` y barra animada.
 
             ### 📦 Módulos Incluidos en este Release:
             1. **🏠 HUB Launcher Dashboard**: Panel central con telemetría en vivo, acceso rápido con IA (Gemini 2.0 Flash) y conmutador flotante con 0ms de latencia.

@@ -24,17 +24,18 @@
   --text-placeholder: #3A3A3C;
   --text-muted: #636366;
 
-  --green: #34C759;
+  --green: #DE7356;
   --coral: #E8505B;
   --pill-light: #E9E9EC;
   --pill-light-text: #1C1C1E;
   --water: #A9C6FF;
 
-  --accent-green: var(--green);
+  --accent-green: #DE7356;
   --accent-blue: #54A0FF;
-  --accent-orange: #FF9F43;
+  --accent-orange: #DE7356;
   --accent-purple: #9C88FF;
   --accent-yellow: #FECA57;
+  --clay-accent: #DE7356;
 
   /* Radii MonAI */
   --radius-pill: 9999px;
@@ -1045,23 +1046,27 @@ input[type='number'] {
     0 3px 8px rgba(59, 130, 246, 0.3);
 }
 
-.clay-btn-emerald {
-  background: #16A34A;
+.clay-btn-emerald,
+.clay-btn-accent,
+.clay-btn-orange {
+  background: #DE7356;
   color: #FFFFFF;
   border-radius: 9999px;
   box-shadow: 
     inset 2px 2px 4px rgba(255, 255, 255, 0.42),
     inset -3px -3px 6px rgba(0, 0, 0, 0.35),
-    0 8px 20px -4px rgba(22, 163, 74, 0.5);
+    0 8px 20px -4px rgba(222, 115, 86, 0.55);
   transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.clay-btn-emerald:active {
+.clay-btn-emerald:active,
+.clay-btn-accent:active,
+.clay-btn-orange:active {
   transform: scale(0.96);
   box-shadow: 
     inset 3px 3px 6px rgba(0, 0, 0, 0.45),
     inset -1px -1px 2px rgba(255, 255, 255, 0.2),
-    0 3px 8px rgba(22, 163, 74, 0.3);
+    0 3px 8px rgba(222, 115, 86, 0.35);
 }
 
 .clay-btn-coral {
@@ -1123,11 +1128,12 @@ input[type='number'] {
 
 /* 5. Clay Glow / Aura Shadows */
 .clay-glow-emerald,
-.glass-glow-emerald {
+.glass-glow-emerald,
+.clay-glow-orange {
   box-shadow: 
     inset 2px 2px 5px rgba(255, 255, 255, 0.12),
     inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 12px 30px -4px rgba(22, 163, 74, 0.4);
+    0 12px 30px -4px rgba(222, 115, 86, 0.45);
 }
 
 .clay-glow-cyan,

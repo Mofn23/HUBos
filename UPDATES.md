@@ -2,6 +2,51 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.6.1] - 2026-09-20 (HUBos v2.6.1: Acento Anaranjado Cálido #DE7356, Claymorphism en Ajustes & Rediseño de Suscripciones)
+
+### 🌟 Perfeccionamiento Cromático & Expansión de Claymorphism
+- **Nuevo Acento Cromático Principal en Anaranjado Cálido (`#DE7356`)**:
+  - Reemplazo global de los acentos verdes (`#16A34A` / `#34C759`) por el color anaranjado cálido `#DE7356` especificado por el usuario.
+  - Actualización de tokens en `globals.css` (`--green`, `--accent-green`, `--accent-orange`, `--clay-accent: #DE7356`).
+  - `.clay-btn-emerald`, `.clay-btn-accent` y `.clay-btn-orange` calibrados con fondo `#DE7356` y doble sombra interna con resalte cenital luminoso (`inset 2px 2px 4px rgba(255, 255, 255, 0.42)`) y resplandor exterior `0 8px 20px -4px rgba(222, 115, 86, 0.55)`.
+  - `.clay-glow-emerald` y `.clay-glow-orange` adaptados para emitir un aura anaranjada cálida `rgba(222, 115, 86, 0.45)`.
+  - Actualización de directrices en `.agents/skills/claymorphism/DESIGN.md`.
+- **Rediseño Claymorphism de la Pantalla de Ajustes (`HubSettingsSheet.tsx`)**:
+  - Contenedor transformado en `.clay-surface-elevated` con esquinas redondeadas `rounded-t-[36px]`.
+  - Botón de cierre en píldora táctil `clay-pill`.
+  - Tarjetas de configuración (Perfil & Moneda, API Key de Gemini, Notificaciones, Copias de Seguridad) elevadas como `.clay-surface rounded-[24px]`.
+  - Entradas de texto y selectores estilizados con bordes táctiles suaves `clay-pill` y foco en anaranjado `#DE7356`.
+  - Botón principal "Guardar Ajustes" con volumetría 3D y compresión al toque con `clay-btn-emerald` (`#DE7356`).
+- **Rediseño Claymorphism Integral del Módulo de Suscripciones (`src/components/subscriptions/`)**:
+  - **`SubscriptionsView.tsx`**: Botones de retorno al HUB y ajustes en `clay-pill`, tarjetas gemelas de costo mensual y anual en `clay-surface rounded-[28px]`, pestañas de filtro (Todas, Timeline, Fugas, Cancelar) con estado activo en `clay-btn-accent` (`#DE7356`), y botón principal "+ Agregar Suscripción" con compresión táctil.
+  - **`SubscriptionList.tsx`**: Tarjetas bento de servicios en `.clay-surface rounded-[26px]`, contenedores de iconos de servicio en `clay-pill`, botón "Pagar" con `clay-btn-accent` (`#DE7356`) y botones de edición/eliminación táctiles.
+  - **`SubscriptionModal.tsx`**: Hoja inferior emergente en `.clay-surface-elevated rounded-t-[36px]`, selectores de emojis interactivos con `clay-pill-active border-2 border-[#DE7356]`, entradas táctiles y botón de guardado.
+  - **`TimelineView.tsx`**: Calendario de cobros con tarjetas `clay-surface`, cobro del día actual destacado con halo `#DE7356` e insignias de día en `clay-btn-accent`.
+  - **`InsightsView.tsx`**: Tarjetas de gasto diario promedio y distribución por categorías en `clay-surface`, barras de progreso fluidas en `#DE7356` e insignias de consejos IA en `clay-pill`.
+  - **`CancellationView.tsx`**: Tarjetas de guías y portales oficiales en `clay-surface` y pasos en `clay-pill`.
+  - **`HeroFinancials.tsx`**: Tarjeta hero principal en `clay-surface-elevated` con aura difusa anaranjada y barras presupuestarias en `#DE7356`.
+- **Actualización de Notificaciones In-App (`ToastNotification.tsx`)**:
+  - Los mensajes de confirmación exitosa ahora lucen el acento anaranjado `#DE7356` en bordes, icono de verificación y barra decreciente de tiempo animada.
+
+### 📁 Archivos Modificados
+- `[MODIFICADO]` `.agents/skills/claymorphism/DESIGN.md` - Color `success` y `accent` cambiados a `#DE7356`.
+- `[MODIFICADO]` `src/app/globals.css` - Tokens cromáticos y botones claymorphism adaptados a `#DE7356`.
+- `[MODIFICADO]` `src/components/hub/HubDashboard.tsx` - Acentos de métricas y tarjetas adaptadas a `#DE7356`.
+- `[MODIFICADO]` `src/components/hub/HubSettingsSheet.tsx` - Overhaul completo a Claymorphism y acentos anaranjados.
+- `[MODIFICADO]` `src/components/subscriptions/SubscriptionsView.tsx` - Vista general de Suscripciones en Claymorphism.
+- `[MODIFICADO]` `src/components/subscriptions/SubscriptionList.tsx` - Lista y botones de pago en Claymorphism y `#DE7356`.
+- `[MODIFICADO]` `src/components/subscriptions/SubscriptionModal.tsx` - Formulario y fichas de emoji en Claymorphism.
+- `[MODIFICADO]` `src/components/subscriptions/TimelineView.tsx` - Timeline de cobros con indicador del día en `#DE7356`.
+- `[MODIFICADO]` `src/components/subscriptions/InsightsView.tsx` - Métricas de fuga y barras de progreso en `#DE7356`.
+- `[MODIFICADO]` `src/components/subscriptions/CancellationView.tsx` - Guías oficiales en Claymorphism.
+- `[MODIFICADO]` `src/components/subscriptions/HeroFinancials.tsx` - Hero de finanzas en Claymorphism con resplandor `#DE7356`.
+- `[MODIFICADO]` `src/components/common/ToastNotification.tsx` - Toasts con tema anaranjado `#DE7356`.
+- `[MODIFICADO]` `src/components/aesthetix/AesthetixView.tsx` - Pestaña activa de Rutinas en `#DE7356`.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Bump a v2.6.1.
+- `[MODIFICADO]` `UPDATES.md` - Documentación de la versión v2.6.1.
+
+---
+
 ## 🚀 [v2.6.0] - 2026-09-20 (HUBos v2.6: Migración Integral de Sistema de Diseño a Claymorphism 3D Táctil)
 
 ### 🌟 Rediseño Visual & Nueva Arquitectura Claymorphism
