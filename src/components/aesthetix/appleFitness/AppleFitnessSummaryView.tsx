@@ -43,7 +43,7 @@ export const AppleFitnessSummaryView: React.FC<AppleFitnessSummaryViewProps> = (
 
   const displayVolume = todayVolumeKg > 0 ? `${todayVolumeKg.toLocaleString()} KG` : '9,953';
   const displayDistanceOrStreak = `${currentStreak} Días`;
-  const displayFlightsOrRank = overall.overallTier.name;
+  const displayFlightsOrRank = overall.overallTier.label;
 
   return (
     <div className="space-y-4">
