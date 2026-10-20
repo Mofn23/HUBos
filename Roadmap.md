@@ -56,3 +56,11 @@ tags:
 - [x] Recordatorio diario de las 09:00 para registrar el progreso físico en RecompAI.
 - [x] Interruptor de notificaciones y horario visible en Ajustes.
 - [x] Versión v2.8.3 enviada al workflow de iOS.
+
+## 🟢 Fase 6: PRs, anillos y resumen de entrenamiento (Completada - 2026-10-20)
+- [x] Récords personales alineados con las tarjetas del perfil (misma superficie, tiles y jerarquía).
+- [x] Corregido el desfase de 90° del remate en los anillos de actividad.
+- [x] Resumen visual al finalizar cada entrenamiento con rango, estadísticas, desglose y diagnóstico.
+- [x] Detección de subida de rango comparando el nivel al iniciar la sesión.
+- [x] Confeti y animaciones del resumen con soporte para `prefers-reduced-motion`.
+- [x] Versión v2.8.4 enviada al workflow de iOS.

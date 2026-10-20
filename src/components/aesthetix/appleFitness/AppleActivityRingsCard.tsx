@@ -52,9 +52,10 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
   const rStand = 46;
   const cStand = 2 * Math.PI * rStand; // ~289.02
 
-  // Terminal cap angle calculation for 3D overlay shadow
+  // El SVG completo ya está rotado -90° (empieza a las 12), así que el ángulo
+  // del remate se calcula en el mismo espacio local del círculo.
   const getCapCoords = (radius: number, pct: number) => {
-    const angle = (pct * 360 - 90) * (Math.PI / 180);
+    const angle = pct * 360 * (Math.PI / 180);
     return {
       x: center + radius * Math.cos(angle),
       y: center + radius * Math.sin(angle),

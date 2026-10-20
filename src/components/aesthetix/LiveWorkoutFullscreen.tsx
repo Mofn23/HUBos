@@ -102,7 +102,23 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
     return () => clearInterval(interval);
   }, [isOpen, activeSession?.isRestTimerRunning, activeSession?.restTimerEndTimestamp, soundEnabled, stopRestTimer, showToast]);
 
-  if (!isOpen || !activeSession) return null;
+  if (!isOpen) return null;
+
+  // finishWorkout() limpia la sesión activa. El resumen debe seguir visible
+  // después de ese punto, así que se renderiza antes de exigir activeSession.
+  if (!activeSession) {
+    if (!completedSummary) return null;
+    return createPortal(
+      <WorkoutSummaryCelebrationModal
+        summary={completedSummary}
+        onClose={() => {
+          setCompletedSummary(null);
+          onClose();
+        }}
+      />,
+      document.body
+    );
+  }
 
   const currentExercise =
     activeSession.exercises[activeSession.currentExerciseIndex] || activeSession.exercises[0];
@@ -841,18 +857,6 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
         </div>
       )}
 
-      {/* ======================================================== */}
-      {/* 9. FINISHED WORKOUT CELEBRATION MODAL                     */}
-      {/* ======================================================== */}
-      {completedSummary && (
-        <WorkoutSummaryCelebrationModal
-          summary={completedSummary}
-          onClose={() => {
-            setCompletedSummary(null);
-            onClose();
-          }}
-        />
-      )}
     </div>
   ), document.body);
 };

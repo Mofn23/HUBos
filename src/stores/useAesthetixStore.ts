@@ -32,6 +32,8 @@ interface AesthetixState {
 
   // Active Live Workout Session (Gym Mode)
   activeSession: ActiveWorkoutSession | null;
+  /** Rango al empezar la sesión, para saber si el entrenamiento lo subió. */
+  sessionStartRank: { level: number; label: string; color: string; badgeImage?: string } | null;
   startWorkout: (routineId?: string, dayIndex?: number) => void;
   startCustomWorkout: (exercises: { id: string; name: string; category?: string; target?: string }[]) => void;
   cancelWorkout: () => void;
@@ -515,6 +517,7 @@ export const useAesthetixStore = create<AesthetixState>()(
 
       // Active Live Session
       activeSession: null,
+      sessionStartRank: null,
 
       startWorkout: (routineId, dayIndex = 0) => {
         const state = get();
@@ -559,7 +562,16 @@ export const useAesthetixStore = create<AesthetixState>()(
           restTimerEndTimestamp: null,
         };
 
-        set({ activeSession: newSession });
+        const startRank = state.getOverallRank();
+        set({
+          activeSession: newSession,
+          sessionStartRank: {
+            level: startRank.overallTier.level,
+            label: startRank.overallTier.label,
+            color: startRank.overallTier.color,
+            badgeImage: startRank.overallTier.badgeImage,
+          },
+        });
       },
 
       startCustomWorkout: (exercises) => {
@@ -588,10 +600,19 @@ export const useAesthetixStore = create<AesthetixState>()(
           restTimerEndTimestamp: null,
         };
 
-        set({ activeSession: newSession });
+        const startRank = state.getOverallRank();
+        set({
+          activeSession: newSession,
+          sessionStartRank: {
+            level: startRank.overallTier.level,
+            label: startRank.overallTier.label,
+            color: startRank.overallTier.color,
+            badgeImage: startRank.overallTier.badgeImage,
+          },
+        });
       },
 
-      cancelWorkout: () => set({ activeSession: null }),
+      cancelWorkout: () => set({ activeSession: null, sessionStartRank: null }),
 
       setCurrentExerciseIndex: (index) =>
         set((state) =>

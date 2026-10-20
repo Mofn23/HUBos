@@ -2,6 +2,43 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.8.4] - 2026-10-20 (PRs alineados, anillos corregidos y resumen de entrenamiento)
+
+### 🏆 Perfil de Aesthetix
+- Los récords personales usan ahora la misma superficie y jerarquía que el resto del perfil: tarjeta `fitness-card`, tiles `#242426` y encabezado en una sola línea.
+- El contador pasó a una píldora compacta y ya no parte el título en dos líneas.
+- Tarjetas de igual altura con estructura fija: nombre truncado, peso y repeticiones, 1RM y fecha.
+
+### 🎯 Anillos de actividad
+- Corregido el remate de los anillos: el SVG completo ya estaba rotado -90°, pero la bola restaba otros -90°, así que quedaba 90° desfasada del arco.
+- El remate ahora coincide con el final real del progreso en Movimiento, Ejercicio y Series.
+
+### 💪 Resumen al finalizar el entrenamiento
+- El resumen ya no desaparece: se montaba dentro de la pantalla de entrenamiento, que se desmonta al limpiar la sesión activa. Ahora se renderiza antes de exigir la sesión.
+- Nuevo resumen visual: rango nuevo o rango mantenido, estadísticas con volumen animado, comparación con la sesión anterior, desglose por ejercicio con barras, récords y diagnóstico del coach.
+- Detecta si subiste de rango comparando el nivel al iniciar la sesión con el nivel actual.
+- Confeti, entrada del rango y conteo animado, con respeto a `prefers-reduced-motion`.
+
+### ✅ Verificación
+- `npx tsc -p tsconfig.json --noEmit` sin errores.
+- `next build` y exportación estática completados.
+- Revisión visual del resumen en viewport de iPhone.
+
+### 📦 Versión y distribución
+- Actualizados `package.json`, `package-lock.json`, el proyecto Xcode y el workflow de iOS a `2.8.4`.
+- El workflow genera `HUBos-2.8.4-codex.ipa` y lo publica como release más reciente.
+
+### 📁 Archivos de versión y registro
+- `[MODIFICADO]` `src/components/aesthetix/ProfileHistoryTab.tsx` - Sección de récords personales alineada al diseño del perfil.
+- `[MODIFICADO]` `src/components/aesthetix/appleFitness/AppleActivityRingsCard.tsx` - Remate de los anillos.
+- `[MODIFICADO]` `src/components/aesthetix/WorkoutSummaryCelebrationModal.tsx` - Resumen visual con rango, desglose y animaciones.
+- `[MODIFICADO]` `src/components/aesthetix/LiveWorkoutFullscreen.tsx` - El resumen se muestra al limpiar la sesión activa.
+- `[MODIFICADO]` `src/stores/useAesthetixStore.ts` - Rango al inicio de la sesión para detectar subidas.
+- `[MODIFICADO]` `src/app/globals.css` - Animaciones de rango y confeti.
+- `[MODIFICADO]` `package.json`, `package-lock.json`, `ios/App/App.xcodeproj/project.pbxproj`, `.github/workflows/build-ios.yml` - Versión v2.8.4.
+
+---
+
 ## 🚀 [v2.8.3] - 2026-10-20 (Detalle de comida legible y notificaciones unificadas)
 
 ### 🍽️ Detalle de la comida

@@ -226,43 +226,51 @@ export const ProfileHistoryTab: React.FC = () => {
         </button>
       </div>
 
-      {/* 3. Personal Records (PRs) Bento Section */}
-      <div className="fitness-surface-elevated rounded-[28px] p-5 border-t-white/10 space-y-3">
-        <div className="flex items-center justify-between pb-1 border-b border-white/5">
-          <div className="flex items-center gap-2">
-            <span className="text-base">🏆</span>
-            <h3 className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
-              Récords Personales (PRs)
+      {/* 3. Personal Records (PRs) */}
+      <div className="fitness-card p-4 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <span className="text-base" aria-hidden="true">🏆</span>
+            <h3 className="truncate text-[10px] font-black uppercase tracking-[0.16em] text-[#8E8E93]">
+              Récords personales
             </h3>
           </div>
-          <span className="text-[10px] font-bold text-[#FFD60A]">
-            {prList.length} marcas registradas
+          <span className="shrink-0 rounded-full bg-[#FFD60A]/12 px-2.5 py-1 text-[10px] font-black text-[#FFD60A]">
+            {prList.length} marcas
           </span>
         </div>
 
         {prList.length === 0 ? (
-          <p className="text-xs text-[#8E8E93] py-2 text-center">
+          <p className="py-2 text-center text-xs text-[#8E8E93]">
             Aún no has registrado récords. Inicia una sesión en el gimnasio para comenzar tu historial.
           </p>
         ) : (
-          <div className="space-y-3">
-            <div className="grid grid-cols-2 gap-2.5">
+          <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               {displayedPrs.map((pr) => (
                 <div
                   key={pr.exerciseId}
-                  className="fitness-pill p-3 rounded-[20px] space-y-1 border-t-white/15"
+                  className="flex min-w-0 flex-col gap-1.5 rounded-[18px] border border-white/[0.05] bg-[#242426] p-3"
                 >
-                  <span className="text-xs font-black text-[#F5F5F7] capitalize block truncate">
+                  <span className="truncate text-[11px] font-black capitalize text-[#F5F5F7]">
                     {pr.exerciseName}
                   </span>
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-base font-black text-[#FFD60A] font-mono">
-                      {pr.maxWeightKg} kg
+
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="font-mono text-lg font-black leading-none text-[#FFD60A]">
+                      {pr.maxWeightKg}
+                      <span className="ml-0.5 text-[10px] font-bold text-[#8E8E93]">kg</span>
                     </span>
-                    <span className="text-[10px] font-bold text-[#8E8E93]">x {pr.maxReps} reps</span>
+                    <span className="shrink-0 text-[10px] font-bold text-[#8E8E93]">
+                      ×{pr.maxReps}
+                    </span>
                   </div>
-                  <div className="text-[9px] font-bold text-[#A1F524]">
-                    1RM Est: {pr.estimated1RM} kg • {pr.date}
+
+                  <div className="mt-auto flex flex-col gap-0.5 border-t border-white/[0.06] pt-1.5">
+                    <span className="truncate text-[9px] font-black text-[#A1F524]">
+                      1RM {pr.estimated1RM} kg
+                    </span>
+                    <span className="truncate text-[9px] font-bold text-[#636366]">{pr.date}</span>
                   </div>
                 </div>
               ))}
@@ -272,7 +280,7 @@ export const ProfileHistoryTab: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowAllPrs(!showAllPrs)}
-                className="w-full py-2.5 px-3 rounded-[18px] bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] active:scale-98 transition-all flex items-center justify-center gap-2 text-xs font-black text-[#A1F524]"
+                className="flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2.5 text-[11px] font-black text-[#A1F524] transition-colors hover:bg-white/[0.08] active:scale-[0.98] motion-reduce:active:scale-100"
               >
                 <span>{showAllPrs ? 'Mostrar menos' : `Mostrar más (${prList.length - 4} restantes)`}</span>
                 <span className="text-sm leading-none">{showAllPrs ? '⌃' : '⌄'}</span>

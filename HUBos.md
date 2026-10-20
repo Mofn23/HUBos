@@ -2,7 +2,7 @@
 tipo: proyecto
 nombre: HUBos
 status: activo
-version_actual: 2.8.3
+version_actual: 2.8.4
 actualizado: 2026-10-20
 area: "[[02_Areas/Desarrollo_y_Tech]]"
 fecha_inicio: 2026-08-13
@@ -29,7 +29,7 @@ tags:
 
 # 🚀 Proyecto: HUBos — Super-App Modular para iOS
 
-> **Versión vigente publicada:** `v2.8.3` · [Release más reciente e IPA para SideStore/AltStore](https://github.com/Mofn23/HUBos/releases/latest). Las versiones `v2.8.2`, `v2.8.1` y `v2.8.0` se conservan en el historial; cada build de iOS usa un tag único por ejecución.
+> **Versión vigente publicada:** `v2.8.4` · [Release más reciente e IPA para SideStore/AltStore](https://github.com/Mofn23/HUBos/releases/latest). Las versiones `v2.8.3`, `v2.8.2`, `v2.8.1` y `v2.8.0` se conservan en el historial; cada build de iOS usa un tag único por ejecución.
 
 > **Resumen Ejecutivo:** **HUBos** es un contenedor modular unificado y Super-App nativa para iOS (compatible con SideStore / AltStore). Permite ejecutar múltiples aplicaciones completas e independientes dentro de un solo archivo `.ipa`, **superando la restricción estricta de 3 aplicaciones activas de sideloading**.
 
@@ -114,4 +114,4 @@ git push origin main
 - Área vinculada: [[02_Areas/Desarrollo_y_Tech]]
 - MOC de referencia: [[00_Meta/MOCs/MOC_Desarrollo_Software]]
 - Torre de Control Global: [[AI_ATLAS]]
-- 🧭 Bitácora de la última entrega: [[00_Meta/Logs/2026-10-20_Detalle_Comida_y_Notificaciones_HUBos_v2_8_3|v2.8.3 — Detalle de comida y notificaciones]]
+- 🧭 Bitácora de la última entrega: [[00_Meta/Logs/2026-10-20_PRs_Anillos_Resumen_Entrenamiento_HUBos_v2_8_4|v2.8.4 — PRs, anillos y resumen de entrenamiento]]
