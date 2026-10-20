@@ -3,17 +3,17 @@
 import React, { useState } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { AesthetixHeader } from './AesthetixHeader';
-import { RoutinesTab } from './RoutinesTab';
-import { ExercisesExplorerTab } from './ExercisesExplorerTab';
-import { AnatomyRanksTab } from './AnatomyRanksTab';
-import { ProfileHistoryTab } from './ProfileHistoryTab';
+import { AppleFitnessSummaryView } from './appleFitness/AppleFitnessSummaryView';
+import { AppleWorkoutsTabView } from './appleFitness/AppleWorkoutsTabView';
+import { AppleAwardsTabView } from './appleFitness/AppleAwardsTabView';
+import { AppleProfileTabView } from './appleFitness/AppleProfileTabView';
+import { AppleFitnessNavDock, AppleFitnessTab } from './appleFitness/AppleFitnessNavDock';
 import { LiveWorkoutFullscreen } from './LiveWorkoutFullscreen';
 import { AiRoutineBuilderModal } from './AiRoutineBuilderModal';
 import { StartWorkoutModal } from './StartWorkoutModal';
-import { Exercise } from '@/types/workout';
+import { SessionDetailModal } from './SessionDetailModal';
+import { Exercise, WorkoutHistoryItem } from '@/types/workout';
 import { useScrollLock } from '@/lib/useScrollLock';
-
-export type AesthetixTab = 'routines' | 'exercises' | 'ranks' | 'profile';
 
 export const AesthetixView: React.FC = () => {
   const {
@@ -21,15 +21,22 @@ export const AesthetixView: React.FC = () => {
     startWorkout,
     addExerciseToActiveSession,
     activeModalCount,
+    deleteHistorySession,
   } = useAesthetixStore();
 
-  const [activeTab, setActiveTab] = useState<AesthetixTab>('routines');
+  const [activeTab, setActiveTab] = useState<AppleFitnessTab>('summary');
   const [isAiBuilderOpen, setIsAiBuilderOpen] = useState(false);
   const [isLiveWorkoutOpen, setIsLiveWorkoutOpen] = useState(false);
   const [isStartWorkoutModalOpen, setIsStartWorkoutModalOpen] = useState(false);
+  const [selectedSessionForDetail, setSelectedSessionForDetail] = useState<WorkoutHistoryItem | null>(null);
 
   const isAnyModalOpen =
-    isStartWorkoutModalOpen || isLiveWorkoutOpen || isAiBuilderOpen || activeModalCount > 0;
+    isStartWorkoutModalOpen ||
+    isLiveWorkoutOpen ||
+    isAiBuilderOpen ||
+    !!selectedSessionForDetail ||
+    activeModalCount > 0;
+
   useScrollLock(isAnyModalOpen);
 
   const handleStartSession = (routineId?: string, dayIndex?: number) => {
@@ -49,20 +56,21 @@ export const AesthetixView: React.FC = () => {
 
   return (
     <div
-      className={`flex-1 flex flex-col px-4 pt-12 pb-36 ${
+      className={`flex-1 flex flex-col px-4 pt-10 pb-36 ${
         isAnyModalOpen ? 'overflow-hidden' : 'overflow-y-auto'
-      } no-scrollbar animate-fade-in space-y-4 relative`}
+      } no-scrollbar bg-black text-white space-y-4 relative min-h-screen`}
     >
-      {/* Ambient Radial Glowing Orbs for Frosted Glass Depth */}
+      {/* Ambient Apple Fitness Radial Glow Orbs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
-        <div className="absolute -top-16 -right-16 w-80 h-80 rounded-full bg-[#64D2FF]/10 blur-[110px]" />
-        <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-[#34C759]/10 blur-[110px]" />
-        <div className="absolute -bottom-16 right-1/4 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[110px]" />
+        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#FA114F]/10 blur-[120px]" />
+        <div className="absolute top-1/3 -left-20 w-80 h-80 rounded-full bg-[#A1F524]/10 blur-[120px]" />
+        <div className="absolute -bottom-20 right-1/4 w-80 h-80 rounded-full bg-[#00F0FF]/10 blur-[120px]" />
       </div>
 
-      {/* Top Header */}
+      {/* Top Apple Fitness Header */}
       <div className="relative z-10">
         <AesthetixHeader
+          activeTab={activeTab}
           onOpenAiBuilder={() => setIsAiBuilderOpen(true)}
           onOpenLiveWorkout={() => {
             if (activeSession) {
@@ -71,100 +79,54 @@ export const AesthetixView: React.FC = () => {
               setIsStartWorkoutModalOpen(true);
             }
           }}
+          onOpenProfile={() => setActiveTab('profile')}
         />
       </div>
 
       {/* Active Tab Content */}
       <div className="relative z-10">
-        {activeTab === 'routines' && (
-          <RoutinesTab
+        {activeTab === 'summary' && (
+          <AppleFitnessSummaryView
             onStartSession={handleStartSession}
-            onOpenAiBuilder={() => setIsAiBuilderOpen(true)}
+            onOpenLiveWorkout={() => {
+              if (activeSession) {
+                setIsLiveWorkoutOpen(true);
+              } else {
+                setIsStartWorkoutModalOpen(true);
+              }
+            }}
+            onSelectSessionDetail={(session) => setSelectedSessionForDetail(session)}
+            onNavigateToWorkouts={() => setActiveTab('workouts')}
           />
         )}
 
-        {activeTab === 'exercises' && (
-          <ExercisesExplorerTab onAddToActiveWorkout={handleAddExerciseToWorkout} />
+        {activeTab === 'workouts' && (
+          <AppleWorkoutsTabView
+            onStartSession={handleStartSession}
+            onOpenAiBuilder={() => setIsAiBuilderOpen(true)}
+            onAddToActiveWorkout={handleAddExerciseToWorkout}
+          />
         )}
 
-        {activeTab === 'ranks' && <AnatomyRanksTab />}
+        {activeTab === 'awards' && <AppleAwardsTabView />}
 
-        {activeTab === 'profile' && <ProfileHistoryTab />}
+        {activeTab === 'profile' && <AppleProfileTabView />}
       </div>
 
-      {/* Floating Bottom Clay Navigation Dock */}
-      <nav
-        className={`fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto clay-surface-elevated rounded-full p-1.5 flex items-center justify-around transition-all duration-300 ${
-          isAnyModalOpen ? 'translate-y-28 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
-        }`}
-      >
-        <button
-          onClick={() => setActiveTab('routines')}
-          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
-            activeTab === 'routines'
-              ? 'clay-pill-active text-[#DE7356]'
-              : 'text-[#8E8E93] hover:text-white'
-          }`}
-        >
-          <span className="text-base">📋</span>
-          <span className="text-[10px]">Rutinas</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('exercises')}
-          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
-            activeTab === 'exercises'
-              ? 'clay-pill-active text-[#3B82F6]'
-              : 'text-[#8E8E93] hover:text-white'
-          }`}
-        >
-          <span className="text-base">🔍</span>
-          <span className="text-[10px]">1.324 Ejercicios</span>
-        </button>
-
-        {/* Center Live Workout Quick Trigger */}
-        <button
-          onClick={() => {
-            if (activeSession) {
-              setIsLiveWorkoutOpen(true);
-            } else {
-              setIsStartWorkoutModalOpen(true);
-            }
-          }}
-          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 cursor-pointer ${
-            activeSession
-              ? 'clay-btn-coral animate-pulse'
-              : 'text-[#8E8E93] hover:text-white'
-          }`}
-        >
-          <span className="text-base">{activeSession ? '🔴' : '⚡'}</span>
-          <span className="text-[10px]">{activeSession ? 'Gym En Vivo' : 'Entrenar'}</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('ranks')}
-          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
-            activeTab === 'ranks'
-              ? 'clay-pill-active text-[#D97706]'
-              : 'text-[#8E8E93] hover:text-white'
-          }`}
-        >
-          <span className="text-base">🧬</span>
-          <span className="text-[10px]">Rangos</span>
-        </button>
-
-        <button
-          onClick={() => setActiveTab('profile')}
-          className={`flex-1 py-2 px-1 rounded-full text-xs font-black transition-all flex flex-col items-center gap-0.5 ${
-            activeTab === 'profile'
-              ? 'clay-pill-active text-[#9333EA]'
-              : 'text-[#8E8E93] hover:text-white'
-          }`}
-        >
-          <span className="text-base">👤</span>
-          <span className="text-[10px]">Perfil</span>
-        </button>
-      </nav>
+      {/* Floating Apple Fitness Glass Dock */}
+      <AppleFitnessNavDock
+        activeTab={activeTab}
+        onTabChange={(tab) => setActiveTab(tab)}
+        activeSession={activeSession}
+        onOpenLiveWorkout={() => {
+          if (activeSession) {
+            setIsLiveWorkoutOpen(true);
+          } else {
+            setIsStartWorkoutModalOpen(true);
+          }
+        }}
+        isHidden={isAnyModalOpen}
+      />
 
       {/* Pre-Workout Start Selector Modal */}
       <StartWorkoutModal
@@ -179,7 +141,7 @@ export const AesthetixView: React.FC = () => {
         onClose={() => setIsLiveWorkoutOpen(false)}
         onOpenExercisesCatalog={() => {
           setIsLiveWorkoutOpen(false);
-          setActiveTab('exercises');
+          setActiveTab('workouts');
         }}
       />
 
@@ -187,6 +149,17 @@ export const AesthetixView: React.FC = () => {
       <AiRoutineBuilderModal
         isOpen={isAiBuilderOpen}
         onClose={() => setIsAiBuilderOpen(false)}
+      />
+
+      {/* Session Detail Modal */}
+      <SessionDetailModal
+        isOpen={!!selectedSessionForDetail}
+        session={selectedSessionForDetail}
+        onClose={() => setSelectedSessionForDetail(null)}
+        onDelete={(id) => {
+          deleteHistorySession(id);
+          setSelectedSessionForDetail(null);
+        }}
       />
     </div>
   );

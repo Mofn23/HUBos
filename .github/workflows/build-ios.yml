@@ -58,29 +58,36 @@ jobs:
       - name: Release IPA on GitHub Releases
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.6.1
-          name: HUBos Super-App v2.6.1 (SideStore IPA)
+          tag_name: v2.7.0
+          name: HUBos Super-App v2.7.0 (SideStore IPA)
           body: |
-            ## 🚀 HUBos Super-App v2.6.1 (SideStore & AltStore Compatible)
+            ## 🚀 HUBos Super-App v2.7.0 (SideStore & AltStore Compatible)
             
             **HUBos** es un contenedor modular unificado para iOS que agrupa múltiples aplicaciones completas e independientes en un único archivo `.ipa`, permitiendo superar el límite estricto de 3 aplicaciones activas de SideStore / AltStore.
 
-            ### 🌟 Novedades en HUBos v2.6.1:
-            - **Nuevo Acento Cromático Anaranjado Cálido (`#DE7356`)**:
-              - Transición global de todos los acentos y botones principales hacia el color anaranjado cálido `#DE7356` con doble sombra interna e iluminación táctil.
-            - **Rediseño Claymorphism Completo en Ajustes (`HubSettingsSheet.tsx`)**:
-              - Hoja modal superior en `.clay-surface-elevated`, tarjetas bento `.clay-surface`, inputs táctiles y botón de guardado en arcilla inflada.
-            - **Rediseño Claymorphism Integral en Suscripciones (`src/components/subscriptions/`)**:
-              - Overhaul estético en todas las vistas: `SubscriptionsView`, `SubscriptionList`, `SubscriptionModal`, `TimelineView`, `InsightsView`, `CancellationView` y `HeroFinancials`.
-            - **Toasts In-App Estilizados con Acento Anaranjado**:
-              - Notificaciones exitosas armonizadas con el tema anaranjado `#DE7356` y barra animada.
+            ### 🌟 Novedades en HUBos v2.7.0:
+            - **Rediseño Integral de Aesthetix al Estilo Apple Fitness 1:1**:
+              - Anillos concéntricos SVG interactivos de Actividad (`AppleActivityRingsCard`) con degradados nativos, glow difuso y punteros 3D.
+              - Selector horizontal de días semanales con mini-anillos (`AppleWeeklyDaysStrip`).
+              - Tarjetas Bento de telemetría compacta para pasos, distancia y pisos (`AppleFitnessBentoCards`).
+              - Gráfica semanal interactiva (`AppleWeeklyBarChart`) con conmutación entre Volumen (Fuego), Tiempo (Corredor) y Series (Rayo), con meta punteada `GOAL 600`.
+              - Sección de entrenamientos con banner reactivo de Live Workout y acción "Hoy Toca" (`AppleWorkoutsSection`).
+              - Dock de navegación flotante ultra-frosted glass con indicador circular verde neón (`AppleFitnessNavDock`).
+              - Segmented Control unificado para rutinas y explorador de 1.324 ejercicios (`AppleWorkoutsTabView`).
+            - **Suite Completa de Animación y Motion Design Emil Kowalski**:
+              - Instalación de 8 skills de diseño y curvas de aceleración física (`--ease-out`, `--ease-drawer`, `--ease-spring`) en `globals.css`.
+              - Feedback táctil universal a 60fps con compresión al toque (`:active:scale-[0.965]`).
+            - **Retención 100% de Capacidades Preexistentes**:
+              - Catálogo completo de 1.324 ejercicios con animaciones GIF intacto.
+              - Modo gimnasio / live workout a pantalla completa con calculadora de placas y temporizador de descanso.
+              - Modelo anatómico 3D de simetría con mapa de calor y generador IA con Gemini.
 
             ### 📦 Módulos Incluidos en este Release:
             1. **🏠 HUB Launcher Dashboard**: Panel central con telemetría en vivo, acceso rápido con IA (Gemini 2.0 Flash) y conmutador flotante con 0ms de latencia.
             2. **🥑 Módulo RecompAI**: Conteo de calorías, distribución de macros, escáner de fotos/texto con IA, auditoría de capturas Symmetry, medidor de glucógeno y mapa de calor muscular.
             3. **📺 Módulo Subscriptions**: Gestor integral de suscripciones estilo MonAI/DinER, métricas de gasto mensual/anual, calendario de cobros, alertas de renovación y guías de cancelación en 1 tap.
             4. **📅 Módulo Horarios & Rutinas**: Matriz 2D de clases y conducción, Attendance Shield, gestor de tareas y sincronización .ics.
-            5. **⚡ Módulo Aesthetix v2.3**: Hipertrofia & Fuerza estilo Symmetry, catálogo de 1.324 ejercicios con animaciones GIF, modo gimnasio con descanso de 2:30 min, generador IA, protocolo PPL x UL, y sistema de rangos Symmetry.
+            5. **⚡ Módulo Aesthetix v2.7**: Rediseño 1:1 Apple Fitness, Anillos de Actividad, Bento telemetría, gráfica semanal interactiva, Live Workout y motor de animaciones Emil Kowalski.
             
             ### 📲 Instrucciones de Instalación en iPhone:
             1. Descarga el archivo `HUBos.ipa` adjunto abajo en tu iPhone.

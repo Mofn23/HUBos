@@ -2,6 +2,39 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.7.0] - 2026-10-19 (HUBos v2.7: Rediseño Integral de Aesthetix al Estilo Apple Fitness 1:1 & Suite Emil Kowalski)
+
+### 🌟 Rediseño Visual & Arquitectura de Animación iOS
+- **Overhaul Integral de Aesthetix al Estilo Apple Fitness**:
+  - Implementación de la paleta oficial Apple Fitness: Rojo Coral Move (`#FA114F`), Verde Neón Exercise (`#A1F524`), Azul Eléctrico Stand (`#00F0FF`) y Amarillo Pasos (`#FFD60A`) sobre fondo OLED puro `#000000` y superficies `#1C1C1E`.
+  - **`AppleActivityRingsCard.tsx`**: Anillos concéntricos SVG con degradados nativos, glow difuso y punteros 3D táctiles.
+  - **`AppleWeeklyDaysStrip.tsx`**: Selector horizontal semanal con mini-anillos de actividad por día.
+  - **`AppleFitnessBentoCards.tsx`**: Tarjetas bento de telemetría para pasos, distancia y pisos con tipografía Apple SF Pro.
+  - **`AppleWeeklyBarChart.tsx`**: Gráfica interactiva con alternancia entre Volumen (Fuego), Tiempo (Corredor) y Series (Rayo), con meta punteada `GOAL 600`.
+  - **`AppleWorkoutsSection.tsx`**: Lista de sesiones con banner reactivo de Live Workout y llamada directa a "Hoy Toca".
+  - **`AppleFitnessNavDock.tsx`**: Dock flotante ultra-frosted glass con indicador circular verde neón.
+  - **`AppleWorkoutsTabView.tsx`**: Segmented Control unificado para gestión de rutinas y explorador de 1.324 ejercicios.
+- **Suite de Motion Design Emil Kowalski (`.agents/skills/`)**:
+  - Inyección de curvas de aceleración física en `globals.css` (`--ease-out`, `--ease-in-out`, `--ease-drawer`, `--ease-spring`).
+  - Feedback táctil universal a 60fps con compresión al toque (`:active:scale-[0.965]`).
+- **Retención 100% Funcional**:
+  - Catálogo de 1.324 ejercicios con animaciones GIF intacto.
+  - Pantalla completa de Live Workout con cálculo de placas y descanso conservada.
+  - Modelo anatómico 3D de simetría con mapa de calor y generador IA con Gemini activos.
+
+### 📁 Archivos Modificados / Creados
+- `[CREADO]` `.agents/skills/*` - Suite completa de 8 skills Emil Kowalski.
+- `[MODIFICADO]` `src/app/globals.css` - Curvas de aceleración y utilidades `.fitness-press`.
+- `[MODIFICADO]` `tailwind.config.ts` - Paleta Apple Fitness (`#FA114F`, `#A1F524`, `#00F0FF`, `#FFD60A`).
+- `[CREADO]` `src/components/aesthetix/appleFitness/*` - 10 componentes dedicados Apple Fitness.
+- `[MODIFICADO]` `src/components/aesthetix/AesthetixHeader.tsx` - Título gigante SF Pro y fecha en mayúsculas espaciadas.
+- `[MODIFICADO]` `src/components/aesthetix/AesthetixView.tsx` - Integración modular de las 4 pestañas y modales.
+- `[MODIFICADO]` `package.json` - Bump a v2.7.0.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Configuración de release v2.7.0.
+- `[MODIFICADO]` `UPDATES.md` - Registro de actualización v2.7.0.
+
+---
+
 ## 🚀 [v2.6.1] - 2026-09-20 (HUBos v2.6.1: Acento Anaranjado Cálido #DE7356, Claymorphism en Ajustes & Rediseño de Suscripciones)
 
 ### 🌟 Perfeccionamiento Cromático & Expansión de Claymorphism

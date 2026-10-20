@@ -30,6 +30,19 @@ const config: Config = {
           yellow: "#FFD60A",
           cyan: "#64D2FF",
         },
+        fitness: {
+          black: "#000000",
+          surface: "#1C1C1E",
+          surfaceSecondary: "#2C2C2E",
+          surfaceCard: "#161618",
+          red: "#FA114F",
+          redGlow: "#FF2D55",
+          green: "#A1F524",
+          greenGlow: "#30D158",
+          cyan: "#00F0FF",
+          cyanGlow: "#0A84FF",
+          yellow: "#FFD60A",
+        },
       },
       fontFamily: {
         sans: [

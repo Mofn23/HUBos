@@ -1172,3 +1172,122 @@ input[type='number'] {
   image-rendering: -webkit-optimize-contrast;
 }
 
+/* ========================================================
+   Apple Fitness Design System & Emil Kowalski Motion Engine
+   ======================================================== */
+
+:root {
+  --fitness-black: #000000;
+  --fitness-surface: #1C1C1E;
+  --fitness-surface-secondary: #2C2C2E;
+  --fitness-surface-card: #161618;
+  --fitness-red: #FA114F;
+  --fitness-red-glow: rgba(250, 17, 79, 0.5);
+  --fitness-green: #A1F524;
+  --fitness-green-glow: rgba(161, 245, 36, 0.5);
+  --fitness-cyan: #00F0FF;
+  --fitness-cyan-glow: rgba(0, 240, 255, 0.5);
+  --fitness-yellow: #FFD60A;
+  --fitness-yellow-glow: rgba(255, 214, 10, 0.5);
+
+  /* Emil Kowalski Physical Animation Curves */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+
+.fitness-bg {
+  background-color: #000000;
+}
+
+.fitness-card {
+  background-color: #1C1C1E;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 24px;
+}
+
+.fitness-card-elevated {
+  background-color: #242426;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+}
+
+.fitness-glass-dock {
+  background: rgba(28, 28, 30, 0.84);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.fitness-press {
+  transition: transform 120ms var(--ease-out), opacity 120ms var(--ease-out);
+  will-change: transform;
+}
+
+.fitness-press:active {
+  transform: scale(0.965);
+}
+
+/* Staggered entrance animations */
+@keyframes appleFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stagger-1 {
+  animation: appleFadeUp 320ms var(--ease-out) 0ms both;
+}
+.stagger-2 {
+  animation: appleFadeUp 320ms var(--ease-out) 40ms both;
+}
+.stagger-3 {
+  animation: appleFadeUp 320ms var(--ease-out) 80ms both;
+}
+.stagger-4 {
+  animation: appleFadeUp 320ms var(--ease-out) 120ms both;
+}
+.stagger-5 {
+  animation: appleFadeUp 320ms var(--ease-out) 160ms both;
+}
+
+@keyframes barGrowth {
+  0% {
+    transform: scaleY(0);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+.animate-bar-grow {
+  transform-origin: bottom;
+  animation: barGrowth 480ms var(--ease-out) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stagger-1,
+  .stagger-2,
+  .stagger-3,
+  .stagger-4,
+  .stagger-5 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .animate-bar-grow {
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+
