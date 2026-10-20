@@ -2,6 +2,43 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.8.1] - 2026-10-20 (Aesthetix: edición de rutinas, orden persistente y ajustes de interfaz móvil)
+
+### 💪 Rutinas y perfil de Aesthetix
+- Rediseñada la tarjeta de perfil para mostrar el nombre y el peso con una etiqueta más compacta; retiradas opciones redundantes de Symmetry y simplificado el escaneo físico.
+- Corregido el espacio inferior de las pestañas para que el dock no tape el contenido final; alineado el botón de regreso al HUB con las otras apps.
+- Añadida edición de rutinas con miniatura, nombre, músculo objetivo y configuración de series, repeticiones y descanso para cada ejercicio.
+- Al añadir un ejercicio a una rutina existente, se guarda al instante, se cierra el editor y se enfoca el día actualizado.
+- Añadido ordenamiento con controles arriba/abajo y arrastre de tarjetas; los cambios de orden se guardan de inmediato.
+- Ajustada la altura móvil del editor para mantener visible el encabezado y su botón de cierre.
+
+### 📦 Versión y distribución
+- Actualizados `package.json`, `package-lock.json`, el proyecto Xcode y el workflow de iOS a `2.8.1`.
+- El workflow genera `HUBos-2.8.1-codex.ipa`, publica un release numerado por ejecución y establece esa entrega como la versión más reciente.
+
+### 📁 Archivos de versión y registro
+- `[MODIFICADO]` `src/components/aesthetix/*` - Perfil, navegación, editor visual de rutinas y ordenamiento persistente.
+- `[MODIFICADO]` `src/app/globals.css` - Animación de reordenamiento de ejercicios.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - IPA y release v2.8.1.
+- `[MODIFICADO]` `package.json`, `package-lock.json`, `ios/App/App.xcodeproj/project.pbxproj` - Número de versión v2.8.1.
+- `[MODIFICADO]` `UPDATES.md` - Registro cronológico de la versión v2.8.1.
+
+---
+
+## 🚀 [v2.8.0] - 2026-10-20 (Rediseño universal Apple Fitness y migración desde Claymorphism)
+
+### 🍎 Rediseño visual transversal
+- Extendida la identidad OLED de Apple Fitness a las vistas pendientes de Aesthetix y RecompAI: superficies oscuras, tarjetas compactas, jerarquía tipográfica y acentos funcionales.
+- Unificados controles segmentados y componentes de actividad, ranking, exploración de ejercicios, perfil, progreso corporal y escaneo físico.
+- Retirado el lenguaje visual Claymorphism en las áreas rediseñadas y conservadas las funciones de entrenamiento, rangos, escaneo Gemini y datos del usuario.
+- Publicado el release `v2.8.0` con IPA SideStore/AltStore. La ficha completa de esta sesión está en `00_Meta/Logs/2026-10-20_Overhaul_Universal_Apple_Fitness_HUBos_v2_8_0.md` del segundo cerebro.
+
+### 📁 Archivos de versión y registro
+- `[MODIFICADO]` Componentes Aesthetix y RecompAI - Unificación visual Apple Fitness.
+- `[MODIFICADO]` `package.json`, `.github/workflows/build-ios.yml`, `UPDATES.md` y `HUBos.md` - Publicación y documentación v2.8.0.
+
+---
+
 ## 🚀 [v2.7.0] - 2026-10-19 (HUBos v2.7: Rediseño Integral de Aesthetix al Estilo Apple Fitness 1:1 & Suite Emil Kowalski)
 
 ### 🌟 Rediseño Visual & Arquitectura de Animación iOS

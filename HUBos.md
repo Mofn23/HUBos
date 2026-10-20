@@ -2,6 +2,8 @@
 tipo: proyecto
 nombre: HUBos
 status: activo
+version_actual: 2.8.1
+actualizado: 2026-10-20
 area: "[[02_Areas/Desarrollo_y_Tech]]"
 fecha_inicio: 2026-08-13
 deadline: 2026-12-31
@@ -26,6 +28,8 @@ tags:
 ---
 
 # 🚀 Proyecto: HUBos — Super-App Modular para iOS
+
+> **Versión en preparación:** `v2.8.1` (Aesthetix: edición y ordenamiento persistente de rutinas, mejoras de perfil y correcciones de interfaz móvil). La versión `v2.8.0` ya existe en el historial; el workflow de GitHub genera releases con un sufijo de ejecución para mantener cada IPA único.
 
 > **Resumen Ejecutivo:** **HUBos** es un contenedor modular unificado y Super-App nativa para iOS (compatible con SideStore / AltStore). Permite ejecutar múltiples aplicaciones completas e independientes dentro de un solo archivo `.ipa`, **superando la restricción estricta de 3 aplicaciones activas de sideloading**.
 

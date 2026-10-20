@@ -1,7 +1,7 @@
 ---
 tipo: roadmap
 proyecto: "[[01_Projects/HUBos/HUBos|HUBos]]"
-actualizado: 2026-10-19
+actualizado: 2026-10-20
 tags:
   - roadmap
   - hubos
@@ -31,4 +31,11 @@ tags:
 - [x] Barra de navegación flotante tipo cápsula de vidrio esmerilado con indicador circular verde lima de selección activa.
 - [x] Segmented Control en la pestaña Workouts (Mis Rutinas y Catálogo de 1.324 ejercicios con GIFs).
 - [x] Preservación del 100% de funcionalidades (live workout, rest timer, modelo 3D de simetría y Gemini IA).
+
+## 🟢 Fase 3: Rutinas editables y distribución v2.8.1 (Completada - 2026-10-20)
+- [x] Edición de rutinas existentes con miniaturas, nombres y datos de cada ejercicio.
+- [x] Guardado inmediato al añadir ejercicios y al cambiar su orden, con cierre del editor después de añadir.
+- [x] Reordenamiento de ejercicios con controles de flecha y arrastre táctil, con animación.
+- [x] Correcciones de interfaz Aesthetix: contenido libre del dock, regreso al HUB, perfil y encabezado de modal móvil.
+- [x] Registro de versión en `UPDATES.md`, proyecto Xcode y workflow iOS; IPA v2.8.1 preparado para GitHub Actions.
 
