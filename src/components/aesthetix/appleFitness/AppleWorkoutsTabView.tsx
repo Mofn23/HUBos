@@ -23,13 +23,13 @@ export const AppleWorkoutsTabView: React.FC<AppleWorkoutsTabViewProps> = ({
   return (
     <div className="space-y-4 animate-fade-in">
       {/* Apple Segmented Control Bar */}
-      <div className="p-1 rounded-full bg-white/[0.06] border border-white/10 flex items-center gap-1">
+      <div className="p-1 rounded-full bg-[#1C1C1E] border border-white/5 flex items-center gap-1">
         <button
           onClick={() => setSubTab('routines')}
-          className={`flex-1 py-1.5 px-3 rounded-full text-xs font-black transition-all flex items-center justify-center gap-1.5 fitness-press ${
+          className={`flex-1 py-1.5 px-3 rounded-full text-xs transition-all flex items-center justify-center gap-1.5 fitness-press ${
             subTab === 'routines'
-              ? 'bg-[#1C1C1E] text-white shadow-md border border-white/10'
-              : 'text-[#8E8E93] hover:text-white'
+              ? 'bg-white text-black font-black shadow-md'
+              : 'text-[#8E8E93] font-bold hover:text-white'
           }`}
         >
           <span>📋</span>
@@ -38,10 +38,10 @@ export const AppleWorkoutsTabView: React.FC<AppleWorkoutsTabViewProps> = ({
 
         <button
           onClick={() => setSubTab('catalog')}
-          className={`flex-1 py-1.5 px-3 rounded-full text-xs font-black transition-all flex items-center justify-center gap-1.5 fitness-press ${
+          className={`flex-1 py-1.5 px-3 rounded-full text-xs transition-all flex items-center justify-center gap-1.5 fitness-press ${
             subTab === 'catalog'
-              ? 'bg-[#1C1C1E] text-white shadow-md border border-white/10'
-              : 'text-[#8E8E93] hover:text-white'
+              ? 'bg-white text-black font-black shadow-md'
+              : 'text-[#8E8E93] font-bold hover:text-white'
           }`}
         >
           <span>🔍</span>

@@ -128,7 +128,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
       <div
-        className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+        className="fixed inset-0 bg-black/80 backdrop-blur-md"
         onClick={onClose}
         onTouchMove={(e) => {
           e.preventDefault();
@@ -137,13 +137,13 @@ NO añadas texto antes ni después. Solo el JSON.`;
       />
 
       <div
-        className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[88vh] flex flex-col overscroll-contain"
+        className="relative w-full max-w-md bg-[#1C1C1E] rounded-[32px] p-5 z-10 border border-white/10 shadow-2xl space-y-4 max-h-[88vh] flex flex-col overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-full bg-[#64D2FF]/20 text-[#64D2FF] flex items-center justify-center text-sm font-black border border-[#64D2FF]/30">
+            <span className="w-8 h-8 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] flex items-center justify-center text-sm font-black border border-[#00F0FF]/30">
               🧬
             </span>
             <div>
@@ -157,7 +157,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+            className="w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white transition-colors"
           >
             ✕
           </button>
@@ -170,8 +170,8 @@ NO añadas texto antes ni después. Solo el JSON.`;
             onClick={() => !isScanning && fileInputRef.current?.click()}
             className={`w-full aspect-[4/3] rounded-[24px] overflow-hidden border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all relative ${
               selectedImage
-                ? 'border-[#64D2FF]/60 bg-black/40'
-                : 'border-white/20 hover:border-[#64D2FF]/40 bg-white/[0.02]'
+                ? 'border-[#00F0FF]/60 bg-black/40'
+                : 'border-white/10 hover:border-white/25 bg-[#242426]'
             }`}
           >
             {selectedImage ? (
@@ -182,10 +182,10 @@ NO añadas texto antes ni después. Solo el JSON.`;
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex items-end p-3 justify-between">
-                  <span className="text-[10px] font-bold text-white glass-pill px-2.5 py-1 rounded-full">
+                  <span className="text-[10px] font-bold text-white bg-[#2C2C2E] border border-white/10 px-2.5 py-1 rounded-full">
                     Toca para cambiar foto
                   </span>
-                  <span className="text-xs text-[#64D2FF] font-black">✓ Foto Lista</span>
+                  <span className="text-xs text-[#00F0FF] font-black">✓ Foto Lista</span>
                 </div>
               </>
             ) : (
@@ -215,10 +215,10 @@ NO añadas texto antes ni después. Solo el JSON.`;
               type="button"
               onClick={handleRunScan}
               disabled={!selectedImage || isScanning}
-              className={`w-full py-3.5 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg ${
+              className={`w-full py-3.5 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg fitness-press ${
                 !selectedImage || isScanning
                   ? 'bg-white/10 text-[#8E8E93] cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#64D2FF] to-[#0A84FF] text-black hover:scale-[1.01] active:scale-98 shadow-[0_0_25px_rgba(100,210,255,0.4)]'
+                  : 'bg-[#00F0FF] text-black hover:scale-[1.01] active:scale-98 shadow-[0_0_25px_rgba(0,240,255,0.35)]'
               }`}
             >
               {isScanning ? (
@@ -240,22 +240,22 @@ NO añadas texto antes ni después. Solo el JSON.`;
             <div className="space-y-3 animate-fade-in">
               {/* Score Bento Row */}
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="glass-surface p-3.5 rounded-[20px] text-center border-t-white/15 space-y-1">
+                <div className="bg-[#242426] p-3.5 rounded-[20px] text-center border border-white/5 space-y-1">
                   <span className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block">
                     Puntuación Simetría
                   </span>
                   <div className="flex items-baseline justify-center gap-1">
-                    <span className="text-2xl font-black text-[#64D2FF] font-mono">
+                    <span className="text-2xl font-black text-[#00F0FF] font-mono">
                       {scanResult.symmetryScore}
                     </span>
                     <span className="text-xs font-bold text-[#8E8E93]">/ 100</span>
                   </div>
-                  <span className="text-[9px] font-bold text-[#34C759] block">
+                  <span className="text-[9px] font-bold text-[#A1F524] block">
                     Rango {scanResult.symmetryScore >= 85 ? 'Rubí / Diamante' : 'Oro Superior'}
                   </span>
                 </div>
 
-                <div className="glass-surface p-3.5 rounded-[20px] text-center border-t-white/15 space-y-1">
+                <div className="bg-[#242426] p-3.5 rounded-[20px] text-center border border-white/5 space-y-1">
                   <span className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block">
                     Grasa Estimada
                   </span>
@@ -264,23 +264,23 @@ NO añadas texto antes ni después. Solo el JSON.`;
                       ~{scanResult.estimatedBodyFatPercent}%
                     </span>
                   </div>
-                  <span className="text-[9px] font-bold text-[#64D2FF] block">
+                  <span className="text-[9px] font-bold text-[#00F0FF] block">
                     {scanResult.vTaperRatio}
                   </span>
                 </div>
               </div>
 
               {/* Muscles analysis */}
-              <div className="glass-surface p-3.5 rounded-[22px] space-y-2 border-t-white/10">
+              <div className="bg-[#242426] p-3.5 rounded-[22px] space-y-2 border border-white/5">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-[#34C759] flex items-center gap-1">
+                  <span className="text-[10px] font-black uppercase text-[#A1F524] flex items-center gap-1">
                     <span>✓</span> Puntos Fuertes (Hipertrofiados)
                   </span>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {scanResult.dominantMuscles.map((m, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 rounded-full bg-[#34C759]/15 text-[#34C759] text-[10px] font-bold border border-[#34C759]/25"
+                        className="px-2.5 py-1 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-[10px] font-bold border border-[#A1F524]/25"
                       >
                         {m}
                       </span>
@@ -289,14 +289,14 @@ NO añadas texto antes ni después. Solo el JSON.`;
                 </div>
 
                 <div className="space-y-1 pt-1 border-t border-white/5">
-                  <span className="text-[10px] font-black uppercase text-[#FF9500] flex items-center gap-1">
+                  <span className="text-[10px] font-black uppercase text-[#FA114F] flex items-center gap-1">
                     <span>⚡</span> Puntos a Priorizar
                   </span>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {scanResult.laggingMuscles.map((m, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 rounded-full bg-[#FF9500]/15 text-[#FF9500] text-[10px] font-bold border border-[#FF9500]/25"
+                        className="px-2.5 py-1 rounded-full bg-[#FA114F]/15 text-[#FA114F] text-[10px] font-bold border border-[#FA114F]/25"
                       >
                         {m}
                       </span>
@@ -306,12 +306,12 @@ NO añadas texto antes ni después. Solo el JSON.`;
               </div>
 
               {/* Summary and Recommendation */}
-              <div className="glass-surface p-3.5 rounded-[22px] space-y-2 border-t-white/10">
+              <div className="bg-[#242426] p-3.5 rounded-[22px] space-y-2 border border-white/5">
                 <p className="text-xs text-[#E5E5EA] leading-relaxed font-medium">
                   {scanResult.aestheticSummary}
                 </p>
-                <div className="p-2.5 rounded-[16px] bg-[#64D2FF]/10 border border-[#64D2FF]/25">
-                  <span className="text-[10px] font-black uppercase tracking-wider text-[#64D2FF] block mb-0.5">
+                <div className="p-2.5 rounded-[16px] bg-[#00F0FF]/10 border border-[#00F0FF]/25">
+                  <span className="text-[10px] font-black uppercase tracking-wider text-[#00F0FF] block mb-0.5">
                     Prescripción de Entrenamiento:
                   </span>
                   <p className="text-[11px] font-bold text-[#F5F5F7] leading-relaxed">
@@ -326,7 +326,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
                   showToast('Escaneo guardado en tu perfil.');
                   onClose();
                 }}
-                className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all"
+                className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-sm shadow-md active:scale-98 transition-all fitness-press"
               >
                 Guardar Resultados en Perfil
               </button>

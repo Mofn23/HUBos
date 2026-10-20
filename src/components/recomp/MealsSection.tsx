@@ -133,14 +133,14 @@ export const MealsSection: React.FC = () => {
           <span className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93]">
             Módulo de Nutrición
           </span>
-          <h1 className="text-xl font-black text-[#F5F5F7] flex items-center gap-2 tracking-tight">
+          <h1 className="text-xl font-black text-white flex items-center gap-2 tracking-tight">
             <span>🍽️</span>
             <span>Comidas & Dieta</span>
           </h1>
         </div>
         <button
           onClick={() => setIsDateModalOpen(true)}
-          className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#F5F5F7] flex items-center gap-1.5 hover:border-white/30 active:scale-95 transition-transform"
+          className="bg-[#1C1C1E] border border-white/[0.08] px-3.5 py-1.5 rounded-full text-xs font-black text-white flex items-center gap-1.5 hover:border-white/20 fitness-press transition-all"
         >
           <span>🗓️</span>
           <span>Cambiar</span>
@@ -148,48 +148,48 @@ export const MealsSection: React.FC = () => {
       </div>
 
       {/* 2. Hero Bento Card de Telemetría & Acciones Rápidas Unificadas */}
-      <div className="glass-surface p-5 rounded-[32px] border-t-white/20 space-y-4 shadow-lg">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-5 rounded-3xl space-y-4 shadow-xl">
         <div className="flex items-start justify-between">
           <div>
             <div className="text-xs font-bold text-[#8E8E93]">Consumo del Día</div>
-            <div className="text-2xl font-black text-[#F5F5F7] tracking-tight mt-0.5">
+            <div className="text-2xl font-black text-white tracking-tight mt-0.5">
               {totalCalories}{' '}
               <span className="text-sm font-bold text-[#8E8E93]">/ {targetCalories} kcal</span>
             </div>
           </div>
 
-          {/* Micro-píldoras de Macronutrientes */}
+          {/* Micro-píldoras de Macronutrientes (Apple Activity Ring Colors) */}
           <div className="flex items-center gap-1.5">
-            <span className="px-2.5 py-1 rounded-full bg-[#0A84FF]/15 text-[#64D2FF] text-[11px] font-black border border-[#0A84FF]/25 shadow-sm">
+            <span className="px-2.5 py-1 rounded-full bg-[#FA114F]/15 text-[#FA114F] text-[11px] font-black border border-[#FA114F]/25 shadow-sm">
               {totalProtein}g P
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-[#FF9F0A]/15 text-[#FFD60A] text-[11px] font-black border border-[#FF9F0A]/25 shadow-sm">
+            <span className="px-2.5 py-1 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] text-[11px] font-black border border-[#00F0FF]/25 shadow-sm">
               {totalCarbs}g C
             </span>
-            <span className="px-2.5 py-1 rounded-full bg-[#BF5AF2]/15 text-[#DA8FFF] text-[11px] font-black border border-[#BF5AF2]/25 shadow-sm">
+            <span className="px-2.5 py-1 rounded-full bg-[#FFD60A]/15 text-[#FFD60A] text-[11px] font-black border border-[#FFD60A]/25 shadow-sm">
               {totalFat}g G
             </span>
           </div>
         </div>
 
         {/* Barra de Progreso Luminosa de Calorías */}
-        <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden border border-white/5">
+        <div className="w-full h-2 rounded-full bg-[#2C2C2E] overflow-hidden">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#34C759] to-[#30B753] shadow-[0_0_10px_rgba(52,199,89,0.5)] transition-all duration-500"
+            className="h-full rounded-full bg-[#A1F524] shadow-[0_0_10px_rgba(161,245,36,0.4)] transition-all duration-500"
             style={{
               width: `${Math.min(100, Math.round((totalCalories / (targetCalories || 2000)) * 100))}%`,
             }}
           />
         </div>
 
-        {/* Acciones Rápidas Integradas (Elimina botones flotantes colisionantes) */}
+        {/* Acciones Rápidas Integradas */}
         <div className="flex items-center gap-2 pt-0.5">
           <button
             onClick={() => {
               setIsAiScanOpen(true);
               setIsModalOpen(true);
             }}
-            className="flex-1 py-3 px-4 rounded-full bg-gradient-to-r from-[#34C759] to-[#30B753] text-black font-black text-xs flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(52,199,89,0.35)] active:scale-95 hover:scale-[1.01] transition-all"
+            className="flex-1 py-3 px-4 rounded-full bg-[#A1F524] text-black font-black text-xs flex items-center justify-center gap-2 fitness-press shadow-md shadow-[#A1F524]/20 transition-all"
           >
             <IconCamera className="w-4 h-4" />
             <span>Escanear con IA</span>
@@ -197,7 +197,7 @@ export const MealsSection: React.FC = () => {
 
           <button
             onClick={() => handleOpenManual(activeFilter === 'todos' ? 'almuerzo' : activeFilter)}
-            className="py-3 px-4 rounded-full glass-pill text-[#F5F5F7] font-black text-xs flex items-center justify-center gap-1.5 hover:border-white/30 active:scale-95 transition-all shadow-sm"
+            className="py-3 px-4 rounded-full bg-[#2C2C2E] border border-white/5 text-white font-black text-xs flex items-center justify-center gap-1.5 hover:bg-white/10 fitness-press transition-all shadow-sm"
           >
             <IconPlus className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Manual</span>
@@ -205,7 +205,7 @@ export const MealsSection: React.FC = () => {
         </div>
       </div>
 
-      {/* 3. Comidas Frecuentes (Píldoras Confinadas con Truncado) */}
+      {/* 3. Comidas Frecuentes */}
       {favoriteMeals.length > 0 && (
         <div className="space-y-1.5">
           <div className="text-[10px] font-black text-[#8E8E93] uppercase tracking-wider flex items-center gap-1 px-1">
@@ -217,21 +217,21 @@ export const MealsSection: React.FC = () => {
             {favoriteMeals.map((fav) => (
               <div
                 key={fav.id}
-                className="glass-pill inline-flex items-center gap-2 px-3 py-1.5 rounded-full shrink-0 text-xs font-black text-[#F5F5F7] shadow-sm hover:border-white/30 transition-all"
+                className="bg-[#242426] border border-white/5 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full shrink-0 text-xs font-bold text-white shadow-sm hover:border-white/20 transition-all"
               >
                 <span>{fav.emoji}</span>
-                <span className="max-w-[125px] truncate">{fav.name}</span>
+                <span className="max-w-[125px] truncate font-black">{fav.name}</span>
                 <span className="text-[#8E8E93] text-[10px] font-bold shrink-0">{fav.calories} kcal</span>
                 <button
                   onClick={() => handleAddFavorite(fav)}
-                  className="w-5 h-5 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0 active:scale-90 shadow-sm"
+                  className="w-5 h-5 rounded-full bg-[#A1F524] flex items-center justify-center text-black font-black text-xs shrink-0 fitness-press shadow-sm"
                   title="Añadir a hoy"
                 >
                   +
                 </button>
                 <button
                   onClick={() => deleteFavoriteMeal(fav.id)}
-                  className="text-[#8E8E93] hover:text-[#FF453A] text-xs shrink-0 active:scale-90"
+                  className="text-[#8E8E93] hover:text-[#FA114F] text-xs shrink-0 fitness-press"
                   title="Eliminar de frecuentes"
                 >
                   ✕
@@ -242,7 +242,7 @@ export const MealsSection: React.FC = () => {
         </div>
       )}
 
-      {/* 4. Selector Segmentado de Tiempos de Comida en Píldoras de Cristal */}
+      {/* 4. Selector Segmentado de Tiempos de Comida */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
         {filterTabs.map((tab) => {
           const isActive = activeFilter === tab.key;
@@ -250,10 +250,10 @@ export const MealsSection: React.FC = () => {
             <button
               key={tab.key}
               onClick={() => setActiveFilter(tab.key)}
-              className={`px-3.5 py-2 rounded-full text-xs font-black shrink-0 transition-all flex items-center gap-1.5 ${
+              className={`px-3.5 py-2 rounded-full text-xs font-bold shrink-0 transition-all flex items-center gap-1.5 fitness-press ${
                 isActive
-                  ? 'glass-pill-active text-[#34C759] shadow-md border-white/25'
-                  : 'glass-pill text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                  ? 'bg-white text-black font-black shadow-sm'
+                  : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
               }`}
             >
               {tab.icon && <span>{tab.icon}</span>}
@@ -263,14 +263,14 @@ export const MealsSection: React.FC = () => {
         })}
       </div>
 
-      {/* 5. Lista de Comidas Registradas o Estado Vacío Elegante */}
+      {/* 5. Lista de Comidas Registradas o Estado Vacío */}
       {displayedMeals.length === 0 ? (
-        <div className="glass-surface rounded-[28px] p-8 text-center space-y-3 border-t-white/20 shadow-md flex flex-col items-center">
-          <div className="w-14 h-14 rounded-3xl glass-pill flex items-center justify-center text-2xl shadow-inner">
+        <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-8 text-center space-y-3 shadow-xl flex flex-col items-center">
+          <div className="w-14 h-14 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-2xl shadow-inner">
             🍽️
           </div>
           <div>
-            <h3 className="text-sm font-black text-[#F5F5F7]">
+            <h3 className="text-sm font-black text-white">
               {activeFilter === 'todos'
                 ? 'No has registrado comidas hoy'
                 : `Sin comidas registradas en ${activeFilter}`}
@@ -284,7 +284,7 @@ export const MealsSection: React.FC = () => {
               setIsAiScanOpen(true);
               setIsModalOpen(true);
             }}
-            className="glass-pill px-4 py-2 rounded-full text-xs font-black text-[#34C759] hover:border-white/30 active:scale-95 transition-all flex items-center gap-1.5 shadow-sm mt-1"
+            className="bg-[#2C2C2E] border border-white/5 px-4 py-2 rounded-full text-xs font-black text-[#A1F524] hover:bg-white/10 fitness-press transition-all flex items-center gap-1.5 shadow-sm mt-1"
           >
             <IconCamera className="w-3.5 h-3.5" />
             <span>Registrar Plato con Foto</span>
@@ -305,11 +305,11 @@ export const MealsSection: React.FC = () => {
               <div
                 key={meal.id}
                 onClick={() => setSelectedDetailMeal(meal)}
-                className="glass-pill p-3.5 rounded-[22px] flex items-center justify-between shadow-sm cursor-pointer hover:border-white/30 active:scale-[0.99] transition-all group"
+                className="bg-[#1C1C1E] border border-white/[0.08] p-3.5 rounded-2xl flex items-center justify-between shadow-sm cursor-pointer hover:border-white/20 fitness-press transition-all group"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
                   {meal.imageBase64 || meal.imageUrl ? (
-                    <div className="w-12 h-12 rounded-2xl overflow-hidden shrink-0 border border-white/10 shadow-sm">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 border border-white/10 shadow-sm">
                       <img
                         src={meal.imageBase64 || meal.imageUrl}
                         alt={meal.name}
@@ -317,23 +317,23 @@ export const MealsSection: React.FC = () => {
                       />
                     </div>
                   ) : (
-                    <div className="w-11 h-11 rounded-2xl glass-surface flex items-center justify-center text-lg shrink-0">
+                    <div className="w-11 h-11 rounded-xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-lg shrink-0">
                       {iconMap[category] || '🍽️'}
                     </div>
                   )}
 
                   <div className="overflow-hidden">
-                    <h4 className="text-xs font-black text-[#F5F5F7] truncate group-hover:text-[#34C759] transition-colors">
+                    <h4 className="text-xs font-black text-white truncate transition-colors">
                       {meal.name}
                     </h4>
                     <div className="flex items-center gap-1.5 mt-1">
-                      <span className="px-1.5 py-0.5 rounded-full bg-[#0A84FF]/15 text-[#64D2FF] text-[9px] font-black">
+                      <span className="px-1.5 py-0.5 rounded-full bg-[#FA114F]/15 text-[#FA114F] text-[9px] font-black">
                         {meal.protein}g P
                       </span>
-                      <span className="px-1.5 py-0.5 rounded-full bg-[#FF9F0A]/15 text-[#FFD60A] text-[9px] font-black">
+                      <span className="px-1.5 py-0.5 rounded-full bg-[#00F0FF]/15 text-[#00F0FF] text-[9px] font-black">
                         {meal.carbs}g C
                       </span>
-                      <span className="px-1.5 py-0.5 rounded-full bg-[#BF5AF2]/15 text-[#DA8FFF] text-[9px] font-black">
+                      <span className="px-1.5 py-0.5 rounded-full bg-[#FFD60A]/15 text-[#FFD60A] text-[9px] font-black">
                         {meal.fat}g G
                       </span>
                     </div>
@@ -341,7 +341,7 @@ export const MealsSection: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 pl-2">
-                  <span className="px-2.5 py-1 rounded-full bg-white/[0.08] text-xs font-black text-[#F5F5F7] border border-white/10">
+                  <span className="px-2.5 py-1 rounded-full bg-[#2C2C2E] border border-white/5 text-xs font-black text-white">
                     {meal.calories} kcal
                   </span>
                   <button
@@ -350,7 +350,7 @@ export const MealsSection: React.FC = () => {
                       e.stopPropagation();
                       deleteMeal(meal.id);
                     }}
-                    className="text-[#8E8E93] hover:text-[#FF453A] p-1.5 transition-colors active:scale-90"
+                    className="text-[#8E8E93] hover:text-[#FA114F] p-1.5 transition-colors fitness-press"
                     title="Eliminar comida"
                   >
                     <IconTrash className="w-3.5 h-3.5" />
@@ -362,11 +362,11 @@ export const MealsSection: React.FC = () => {
         </div>
       )}
 
-      {/* 6. Galería de Fotos Reales (Fotos de comidas tomadas por el usuario) */}
+      {/* 6. Galería de Fotos Reales */}
       {mealsWithPhotos.length > 0 && (
-        <div className="glass-surface rounded-[28px] p-4.5 space-y-3 border-t-white/20 shadow-md">
+        <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-5 space-y-3 shadow-xl">
           <div className="flex items-center justify-between pb-1 border-b border-white/5">
-            <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+            <div className="bg-[#242426] border border-white/5 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-white">
               <span>📸</span>
               <span>Galería de Fotos Reales</span>
             </div>
@@ -380,7 +380,7 @@ export const MealsSection: React.FC = () => {
               <div
                 key={meal.id}
                 onClick={() => setSelectedPhotoMeal(meal)}
-                className="relative aspect-square rounded-[20px] overflow-hidden border border-white/15 group cursor-pointer active:scale-95 transition-all shadow-sm hover:border-white/30"
+                className="relative aspect-square rounded-[20px] overflow-hidden border border-white/10 group cursor-pointer fitness-press transition-all shadow-sm hover:border-white/30"
               >
                 <img
                   src={meal.imageBase64 || meal.imageUrl}
@@ -401,22 +401,22 @@ export const MealsSection: React.FC = () => {
       {isManualModalOpen && (
         <div className="fixed inset-0 z-[9999] flex items-end justify-center animate-fade-in">
           <div
-            className="fixed inset-0 bg-black/75 backdrop-blur-xl"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
             onClick={handleCloseManual}
           />
           <div
-            className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl backdrop-blur-3xl"
+            className="relative bg-[#1C1C1E] border-t border-white/[0.08] w-full max-w-md rounded-t-[32px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="w-10 h-1.5 rounded-full bg-white/20 mx-auto -mt-1 mb-2" />
 
             <div className="flex items-center justify-between pb-1 border-b border-white/5">
-              <h3 className="text-base font-black text-[#F5F5F7] tracking-tight capitalize">
+              <h3 className="text-base font-black text-white tracking-tight capitalize">
                 Registrar en {activeCategoryForManual}
               </h3>
               <button
                 onClick={handleCloseManual}
-                className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white"
+                className="w-8 h-8 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-[#8E8E93] hover:text-white fitness-press"
               >
                 ✕
               </button>
@@ -432,7 +432,7 @@ export const MealsSection: React.FC = () => {
                   placeholder="Ej: Pechuga de pollo con arroz y ensalada"
                   value={manualName}
                   onChange={(e) => setManualName(e.target.value)}
-                  className="w-full mt-1 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                  className="w-full mt-1 p-3.5 rounded-xl bg-[#2C2C2E] border border-white/10 text-sm text-white font-bold focus:border-[#A1F524] focus:outline-none"
                   required
                 />
               </div>
@@ -447,7 +447,7 @@ export const MealsSection: React.FC = () => {
                     placeholder="450"
                     value={manualCalories}
                     onChange={(e) => setManualCalories(e.target.value)}
-                    className="w-full mt-1 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1 p-3.5 rounded-xl bg-[#2C2C2E] border border-white/10 text-sm text-white font-bold focus:border-[#A1F524] focus:outline-none"
                     required
                   />
                 </div>
@@ -460,7 +460,7 @@ export const MealsSection: React.FC = () => {
                     placeholder="35"
                     value={manualProtein}
                     onChange={(e) => setManualProtein(e.target.value)}
-                    className="w-full mt-1 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1 p-3.5 rounded-xl bg-[#2C2C2E] border border-white/10 text-sm text-white font-bold focus:border-[#A1F524] focus:outline-none"
                   />
                 </div>
               </div>
@@ -475,7 +475,7 @@ export const MealsSection: React.FC = () => {
                     placeholder="40"
                     value={manualCarbs}
                     onChange={(e) => setManualCarbs(e.target.value)}
-                    className="w-full mt-1 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1 p-3.5 rounded-xl bg-[#2C2C2E] border border-white/10 text-sm text-white font-bold focus:border-[#A1F524] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -487,14 +487,14 @@ export const MealsSection: React.FC = () => {
                     placeholder="12"
                     value={manualFat}
                     onChange={(e) => setManualFat(e.target.value)}
-                    className="w-full mt-1 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1 p-3.5 rounded-xl bg-[#2C2C2E] border border-white/10 text-sm text-white font-bold focus:border-[#A1F524] focus:outline-none"
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#34C759] to-[#30B753] text-black font-black text-sm shadow-[0_4px_16px_rgba(52,199,89,0.35)] active:scale-95 transition-all mt-2"
+                className="w-full py-4 rounded-full bg-[#A1F524] text-black font-black text-sm fitness-press transition-all mt-2 shadow-lg shadow-[#A1F524]/20"
               >
                 Guardar Comida
               </button>
@@ -511,7 +511,7 @@ export const MealsSection: React.FC = () => {
             onClick={() => setSelectedPhotoMeal(null)}
           />
           <div
-            className="relative glass-surface-elevated border border-white/15 rounded-[32px] overflow-hidden max-w-xs w-full z-10 animate-scale-up shadow-2xl"
+            className="relative bg-[#1C1C1E] border border-white/[0.08] rounded-3xl overflow-hidden max-w-xs w-full z-10 animate-scale-up shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="relative aspect-video">
@@ -522,21 +522,21 @@ export const MealsSection: React.FC = () => {
               />
               <button
                 onClick={() => setSelectedPhotoMeal(null)}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 backdrop-blur-md text-white flex items-center justify-center text-xs shadow-md"
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70 backdrop-blur-md text-white flex items-center justify-center text-xs shadow-md fitness-press"
               >
                 ✕
               </button>
             </div>
             <div className="p-4.5 space-y-2 text-center">
-              <h4 className="text-sm font-black text-[#F5F5F7] tracking-tight">
+              <h4 className="text-sm font-black text-white tracking-tight">
                 {selectedPhotoMeal.name}
               </h4>
-              <div className="inline-block px-3 py-1 rounded-full glass-pill text-xs font-black text-[#34C759]">
+              <div className="inline-block px-3 py-1 rounded-full bg-[#A1F524]/20 text-xs font-black text-[#A1F524]">
                 {selectedPhotoMeal.calories} kcal • {selectedPhotoMeal.date}
               </div>
               <button
                 onClick={() => setSelectedPhotoMeal(null)}
-                className="glass-pill w-full py-2 rounded-full text-xs font-black text-[#F5F5F7] hover:border-white/30 active:scale-95 transition-all mt-1"
+                className="bg-[#2C2C2E] border border-white/5 w-full py-2.5 rounded-full text-xs font-black text-white hover:bg-white/10 fitness-press transition-all mt-1"
               >
                 Cerrar
               </button>

@@ -2,6 +2,67 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.8.0] - 2026-10-20 (HUBos v2.8: Overhaul Universal Apple Fitness 1:1 en Toda la Super-App & Erradicación Total de Claymorphism)
+
+### 🌟 Rediseño Visual & Unificación de Ecosistema Apple Fitness
+- **Erradicación 100% de Claymorphism**:
+  - Eliminación absoluta de formas 3D infladas, botones tipo arcilla mate y dobles sombras interiores en todas las aplicaciones, submódulos, pestañas y modales.
+  - Implementación universal del sistema de diseño oficial de Apple Fitness:
+    - Fondo de aplicación: True OLED Black (`#000000`).
+    - Tarjeta estándar: Dark Apple Card (`#1C1C1E`) con borde sutil `border-white/5` o `border-white/10`.
+    - Superficies elevadas y contenedores secundarios: Elevated Card (`#242426`).
+    - Píldoras de control, tags inactivos y fondos de inputs: Control Pill (`#2C2C2E`).
+    - Segmented Tabs activos: Píldora blanca pura con texto negro en negrita máxima (`bg-white text-black font-black shadow-md`).
+    - Botones de acción principal y confirmaciones: Verde Neón Exercise (`#A1F524`) con texto negro y compresión física táctil `fitness-press` (`:active:scale-[0.965]`).
+    - Acentos de alerta y acciones destructivas: Rojo Coral Move (`#FA114F`).
+    - Acentos de escaneo IA, telemetría e hidratación: Azul Eléctrico Stand (`#00F0FF`).
+    - Acentos de rachas, trofeos y macronutrientes grasos: Amarillo Awards (`#FFD60A`).
+
+### 📱 Módulos y Componentes Transformados
+1. **🥑 Módulo RecompAI (Nutrición & Recomposición)**:
+   - `ProfilePage.tsx`: Secciones 7-11 y modales migrados a tarjetas `#1C1C1E` / `#242426`, acentos `#A1F524`, acciones `#00F0FF` y hojas Apple Fitness.
+   - `WeightTrend.tsx`: Gráficas y badges renovados con `#A1F524` / `#FA114F`.
+   - `MealCaptureModal.tsx`: Hoja inferior `#1C1C1E`, control segmentado blanco, contenedor `#242426` y botón `#00F0FF` con `fitness-press`.
+   - `DateSelectionModal.tsx`: Hoja `#1C1C1E`, tarjetas `#242426` con checks activos `#A1F524`.
+   - `AICoachModal.tsx`: Burbujas de usuario `#A1F524`, burbujas del coach `#242426` y botón enviar neón.
+   - `MealDetailModal.tsx`: Desglose macro `#242426` (Proteína `#FA114F`, Carbos `#00F0FF`, Grasa `#FFD60A`).
+   - `MuscleHeatmap.tsx`: Tarjeta `#1C1C1E`, leyenda con `#A1F524`, `#FFD60A`, `#FA114F` y modelo anatómico adaptado.
+   - `ProgressSection.tsx`: Métricas bento `#242426`, inputs oscuros y modal de registro `#1C1C1E`.
+
+2. **⚡ Módulo Aesthetix (Gym & Entrenamiento)**:
+   - `AnatomyRanksTab.tsx`: Tarjeta hero bento `#1C1C1E`, calculadora 1RM en `#242426` con inputs `#2C2C2E`, tarjetas de grupos musculares y modal de 25 rangos globales con botón `#A1F524`.
+   - `ExercisesExplorerTab.tsx`: Barra de búsqueda `#1C1C1E`, menús desplegables `#1C1C1E` con selección `#A1F524` / `#00F0FF`, tarjetas de ejercicio y botón de carga `#2C2C2E`.
+   - `ProfileHistoryTab.tsx`: Hero de perfil `#1C1C1E`, volumen anual acumulado con dot `#A1F524`, tarjetas de PRs en `#242426` y modal de antropometría `#1C1C1E`.
+   - `RoutinesTab.tsx`: Segmented control de rutinas y días con píldoras blancas puras (`bg-white text-black font-black`), tarjetas de ejercicios de la rutina en `#242426` y banners de generador IA y constructor manual en `#1C1C1E`.
+   - `BodyScanModal.tsx`: Escáner físico con Gemini Vision en hoja `#1C1C1E`, caja de fotos `#242426` y botón `#00F0FF`.
+   - `AppleWorkoutsTabView.tsx`: Segmented control con píldoras blancas y botones con feedback táctil.
+   - `LiveWorkoutFullscreen.tsx`: Cabecera OLED `#000000`, cronómetro pulsante `#A1F524`, checks de series completadas y pod flotante de descanso `#1C1C1E`.
+   - Modales adicionales: `StartWorkoutModal`, `SessionDetailModal`, `AiRoutineBuilderModal`, `CustomRoutineModal`, `ExerciseDetailModal`, `SymmetryMuscleDetailSheet`, `SymmetryImportModal` y `WorkoutSummaryCelebrationModal`.
+
+3. **📅 Módulo Schedule (Horarios & Tareas)**:
+   - `ScheduleGrid.tsx` & `ScheduleHeroCards.tsx`: Tarjetas `#1C1C1E`, tarjetas de clases `#242426`, botones de asistencia y timeline horario.
+   - Modales: `AddClassModal`, `AddTaskModal`, `ClassDetailModal`, `ScheduleAiImportModal`, `ScheduleFabMenu`, `ScheduleSettingsModal`, `TasksModal`.
+
+4. **📺 Módulo Subscriptions (Finanzas & Suscripciones)**:
+   - `SubscriptionsView.tsx` & `HeroFinancials.tsx`: Tarjeta hero `#1C1C1E`, métricas de gasto mensual/anual y barras de presupuesto en acentos Apple.
+   - `SubscriptionList.tsx`, `TimelineView.tsx`, `InsightsView.tsx`, `CancellationView.tsx`, `SubscriptionModal.tsx`.
+
+5. **🏠 HUB Launcher Core & Utilidades**:
+   - `HubDashboard.tsx`: Dashboard central en `#000000`, tarjetas bento de aplicaciones `#1C1C1E`, accesos rápidos y estado del sistema.
+   - `HubQuickPromptSheet.tsx` & `HubSettingsSheet.tsx`: Hojas modales `#1C1C1E` con esquinas `rounded-t-[36px]`, inputs `#242426` y botones `#A1F524`.
+   - `FloatingHubBar.tsx`: Dock ultra-frosted glass con selector activo `#A1F524` y compresión táctil.
+   - `AlertToast.tsx` & `ToastNotification.tsx`: Notificaciones flotantes en `#1C1C1E` con bordes cromáticos `#A1F524`, `#FA114F`, `#00F0FF` y `#FFD60A`.
+
+### 📁 Archivos Modificados / Creados
+- `[MODIFICADO]` `package.json` - Versión actualizada a v2.8.0.
+- `[MODIFICADO]` `.github/workflows/build-ios.yml` - Release tag actualizado a v2.8.0.
+- `[MODIFICADO]` `UPDATES.md` - Registro detallado de la versión v2.8.0.
+- `[MODIFICADO]` `HUBos.md` - Actualización del estado del proyecto en la documentación central.
+- `[MODIFICADO]` `src/app/globals.css` - Normalización de tokens Apple Fitness y utilidades de interacción física.
+- `[MODIFICADO]` `src/components/*` (60 archivos actualizados y unificados).
+
+---
+
 ## 🚀 [v2.7.0] - 2026-10-19 (HUBos v2.7: Rediseño Integral de Aesthetix al Estilo Apple Fitness 1:1 & Suite Emil Kowalski)
 
 ### 🌟 Rediseño Visual & Arquitectura de Animación iOS

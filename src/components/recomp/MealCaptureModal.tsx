@@ -175,33 +175,33 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         onClick={handleClose}
       />
 
-      {/* Bottom Sheet Modal (Glassmorphism Elevated) */}
+      {/* Bottom Sheet Modal (Apple Fitness Sheet) */}
       <div
-        className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative bg-[#1C1C1E] border-t border-white/15 w-full max-w-md rounded-t-[38px] p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <span className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+            <span className="text-[11px] font-black uppercase tracking-wider text-[#00F0FF]">
               REGISTRO FOTOGRÁFICO
             </span>
             <h2 className="text-2xl font-black text-[#F5F5F7] tracking-tight">Escaneo con IA</h2>
           </div>
           <button
             onClick={handleClose}
-            className="glass-pill w-10 h-10 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white hover:border-white/30 active:scale-95 transition-all"
+            className="w-10 h-10 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[#8E8E93] hover:text-white hover:bg-[#3A3A3C] fitness-press transition-all"
           >
             <span className="text-base font-bold">✕</span>
           </button>
         </div>
 
-        {/* Category Selection (Segmented Glass Pills) */}
+        {/* Category Selection (Apple Fitness Segmented Control) */}
         <div className="space-y-2">
           <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
             Categoría
           </label>
-          <div className="glass-surface p-1 rounded-2xl flex gap-1.5 shadow-inner">
+          <div className="bg-[#2C2C2E] p-1 rounded-2xl flex gap-1">
             {categories.map((c) => {
               const isActive = category === c.key;
               return (
@@ -209,10 +209,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                   key={c.key}
                   type="button"
                   onClick={() => setCategory(c.key)}
-                  className={`flex-1 py-2 px-1.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all ${
+                  className={`flex-1 py-2 px-1.5 rounded-xl text-xs font-black flex items-center justify-center gap-1.5 transition-all fitness-press ${
                     isActive
-                      ? 'glass-pill-active text-[#F5F5F7] shadow-sm scale-100'
-                      : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                      ? 'bg-white text-black shadow-sm font-black'
+                      : 'text-[#8E8E93] hover:text-[#F5F5F7]'
                   }`}
                 >
                   <span className="text-sm">{c.icon}</span>
@@ -226,7 +226,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         {/* Photo Upload Dashed Container */}
         <div
           onClick={() => fileInputRef.current?.click()}
-          className="relative w-full h-56 rounded-[28px] border-2 border-dashed border-white/20 glass-surface flex flex-col items-center justify-center cursor-pointer hover:border-white/40 active:scale-[0.99] transition-all overflow-hidden group shadow-inner"
+          className="relative w-full h-56 rounded-[28px] border-2 border-dashed border-white/20 bg-[#242426] flex flex-col items-center justify-center cursor-pointer hover:border-white/40 fitness-press transition-all overflow-hidden group shadow-inner"
         >
           {imagePreview ? (
             <div className="relative w-full h-full">
@@ -242,14 +242,14 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                   setImageForApi(null);
                   setImagePreview(null);
                 }}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/75 backdrop-blur-sm text-white flex items-center justify-center text-xs shadow-lg hover:scale-110 active:scale-95 transition-transform"
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/80 backdrop-blur-sm text-white flex items-center justify-center text-xs shadow-lg hover:scale-110 active:scale-95 transition-transform"
               >
                 ✕
               </button>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3 text-center px-4">
-              <div className="w-14 h-14 rounded-2xl glass-pill flex items-center justify-center text-2xl text-[#8E8E93] group-hover:scale-110 group-hover:text-white transition-all shadow-sm">
+              <div className="w-14 h-14 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-2xl text-[#00F0FF] group-hover:scale-110 transition-all shadow-sm">
                 📷
               </div>
               <span className="text-sm font-black text-[#F5F5F7]">
@@ -271,7 +271,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Description Text Box */}
-        <div className="p-3.5 rounded-2xl glass-surface border border-white/10 focus-within:border-white/30 transition-all">
+        <div className="p-3.5 rounded-2xl bg-[#2C2C2E] border border-white/10 focus-within:border-[#00F0FF] transition-all">
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -285,10 +285,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
         <button
           type="button"
           onClick={() => setIsFavorite(!isFavorite)}
-          className={`w-full py-3 px-4 rounded-2xl flex items-center justify-between border transition-all active:scale-[0.99] ${
+          className={`w-full py-3 px-4 rounded-2xl flex items-center justify-between border transition-all fitness-press ${
             isFavorite
-              ? 'bg-[#FFD60A]/10 border-[#FFD60A]/40 text-[#FFD60A]'
-              : 'glass-surface border-white/10 text-[#8E8E93] hover:text-[#F5F5F7]'
+              ? 'bg-[#FFD60A]/15 border-[#FFD60A]/40 text-[#FFD60A]'
+              : 'bg-[#242426] border-white/5 text-[#8E8E93] hover:text-[#F5F5F7]'
           }`}
         >
           <div className="flex items-center gap-2.5 text-xs font-black">
@@ -312,7 +312,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
             type="button"
             onClick={handleAnalyze}
             disabled={isLoading || (!description.trim() && !imageForApi)}
-            className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(52,199,89,0.35)] hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-40"
+            className="w-full py-4 rounded-full bg-[#00F0FF] text-black font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#00F0FF]/25 fitness-press transition-all disabled:opacity-40"
           >
             {isLoading ? (
               <>

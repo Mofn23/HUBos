@@ -69,17 +69,17 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
 
       {/* Confetti / celebration ambient particles */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
-        <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-[#34C759]/20 blur-[100px] animate-pulse" />
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 rounded-full bg-[#A1F524]/20 blur-[100px] animate-pulse" />
         <div className="absolute top-1/3 right-1/4 w-72 h-72 rounded-full bg-[#FFD60A]/15 blur-[100px] animate-pulse" />
-        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 rounded-full bg-[#64D2FF]/20 blur-[110px]" />
+        <div className="absolute bottom-1/4 left-1/3 w-80 h-80 rounded-full bg-[#00F0FF]/20 blur-[110px]" />
       </div>
 
       {/* Celebration Card */}
-      <div className="relative w-full max-w-sm sm:max-w-md glass-surface-elevated rounded-[36px] p-6 z-10 border border-white/20 shadow-[0_0_60px_rgba(52,199,89,0.35)] animate-scale-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div className="relative w-full max-w-sm sm:max-w-md bg-[#1C1C1E] rounded-[36px] p-6 z-10 border border-white/15 shadow-2xl animate-scale-up space-y-5 max-h-[90vh] overflow-y-auto no-scrollbar">
         {/* Top Trophy & Streak Badge */}
         <div className="flex flex-col items-center text-center space-y-2">
           <div className="relative">
-            <div className="w-20 h-20 rounded-full bg-[#34C759]/20 border border-[#34C759]/40 flex items-center justify-center text-4xl shadow-[0_0_30px_rgba(52,199,89,0.4)] animate-bounce">
+            <div className="w-20 h-20 rounded-full bg-[#A1F524]/20 border border-[#A1F524]/40 flex items-center justify-center text-4xl shadow-[0_0_30px_rgba(161,245,36,0.4)] animate-bounce">
               🏆
             </div>
             {/* Fire Streak Badge */}
@@ -90,7 +90,7 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
           </div>
 
           <div>
-            <span className="text-[11px] font-black uppercase tracking-widest text-[#34C759] block">
+            <span className="text-[11px] font-black uppercase tracking-widest text-[#A1F524] block">
               ¡Entrenamiento Completado!
             </span>
             <h2 className="text-xl font-black text-[#F5F5F7] tracking-tight mt-0.5">
@@ -102,24 +102,24 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
 
         {/* Big 3 Stats Bento Cards */}
         <div className="grid grid-cols-3 gap-2.5">
-          <div className="glass-pill p-3 rounded-[20px] text-center border-t-white/15">
+          <div className="bg-[#242426] border border-white/5 p-3 rounded-[20px] text-center">
             <span className="text-[10px] font-bold text-[#8E8E93] block">Duración</span>
             <span className="text-base font-black text-[#F5F5F7] font-mono">
               {summary.durationMinutes}m
             </span>
           </div>
 
-          <div className="glass-pill p-3 rounded-[20px] text-center border-t-white/15">
+          <div className="bg-[#242426] border border-white/5 p-3 rounded-[20px] text-center">
             <span className="text-[10px] font-bold text-[#8E8E93] block">Volumen</span>
-            <span className="text-base font-black text-[#34C759] font-mono">
+            <span className="text-base font-black text-[#A1F524] font-mono">
               {Number(summary.totalVolumeKg).toLocaleString('es-CO')}
             </span>
             <span className="text-[9px] font-bold text-[#8E8E93] block">kg</span>
           </div>
 
-          <div className="glass-pill p-3 rounded-[20px] text-center border-t-white/15">
+          <div className="bg-[#242426] border border-white/5 p-3 rounded-[20px] text-center">
             <span className="text-[10px] font-bold text-[#8E8E93] block">Series</span>
-            <span className="text-base font-black text-[#64D2FF] font-mono">
+            <span className="text-base font-black text-[#00F0FF] font-mono">
               {summary.totalSets}
             </span>
           </div>
@@ -139,7 +139,7 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
         )}
 
         {/* AI Coach Analysis with Memory */}
-        <div className="glass-surface p-4 rounded-[24px] border border-white/15 space-y-2.5">
+        <div className="bg-[#242426] border border-white/5 p-4 rounded-[24px] space-y-2.5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span className="text-base">🤖</span>
@@ -147,7 +147,7 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
                 Diagnóstico del Coach IA
               </h4>
             </div>
-            <span className="px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10 text-[10px] font-black text-[#64D2FF]">
+            <span className="px-2 py-0.5 rounded-full bg-[#2C2C2E] border border-white/5 text-[10px] font-black text-[#00F0FF]">
               Memoria Activa
             </span>
           </div>
@@ -159,13 +159,13 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
           {/* Highlights comparison with previous day */}
           {analysis.highlights.length > 0 && (
             <div className="pt-2 border-t border-white/10 space-y-1">
-              <span className="text-[10px] font-black uppercase tracking-wider text-[#34C759]">
+              <span className="text-[10px] font-black uppercase tracking-wider text-[#A1F524]">
                 Ganancias vs Sesión Anterior:
               </span>
               <ul className="space-y-1 text-xs font-bold text-[#F5F5F7]">
                 {analysis.highlights.map((h, i) => (
                   <li key={i} className="flex items-center gap-1.5">
-                    <span className="text-[#34C759] text-[11px]">✓</span>
+                    <span className="text-[#A1F524] text-[11px]">✓</span>
                     <span>{h}</span>
                   </li>
                 ))}
@@ -175,7 +175,7 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
         </div>
 
         {/* Symmetry Rank Status */}
-        <div className="glass-surface p-3.5 rounded-[22px] border border-white/10 flex items-center justify-between gap-3">
+        <div className="bg-[#242426] border border-white/5 p-3.5 rounded-[22px] flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <div
               className="w-11 h-11 rounded-full p-1 flex items-center justify-center shrink-0 border border-white/15 shadow-sm"
@@ -198,7 +198,7 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
             </div>
           </div>
 
-          <span className="text-[11px] font-mono font-black text-[#34C759] shrink-0">
+          <span className="text-[11px] font-mono font-black text-[#A1F524] shrink-0">
             {rank.progressToNext}% prox.
           </span>
         </div>
@@ -206,7 +206,7 @@ export const WorkoutSummaryCelebrationModal: React.FC<WorkoutSummaryCelebrationM
         {/* Finish button */}
         <button
           onClick={onClose}
-          className="w-full py-4 rounded-full bg-[#34C759] hover:bg-[#34C759]/90 active:scale-98 text-black font-black text-sm tracking-tight shadow-[0_4px_25px_rgba(52,199,89,0.35)] transition-all"
+          className="w-full py-4 rounded-full bg-[#A1F524] hover:bg-[#A1F524]/90 text-black font-black text-sm tracking-tight shadow-md shadow-[#A1F524]/20 fitness-press transition-all"
         >
           Guardar & Volver al HUB
         </button>

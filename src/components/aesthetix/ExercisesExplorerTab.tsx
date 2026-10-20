@@ -82,13 +82,13 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
             setPage(1);
           }}
           placeholder="Buscar entre 1.324 ejercicios por nombre, músculo..."
-          className="w-full glass-surface rounded-[24px] pl-11 pr-4 py-3 text-xs text-[#F5F5F7] placeholder-[#636366] font-bold border border-white/10 outline-none focus:border-[#34C759] transition-all shadow-inner"
+          className="w-full bg-[#1C1C1E] rounded-[22px] pl-11 pr-4 py-3 text-xs text-white placeholder-[#8E8E93] font-bold border border-white/5 outline-none focus:border-[#A1F524]/50 transition-all shadow-inner"
         />
         <span className="absolute left-4 top-3 text-sm text-[#8E8E93]">🔍</span>
         {searchQuery && (
           <button
             onClick={() => setSearchQuery('')}
-            className="absolute right-3.5 top-3 w-5 h-5 rounded-full bg-white/[0.1] text-[10px] text-[#8E8E93] hover:text-white flex items-center justify-center"
+            className="absolute right-3.5 top-3 w-5 h-5 rounded-full bg-[#2C2C2E] text-[10px] text-[#8E8E93] hover:text-white flex items-center justify-center transition-colors"
           >
             ✕
           </button>
@@ -107,10 +107,10 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
             }}
             className={`px-3.5 py-2.5 rounded-[20px] text-xs font-black transition-all flex items-center justify-between border ${
               selectedBodyPart !== 'all'
-                ? 'bg-[#34C759]/20 border-[#34C759]/50 text-[#34C759] shadow-[0_0_15px_rgba(52,199,89,0.2)]'
+                ? 'bg-[#A1F524]/20 border-[#A1F524]/50 text-[#A1F524] shadow-[0_0_15px_rgba(161,245,36,0.2)]'
                 : isMuscleDropdownOpen
-                ? 'bg-white/[0.12] border-white/30 text-white'
-                : 'glass-surface border-white/10 text-[#F5F5F7] hover:border-white/20'
+                ? 'bg-[#2C2C2E] border-white/20 text-white'
+                : 'bg-[#1C1C1E] border-white/5 text-[#F5F5F7] hover:border-white/15'
             }`}
           >
             <div className="flex items-center gap-1.5 min-w-0">
@@ -135,10 +135,10 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
             }}
             className={`px-3.5 py-2.5 rounded-[20px] text-xs font-black transition-all flex items-center justify-between border ${
               selectedEquipment !== 'all'
-                ? 'bg-[#64D2FF]/20 border-[#64D2FF]/50 text-[#64D2FF] shadow-[0_0_15px_rgba(100,210,255,0.2)]'
+                ? 'bg-[#00F0FF]/20 border-[#00F0FF]/50 text-[#00F0FF] shadow-[0_0_15px_rgba(0,240,255,0.2)]'
                 : isEquipmentDropdownOpen
-                ? 'bg-white/[0.12] border-white/30 text-white'
-                : 'glass-surface border-white/10 text-[#F5F5F7] hover:border-white/20'
+                ? 'bg-[#2C2C2E] border-white/20 text-white'
+                : 'bg-[#1C1C1E] border-white/5 text-[#F5F5F7] hover:border-white/15'
             }`}
           >
             <div className="flex items-center gap-1.5 min-w-0">
@@ -157,7 +157,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
 
         {/* Muscle Dropdown Popover List */}
         {isMuscleDropdownOpen && (
-          <div className="glass-surface-elevated rounded-[24px] p-3 border border-white/20 shadow-2xl space-y-1 max-h-60 overflow-y-auto no-scrollbar animate-slide-up">
+          <div className="bg-[#1C1C1E] rounded-[24px] p-3 border border-white/10 shadow-2xl space-y-1 max-h-60 overflow-y-auto no-scrollbar animate-slide-up">
             <div className="flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#8E8E93] border-b border-white/5 mb-1">
               <span>Selecciona Grupo Muscular</span>
               <span>Total: {bodyParts.reduce((a, b) => a + b.count, 0)}</span>
@@ -168,7 +168,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
               onClick={() => handleSelectBodyPart('all')}
               className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
                 selectedBodyPart === 'all'
-                  ? 'bg-[#34C759] text-black shadow-md'
+                  ? 'bg-[#A1F524] text-black shadow-md'
                   : 'text-[#F5F5F7] hover:bg-white/[0.08]'
               }`}
             >
@@ -185,7 +185,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
                   onClick={() => handleSelectBodyPart(bp.key)}
                   className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
                     isSelected
-                      ? 'bg-[#34C759] text-black shadow-md'
+                      ? 'bg-[#A1F524] text-black shadow-md'
                       : 'text-[#F5F5F7] hover:bg-white/[0.08]'
                   }`}
                 >
@@ -201,7 +201,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
 
         {/* Equipment Dropdown Popover List */}
         {isEquipmentDropdownOpen && (
-          <div className="glass-surface-elevated rounded-[24px] p-3 border border-white/20 shadow-2xl space-y-1 max-h-60 overflow-y-auto no-scrollbar animate-slide-up">
+          <div className="bg-[#1C1C1E] rounded-[24px] p-3 border border-white/10 shadow-2xl space-y-1 max-h-60 overflow-y-auto no-scrollbar animate-slide-up">
             <div className="flex items-center justify-between px-2 py-1 text-[10px] font-black uppercase tracking-wider text-[#8E8E93] border-b border-white/5 mb-1">
               <span>Selecciona Equipamiento</span>
               <span>{equipments.length} Tipos</span>
@@ -212,7 +212,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
               onClick={() => handleSelectEquipment('all')}
               className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
                 selectedEquipment === 'all'
-                  ? 'bg-[#64D2FF] text-black shadow-md'
+                  ? 'bg-[#00F0FF] text-black shadow-md'
                   : 'text-[#F5F5F7] hover:bg-white/[0.08]'
               }`}
             >
@@ -229,7 +229,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
                   onClick={() => handleSelectEquipment(eq.key)}
                   className={`w-full px-3 py-2 rounded-[16px] text-xs font-black flex items-center justify-between transition-all ${
                     isSelected
-                      ? 'bg-[#64D2FF] text-black shadow-md'
+                      ? 'bg-[#00F0FF] text-black shadow-md'
                       : 'text-[#F5F5F7] hover:bg-white/[0.08]'
                   }`}
                 >
@@ -250,7 +250,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
             <button
               type="button"
               onClick={handleResetFilters}
-              className="text-[#FF453A] font-bold hover:underline"
+              className="text-[#FA114F] font-bold hover:underline"
             >
               Limpiar filtros ✕
             </button>
@@ -267,7 +267,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
         </div>
 
         {paginatedExercises.length === 0 ? (
-          <div className="glass-surface rounded-[26px] p-8 text-center space-y-2">
+          <div className="bg-[#1C1C1E] rounded-[26px] p-8 text-center border border-white/5 space-y-2">
             <span className="text-2xl">🔍</span>
             <p className="text-xs font-bold text-[#8E8E93]">
               No se encontraron ejercicios con esos filtros.
@@ -283,11 +283,10 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
                 <div
                   key={exercise.id}
                   onClick={() => handleOpenDetail(exercise)}
-                  className="glass-surface rounded-[24px] p-3 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all flex flex-col justify-between space-y-2 group shadow-sm hover:shadow-[0_8px_25px_rgba(52,199,89,0.12)]"
+                  className="bg-[#1C1C1E] rounded-[22px] p-3 cursor-pointer hover:border-white/20 active:scale-[0.98] transition-all flex flex-col justify-between space-y-2 group border border-white/5 shadow-sm"
                 >
                   {/* Thumbnail */}
-                  <div className="w-full aspect-square rounded-[18px] bg-[#000000] border border-white/10 overflow-hidden flex items-center justify-center p-2 shadow-inner group-hover:scale-105 transition-transform relative">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.05)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
+                  <div className="w-full aspect-square rounded-[16px] bg-[#000000] border border-white/5 overflow-hidden flex items-center justify-center p-2 group-hover:scale-102 transition-transform relative">
                     <img
                       src={imageUrl}
                       alt={exercise.name}
@@ -298,7 +297,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
 
                   {/* Info */}
                   <div className="space-y-1">
-                    <span className="inline-block px-2 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] text-[9px] font-black uppercase tracking-wider">
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-[9px] font-black uppercase tracking-wider">
                       {bodyLabel}
                     </span>
                     <h4 className="text-xs font-black text-[#F5F5F7] capitalize leading-snug line-clamp-2">
@@ -318,7 +317,7 @@ export const ExercisesExplorerTab: React.FC<ExercisesExplorerTabProps> = ({
         {paginatedExercises.length < filteredExercises.length && (
           <button
             onClick={() => setPage((p) => p + 1)}
-            className="w-full py-3 rounded-full glass-pill text-xs font-black text-[#34C759] hover:text-white active:scale-95 transition-all shadow-sm"
+            className="w-full py-3.5 rounded-full bg-[#2C2C2E] border border-white/5 text-xs font-black text-[#A1F524] hover:text-white active:scale-95 transition-all shadow-sm fitness-press"
           >
             Cargar más ejercicios (+30)
           </button>

@@ -40,9 +40,9 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
         onClick={onClose}
       />
 
-      {/* Glassmorphism Bottom Sheet */}
+      {/* Apple Fitness Bottom Sheet */}
       <div
-        className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[36px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl backdrop-blur-3xl"
+        className="relative bg-[#1C1C1E] border-t border-white/15 w-full max-w-md rounded-t-[36px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Ambient Top Drag Indicator */}
@@ -56,7 +56,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
           </div>
           <button
             onClick={onClose}
-            className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white hover:border-white/30 transition-colors active:scale-90"
+            className="w-8 h-8 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors fitness-press"
             aria-label="Cerrar modal"
           >
             <span className="text-xs font-black">✕</span>
@@ -66,16 +66,16 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
         {/* Option 1: HOY */}
         <button
           onClick={() => handleSelectDate(todayKey)}
-          className={`w-full p-4 rounded-[22px] text-left flex items-center justify-between transition-all ${
+          className={`w-full p-4 rounded-[22px] text-left flex items-center justify-between transition-all fitness-press ${
             isToday
-              ? 'glass-pill-active border-[#34C759]/40 bg-[#34C759]/15 shadow-[0_0_20px_rgba(52,199,89,0.25)]'
-              : 'glass-pill hover:border-white/25 active:scale-[0.99]'
+              ? 'bg-[#242426] border border-[#A1F524]/40 shadow-sm'
+              : 'bg-[#242426] border border-white/5 hover:border-white/20'
           }`}
         >
           <div className="flex items-center gap-3.5">
             <div
               className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0 ${
-                isToday ? 'bg-[#34C759]/20 text-[#34C759]' : 'glass-pill text-white/80'
+                isToday ? 'bg-[#A1F524]/20 text-[#A1F524]' : 'bg-[#2C2C2E] text-white/80'
               }`}
             >
               ☀️
@@ -83,7 +83,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
             <div>
               <div
                 className={`text-sm font-black ${
-                  isToday ? 'text-[#34C759]' : 'text-[#F5F5F7]'
+                  isToday ? 'text-[#A1F524]' : 'text-[#F5F5F7]'
                 }`}
               >
                 Hoy ({todayDisplay})
@@ -94,7 +94,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
             </div>
           </div>
           {isToday && (
-            <div className="w-6 h-6 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0 shadow-[0_0_10px_#34C759]">
+            <div className="w-6 h-6 rounded-full bg-[#A1F524] flex items-center justify-center text-black font-black text-xs shrink-0 shadow-[0_0_10px_#A1F524]">
               ✓
             </div>
           )}
@@ -103,16 +103,16 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
         {/* Option 2: AYER */}
         <button
           onClick={() => handleSelectDate(yesterdayKey)}
-          className={`w-full p-4 rounded-[22px] text-left flex items-center justify-between transition-all ${
+          className={`w-full p-4 rounded-[22px] text-left flex items-center justify-between transition-all fitness-press ${
             isYesterday
-              ? 'glass-pill-active border-[#34C759]/40 bg-[#34C759]/15 shadow-[0_0_20px_rgba(52,199,89,0.25)]'
-              : 'glass-pill hover:border-white/25 active:scale-[0.99]'
+              ? 'bg-[#242426] border border-[#A1F524]/40 shadow-sm'
+              : 'bg-[#242426] border border-white/5 hover:border-white/20'
           }`}
         >
           <div className="flex items-center gap-3.5">
             <div
               className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl shrink-0 ${
-                isYesterday ? 'bg-[#34C759]/20 text-[#34C759]' : 'glass-pill text-white/80'
+                isYesterday ? 'bg-[#A1F524]/20 text-[#A1F524]' : 'bg-[#2C2C2E] text-white/80'
               }`}
             >
               ◀️
@@ -120,7 +120,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
             <div>
               <div
                 className={`text-sm font-black ${
-                  isYesterday ? 'text-[#34C759]' : 'text-[#F5F5F7]'
+                  isYesterday ? 'text-[#A1F524]' : 'text-[#F5F5F7]'
                 }`}
               >
                 Ayer ({yesterdayDisplay})
@@ -131,21 +131,21 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
             </div>
           </div>
           {isYesterday && (
-            <div className="w-6 h-6 rounded-full bg-[#34C759] flex items-center justify-center text-black font-black text-xs shrink-0 shadow-[0_0_10px_#34C759]">
+            <div className="w-6 h-6 rounded-full bg-[#A1F524] flex items-center justify-center text-black font-black text-xs shrink-0 shadow-[0_0_10px_#A1F524]">
               ✓
             </div>
           )}
         </button>
 
         {/* Option 3: CALENDARIO PERSONALIZADO */}
-        <div className="glass-surface p-4 rounded-[22px] border-t-white/20 space-y-2">
+        <div className="bg-[#242426] border border-white/5 p-4 rounded-[22px] space-y-2">
           <div className="flex items-center gap-2 text-[11px] font-black text-[#8E8E93] uppercase tracking-wider">
             <span>📅</span>
             <span>O ELIGE UNA FECHA ESPECÍFICA</span>
           </div>
 
           <div
-            className="w-full relative flex items-center justify-center py-3.5 px-4 rounded-xl glass-pill text-[#F5F5F7] font-black text-center cursor-pointer active:scale-[0.99] transition-transform hover:border-white/30"
+            className="w-full relative flex items-center justify-center py-3.5 px-4 rounded-xl bg-[#2C2C2E] border border-white/10 hover:border-white/25 text-[#F5F5F7] font-black text-center cursor-pointer fitness-press transition-transform"
             onClick={() => dateInputRef.current?.showPicker?.()}
           >
             <span className="capitalize">{formattedSelectedDate}</span>
@@ -165,7 +165,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({ isOpen, 
         {!isToday && (
           <button
             onClick={() => handleSelectDate(todayKey)}
-            className="glass-pill w-full py-3.5 rounded-full text-[#F5F5F7] font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all hover:border-white/30 shadow-md"
+            className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-sm flex items-center justify-center gap-2 fitness-press transition-all shadow-md shadow-[#A1F524]/20"
           >
             <span>🔄</span>
             <span>Volver a Hoy</span>

@@ -190,10 +190,10 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
                   type="button"
                   key={p.id}
                   onClick={() => setProfileId(p.id)}
-                  className={`px-3 py-1.5 rounded-full text-xs font-black transition-all flex items-center gap-1.5 shrink-0 ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 fitness-press ${
                     profileId === p.id
-                      ? 'bg-[#34C759] text-black shadow-glowGreen scale-100'
-                      : 'bg-[#242426] border border-white/5 text-[#8E8E93] hover:text-[#F5F5F7]'
+                      ? 'bg-white text-black shadow-sm'
+                      : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
                   }`}
                 >
                   <span>{p.icon}</span>
@@ -209,7 +209,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
             Nombre de la Materia / Clase *
           </label>
           <div className="flex items-center gap-2">
-            <div className="w-12 h-12 rounded-[18px] bg-[#242426] border border-white/10 flex items-center justify-center text-2xl shrink-0 shadow-inner">
+            <div className="w-12 h-12 rounded-[18px] bg-[#2C2C2E] border border-white/10 flex items-center justify-center text-2xl shrink-0 shadow-inner">
               {emoji}
             </div>
             <input
@@ -218,7 +218,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
               onChange={(e) => setName(e.target.value)}
               placeholder="Ej: Clases de Conducción, Cálculo, Física..."
               required
-              className="flex-1 bg-[#242426] border border-white/10 rounded-[18px] px-4 py-3 text-[#F5F5F7] font-bold text-sm focus:outline-none focus:border-[#34C759] transition-colors"
+              className="flex-1 bg-[#2C2C2E] border border-white/10 rounded-[18px] px-4 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#A1F524] transition-colors"
             />
           </div>
         </div>
@@ -230,8 +230,8 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
               type="button"
               key={e}
               onClick={() => setEmoji(e)}
-              className={`w-9 h-9 rounded-[12px] flex items-center justify-center text-lg transition-all shrink-0 ${
-                emoji === e ? 'bg-white/20 scale-110 ring-2 ring-[#34C759]' : 'bg-[#242426] hover:bg-white/10'
+              className={`w-9 h-9 rounded-[12px] flex items-center justify-center text-lg transition-all shrink-0 fitness-press ${
+                emoji === e ? 'bg-white/20 scale-110 ring-2 ring-[#A1F524]' : 'bg-[#2C2C2E] hover:bg-white/10'
               }`}
             >
               {e}
@@ -239,13 +239,13 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
           ))}
         </div>
 
-        {/* 3. MULTI-DAY SELECTOR (The crucial feature requested!) */}
-        <div className="p-4 rounded-[22px] bg-[#1F1F22] border border-white/5 space-y-2.5">
+        {/* 3. MULTI-DAY SELECTOR */}
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] space-y-2.5">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
+            <label className="text-xs font-black uppercase tracking-wider text-white">
               ¿Qué días se ve esta clase? 🗓️
             </label>
-            <span className="text-[11px] font-bold text-[#34C759]">
+            <span className="text-[11px] font-bold text-[#A1F524]">
               {selectedDays.length} {selectedDays.length === 1 ? 'día' : 'días'} seleccionado(s)
             </span>
           </div>
@@ -262,10 +262,10 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
                   type="button"
                   key={day.id}
                   onClick={() => toggleDay(day.id)}
-                  className={`py-2 rounded-[14px] text-xs font-black transition-all flex flex-col items-center justify-center ${
+                  className={`py-2 rounded-[14px] text-xs font-black transition-all flex flex-col items-center justify-center fitness-press ${
                     isSelected
-                      ? 'bg-[#34C759] text-black shadow-glowGreen scale-105'
-                      : 'bg-[#28282C] text-[#8E8E93] hover:text-[#F5F5F7] border border-white/5'
+                      ? 'bg-[#A1F524] text-black shadow-md scale-105'
+                      : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white border border-white/5'
                   }`}
                 >
                   <span className="text-[10px] uppercase font-bold">{day.short}</span>
@@ -276,12 +276,12 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
         </div>
 
         {/* 4. Hours and Duration */}
-        <div className="p-4 rounded-[22px] bg-[#1F1F22] border border-white/5 space-y-3">
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] space-y-3">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
+            <label className="text-xs font-black uppercase tracking-wider text-white">
               Horario & Duración ⏰
             </label>
-            <span className="text-xs font-extrabold text-[#34C759]">
+            <span className="text-xs font-extrabold text-[#A1F524]">
               {startHour} → {endHour}
             </span>
           </div>
@@ -293,7 +293,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
               type="time"
               value={startHour}
               onChange={(e) => setStartHour(e.target.value)}
-              className="bg-[#28282C] border border-white/10 rounded-xl px-3 py-1.5 text-[#F5F5F7] font-bold text-sm focus:outline-none focus:border-[#34C759]"
+              className="bg-[#2C2C2E] border border-white/10 rounded-xl px-3 py-1.5 text-white font-bold text-sm focus:outline-none focus:border-[#A1F524]"
             />
           </div>
 
@@ -306,10 +306,10 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
                   type="button"
                   key={opt.minutes}
                   onClick={() => setDurationMinutes(opt.minutes)}
-                  className={`py-1.5 px-1 rounded-xl text-center text-xs font-black transition-all ${
+                  className={`py-1.5 px-1 rounded-xl text-center text-xs font-bold transition-all fitness-press ${
                     durationMinutes === opt.minutes
-                      ? 'bg-white text-black shadow-sm scale-102'
-                      : 'bg-[#28282C] text-[#8E8E93] hover:text-[#F5F5F7] border border-white/5'
+                      ? 'bg-white text-black shadow-sm font-black'
+                      : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white border border-white/5'
                   }`}
                 >
                   {opt.label}
@@ -330,7 +330,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
               value={shortInfo}
               onChange={(e) => setShortInfo(e.target.value)}
               placeholder="Ej: Pista Norte Auto 04"
-              className="w-full bg-[#242426] border border-white/10 rounded-[16px] px-3.5 py-2.5 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+              className="w-full bg-[#2C2C2E] border border-white/10 rounded-[16px] px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
             />
           </div>
 
@@ -343,7 +343,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
               value={instructor}
               onChange={(e) => setInstructor(e.target.value)}
               placeholder="Ej: Carlos Gómez"
-              className="w-full bg-[#242426] border border-white/10 rounded-[16px] px-3.5 py-2.5 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+              className="w-full bg-[#2C2C2E] border border-white/10 rounded-[16px] px-3.5 py-2.5 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
             />
           </div>
         </div>
@@ -366,7 +366,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
                 key={c}
                 onClick={() => setColor(c)}
                 style={{ backgroundColor: c }}
-                className={`w-8 h-8 rounded-full transition-all shrink-0 ${
+                className={`w-8 h-8 rounded-full transition-all shrink-0 fitness-press ${
                   color === c ? 'scale-125 ring-4 ring-white/40 shadow-lg' : 'opacity-80 hover:opacity-100'
                 }`}
               />
@@ -374,12 +374,12 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
           </div>
         </div>
 
-        {/* 7. Attendance Shield Config (WOW Feature) */}
-        <div className="p-4 rounded-[22px] bg-[#1F1F22] border border-white/5 space-y-2.5">
+        {/* 7. Attendance Shield Config */}
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] space-y-2.5">
           <div className="flex items-center gap-2">
             <span className="text-base">🛡️</span>
             <div>
-              <h4 className="text-xs font-black text-[#F5F5F7]">Control de Asistencias & Metas</h4>
+              <h4 className="text-xs font-black text-white">Control de Asistencias & Metas</h4>
               <p className="text-[10px] font-bold text-[#8E8E93]">
                 Ideal para certificar horas de conducción o evitar faltas en la universidad
               </p>
@@ -398,7 +398,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
                 value={targetSessions}
                 onChange={(e) => setTargetSessions(e.target.value ? Number(e.target.value) : '')}
                 placeholder="Ej: 15 (Conducción)"
-                className="w-full bg-[#28282C] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+                className="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
               />
             </div>
 
@@ -413,7 +413,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
                 value={maxAbsences}
                 onChange={(e) => setMaxAbsences(e.target.value ? Number(e.target.value) : '')}
                 placeholder="Ej: 3 (Universidad)"
-                className="w-full bg-[#28282C] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+                className="w-full bg-[#2C2C2E] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
               />
             </div>
           </div>
@@ -429,7 +429,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Enlaces a reuniones virtuales, temario o apuntes..."
-            className="w-full bg-[#242426] border border-white/10 rounded-[16px] p-3 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759] resize-none"
+            className="w-full bg-[#2C2C2E] border border-white/10 rounded-[16px] p-3 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524] resize-none"
           />
         </div>
 
@@ -437,7 +437,7 @@ export const AddClassModal: React.FC<AddClassModalProps> = ({
         <button
           type="submit"
           disabled={!name.trim()}
-          className="w-full py-4 rounded-full bg-[#34C759] disabled:opacity-50 text-black font-black text-sm shadow-glowGreen active:scale-95 transition-transform flex items-center justify-center gap-2"
+          className="w-full py-4 rounded-full bg-[#A1F524] disabled:opacity-40 text-black font-black text-sm fitness-press transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#A1F524]/20"
         >
           <span>✓</span>
           <span>{editingSubject ? 'Actualizar Materia' : 'Guardar en el Horario'}</span>

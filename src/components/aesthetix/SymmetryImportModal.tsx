@@ -197,13 +197,13 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
       />
 
       <div
-        className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+        className="relative w-full max-w-md bg-[#1C1C1E] rounded-[32px] p-5 z-10 border border-white/15 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-full bg-[#34C759]/20 text-[#34C759] flex items-center justify-center text-sm font-black border border-[#34C759]/30">
+            <span className="w-8 h-8 rounded-full bg-[#00F0FF]/20 text-[#00F0FF] flex items-center justify-center text-sm font-black border border-[#00F0FF]/30">
               📥
             </span>
             <div>
@@ -217,7 +217,7 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+            className="w-7 h-7 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white fitness-press"
           >
             ✕
           </button>
@@ -228,10 +228,10 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
           {/* Screenshot Upload Box */}
           <div
             onClick={() => !isProcessing && fileInputRef.current?.click()}
-            className={`w-full aspect-[16/10] rounded-[22px] overflow-hidden border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all relative ${
+            className={`w-full aspect-[16/10] rounded-[22px] overflow-hidden border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all relative fitness-press ${
               screenshot
-                ? 'border-[#34C759]/60 bg-black/40'
-                : 'border-white/20 hover:border-[#34C759]/40 bg-white/[0.02]'
+                ? 'border-[#00F0FF]/60 bg-black/40'
+                : 'border-white/20 hover:border-[#00F0FF]/40 bg-[#242426]'
             }`}
           >
             {screenshot ? (
@@ -271,10 +271,10 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
               type="button"
               onClick={handleProcessScreenshot}
               disabled={!screenshot || isProcessing}
-              className={`w-full py-3.5 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg ${
+              className={`w-full py-3.5 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg fitness-press ${
                 !screenshot || isProcessing
                   ? 'bg-white/10 text-[#8E8E93] cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#34C759] to-[#2ECC71] text-black hover:scale-[1.01] active:scale-98 shadow-[0_0_25px_rgba(52,199,89,0.4)]'
+                  : 'bg-[#00F0FF] text-black shadow-md shadow-[#00F0FF]/25'
               }`}
             >
               {isProcessing ? (
@@ -294,12 +294,12 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
           {/* Parsed Workout Preview */}
           {parsedWorkout && (
             <div className="space-y-3 animate-fade-in">
-              <div className="glass-surface p-3.5 rounded-[22px] space-y-2 border border-[#34C759]/30">
+              <div className="bg-[#242426] border border-[#A1F524]/30 p-3.5 rounded-[22px] space-y-2">
                 <div className="flex items-center justify-between">
                   <h4 className="text-xs font-black text-[#F5F5F7]">
                     {parsedWorkout.routineName}
                   </h4>
-                  <span className="text-[10px] font-mono text-[#34C759] font-black">
+                  <span className="text-[10px] font-mono text-[#A1F524] font-black">
                     {parsedWorkout.date}
                   </span>
                 </div>
@@ -308,12 +308,12 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
                   {parsedWorkout.exercises.map((ex, idx) => (
                     <div
                       key={idx}
-                      className="glass-pill p-2 rounded-[14px] flex items-center justify-between text-xs"
+                      className="bg-[#1C1C1E] border border-white/5 p-2 rounded-[14px] flex items-center justify-between text-xs"
                     >
                       <span className="font-bold text-[#F5F5F7] truncate max-w-[200px]">
                         {ex.name}
                       </span>
-                      <span className="font-mono text-[#64D2FF] font-black text-[11px]">
+                      <span className="font-mono text-[#00F0FF] font-black text-[11px]">
                         {ex.sets.map((s) => `${s.weightKg}k x ${s.reps}`).join(', ')}
                       </span>
                     </div>
@@ -324,7 +324,7 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
               <button
                 type="button"
                 onClick={handleConfirmImport}
-                className="w-full py-3.5 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md shadow-[#A1F524]/20 fitness-press transition-all flex items-center justify-center gap-1.5"
               >
                 <span>✓</span>
                 <span>Confirmar e Importar al Historial</span>

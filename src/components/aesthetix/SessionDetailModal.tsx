@@ -101,17 +101,17 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
         }}
       />
 
-      {/* Main Glass Modal Card */}
+      {/* Main Apple Fitness Modal Card */}
       <div
-        className="relative w-full max-w-lg glass-surface-elevated rounded-[36px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-hidden text-[#F5F5F7] overscroll-contain"
+        className="relative w-full max-w-lg bg-[#1C1C1E] rounded-[36px] p-5 z-10 border border-white/15 shadow-2xl space-y-4 max-h-[92vh] flex flex-col overflow-hidden text-[#F5F5F7] overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-start justify-between pb-3 border-b border-white/10 shrink-0">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#34C759] shadow-[0_0_8px_#34C759]" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#34C759]">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#A1F524] shadow-[0_0_8px_#A1F524]" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#A1F524]">
                 Sesión Finalizada • {session.date}
               </span>
             </div>
@@ -123,7 +123,7 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white transition-all"
+            className="w-8 h-8 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white fitness-press transition-all"
           >
             ✕
           </button>
@@ -133,28 +133,28 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
         <div className="flex-1 overflow-y-auto space-y-4 pr-1 no-scrollbar">
           {/* Bento Metrics 4-Grid */}
           <div className="grid grid-cols-4 gap-2">
-            <div className="glass-surface p-2.5 rounded-[20px] text-center border border-white/10">
+            <div className="bg-[#242426] p-2.5 rounded-[20px] text-center border border-white/5">
               <span className="text-[10px] font-bold text-[#8E8E93] block">⏱️ Tiempo</span>
               <span className="text-sm font-mono font-black text-[#F5F5F7]">
                 {session.durationMinutes}m
               </span>
             </div>
 
-            <div className="glass-surface p-2.5 rounded-[20px] text-center border border-[#34C759]/30">
+            <div className="bg-[#242426] p-2.5 rounded-[20px] text-center border border-[#A1F524]/20">
               <span className="text-[10px] font-bold text-[#8E8E93] block">⚡ Volumen</span>
-              <span className="text-sm font-mono font-black text-[#34C759]">
+              <span className="text-sm font-mono font-black text-[#A1F524]">
                 {session.totalVolumeKg}k
               </span>
             </div>
 
-            <div className="glass-surface p-2.5 rounded-[20px] text-center border border-[#64D2FF]/30">
+            <div className="bg-[#242426] p-2.5 rounded-[20px] text-center border border-[#00F0FF]/20">
               <span className="text-[10px] font-bold text-[#8E8E93] block">💪 Series</span>
-              <span className="text-sm font-mono font-black text-[#64D2FF]">
+              <span className="text-sm font-mono font-black text-[#00F0FF]">
                 {session.totalSets}
               </span>
             </div>
 
-            <div className="glass-surface p-2.5 rounded-[20px] text-center border border-[#FFD60A]/30">
+            <div className="bg-[#242426] p-2.5 rounded-[20px] text-center border border-[#FFD60A]/20">
               <span className="text-[10px] font-bold text-[#8E8E93] block">🏆 PRs</span>
               <span className="text-sm font-mono font-black text-[#FFD60A]">
                 {session.prCount}
@@ -163,11 +163,11 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
           </div>
 
           {/* AI Analysis Section */}
-          <div className="glass-surface rounded-[26px] p-4 border border-[#64D2FF]/30 space-y-3 shadow-inner">
+          <div className="bg-[#242426] rounded-[26px] p-4 border border-[#00F0FF]/30 space-y-3 shadow-inner">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-lg">✨</span>
-                <h3 className="text-xs font-black uppercase tracking-wider text-[#64D2FF]">
+                <h3 className="text-xs font-black uppercase tracking-wider text-[#00F0FF]">
                   Análisis Inteligente Gemini
                 </h3>
               </div>
@@ -176,11 +176,11 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
                 type="button"
                 onClick={handleAnalyzeWithAI}
                 disabled={isAiLoading}
-                className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#64D2FF] hover:bg-[#64D2FF]/20 active:scale-95 disabled:opacity-50 transition-all flex items-center gap-1.5"
+                className="bg-[#2C2C2E] border border-[#00F0FF]/40 px-3 py-1.5 rounded-full text-xs font-black text-[#00F0FF] hover:bg-[#00F0FF]/15 fitness-press disabled:opacity-50 transition-all flex items-center gap-1.5"
               >
                 {isAiLoading ? (
                   <>
-                    <span className="w-3 h-3 rounded-full border-2 border-cyan-400 border-t-transparent animate-spin" />
+                    <span className="w-3 h-3 rounded-full border-2 border-[#00F0FF] border-t-transparent animate-spin" />
                     <span>Analizando...</span>
                   </>
                 ) : (
@@ -193,7 +193,7 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
             </div>
 
             {aiAnalysis ? (
-              <div className="p-3.5 rounded-[20px] bg-black/40 border border-white/10 text-xs font-medium text-[#F5F5F7] leading-relaxed whitespace-pre-wrap animate-fade-in">
+              <div className="p-3.5 rounded-[20px] bg-[#1C1C1E] border border-white/10 text-xs font-medium text-[#F5F5F7] leading-relaxed whitespace-pre-wrap animate-fade-in">
                 {aiAnalysis}
               </div>
             ) : (
@@ -228,25 +228,25 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
                 return (
                   <div
                     key={exIdx}
-                    className="glass-surface-elevated rounded-[24px] p-3.5 border border-white/10 space-y-2.5"
+                    className="bg-[#242426] rounded-[24px] p-3.5 border border-white/5 space-y-2.5"
                   >
                     <div className="flex items-center justify-between border-b border-white/5 pb-2">
                       <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-white/[0.08] text-[10px] font-black flex items-center justify-center text-[#8E8E93]">
+                        <span className="w-5 h-5 rounded-full bg-[#2C2C2E] text-[10px] font-black flex items-center justify-center text-[#8E8E93]">
                           {exIdx + 1}
                         </span>
                         <div>
                           <h4 className="text-xs font-black text-[#F5F5F7] capitalize">
                             {ex.exerciseName}
                           </h4>
-                          <span className="text-[10px] font-bold text-[#34C759] capitalize">
+                          <span className="text-[10px] font-black text-[#A1F524] capitalize">
                             {ex.target || ex.category}
                           </span>
                         </div>
                       </div>
 
                       <div className="text-right">
-                        <span className="text-[11px] font-mono font-black text-[#64D2FF] block">
+                        <span className="text-[11px] font-mono font-black text-[#00F0FF] block">
                           {exVolume} kg vol.
                         </span>
                         <span className="text-[9px] font-bold text-[#8E8E93]">
@@ -269,7 +269,7 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
                         return (
                           <div
                             key={s.id || sIdx}
-                            className="grid grid-cols-12 items-center px-2 py-1.5 rounded-[12px] bg-white/[0.03] text-xs font-mono"
+                            className="grid grid-cols-12 items-center px-2 py-1.5 rounded-[12px] bg-[#1C1C1E]/60 text-xs font-mono"
                           >
                             <span className="col-span-2 text-[#8E8E93] font-bold">
                               #{s.setNumber || sIdx + 1}
@@ -277,7 +277,7 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
                             <span className="col-span-4 text-center text-[#F5F5F7] font-black">
                               {s.weightKg} kg
                             </span>
-                            <span className="col-span-3 text-center text-[#34C759] font-black">
+                            <span className="col-span-3 text-center text-[#A1F524] font-black">
                               {s.reps} reps
                             </span>
                             <span className="col-span-3 text-right text-[#8E8E93] font-bold">
@@ -299,7 +299,7 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
           <button
             type="button"
             onClick={handleDelete}
-            className="px-4 py-3 rounded-full glass-pill text-xs font-black text-[#FF453A] hover:bg-[#FF453A]/20 active:scale-95 transition-all flex items-center gap-1.5 border border-[#FF453A]/30"
+            className="px-4 py-3 rounded-full bg-[#2C2C2E] text-xs font-black text-[#FA114F] hover:bg-[#FA114F]/15 fitness-press transition-all flex items-center gap-1.5 border border-[#FA114F]/30"
           >
             <span>🗑️</span>
             <span>Eliminar Sesión</span>
@@ -308,7 +308,7 @@ Proporciona un análisis conciso, biomecánico, motivador y directo (máximo 180
           <button
             type="button"
             onClick={onClose}
-            className="px-6 py-3 rounded-full bg-white/[0.1] text-[#F5F5F7] hover:bg-white/[0.18] text-xs font-black active:scale-95 transition-all"
+            className="px-6 py-3 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-[#F5F5F7] text-xs font-black fitness-press transition-all"
           >
             Cerrar
           </button>

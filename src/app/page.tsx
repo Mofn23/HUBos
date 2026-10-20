@@ -78,7 +78,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative w-full h-full flex flex-col bg-[#131313] text-[#F5F5F7] overflow-hidden">
+    <main className="relative w-full h-full flex flex-col bg-black text-white overflow-hidden">
       {/* Toast Notification Container */}
       <ToastNotification />
 

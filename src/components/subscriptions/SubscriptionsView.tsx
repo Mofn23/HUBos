@@ -9,7 +9,7 @@ import { SubscriptionModal } from './SubscriptionModal';
 import { TimelineView } from './TimelineView';
 import { InsightsView } from './InsightsView';
 import { CancellationView } from './CancellationView';
-import { IconSettings } from '../common/Icons';
+import { IconSettings, IconPlus } from '../common/Icons';
 
 export const SubscriptionsView: React.FC = () => {
   const { setCurrentApp, setIsSettingsOpen } = useHubStore();
@@ -40,62 +40,94 @@ export const SubscriptionsView: React.FC = () => {
   const formattedMonthly = `$ ${Number(summary.monthlyTotal).toLocaleString('es-CO')}`;
   const formattedYearly = `$ ${Number(summary.annualTotal).toLocaleString('es-CO')}`;
 
-  return (
-    <div className="flex-1 flex flex-col px-4 pt-16 pb-28 overflow-y-auto no-scrollbar animate-fade-in space-y-4">
-      {/* 1. Top Bar: Home Return Button (Left) & Settings (Right) */}
-      <div className="flex items-center justify-between">
-        {/* Return to HUB Button */}
-        <button
-          onClick={() => setCurrentApp('hub')}
-          className="clay-pill px-4 py-2.5 rounded-full text-sm font-black text-[#F5F5F7] flex items-center gap-2 active:scale-95 transition-transform cursor-pointer"
-        >
-          <span>🏠</span>
-          <span>Volver al HUB</span>
-        </button>
+  const formattedDate = new Intl.DateTimeFormat('es-ES', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date()).toUpperCase();
 
-        {/* Top Right Settings Icon */}
-        <button
-          onClick={() => setIsSettingsOpen(true)}
-          className="clay-pill w-11 h-11 rounded-full flex items-center justify-center text-[#F5F5F7] hover:text-white active:scale-95 transition-all cursor-pointer"
-          title="Ajustes de Suscripciones"
-        >
-          <IconSettings className="w-5 h-5" />
-        </button>
+  return (
+    <div className="flex-1 flex flex-col px-4 pt-12 pb-32 overflow-y-auto no-scrollbar animate-fade-in space-y-4 bg-black text-white min-h-screen relative">
+      {/* Ambient Apple Fitness Radial Glow */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+        <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[120px]" />
+        <div className="absolute top-1/2 -left-20 w-80 h-80 rounded-full bg-[#00F0FF]/10 blur-[120px]" />
       </div>
 
-      {/* 2. Two Side-by-Side Financial Cost Cards */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* 1. Apple Fitness Top Bar */}
+      <header className="relative z-10 space-y-2">
+        <div className="flex items-center justify-between">
+          <button
+            onClick={() => setCurrentApp('hub')}
+            className="h-8 px-3 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center gap-1 text-xs font-bold text-white hover:border-white/30 fitness-press shadow-sm"
+          >
+            <span className="text-sm font-bold leading-none">‹</span>
+            <span>HUB</span>
+          </button>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleOpenAdd}
+              className="h-8 px-3 rounded-full bg-[#A1F524] text-black text-xs font-bold flex items-center gap-1 shadow-[0_2px_12px_rgba(161,245,36,0.3)] fitness-press"
+            >
+              <IconPlus className="w-3.5 h-3.5 stroke-[3]" />
+              <span>Añadir</span>
+            </button>
+
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="w-8 h-8 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90 transition-all fitness-press"
+              title="Ajustes"
+            >
+              <IconSettings className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Big Apple Fitness Title */}
+        <div className="pt-1">
+          <h1 className="text-3xl font-black text-white tracking-tight leading-none">
+            Suscripciones
+          </h1>
+          <div className="text-[11px] font-bold tracking-widest text-[#8E8E93] uppercase mt-1">
+            {formattedDate} • {summary.activeCount} SERVICIOS ACTIVOS
+          </div>
+        </div>
+      </header>
+
+      {/* 2. Two Apple Bento Financial Telemetry Cards */}
+      <div className="grid grid-cols-2 gap-3 relative z-10">
         {/* Costo Mensual */}
-        <div className="clay-surface p-5 rounded-[28px] space-y-1">
-          <span className="text-xs font-bold text-[#8E8E93]">Costo Mensual</span>
-          <div className="text-2xl font-black text-[#F5F5F7] tracking-tight">
+        <div className="fitness-card p-4.5 rounded-3xl space-y-1 border border-white/[0.08]">
+          <span className="text-xs font-bold text-[#8E8E93] uppercase tracking-wider">Costo Mensual</span>
+          <div className="text-2xl font-black text-[#BF5AF2] tracking-tight">
             {formattedMonthly}
           </div>
-          <span className="text-xs font-bold text-[#8E8E93] block">/ mes</span>
+          <span className="text-[11px] font-semibold text-[#8E8E93] block">por mes</span>
         </div>
 
         {/* Costo Anual */}
-        <div className="clay-surface p-5 rounded-[28px] space-y-1">
-          <span className="text-xs font-bold text-[#8E8E93]">Costo Anual</span>
-          <div className="text-2xl font-black text-[#F5F5F7] tracking-tight">
+        <div className="fitness-card p-4.5 rounded-3xl space-y-1 border border-white/[0.08]">
+          <span className="text-xs font-bold text-[#8E8E93] uppercase tracking-wider">Proyección Anual</span>
+          <div className="text-2xl font-black text-[#FFD60A] tracking-tight">
             {formattedYearly}
           </div>
-          <span className="text-xs font-bold text-[#8E8E93] block">/ año</span>
+          <span className="text-[11px] font-semibold text-[#8E8E93] block">por año</span>
         </div>
       </div>
 
-      {/* 3. Horizontal Filter Pills Row (Todas 📺, Timeline ⏰, Fugas 💡, Cancelar 🚫) */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 shrink-0 w-full">
+      {/* 3. Apple Segmented Control Pills (Reference IMG_2041) */}
+      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 shrink-0 w-full relative z-10">
         {filterTabs.map((t) => {
           const isActive = currentTab === t.id;
           return (
             <button
               key={t.id}
               onClick={() => setCurrentTab(t.id)}
-              className={`px-4 py-2.5 rounded-full text-xs font-black flex items-center gap-1.5 whitespace-nowrap transition-all active:scale-95 shrink-0 min-h-[38px] cursor-pointer ${
+              className={`px-4 py-2 rounded-full text-xs font-bold flex items-center gap-1.5 whitespace-nowrap transition-all duration-150 active:scale-95 shrink-0 cursor-pointer fitness-press ${
                 isActive
-                  ? 'clay-btn-accent text-white'
-                  : 'clay-pill text-[#8E8E93] hover:text-[#F5F5F7]'
+                  ? 'bg-white text-black shadow-md'
+                  : 'bg-[#1C1C1E] text-white/80 hover:text-white border border-white/5'
               }`}
             >
               <span>{t.label}</span>
@@ -105,17 +137,8 @@ export const SubscriptionsView: React.FC = () => {
         })}
       </div>
 
-      {/* 4. Big Add Subscription Button */}
-      <button
-        onClick={handleOpenAdd}
-        className="clay-btn-accent w-full py-4 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-98 transition-all cursor-pointer"
-      >
-        <span className="text-base font-bold">+</span>
-        <span>Agregar Suscripción</span>
-      </button>
-
-      {/* 5. Active Tab Content */}
-      <div className="pt-1">
+      {/* 4. Active Tab Content */}
+      <div className="pt-1 relative z-10">
         {currentTab === 'all' && <SubscriptionList onEdit={handleEdit} />}
         {currentTab === 'timeline' && <TimelineView />}
         {currentTab === 'insights' && <InsightsView />}

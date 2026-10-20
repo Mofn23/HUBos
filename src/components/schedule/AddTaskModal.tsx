@@ -104,7 +104,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ej: Taller de Manejo en Carretera, Taller #2 de Cálculo..."
             required
-            className="w-full bg-[#242426] border border-white/10 rounded-[18px] px-4 py-3 text-[#F5F5F7] font-bold text-sm focus:outline-none focus:border-[#34C759]"
+            className="w-full bg-[#2C2C2E] border border-white/10 rounded-[18px] px-4 py-3 text-white font-bold text-sm focus:outline-none focus:border-[#A1F524] transition-colors"
           />
         </div>
 
@@ -116,7 +116,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           <select
             value={subjectId}
             onChange={(e) => setSubjectId(e.target.value)}
-            className="w-full bg-[#242426] border border-white/10 rounded-[18px] px-4 py-3 text-[#F5F5F7] font-bold text-xs focus:outline-none focus:border-[#34C759]"
+            className="w-full bg-[#2C2C2E] border border-white/10 rounded-[18px] px-4 py-3 text-white font-bold text-xs focus:outline-none focus:border-[#A1F524]"
           >
             <option value="">General / Sin Materia Específica</option>
             {subjects.map((sub) => (
@@ -128,8 +128,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         </div>
 
         {/* Due Date & Quick Chips */}
-        <div className="space-y-2 p-4 rounded-[22px] bg-[#1F1F22] border border-white/5">
-          <label className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
+        <div className="space-y-2 p-4 rounded-[22px] bg-[#242426] border border-white/[0.08]">
+          <label className="text-xs font-black uppercase tracking-wider text-white">
             Fecha y Hora Límite 📅
           </label>
 
@@ -138,13 +138,13 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               type="date"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
-              className="flex-1 bg-[#28282C] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+              className="flex-1 bg-[#2C2C2E] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
             />
             <input
               type="time"
               value={dueTime}
               onChange={(e) => setDueTime(e.target.value)}
-              className="w-28 bg-[#28282C] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+              className="w-28 bg-[#2C2C2E] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
             />
           </div>
 
@@ -153,28 +153,28 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <button
               type="button"
               onClick={() => handleQuickDate(0)}
-              className="px-2.5 py-1 rounded-lg bg-[#28282C] text-[11px] font-extrabold text-[#8E8E93] hover:text-[#F5F5F7] border border-white/5"
+              className="px-3 py-1 rounded-full bg-[#2C2C2E] text-[11px] font-bold text-[#8E8E93] hover:text-white border border-white/5 fitness-press"
             >
               Hoy
             </button>
             <button
               type="button"
               onClick={() => handleQuickDate(1)}
-              className="px-2.5 py-1 rounded-lg bg-[#28282C] text-[11px] font-extrabold text-[#8E8E93] hover:text-[#F5F5F7] border border-white/5"
+              className="px-3 py-1 rounded-full bg-[#2C2C2E] text-[11px] font-bold text-[#8E8E93] hover:text-white border border-white/5 fitness-press"
             >
               Mañana
             </button>
             <button
               type="button"
               onClick={() => handleQuickDate(3)}
-              className="px-2.5 py-1 rounded-lg bg-[#28282C] text-[11px] font-extrabold text-[#8E8E93] hover:text-[#F5F5F7] border border-white/5"
+              className="px-3 py-1 rounded-full bg-[#2C2C2E] text-[11px] font-bold text-[#8E8E93] hover:text-white border border-white/5 fitness-press"
             >
               En 3 días
             </button>
             <button
               type="button"
               onClick={() => handleQuickDate(7)}
-              className="px-2.5 py-1 rounded-lg bg-[#28282C] text-[11px] font-extrabold text-[#8E8E93] hover:text-[#F5F5F7] border border-white/5"
+              className="px-3 py-1 rounded-full bg-[#2C2C2E] text-[11px] font-bold text-[#8E8E93] hover:text-white border border-white/5 fitness-press"
             >
               Próxima semana
             </button>
@@ -190,10 +190,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <button
               type="button"
               onClick={() => setPriority('low')}
-              className={`py-2 rounded-[16px] text-xs font-black transition-all ${
+              className={`py-2 rounded-[16px] text-xs font-black transition-all fitness-press ${
                 priority === 'low'
-                  ? 'bg-[#34C759] text-black shadow-glowGreen scale-102'
-                  : 'bg-[#242426] border border-white/5 text-[#8E8E93]'
+                  ? 'bg-[#A1F524] text-black shadow-md scale-102'
+                  : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
               }`}
             >
               Baja
@@ -201,10 +201,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <button
               type="button"
               onClick={() => setPriority('medium')}
-              className={`py-2 rounded-[16px] text-xs font-black transition-all ${
+              className={`py-2 rounded-[16px] text-xs font-black transition-all fitness-press ${
                 priority === 'medium'
-                  ? 'bg-[#FF9500] text-black shadow-card scale-102'
-                  : 'bg-[#242426] border border-white/5 text-[#8E8E93]'
+                  ? 'bg-[#FFD60A] text-black shadow-md scale-102'
+                  : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
               }`}
             >
               Media
@@ -212,10 +212,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <button
               type="button"
               onClick={() => setPriority('high')}
-              className={`py-2 rounded-[16px] text-xs font-black transition-all ${
+              className={`py-2 rounded-[16px] text-xs font-black transition-all fitness-press ${
                 priority === 'high'
-                  ? 'bg-[#FF453A] text-white shadow-glowRed scale-102'
-                  : 'bg-[#242426] border border-white/5 text-[#8E8E93]'
+                  ? 'bg-[#FA114F] text-white shadow-md scale-102'
+                  : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
               }`}
             >
               Alta 🔥
@@ -233,7 +233,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Puntos a entregar, lectura asignada..."
-            className="w-full bg-[#242426] border border-white/10 rounded-[16px] p-3 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759] resize-none"
+            className="w-full bg-[#2C2C2E] border border-white/10 rounded-[16px] p-3 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524] resize-none"
           />
         </div>
 
@@ -241,7 +241,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         <button
           type="submit"
           disabled={!title.trim()}
-          className="w-full py-4 rounded-full bg-[#34C759] disabled:opacity-50 text-black font-black text-sm shadow-glowGreen active:scale-95 transition-transform flex items-center justify-center gap-2"
+          className="w-full py-4 rounded-full bg-[#A1F524] disabled:opacity-40 text-black font-black text-sm fitness-press transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#A1F524]/20"
         >
           <span>✓</span>
           <span>{editingTask ? 'Actualizar Tarea' : 'Guardar Tarea'}</span>

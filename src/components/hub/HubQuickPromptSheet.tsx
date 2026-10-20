@@ -107,33 +107,33 @@ export const HubQuickPromptSheet: React.FC = () => {
     >
       <div className="space-y-4 pb-6">
         {/* Input Box */}
-        <div className="relative bg-[#242426] rounded-2xl border border-white/10 p-3 focus-within:border-[#34C759] transition-colors">
+        <div className="relative bg-[#242426] rounded-2xl border border-white/10 p-3.5 focus-within:border-[#A1F524] transition-colors">
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             placeholder="Ej: Me comí 250g de carne con ensalada / Pagué YouTube Premium $20.900..."
             rows={3}
             disabled={isLoading}
-            className="w-full bg-transparent text-sm text-[#F5F5F7] placeholder-[#8E8E93] focus:outline-none resize-none"
+            className="w-full bg-transparent text-sm text-white placeholder-[#8E8E93] focus:outline-none resize-none font-medium"
           />
 
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-[#8E8E93]">
-              <IconSparkles className="w-3.5 h-3.5 text-[#34C759]" />
-              <span>Gemini 2.0 Flash</span>
+              <IconSparkles className="w-3.5 h-3.5 text-[#A1F524]" />
+              <span className="font-semibold">Gemini 2.0 Flash</span>
             </div>
 
             <button
               onClick={() => handleExecutePrompt()}
               disabled={isLoading || !prompt.trim()}
-              className="px-4 py-1.5 rounded-full bg-[#34C759] text-black font-bold text-xs flex items-center gap-1.5 disabled:opacity-40 active:scale-95 transition-all shadow-md"
+              className="px-4 py-2 rounded-full bg-[#A1F524] text-black font-bold text-xs flex items-center gap-1.5 disabled:opacity-40 active:scale-95 transition-all shadow-[0_2px_12px_rgba(161,245,36,0.3)] fitness-press"
             >
               {isLoading ? (
                 <span>Procesando...</span>
               ) : (
                 <>
                   <span>Ejecutar</span>
-                  <IconSend className="w-3 h-3" />
+                  <IconSend className="w-3 h-3 stroke-[2.5]" />
                 </>
               )}
             </button>
@@ -141,8 +141,8 @@ export const HubQuickPromptSheet: React.FC = () => {
         </div>
 
         {statusText && (
-          <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center animate-pulse">
-            <p className="text-xs text-[#34C759] font-medium">{statusText}</p>
+          <div className="p-3 rounded-xl bg-[#A1F524]/10 border border-[#A1F524]/20 text-center animate-pulse">
+            <p className="text-xs text-[#A1F524] font-bold">{statusText}</p>
           </div>
         )}
 

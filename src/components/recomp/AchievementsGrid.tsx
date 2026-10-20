@@ -25,38 +25,38 @@ export const AchievementsGrid: React.FC<AchievementsGridProps> = ({ achievements
     <div className="mb-4 space-y-2.5">
       {/* Header Pill */}
       <div className="flex items-center justify-between px-1">
-        <div className="glass-pill px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+        <div className="bg-[#1C1C1E] border border-white/[0.08] px-3.5 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
           <span>🥇</span>
-          <span className="text-xs font-black text-[#F5F5F7]">Logros & Metas</span>
+          <span className="text-xs font-black text-white">Premios & Metas</span>
         </div>
         <span className="text-[11px] font-black text-[#8E8E93]">
-          {unlockedCount} / {ALL_ACHIEVEMENT_DEFINITIONS.length} desbloqueados
+          {unlockedCount} / {ALL_ACHIEVEMENT_DEFINITIONS.length} obtenidos
         </span>
       </div>
 
-      {/* Glassmorphism Achievements Card */}
-      <div className="glass-surface rounded-[28px] p-4.5 border-t-white/20">
+      {/* Apple Fitness Awards Card */}
+      <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-5 shadow-xl">
         <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
           {ALL_ACHIEVEMENT_DEFINITIONS.map((def) => {
             const unlocked = unlockedMap.has(def.id);
             return (
               <div
                 key={def.id}
-                className="flex flex-col items-center cursor-pointer group active:scale-95 transition-transform"
+                className="flex flex-col items-center cursor-pointer group fitness-press transition-transform"
                 onClick={() => setSelected({ ...def, unlocked })}
               >
                 <div
                   className={`w-13 h-13 rounded-2xl flex items-center justify-center text-2xl transition-all duration-300 ${
                     unlocked
-                      ? 'bg-gradient-to-br from-[#34C759]/25 to-[#34C759]/10 border border-[#34C759]/40 shadow-[0_0_15px_rgba(52,199,89,0.35)] scale-100 group-hover:scale-110'
-                      : 'bg-white/[0.04] border border-white/[0.08] text-white/30 hover:border-white/20'
+                      ? 'bg-gradient-to-br from-[#FFD60A]/30 to-[#A1F524]/20 border border-[#FFD60A]/50 shadow-[0_0_15px_rgba(255,214,10,0.35)] scale-100 group-hover:scale-110'
+                      : 'bg-[#2C2C2E] border border-white/5 text-white/30 hover:border-white/20'
                   }`}
                 >
                   {unlocked ? def.icon : '🔒'}
                 </div>
                 <span
                   className={`text-[10px] font-black mt-1.5 text-center truncate max-w-[65px] transition-colors ${
-                    unlocked ? 'text-[#F5F5F7]' : 'text-[#636366]'
+                    unlocked ? 'text-white' : 'text-[#8E8E93]'
                   }`}
                 >
                   {unlocked ? def.title : '???'}
@@ -67,29 +67,29 @@ export const AchievementsGrid: React.FC<AchievementsGridProps> = ({ achievements
         </div>
       </div>
 
-      {/* Detail Modal (Glassmorphism Elevated) */}
+      {/* Detail Modal */}
       {selected && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in">
           <div
             className="fixed inset-0 bg-black/80 backdrop-blur-md"
             onClick={() => setSelected(null)}
           />
-          <div className="relative glass-surface-elevated rounded-[32px] p-6 max-w-xs w-full text-center space-y-3.5 z-10 animate-scale-up border-t-white/30 shadow-2xl">
+          <div className="relative bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-6 max-w-xs w-full text-center space-y-3.5 z-10 animate-scale-up shadow-2xl">
             <div
               className={`w-18 h-18 rounded-3xl mx-auto flex items-center justify-center text-4xl shadow-lg ${
                 selected.unlocked
-                  ? 'bg-[#34C759]/20 border-2 border-[#34C759] shadow-[0_0_25px_rgba(52,199,89,0.45)]'
-                  : 'bg-white/[0.06] border border-white/10'
+                  ? 'bg-[#FFD60A]/20 border-2 border-[#FFD60A] shadow-[0_0_25px_rgba(255,214,10,0.45)]'
+                  : 'bg-[#2C2C2E] border border-white/10'
               }`}
             >
               {selected.unlocked ? selected.icon : '🔒'}
             </div>
-            <h3 className="text-base font-black text-[#F5F5F7] tracking-tight">{selected.title}</h3>
+            <h3 className="text-base font-black text-white tracking-tight">{selected.title}</h3>
             <span
               className={`inline-block px-3 py-1 rounded-full text-xs font-black ${
                 selected.unlocked
-                  ? 'bg-[#34C759]/20 text-[#34C759] border border-[#34C759]/30'
-                  : 'bg-white/10 text-[#8E8E93] border border-white/10'
+                  ? 'bg-[#A1F524]/20 text-[#A1F524] border border-[#A1F524]/30'
+                  : 'bg-[#2C2C2E] text-[#8E8E93] border border-white/10'
               }`}
             >
               {selected.unlocked ? '✓ Desbloqueado' : '🔒 Bloqueado'}
@@ -99,7 +99,7 @@ export const AchievementsGrid: React.FC<AchievementsGridProps> = ({ achievements
             </p>
             <button
               onClick={() => setSelected(null)}
-              className="glass-pill w-full py-2.5 rounded-full text-[#F5F5F7] text-xs font-black hover:border-white/30 active:scale-95 transition-all mt-2"
+              className="bg-[#2C2C2E] border border-white/5 w-full py-3 rounded-full text-white text-xs font-black fitness-press hover:bg-white/10 transition-all mt-2"
             >
               Cerrar
             </button>

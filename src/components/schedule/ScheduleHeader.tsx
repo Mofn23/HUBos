@@ -24,22 +24,22 @@ export const ScheduleHeader: React.FC<ScheduleHeaderProps> = ({
   const capitalizedDate = formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
 
   return (
-    <header className="flex flex-col space-y-2.5 pt-2 relative z-20">
-      {/* Row 1: Unified Minimalist Top Bar */}
+    <header className="flex flex-col space-y-2.5 pt-1 relative z-20">
+      {/* Row 1: Apple Fitness Top Navigation Bar */}
       <div className="flex items-center justify-between">
-        {/* Left: Minimalist Return to Hub Capsule */}
+        {/* Left: Return to Hub Capsule */}
         <button
           onClick={() => setCurrentApp('hub')}
-          className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#F5F5F7] flex items-center gap-1.5 hover:border-white/30 active:scale-95 transition-all shadow-sm group"
+          className="h-8 px-3 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center gap-1 text-xs font-bold text-white hover:border-white/30 fitness-press shadow-sm group"
           title="Volver al HUB principal"
         >
-          <span className="text-sm leading-none group-hover:-translate-x-0.5 transition-transform">‹</span>
-          <span className="tracking-tight">HUB</span>
+          <span className="text-sm leading-none font-bold group-hover:-translate-x-0.5 transition-transform">‹</span>
+          <span>HUB</span>
         </button>
 
-        {/* Center: Frosted Date Capsule */}
+        {/* Center: Apple Date Capsule */}
         <div
-          className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-black text-[#F5F5F7] flex items-center gap-1.5 shadow-sm"
+          className="h-8 px-3.5 rounded-full bg-[#1C1C1E] border border-white/10 text-xs font-bold text-white flex items-center gap-1.5 shadow-sm"
           title="Fecha de hoy"
         >
           <span className="text-xs">🗓️</span>
@@ -50,7 +50,7 @@ export const ScheduleHeader: React.FC<ScheduleHeaderProps> = ({
         <div className="flex items-center gap-1.5">
           <button
             onClick={onOpenAiImport}
-            className="glass-pill px-2.5 py-1.5 rounded-full text-xs font-black text-[#64D2FF] border-[#0A84FF]/25 hover:border-[#64D2FF]/50 flex items-center gap-1 active:scale-95 transition-all shadow-sm"
+            className="h-8 px-2.5 rounded-full bg-[#00F0FF]/15 border border-[#00F0FF]/30 text-xs font-bold text-[#00F0FF] flex items-center gap-1 active:scale-95 transition-all shadow-sm fitness-press"
             title="Escanear horario con Gemini IA"
           >
             <span className="animate-pulse">✨</span>
@@ -59,7 +59,7 @@ export const ScheduleHeader: React.FC<ScheduleHeaderProps> = ({
 
           <button
             onClick={onOpenSettings}
-            className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#F5F5F7] hover:text-white hover:border-white/30 active:scale-95 transition-all shadow-sm"
+            className="w-8 h-8 rounded-full bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90 transition-all fitness-press shadow-sm"
             title="Ajustes de Horarios"
           >
             <IconSettings className="w-3.5 h-3.5" />
@@ -67,18 +67,18 @@ export const ScheduleHeader: React.FC<ScheduleHeaderProps> = ({
         </div>
       </div>
 
-      {/* Row 2: Apple-style Segmented Frosted Glass Profile Switcher */}
-      <div className="glass-surface p-1 rounded-full flex items-center gap-1 overflow-x-auto no-scrollbar shadow-inner">
+      {/* Row 2: Apple-style Segmented Profile Switcher */}
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-1 rounded-full flex items-center gap-1 overflow-x-auto no-scrollbar shadow-md">
         {profiles.map((p) => {
           const isSelected = p.id === activeProfileId;
           return (
             <button
               key={p.id}
               onClick={() => setActiveProfileId(p.id)}
-              className={`flex-1 min-w-[70px] py-1.5 px-3 rounded-full text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+              className={`flex-1 min-w-[70px] py-1.5 px-3 rounded-full text-xs font-bold transition-all flex items-center justify-center gap-1.5 fitness-press ${
                 isSelected
-                  ? 'glass-pill-active text-[#F5F5F7] shadow-sm scale-100'
-                  : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                  ? 'bg-white text-black shadow-md scale-100'
+                  : 'text-[#8E8E93] hover:text-white active:scale-95'
               }`}
             >
               <span className="text-xs">{p.icon}</span>

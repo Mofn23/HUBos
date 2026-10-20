@@ -52,15 +52,15 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
         }}
       />
 
-      {/* Glass Modal Card */}
+      {/* Apple Fitness Modal Card */}
       <div
-        className="relative w-full max-w-md glass-surface-elevated rounded-t-[36px] sm:rounded-[36px] p-6 z-10 border-t sm:border border-white/20 shadow-2xl space-y-5 animate-slide-up max-h-[90vh] overflow-y-auto no-scrollbar overscroll-contain"
+        className="relative w-full max-w-md bg-[#1C1C1E] rounded-t-[36px] sm:rounded-[36px] p-6 z-10 border-t sm:border border-white/15 shadow-2xl space-y-5 animate-slide-up max-h-[90vh] overflow-y-auto no-scrollbar overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-3 border-b border-white/10">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-full bg-[#34C759]/20 border border-[#34C759]/40 flex items-center justify-center text-lg">
+            <div className="w-9 h-9 rounded-full bg-[#A1F524]/20 border border-[#A1F524]/40 flex items-center justify-center text-lg">
               ⚡
             </div>
             <div>
@@ -75,7 +75,7 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white active:scale-95 transition-all"
+            className="w-8 h-8 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white fitness-press transition-all"
           >
             ✕
           </button>
@@ -96,10 +96,10 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
                     setSelectedRoutineId(routine.id);
                     setSelectedDayIdx(0);
                   }}
-                  className={`p-3 rounded-[20px] cursor-pointer transition-all border flex items-center justify-between ${
+                  className={`p-3 rounded-[20px] cursor-pointer transition-all border flex items-center justify-between fitness-press ${
                     isSelected
-                      ? 'bg-[#34C759]/15 border-[#34C759]/50 shadow-[0_0_15px_rgba(52,199,89,0.2)]'
-                      : 'glass-pill border-white/5 hover:border-white/20'
+                      ? 'bg-[#242426] border-[#A1F524]/50 shadow-sm'
+                      : 'bg-[#242426]/60 border-white/5 hover:border-white/20'
                   }`}
                 >
                   <div className="flex items-center gap-3">
@@ -113,7 +113,7 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
                   </div>
 
                   {isSelected ? (
-                    <span className="w-5 h-5 rounded-full bg-[#34C759] text-black text-xs font-black flex items-center justify-center">
+                    <span className="w-5 h-5 rounded-full bg-[#A1F524] text-black text-xs font-black flex items-center justify-center">
                       ✓
                     </span>
                   ) : (
@@ -126,10 +126,10 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
             {/* Free Workout Option */}
             <div
               onClick={() => setSelectedRoutineId('free')}
-              className={`p-3 rounded-[20px] cursor-pointer transition-all border flex items-center justify-between ${
+              className={`p-3 rounded-[20px] cursor-pointer transition-all border flex items-center justify-between fitness-press ${
                 isFreeWorkout
-                  ? 'bg-[#64D2FF]/15 border-[#64D2FF]/50 shadow-[0_0_15px_rgba(100,210,255,0.2)]'
-                  : 'glass-pill border-white/5 hover:border-white/20'
+                  ? 'bg-[#242426] border-[#00F0FF]/50 shadow-sm'
+                  : 'bg-[#242426]/60 border-white/5 hover:border-white/20'
               }`}
             >
               <div className="flex items-center gap-3">
@@ -143,7 +143,7 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
               </div>
 
               {isFreeWorkout ? (
-                <span className="w-5 h-5 rounded-full bg-[#64D2FF] text-black text-xs font-black flex items-center justify-center">
+                <span className="w-5 h-5 rounded-full bg-[#00F0FF] text-black text-xs font-black flex items-center justify-center">
                   ✓
                 </span>
               ) : (
@@ -167,10 +167,10 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
                     key={day.id || idx}
                     type="button"
                     onClick={() => setSelectedDayIdx(idx)}
-                    className={`p-2.5 rounded-[18px] text-left transition-all border ${
+                    className={`p-2.5 rounded-[18px] text-left transition-all border fitness-press ${
                       isSelected
-                        ? 'bg-[#34C759] text-black border-[#34C759] font-black shadow-md'
-                        : 'glass-pill border-white/5 text-[#8E8E93] hover:text-white font-bold'
+                        ? 'bg-white text-black border-white font-black shadow-md'
+                        : 'bg-[#2C2C2E] border-white/5 text-[#8E8E93] hover:text-white font-bold'
                     }`}
                   >
                     <p className="text-xs truncate">{day.dayName}</p>
@@ -188,10 +188,10 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
 
             {/* Preview of exercises for the selected day */}
             {currentDay && (
-              <div className="p-3 rounded-[20px] bg-white/[0.04] border border-white/10 space-y-1.5">
+              <div className="p-3 rounded-[20px] bg-[#242426] border border-white/5 space-y-1.5">
                 <div className="flex items-center justify-between text-[11px] font-black text-[#F5F5F7]">
                   <span>{currentDay.dayName}</span>
-                  <span className="text-[#34C759] text-[10px] font-bold">{currentDay.focus}</span>
+                  <span className="text-[#A1F524] text-[10px] font-black">{currentDay.focus}</span>
                 </div>
                 <div className="space-y-1">
                   {currentDay.exercises.map((ex, i) => (
@@ -217,7 +217,7 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
         <div className="space-y-2 pt-2 border-t border-white/10">
           <button
             onClick={handleStartConfirm}
-            className="w-full py-4 rounded-full bg-gradient-to-r from-[#34C759] to-[#2ECC71] text-black font-black text-sm shadow-[0_0_30px_rgba(52,199,89,0.4)] hover:scale-[1.01] active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="w-full py-4 rounded-full bg-[#A1F524] text-black font-black text-sm shadow-md shadow-[#A1F524]/20 fitness-press transition-all flex items-center justify-center gap-2"
           >
             <span className="text-lg">⚡</span>
             <span>Comenzar Entrenamiento Ahora</span>
@@ -225,7 +225,7 @@ export const StartWorkoutModal: React.FC<StartWorkoutModalProps> = ({
 
           <button
             onClick={onClose}
-            className="w-full py-3 rounded-full glass-pill text-xs font-black text-[#8E8E93] hover:text-white active:scale-98 transition-all"
+            className="w-full py-3 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-xs font-black text-[#8E8E93] hover:text-white fitness-press transition-all"
           >
             ✕ Cancelar
           </button>

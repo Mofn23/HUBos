@@ -179,32 +179,32 @@ Formato en Markdown claro con emojis.`;
       </div>
 
       {/* 1. User Profile Bento Card */}
-      <div className="glass-surface p-5 rounded-[28px] flex items-center gap-4 border-t-white/20 shadow-md">
-        <div className="w-14 h-14 rounded-2xl glass-pill flex items-center justify-center text-3xl shrink-0 shadow-inner">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-5 rounded-3xl flex items-center gap-4 shadow-xl">
+        <div className="w-14 h-14 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-3xl shrink-0 shadow-inner">
           💪
         </div>
         <div>
-          <h2 className="text-lg font-black text-[#F5F5F7] tracking-tight">{userName}</h2>
+          <h2 className="text-lg font-black text-white tracking-tight">{userName}</h2>
           <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
-            🎯 Recomposición Corporal • <strong className="text-[#34C759]">{latestWeight} kg</strong>
+            🎯 Recomposición Corporal • <strong className="text-[#A1F524]">{latestWeight} kg</strong>
           </p>
         </div>
       </div>
 
       {/* 2. Modo de Tema */}
-      <div className="glass-surface p-4.5 rounded-[28px] border-t-white/20 space-y-3 shadow-md">
-        <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-5 rounded-3xl space-y-3 shadow-xl">
+        <div className="flex items-center gap-2 text-xs font-black text-white">
           <span>🎨</span>
           <span>Esquema Visual de Color</span>
         </div>
 
-        <div className="glass-pill p-1 rounded-2xl flex gap-1 shadow-inner">
+        <div className="bg-[#2C2C2E] p-1 rounded-full flex gap-1 shadow-inner">
           <button
             onClick={() => setThemeMode('dark')}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-2 transition-all fitness-press ${
               themeMode === 'dark'
-                ? 'glass-pill-active text-white shadow-sm'
-                : 'text-[#8E8E93] hover:text-white active:scale-95'
+                ? 'bg-white text-black font-black shadow-sm'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
           >
             <span>🌙</span>
@@ -212,10 +212,10 @@ Formato en Markdown claro con emojis.`;
           </button>
           <button
             onClick={() => setThemeMode('light')}
-            className={`flex-1 py-2.5 px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition-all ${
+            className={`flex-1 py-2 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-2 transition-all fitness-press ${
               themeMode === 'light'
-                ? 'glass-pill-active text-white shadow-sm'
-                : 'text-[#8E8E93] hover:text-white active:scale-95'
+                ? 'bg-white text-black font-black shadow-sm'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
           >
             <span>☀️</span>
@@ -225,47 +225,47 @@ Formato en Markdown claro con emojis.`;
       </div>
 
       {/* 3. Meta Calórica Diaria */}
-      <div className="glass-surface p-4.5 rounded-[26px] border-t-white/20 flex items-center justify-between shadow-sm">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-4.5 rounded-2xl flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-lg shrink-0">
             🎯
           </div>
           <div>
-            <div className="text-sm font-black text-[#F5F5F7]">Meta Calórica Diaria</div>
+            <div className="text-sm font-black text-white">Meta Calórica Diaria</div>
             <div className="text-xs font-bold text-[#8E8E93]">
               Rango: {targetCalories - 75} - {targetCalories + 75} kcal
             </div>
           </div>
         </div>
-        <span className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-black text-[#34C759]">
+        <span className="bg-[#2C2C2E] border border-white/5 px-3.5 py-1.5 rounded-full text-xs font-black text-[#A1F524]">
           {targetCalories} kcal
         </span>
       </div>
 
       {/* 4. Metas de Macronutrientes */}
-      <div className="glass-surface p-4.5 rounded-[26px] border-t-white/20 flex items-center justify-between shadow-sm">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-4.5 rounded-2xl flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shrink-0">
-            🥗
+          <div className="w-10 h-10 rounded-xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-lg shrink-0">
+            🥩
           </div>
           <div>
-            <div className="text-sm font-black text-[#F5F5F7]">Meta Proteica</div>
+            <div className="text-sm font-black text-white">Meta Proteica</div>
             <div className="text-xs font-bold text-[#8E8E93]">Construcción y saciedad</div>
           </div>
         </div>
-        <span className="glass-pill px-3.5 py-1.5 rounded-full text-xs font-black text-[#64D2FF]">
+        <span className="bg-[#2C2C2E] border border-white/5 px-3.5 py-1.5 rounded-full text-xs font-black text-[#FA114F]">
           {targetProtein}g Proteína
         </span>
       </div>
 
       {/* 5. API Key de Gemini Status */}
-      <div className="glass-surface p-4.5 rounded-[26px] border-t-white/20 flex items-center justify-between shadow-sm">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-4.5 rounded-2xl flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-lg shrink-0">
             🤖
           </div>
           <div>
-            <div className="text-sm font-black text-[#F5F5F7]">API Key de Gemini</div>
+            <div className="text-sm font-black text-white">API Key de Gemini</div>
             <div className="text-xs font-bold text-[#8E8E93]">
               {geminiApiKey ? `Conectado (${geminiApiKey.substring(0, 8)}...)` : 'No configurada'}
             </div>
@@ -274,8 +274,8 @@ Formato en Markdown claro con emojis.`;
         <span
           className={`px-3 py-1 rounded-full text-xs font-black border ${
             geminiApiKey
-              ? 'bg-[#34C759]/15 text-[#34C759] border-[#34C759]/30'
-              : 'bg-[#FF453A]/15 text-[#FF453A] border-[#FF453A]/30'
+              ? 'bg-[#A1F524]/15 text-[#A1F524] border-[#A1F524]/30'
+              : 'bg-[#FA114F]/15 text-[#FA114F] border-[#FA114F]/30'
           }`}
         >
           {geminiApiKey ? 'Activo' : 'Pendiente'}
@@ -285,7 +285,7 @@ Formato en Markdown claro con emojis.`;
       {/* 6. Formulario Actualizar Gemini API Key */}
       <form
         onSubmit={handleSaveApiKey}
-        className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md"
+        className="bg-[#1C1C1E] border border-white/[0.08] p-5 rounded-3xl space-y-3.5 shadow-xl"
       >
         <label className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
           Ingresar / Actualizar Gemini API Key
@@ -294,12 +294,12 @@ Formato en Markdown claro con emojis.`;
           type="password"
           value={apiKeyInput}
           onChange={(e) => setApiKeyInput(e.target.value)}
-          placeholder="AQ.Ab8..."
-          className="w-full p-3.5 rounded-2xl glass-pill text-sm text-[#F5F5F7] font-bold tracking-widest focus:border-white/40 focus:outline-none"
+          placeholder="AIzaSy..."
+          className="w-full p-3.5 rounded-xl bg-[#2C2C2E] border border-white/10 text-sm text-white font-bold tracking-widest focus:border-[#A1F524] focus:outline-none"
         />
         <button
           type="submit"
-          className="w-full py-3.5 rounded-full bg-[#34C759] text-black font-black text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow-[0_4px_16px_rgba(52,199,89,0.3)]"
+          className="w-full py-4 rounded-full bg-[#A1F524] text-black font-black text-xs flex items-center justify-center gap-2 fitness-press transition-all shadow-md shadow-[#A1F524]/20"
         >
           <span>✓</span>
           <span>Guardar API Key</span>
@@ -307,7 +307,7 @@ Formato en Markdown claro con emojis.`;
       </form>
 
       {/* 7. Consumo Semanal Bar Chart */}
-      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[28px] space-y-3.5 shadow-md">
         <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
           <span>📈</span>
           <span>Consumo Semanal (kcal)</span>
@@ -319,8 +319,8 @@ Formato en Markdown claro con emojis.`;
               key={i}
               className={`h-36 rounded-2xl flex flex-col items-center justify-between p-2.5 relative overflow-hidden border transition-all ${
                 d.active
-                  ? 'glass-pill-active border-[#34C759]/40'
-                  : 'glass-pill border-white/5'
+                  ? 'bg-[#242426] border-[#A1F524]/50 shadow-sm'
+                  : 'bg-[#2C2C2E]/60 border-white/5'
               }`}
             >
               <span className="text-base">{d.icon}</span>
@@ -329,7 +329,7 @@ Formato en Markdown claro con emojis.`;
                 <span className="text-[10px] font-extrabold text-[#8E8E93] block">{d.day}</span>
               </div>
               {d.active && (
-                <div className="absolute bottom-0 inset-x-0 h-1.5 bg-[#34C759] rounded-b-2xl shadow-[0_0_8px_#34C759]" />
+                <div className="absolute bottom-0 inset-x-0 h-1.5 bg-[#A1F524] rounded-b-2xl shadow-[0_0_8px_#A1F524]" />
               )}
             </div>
           ))}
@@ -337,9 +337,9 @@ Formato en Markdown claro con emojis.`;
       </div>
 
       {/* 8. Mis Suplementos */}
-      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[28px] space-y-3.5 shadow-md">
         <div className="flex items-center justify-between pb-1 border-b border-white/5">
-          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+          <div className="bg-[#2C2C2E] border border-white/5 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
             <span>💊</span>
             <span>Mis Suplementos</span>
           </div>
@@ -348,7 +348,7 @@ Formato en Markdown claro con emojis.`;
               setShowAddSuppModal(true);
               setIsModalOpen(true);
             }}
-            className="glass-pill text-xs font-black text-[#34C759] px-3.5 py-1.5 rounded-full hover:border-white/30 active:scale-95"
+            className="bg-[#2C2C2E] border border-white/5 text-xs font-black text-[#A1F524] px-3.5 py-1.5 rounded-full hover:bg-[#3A3A3C] fitness-press"
           >
             + Añadir
           </button>
@@ -358,10 +358,10 @@ Formato en Markdown claro con emojis.`;
           {supplements.map((s) => (
             <div
               key={s.id}
-              className="glass-pill p-3.5 rounded-[22px] flex items-center justify-between shadow-sm"
+              className="bg-[#242426] border border-white/5 p-3.5 rounded-[22px] flex items-center justify-between shadow-sm"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl glass-surface flex items-center justify-center text-lg">
+                <div className="w-10 h-10 rounded-2xl bg-[#2C2C2E] flex items-center justify-center text-lg">
                   {s.icon || '💊'}
                 </div>
                 <div>
@@ -373,7 +373,7 @@ Formato en Markdown claro con emojis.`;
               </div>
               <button
                 onClick={() => deleteSupplement(s.id)}
-                className="text-[#8E8E93] hover:text-[#FF453A] p-2 transition-colors"
+                className="text-[#8E8E93] hover:text-[#FA114F] p-2 transition-colors"
               >
                 <IconTrash className="w-4 h-4" />
               </button>
@@ -383,9 +383,9 @@ Formato en Markdown claro con emojis.`;
       </div>
 
       {/* 9. Registro Corporal & WeightTrend */}
-      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[28px] space-y-3.5 shadow-md">
         <div className="flex items-center justify-between pb-1 border-b border-white/5">
-          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+          <div className="bg-[#2C2C2E] border border-white/5 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
             <span>📏</span>
             <span>Registro Corporal</span>
           </div>
@@ -394,15 +394,15 @@ Formato en Markdown claro con emojis.`;
               setShowMeasureModal(true);
               setIsModalOpen(true);
             }}
-            className="glass-pill text-xs font-black text-[#64D2FF] px-3.5 py-1.5 rounded-full hover:border-white/30 active:scale-95"
+            className="bg-[#2C2C2E] border border-white/5 text-xs font-black text-[#00F0FF] px-3.5 py-1.5 rounded-full hover:bg-[#3A3A3C] fitness-press"
           >
             + Registrar
           </button>
         </div>
 
-        <div className="glass-pill p-4 rounded-[22px] flex items-center justify-between shadow-sm">
+        <div className="bg-[#242426] border border-white/5 p-4 rounded-[22px] flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-2xl glass-surface flex items-center justify-center text-xl shrink-0 shadow-inner">
+            <div className="w-12 h-12 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-xl shrink-0">
               ⚖️
             </div>
             <div>
@@ -417,16 +417,16 @@ Formato en Markdown claro con emojis.`;
       </div>
 
       {/* 10. Fotos de Progreso Físico & Análisis IA */}
-      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3.5 shadow-md">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[28px] space-y-3.5 shadow-md">
         <div className="flex items-center justify-between pb-1 border-b border-white/5">
-          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+          <div className="bg-[#2C2C2E] border border-white/5 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
             <span>📷</span>
             <span>Fotos de Progreso Físico</span>
           </div>
           <button
             onClick={() => photoInputRef.current?.click()}
             disabled={isAnalyzingPhoto}
-            className="text-xs font-black text-black px-4 py-1.5 rounded-full bg-[#34C759] shadow active:scale-95 flex items-center gap-1"
+            className="text-xs font-black text-black px-4 py-1.5 rounded-full bg-[#A1F524] shadow-md shadow-[#A1F524]/20 fitness-press flex items-center gap-1"
           >
             {isAnalyzingPhoto ? (
               <>
@@ -450,22 +450,22 @@ Formato en Markdown claro con emojis.`;
         </div>
 
         {latestPhoto ? (
-          <div className="rounded-[28px] overflow-hidden glass-pill space-y-4 border border-white/10">
+          <div className="rounded-[28px] overflow-hidden bg-[#242426] space-y-4 border border-white/10">
             <div className="relative aspect-[3/4] w-full overflow-hidden">
               <img
                 src={latestPhoto.imageBase64}
                 alt="Foto de progreso"
                 className="w-full h-full object-cover"
               />
-              <span className="absolute bottom-3 left-3 text-xs font-black text-white px-3 py-1 rounded-full bg-black/75 backdrop-blur-md border border-white/10">
+              <span className="absolute bottom-3 left-3 text-xs font-black text-white px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/10">
                 Hoy
               </span>
             </div>
 
             {/* AI Coach Detailed Analysis */}
             <div className="p-5 pt-0 space-y-3">
-              <div className="flex items-center gap-2 text-[#34C759] text-xs font-black">
-                <IconSparkles className="w-4 h-4 text-[#34C759]" />
+              <div className="flex items-center gap-2 text-[#A1F524] text-xs font-black">
+                <IconSparkles className="w-4 h-4 text-[#A1F524]" />
                 <span>Análisis del Coach IA</span>
               </div>
 
@@ -475,7 +475,7 @@ Formato en Markdown claro con emojis.`;
             </div>
           </div>
         ) : (
-          <div className="p-6 text-center space-y-2 flex flex-col items-center">
+          <div className="p-6 text-center space-y-2 flex flex-col items-center bg-[#242426]/50 rounded-[22px] border border-white/5">
             <span className="text-3xl">📷</span>
             <h4 className="text-sm font-black text-[#F5F5F7]">
               Sube tu primera foto de progreso
@@ -488,8 +488,8 @@ Formato en Markdown claro con emojis.`;
       </div>
 
       {/* 11. Respaldo y Exportación */}
-      <div className="glass-surface p-5 rounded-[28px] border-t-white/20 space-y-3 shadow-md">
-        <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[28px] space-y-3 shadow-md">
+        <div className="bg-[#2C2C2E] border border-white/5 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
           <span>📥</span>
           <span>Respaldo de Datos</span>
         </div>
@@ -497,21 +497,21 @@ Formato en Markdown claro con emojis.`;
         <div className="space-y-2">
           <button
             onClick={() => showToast('📄 Resumen .txt descargado.')}
-            className="w-full py-3.5 rounded-2xl glass-pill text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 hover:border-white/30 active:scale-98 transition-all"
+            className="w-full py-3.5 rounded-2xl bg-[#2C2C2E] hover:bg-[#3A3A3C] border border-white/5 text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 fitness-press transition-all"
           >
             <span>📥</span>
             <span>Resumen .txt</span>
           </button>
           <button
             onClick={() => showToast('📤 Respaldo JSON exportado.')}
-            className="w-full py-3.5 rounded-2xl glass-pill text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 hover:border-white/30 active:scale-98 transition-all"
+            className="w-full py-3.5 rounded-2xl bg-[#2C2C2E] hover:bg-[#3A3A3C] border border-white/5 text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 fitness-press transition-all"
           >
             <span>📤</span>
             <span>Exportar JSON</span>
           </button>
           <button
             onClick={() => showToast('📥 Selecciona archivo JSON para importar.')}
-            className="w-full py-3.5 rounded-2xl glass-pill text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 hover:border-white/30 active:scale-98 transition-all"
+            className="w-full py-3.5 rounded-2xl bg-[#2C2C2E] hover:bg-[#3A3A3C] border border-white/5 text-xs font-black text-[#F5F5F7] flex items-center justify-center gap-2 fitness-press transition-all"
           >
             <span>📥</span>
             <span>Importar JSON</span>
@@ -519,7 +519,7 @@ Formato en Markdown claro con emojis.`;
         </div>
       </div>
 
-      {/* Modal Añadir Suplemento (Glassmorphism Elevated) */}
+      {/* Modal Añadir Suplemento (Apple Fitness Sheet) */}
       {showAddSuppModal && (
         <div className="fixed inset-0 z-[9999] flex items-end justify-center animate-fade-in">
           <div
@@ -530,7 +530,7 @@ Formato en Markdown claro con emojis.`;
             }}
           />
           <div
-            className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
+            className="relative bg-[#1C1C1E] border-t border-white/15 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -540,7 +540,7 @@ Formato en Markdown claro con emojis.`;
                   setShowAddSuppModal(false);
                   setIsModalOpen(false);
                 }}
-                className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93]"
+                className="bg-[#2C2C2E] hover:bg-[#3A3A3C] w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -556,7 +556,7 @@ Formato en Markdown claro con emojis.`;
                   placeholder="Ej: Creatina, Magnesio, Omega 3"
                   value={newSuppName}
                   onChange={(e) => setNewSuppName(e.target.value)}
-                  className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                  className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-[#A1F524] focus:outline-none"
                   required
                 />
               </div>
@@ -570,7 +570,7 @@ Formato en Markdown claro con emojis.`;
                     placeholder="3-5g"
                     value={newSuppDose}
                     onChange={(e) => setNewSuppDose(e.target.value)}
-                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-[#A1F524] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -581,13 +581,13 @@ Formato en Markdown claro con emojis.`;
                     type="time"
                     value={newSuppTime}
                     onChange={(e) => setNewSuppTime(e.target.value)}
-                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-[#A1F524] focus:outline-none"
                   />
                 </div>
               </div>
               <button
                 type="submit"
-                className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-95 transition-all shadow-md mt-2"
+                className="w-full py-4 rounded-full bg-[#A1F524] text-black font-black text-xs fitness-press transition-all shadow-md shadow-[#A1F524]/20 mt-2"
               >
                 Guardar Suplemento
               </button>
@@ -596,7 +596,7 @@ Formato en Markdown claro con emojis.`;
         </div>
       )}
 
-      {/* Modal Registrar Medidas Corporales (Glassmorphism Elevated) */}
+      {/* Modal Registrar Medidas Corporales (Apple Fitness Sheet) */}
       {showMeasureModal && (
         <div className="fixed inset-0 z-[9999] flex items-end justify-center animate-fade-in">
           <div
@@ -607,7 +607,7 @@ Formato en Markdown claro con emojis.`;
             }}
           />
           <div
-            className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
+            className="relative bg-[#1C1C1E] border-t border-white/15 w-full max-w-md rounded-t-[38px] p-6 pb-[calc(env(safe-area-inset-bottom,20px)+24px)] z-20 animate-sheet-up space-y-4 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
@@ -617,7 +617,7 @@ Formato en Markdown claro con emojis.`;
                   setShowMeasureModal(false);
                   setIsModalOpen(false);
                 }}
-                className="glass-pill w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93]"
+                className="bg-[#2C2C2E] hover:bg-[#3A3A3C] w-8 h-8 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -634,7 +634,7 @@ Formato en Markdown claro con emojis.`;
                   placeholder="80.0"
                   value={newWeight}
                   onChange={(e) => setNewWeight(e.target.value)}
-                  className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-base font-black text-[#F5F5F7] border border-white/10 focus:border-white/30 focus:outline-none"
+                  className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-base font-black text-[#F5F5F7] border border-white/10 focus:border-[#00F0FF] focus:outline-none"
                   required
                 />
               </div>
@@ -650,7 +650,7 @@ Formato en Markdown claro con emojis.`;
                     placeholder="81"
                     value={newWaist}
                     onChange={(e) => setNewWaist(e.target.value)}
-                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-[#00F0FF] focus:outline-none"
                   />
                 </div>
                 <div>
@@ -663,7 +663,7 @@ Formato en Markdown claro con emojis.`;
                     placeholder="104"
                     value={newChest}
                     onChange={(e) => setNewChest(e.target.value)}
-                    className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                    className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-[#00F0FF] focus:outline-none"
                   />
                 </div>
               </div>
@@ -678,13 +678,13 @@ Formato en Markdown claro con emojis.`;
                   placeholder="38.5"
                   value={newArms}
                   onChange={(e) => setNewArms(e.target.value)}
-                  className="w-full mt-1.5 p-3.5 rounded-2xl glass-surface text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-white/30 focus:outline-none"
+                  className="w-full mt-1.5 p-3.5 rounded-2xl bg-[#2C2C2E] text-sm text-[#F5F5F7] font-bold border border-white/10 focus:border-[#00F0FF] focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-95 transition-all shadow-md mt-2"
+                className="w-full py-4 rounded-full bg-[#00F0FF] text-black font-black text-xs fitness-press transition-all shadow-md shadow-[#00F0FF]/20 mt-2"
               >
                 Guardar Registro
               </button>

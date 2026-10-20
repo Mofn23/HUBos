@@ -14,14 +14,14 @@ export const QuickStatsRow: React.FC = () => {
 
   return (
     <div className="grid grid-cols-3 gap-2.5 mb-4">
-      {/* 1. Rutina Hoy (Dinámica según nuevo split) */}
-      <div className="glass-pill p-3 rounded-[22px] flex flex-col justify-between shadow-sm hover:border-white/25 active:scale-95 transition-all min-h-[90px] group">
+      {/* 1. Rutina Hoy */}
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-3.5 rounded-2xl flex flex-col justify-between shadow-md hover:border-white/20 fitness-press transition-all min-h-[92px] group">
         <div className="flex items-center justify-between">
           <span className="text-base group-hover:scale-110 transition-transform">{routine.icon}</span>
           <span className="text-[9px] font-black uppercase text-[#8E8E93] tracking-wider">Hoy</span>
         </div>
         <div className="space-y-0.5 mt-1">
-          <div className="text-xs font-black text-[#F5F5F7] truncate leading-tight">
+          <div className="text-xs font-black text-white truncate leading-tight">
             {routine.title}
           </div>
           <div className="text-[10px] font-bold text-[#8E8E93] truncate">
@@ -31,13 +31,13 @@ export const QuickStatsRow: React.FC = () => {
       </div>
 
       {/* 2. Racha Gym */}
-      <div className="glass-pill p-3 rounded-[22px] flex flex-col justify-between shadow-sm hover:border-white/25 active:scale-95 transition-all min-h-[90px] group">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-3.5 rounded-2xl flex flex-col justify-between shadow-md hover:border-white/20 fitness-press transition-all min-h-[92px] group">
         <div className="flex items-center justify-between">
           <span className="text-base group-hover:scale-110 transition-transform">🔥</span>
           <span className="text-[9px] font-black uppercase text-[#8E8E93] tracking-wider">Gym</span>
         </div>
         <div className="space-y-0.5 mt-1">
-          <div className="text-xs font-black text-[#F5F5F7] tracking-tight">
+          <div className="text-xs font-black text-white tracking-tight">
             {gymStreakDays} {gymStreakDays === 1 ? 'día' : 'días'}
           </div>
           <div className="text-[10px] font-bold text-[#8E8E93]">
@@ -47,7 +47,7 @@ export const QuickStatsRow: React.FC = () => {
       </div>
 
       {/* 3. Nutrición */}
-      <div className="glass-pill p-3 rounded-[22px] flex flex-col justify-between shadow-sm hover:border-white/25 active:scale-95 transition-all min-h-[90px] group">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-3.5 rounded-2xl flex flex-col justify-between shadow-md hover:border-white/20 fitness-press transition-all min-h-[92px] group">
         <div className="flex items-center justify-between">
           <span className="text-base group-hover:scale-110 transition-transform">🥑</span>
           <span className="text-[9px] font-black uppercase text-[#8E8E93] tracking-wider">Dieta</span>
@@ -55,7 +55,7 @@ export const QuickStatsRow: React.FC = () => {
         <div className="space-y-0.5 mt-1">
           <div
             className="text-xs font-black tracking-tight"
-            style={{ color: hasLoggedToday ? '#34C759' : '#FF9F43' }}
+            style={{ color: hasLoggedToday ? '#A1F524' : '#FFD60A' }}
           >
             {nutStreakDays} {nutStreakDays === 1 ? 'día' : 'días'}
           </div>

@@ -9,33 +9,33 @@
    ============================================ */
 
 :root {
-  /* Dark Theme (Principal OLED) */
-  --bg-app: #0B0B0D;
-  --bg-sheet: #121214;
+  /* Dark Theme (Principal Apple Fitness OLED) */
+  --bg-app: #000000;
+  --bg-sheet: #1C1C1E;
   --surface: #1C1C1E;
-  --surface-elevated: #2A2A2C;
-  --tag: #1E1E20;
+  --surface-elevated: #242426;
+  --tag: #2C2C2E;
 
-  --border: rgba(255, 255, 255, 0.10);
-  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.05);
 
-  --text-primary: #F5F5F7;
+  --text-primary: #FFFFFF;
   --text-secondary: #8E8E93;
-  --text-placeholder: #3A3A3C;
+  --text-placeholder: #48484A;
   --text-muted: #636366;
 
-  --green: #DE7356;
-  --coral: #E8505B;
-  --pill-light: #E9E9EC;
-  --pill-light-text: #1C1C1E;
-  --water: #A9C6FF;
+  --green: #A1F524;
+  --coral: #FA114F;
+  --pill-light: #FFFFFF;
+  --pill-light-text: #000000;
+  --water: #00F0FF;
 
-  --accent-green: #DE7356;
-  --accent-blue: #54A0FF;
-  --accent-orange: #DE7356;
-  --accent-purple: #9C88FF;
-  --accent-yellow: #FECA57;
-  --clay-accent: #DE7356;
+  --accent-green: #A1F524;
+  --accent-blue: #00F0FF;
+  --accent-orange: #FF9F0A;
+  --accent-purple: #BF5AF2;
+  --accent-yellow: #FFD60A;
+  --clay-accent: #A1F524;
 
   /* Radii MonAI */
   --radius-pill: 9999px;
@@ -939,217 +939,197 @@ input[type='number'] {
 }
 
 /* ============================================
-   Claymorphism Design System (v2.6.0)
-   Soft, rounded 3D-like shapes mimicking malleable clay with
-   playful, puffy elements, dual inner shadows and rich tactile surfaces.
+   Apple Fitness Design System & Emil Kowalski Motion Engine
+   OLED True Black (#000000), Apple Card Surfaces (#1C1C1E),
+   Vibrant Activity Neons, and Fluid Tactile Feedback.
    ============================================ */
 
-/* 1. Base Clay Surfaces */
+/* 1. Base Apple Fitness Surfaces & Aliases */
+.fitness-card,
 .clay-surface,
 .glass-surface {
-  background: #191922;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  box-shadow: 
-    inset 2px 2px 5px rgba(255, 255, 255, 0.10),
-    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 14px 30px -6px rgba(0, 0, 0, 0.55),
-    0 6px 14px -2px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  background-color: #1C1C1E;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease;
 }
 
+.fitness-card:hover,
+.clay-surface:hover,
+.glass-surface:hover {
+  border-color: rgba(255, 255, 255, 0.16);
+}
+
+.fitness-card-elevated,
 .clay-surface-elevated,
 .glass-surface-elevated {
-  background: #20202B;
-  border-radius: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    inset 2.5px 2.5px 6px rgba(255, 255, 255, 0.14),
-    inset -4px -4px 9px rgba(0, 0, 0, 0.65),
-    0 20px 42px -6px rgba(0, 0, 0, 0.65),
-    0 8px 18px -3px rgba(0, 0, 0, 0.45);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  background-color: #242426;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease;
 }
 
-/* 2. Clay Pills & Interactive Tiles */
+/* 2. Apple Fitness Pills & Segmented Controls */
+.fitness-pill,
 .clay-pill,
 .glass-pill {
-  background: #22222E;
+  background-color: #2C2C2E;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 
-    inset 1.5px 1.5px 3px rgba(255, 255, 255, 0.12),
-    inset -2px -2px 5px rgba(0, 0, 0, 0.5),
-    0 6px 14px -2px rgba(0, 0, 0, 0.35);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #FFFFFF;
+  box-shadow: none;
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.fitness-pill:active,
 .clay-pill:active,
 .glass-pill:active {
   transform: scale(0.96);
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.65),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.06),
-    0 2px 6px rgba(0, 0, 0, 0.25);
+  opacity: 0.85;
 }
 
+.fitness-pill-active,
 .clay-pill-active,
 .glass-pill-active {
-  background: #2C2C3C;
+  background-color: #FFFFFF;
+  color: #000000;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.22),
-    inset -2px -2px 5px rgba(0, 0, 0, 0.5),
-    0 6px 18px -2px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
-/* 3. Clay Floating Cards */
+/* 3. Floating Apple Bento Cards */
+.fitness-floating-card,
 .clay-floating-card,
 .glass-floating-card {
-  background: #1D1D27;
-  border-radius: 28px;
+  background-color: #1C1C1E;
+  border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 
-    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
-    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 16px 32px -6px rgba(0, 0, 0, 0.55);
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease;
 }
 
+.fitness-floating-card:hover,
 .clay-floating-card:hover,
 .glass-floating-card:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    inset 2px 2px 6px rgba(255, 255, 255, 0.18),
-    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 22px 44px -8px rgba(0, 0, 0, 0.65);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
 }
 
-/* 4. Colorful Puffy Clay Buttons */
-.clay-btn-primary {
-  background: #3B82F6;
-  color: #FFFFFF;
-  border-radius: 9999px;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
-    0 8px 20px -4px rgba(59, 130, 246, 0.5);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.clay-btn-primary:active {
-  transform: scale(0.96);
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
-    0 3px 8px rgba(59, 130, 246, 0.3);
-}
-
+/* 4. Apple Fitness Vibrant Neon Action Buttons */
+/* Exercise Neon Lime Green (#A1F524) */
+.fitness-btn-lime,
 .clay-btn-emerald,
 .clay-btn-accent,
 .clay-btn-orange {
-  background: #DE7356;
-  color: #FFFFFF;
+  background-color: #A1F524;
+  color: #000000;
+  font-weight: 700;
   border-radius: 9999px;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
-    0 8px 20px -4px rgba(222, 115, 86, 0.55);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: none;
+  box-shadow: 0 4px 16px rgba(161, 245, 36, 0.35);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
 }
 
+.fitness-btn-lime:active,
 .clay-btn-emerald:active,
 .clay-btn-accent:active,
 .clay-btn-orange:active {
   transform: scale(0.96);
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
-    0 3px 8px rgba(222, 115, 86, 0.35);
+  filter: brightness(0.9);
 }
 
-.clay-btn-coral {
-  background: #DC2626;
-  color: #FFFFFF;
+/* Stand Neon Electric Cyan (#00F0FF) */
+.fitness-btn-cyan,
+.clay-btn-primary {
+  background-color: #00F0FF;
+  color: #000000;
+  font-weight: 700;
   border-radius: 9999px;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
-    0 8px 20px -4px rgba(220, 38, 38, 0.5);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: none;
+  box-shadow: 0 4px 16px rgba(0, 240, 255, 0.35);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
 }
 
+.fitness-btn-cyan:active,
+.clay-btn-primary:active {
+  transform: scale(0.96);
+  filter: brightness(0.9);
+}
+
+/* Move Neon Coral Red / Pink (#FA114F) */
+.fitness-btn-red,
+.clay-btn-coral {
+  background-color: #FA114F;
+  color: #FFFFFF;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: none;
+  box-shadow: 0 4px 16px rgba(250, 17, 79, 0.35);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
+}
+
+.fitness-btn-red:active,
 .clay-btn-coral:active {
   transform: scale(0.96);
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
-    0 3px 8px rgba(220, 38, 38, 0.3);
+  filter: brightness(0.9);
 }
 
+/* Awards / Steps Neon Yellow (#FFD60A) */
+.fitness-btn-yellow,
 .clay-btn-amber {
-  background: #D97706;
-  color: #FFFFFF;
+  background-color: #FFD60A;
+  color: #000000;
+  font-weight: 700;
   border-radius: 9999px;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
-    0 8px 20px -4px rgba(217, 119, 6, 0.5);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: none;
+  box-shadow: 0 4px 16px rgba(255, 214, 10, 0.35);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
 }
 
+.fitness-btn-yellow:active,
 .clay-btn-amber:active {
   transform: scale(0.96);
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
-    0 3px 8px rgba(217, 119, 6, 0.3);
+  filter: brightness(0.9);
 }
 
+/* Purple / HIIT Accent (#BF5AF2) */
+.fitness-btn-purple,
 .clay-btn-purple {
-  background: #9333EA;
+  background-color: #BF5AF2;
   color: #FFFFFF;
+  font-weight: 700;
   border-radius: 9999px;
-  box-shadow: 
-    inset 2px 2px 4px rgba(255, 255, 255, 0.42),
-    inset -3px -3px 6px rgba(0, 0, 0, 0.35),
-    0 8px 20px -4px rgba(147, 51, 234, 0.5);
-  transition: all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: none;
+  box-shadow: 0 4px 16px rgba(191, 90, 242, 0.35);
+  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
 }
 
+.fitness-btn-purple:active,
 .clay-btn-purple:active {
   transform: scale(0.96);
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.45),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.2),
-    0 3px 8px rgba(147, 51, 234, 0.3);
+  filter: brightness(0.9);
 }
 
-/* 5. Clay Glow / Aura Shadows */
+/* 5. Apple Fitness Ambient Auras */
 .clay-glow-emerald,
 .glass-glow-emerald,
 .clay-glow-orange {
-  box-shadow: 
-    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
-    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 12px 30px -4px rgba(222, 115, 86, 0.45);
+  box-shadow: 0 0 24px rgba(161, 245, 36, 0.25);
 }
 
 .clay-glow-cyan,
 .glass-glow-cyan {
-  box-shadow: 
-    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
-    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 12px 30px -4px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 0 24px rgba(0, 240, 255, 0.25);
 }
 
 .clay-glow-purple,
 .glass-glow-purple {
-  box-shadow: 
-    inset 2px 2px 5px rgba(255, 255, 255, 0.12),
-    inset -3px -3px 7px rgba(0, 0, 0, 0.55),
-    0 12px 30px -4px rgba(147, 51, 234, 0.4);
+  box-shadow: 0 0 24px rgba(191, 90, 242, 0.25);
 }
 
 /* ========================================================

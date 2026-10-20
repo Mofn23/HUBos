@@ -118,9 +118,9 @@ export const RecompView: React.FC = () => {
     <div className="flex-1 flex flex-col px-4 pt-16 pb-36 overflow-y-auto no-scrollbar animate-fade-in relative">
       {/* Ambient Radial Glowing Orbs for Glass Refraction */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
-        <div className="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#34C759]/10 blur-[100px]" />
-        <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[110px]" />
-        <div className="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-[#0A84FF]/10 blur-[100px]" />
+        <div className="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#A1F524]/10 blur-[100px]" />
+        <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-[#FA114F]/10 blur-[110px]" />
+        <div className="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-[#00F0FF]/10 blur-[100px]" />
       </div>
 
       {/* Achievement Unlocked Toast Notification */}
@@ -201,7 +201,7 @@ export const RecompView: React.FC = () => {
         </div>
       )}
 
-      {/* Native Floating Bottom Nav Dock (Glassmorphism Elevated Capsule) */}
+      {/* Native Floating Bottom Nav Dock (Apple Fitness Capsule) */}
       <div
         className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
           isModalOpen || isMealModalOpen
@@ -209,12 +209,12 @@ export const RecompView: React.FC = () => {
             : 'opacity-100 translate-y-0 scale-100'
         }`}
       >
-        <nav className="glass-surface-elevated rounded-full p-1.5 flex items-center gap-1 shadow-2xl backdrop-blur-3xl border border-white/20">
+        <nav className="bg-[#1C1C1E]/90 backdrop-blur-2xl rounded-full p-1.5 flex items-center gap-1 shadow-2xl border border-white/[0.08]">
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center justify-center transition-all fitness-press ${
               currentTab === 'dashboard'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-white text-black shadow-sm font-bold'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
             onClick={() => setCurrentTab('dashboard')}
             aria-label="Inicio"
@@ -222,10 +222,10 @@ export const RecompView: React.FC = () => {
             <IconHome className="w-5 h-5" />
           </button>
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center justify-center transition-all fitness-press ${
               currentTab === 'meals'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-white text-black shadow-sm font-bold'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
             onClick={() => setCurrentTab('meals')}
             aria-label="Comidas"
@@ -233,10 +233,10 @@ export const RecompView: React.FC = () => {
             <span className="text-lg leading-none">🍴</span>
           </button>
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center justify-center transition-all fitness-press ${
               currentTab === 'training'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-white text-black shadow-sm font-bold'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
             onClick={() => setCurrentTab('training')}
             aria-label="Entrenamiento"
@@ -244,10 +244,10 @@ export const RecompView: React.FC = () => {
             <IconDumbbell className="w-5 h-5" />
           </button>
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2 rounded-full flex items-center justify-center transition-all fitness-press ${
               currentTab === 'profile'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-white text-black shadow-sm font-bold'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
             onClick={() => setCurrentTab('profile')}
             aria-label="Perfil y Ajustes"

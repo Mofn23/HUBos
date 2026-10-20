@@ -90,29 +90,29 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
   const selectedDayMeta = DAYS.find((d) => d.id === selectedDay) || DAYS[0];
 
   return (
-    <div className="flex-1 flex flex-col rounded-[30px] glass-surface overflow-hidden relative shadow-2xl z-10 border-t-white/20">
+    <div className="flex-1 flex flex-col rounded-3xl fitness-card overflow-hidden relative shadow-2xl z-10 border border-white/[0.08] bg-[#1C1C1E]">
       {/* 1. Header Bar: Floating Day Pills & View Mode Switcher */}
-      <div className="p-3 border-b border-white/[0.08] bg-white/[0.02] backdrop-blur-2xl space-y-2.5">
+      <div className="p-3 border-b border-white/[0.08] bg-black/40 backdrop-blur-2xl space-y-2.5">
         {/* Top Control: View Mode Segmented Pill */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[#8E8E93]">
               {viewMode === 'day' ? `Cronograma • ${selectedDayMeta.name}` : 'Horario Semanal'}
             </span>
             {selectedDay === currentDay && (
-              <span className="px-2 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] text-[10px] font-black border border-[#34C759]/30">
+              <span className="px-2 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-[10px] font-bold border border-[#A1F524]/30">
                 Hoy
               </span>
             )}
           </div>
 
           {/* Mode Switcher Segmented Pill */}
-          <div className="glass-pill p-0.5 rounded-full flex items-center shadow-inner">
+          <div className="bg-[#2C2C2E] p-0.5 rounded-full flex items-center shadow-inner">
             <button
               onClick={() => setViewMode('day')}
-              className={`px-3 py-1 rounded-full text-xs font-black transition-all flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 fitness-press ${
                 viewMode === 'day'
-                  ? 'glass-pill-active text-white shadow-sm'
+                  ? 'bg-white text-black shadow-sm'
                   : 'text-[#8E8E93] hover:text-white'
               }`}
             >
@@ -121,9 +121,9 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
             </button>
             <button
               onClick={() => setViewMode('week')}
-              className={`px-3 py-1 rounded-full text-xs font-black transition-all flex items-center gap-1 ${
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 fitness-press ${
                 viewMode === 'week'
-                  ? 'glass-pill-active text-white shadow-sm'
+                  ? 'bg-white text-black shadow-sm'
                   : 'text-[#8E8E93] hover:text-white'
               }`}
             >
@@ -144,16 +144,16 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
               <button
                 key={day.id}
                 onClick={() => setSelectedDay(day.id)}
-                className={`shrink-0 px-3.5 py-2 rounded-[18px] text-xs font-black transition-all flex flex-col items-center justify-center min-w-[50px] relative group ${
+                className={`shrink-0 px-3.5 py-2 rounded-2xl text-xs font-bold transition-all flex flex-col items-center justify-center min-w-[50px] relative group fitness-press ${
                   isSelected
-                    ? 'glass-pill-active text-white shadow-md scale-105 border-white/30'
-                    : 'glass-pill text-[#8E8E93] hover:text-[#F5F5F7]'
+                    ? 'bg-white text-black shadow-md scale-105'
+                    : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white border border-white/5'
                 }`}
               >
                 <div className="flex items-center gap-1">
-                  <span className="text-[11px] font-black tracking-wider">{day.short}</span>
+                  <span className="text-[11px] font-bold tracking-wider">{day.short}</span>
                   {isToday && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#34C759] shadow-[0_0_6px_#34C759]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#A1F524] shadow-[0_0_6px_#A1F524]" />
                   )}
                 </div>
 
@@ -161,13 +161,13 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                 {dayClassCount > 0 ? (
                   <span
                     className={`text-[9px] font-bold mt-0.5 ${
-                      isSelected ? 'text-[#34C759]' : 'text-[#636366]'
+                      isSelected ? 'text-black/80 font-black' : 'text-[#8E8E93]'
                     }`}
                   >
                     {dayClassCount} {dayClassCount === 1 ? 'clase' : 'clases'}
                   </span>
                 ) : (
-                  <span className="text-[9px] font-semibold text-[#48484A] mt-0.5">Libre</span>
+                  <span className="text-[9px] font-semibold text-[#636366] mt-0.5">Libre</span>
                 )}
               </button>
             );
@@ -181,11 +181,11 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
         <div className="flex-1 overflow-y-auto no-scrollbar p-4 space-y-3">
           {selectedDaySlots.length === 0 ? (
             <div className="h-full min-h-[260px] flex flex-col items-center justify-center text-center p-6 space-y-3">
-              <div className="w-16 h-16 rounded-[24px] glass-pill flex items-center justify-center text-3xl shadow-inner">
+              <div className="w-16 h-16 rounded-[24px] bg-[#2C2C2E] flex items-center justify-center text-3xl shadow-inner border border-white/5">
                 ☕
               </div>
               <div className="space-y-1">
-                <h3 className="text-base font-black text-[#F5F5F7]">
+                <h3 className="text-base font-black text-white">
                   Día Libre • Sin Clases
                 </h3>
                 <p className="text-xs font-bold text-[#8E8E93] max-w-[220px]">
@@ -211,15 +211,15 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                     key={slot.id}
                     onClick={() => onSelectSubject(subject, slot)}
                     style={{
-                      borderColor: isClassLive ? subject.color : undefined,
+                      borderColor: isClassLive ? subject.color : 'rgba(255,255,255,0.08)',
                       boxShadow: isClassLive
                         ? `0 12px 36px -8px ${subject.color}40`
                         : undefined,
                     }}
-                    className={`glass-floating-card rounded-[24px] p-4 cursor-pointer active:scale-[0.98] transition-all flex items-center justify-between relative overflow-hidden group ${
+                    className={`fitness-card rounded-[22px] p-4 cursor-pointer fitness-press transition-all flex items-center justify-between relative overflow-hidden group bg-[#242426] border border-white/[0.08] ${
                       isClassLive
-                        ? 'ring-1 ring-white/30 bg-gradient-to-r from-white/[0.09] to-white/[0.04]'
-                        : ''
+                        ? 'ring-1 ring-white/30 bg-[#2C2C2E]'
+                        : 'hover:border-white/20'
                     }`}
                   >
                     {/* Left Accent Glow Bar */}
@@ -244,11 +244,11 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                       {/* Info Texts */}
                       <div className="space-y-1 min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-black text-[#F5F5F7] tracking-tight truncate">
+                          <h4 className="text-sm font-black text-white tracking-tight truncate">
                             {subject.name}
                           </h4>
                           {isClassLive && (
-                            <span className="px-2 py-0.5 rounded-full bg-[#34C759] text-black text-[9px] font-black uppercase tracking-wider animate-pulse shrink-0">
+                            <span className="px-2 py-0.5 rounded-full bg-[#A1F524] text-black text-[9px] font-black uppercase tracking-wider animate-pulse shrink-0">
                               En vivo
                             </span>
                           )}
@@ -268,7 +268,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
 
                     {/* Right Time Pill */}
                     <div className="flex flex-col items-end gap-1.5 shrink-0 pl-3">
-                      <div className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#F5F5F7] tracking-tight shadow-sm">
+                      <div className="bg-[#2C2C2E] px-3 py-1.5 rounded-full text-xs font-black text-white tracking-tight border border-white/5">
                         {slot.startHour} - {slot.endHour}
                       </div>
                       <span className="text-[10px] font-extrabold text-[#8E8E93]">
@@ -296,9 +296,9 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
             }}
           >
             {/* Sticky Top Days Row Header */}
-            <div className="sticky top-0 z-30 flex bg-[#121214]/85 backdrop-blur-2xl border-b border-white/[0.08]">
+            <div className="sticky top-0 z-30 flex bg-[#1C1C1E]/95 backdrop-blur-2xl border-b border-white/[0.08]">
               {/* Top-left corner spacer */}
-              <div className="sticky left-0 z-40 w-14 shrink-0 bg-[#121214]/95 backdrop-blur-2xl border-r border-white/[0.06] flex items-center justify-center">
+              <div className="sticky left-0 z-40 w-14 shrink-0 bg-[#1C1C1E] backdrop-blur-2xl border-r border-white/[0.06] flex items-center justify-center">
                 <span className="text-[10px] font-black text-[#636366]">HORA</span>
               </div>
 
@@ -315,8 +315,8 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                       <div
                         className={`w-full py-1 px-2 rounded-full text-center transition-all ${
                           isToday
-                            ? 'glass-pill-active text-[#34C759] font-black'
-                            : 'glass-pill text-[#8E8E93] font-bold'
+                            ? 'bg-white text-black font-black shadow-sm'
+                            : 'bg-[#2C2C2E] text-[#8E8E93] font-bold'
                         }`}
                       >
                         <span className="text-xs tracking-wider uppercase">{day.name}</span>
@@ -330,7 +330,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
             {/* Grid Body: Left Sticky Hours Column + Days Columns */}
             <div className="flex relative">
               {/* Sticky Hours Column */}
-              <div className="sticky left-0 z-20 w-14 shrink-0 bg-[#121214]/85 backdrop-blur-2xl border-r border-white/[0.06] flex flex-col">
+              <div className="sticky left-0 z-20 w-14 shrink-0 bg-[#1C1C1E]/95 backdrop-blur-2xl border-r border-white/[0.06] flex flex-col">
                 {Array.from({ length: TOTAL_HOURS }).map((_, idx) => {
                   const hour = START_HOUR + idx;
                   const isCurrentHour = Math.floor(currentHourFloat) === hour;
@@ -343,7 +343,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                       <div
                         className={`px-1.5 py-0.5 rounded-full text-[10px] font-black tracking-tight text-center leading-tight ${
                           isCurrentHour
-                            ? 'bg-[#34C759] text-black font-black shadow-[0_0_8px_#34C759]'
+                            ? 'bg-[#A1F524] text-black font-black shadow-[0_0_8px_#A1F524]'
                             : 'text-[#8E8E93]'
                         }`}
                       >
@@ -373,8 +373,8 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                     className="absolute left-0 right-0 z-20 flex items-center pointer-events-none"
                     style={{ top: `${currentIndicatorTop}px` }}
                   >
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#FF453A] ring-2 ring-[#131313] -ml-1.5 shadow-[0_0_8px_#FF453A]" />
-                    <div className="h-[2px] bg-[#FF453A] w-full opacity-80" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#FA114F] ring-2 ring-black -ml-1.5 shadow-[0_0_8px_#FA114F]" />
+                    <div className="h-[2px] bg-[#FA114F] w-full opacity-90" />
                   </div>
                 )}
 
@@ -391,7 +391,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                         height: `${TOTAL_HOURS * HOUR_HEIGHT}px`,
                       }}
                       className={`shrink-0 border-r border-white/[0.04] relative ${
-                        isToday ? 'bg-white/[0.015]' : ''
+                        isToday ? 'bg-white/[0.02]' : ''
                       }`}
                     >
                       {/* Render Floating Subject Pill Capsules for this day */}
@@ -420,12 +420,12 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
                               borderColor: `${subject.color}45`,
                               boxShadow: `0 8px 24px -4px ${subject.color}25`,
                             }}
-                            className="absolute z-10 rounded-[20px] glass-floating-card cursor-pointer active:scale-95 transition-all overflow-hidden flex group hover:border-white/40"
+                            className="absolute z-10 rounded-[20px] fitness-card bg-[#242426] cursor-pointer fitness-press transition-all overflow-hidden flex group hover:border-white/40 border border-white/[0.08]"
                           >
                             {/* Left Content Area (Name, Info, Emoji) */}
                             <div className="flex-1 p-2.5 flex flex-col justify-between overflow-hidden min-w-0">
                               <div>
-                                <h4 className="text-xs font-black text-[#F5F5F7] tracking-tight leading-tight truncate">
+                                <h4 className="text-xs font-black text-white tracking-tight leading-tight truncate">
                                   {subject.name}
                                 </h4>
 
@@ -442,7 +442,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({
 
                               {/* Bottom Emoji Stamp & Duration */}
                               <div className="flex items-center justify-between pt-0.5">
-                                <div className="px-2 py-0.5 rounded-full bg-white/[0.08] border border-white/15 flex items-center gap-1">
+                                <div className="px-2 py-0.5 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center gap-1">
                                   <span className="text-xs">{subject.emoji || '📚'}</span>
                                   <span className="text-[9px] font-bold text-[#8E8E93]">
                                     {slot.durationMinutes}m

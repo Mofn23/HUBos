@@ -40,7 +40,7 @@ export const TasksModal: React.FC<TasksModalProps> = ({
       headerAction={
         <button
           onClick={onAddNewTask}
-          className="px-3 py-1.5 rounded-full bg-[#34C759] text-black text-xs font-black shadow-glowGreen active:scale-95 transition-transform flex items-center gap-1"
+          className="px-3.5 py-1.5 rounded-full bg-[#A1F524] text-black text-xs font-black fitness-press shadow-sm flex items-center gap-1"
         >
           <span>+</span>
           <span>Nueva Tarea</span>
@@ -49,20 +49,20 @@ export const TasksModal: React.FC<TasksModalProps> = ({
       maxHeightClass="h-[calc(100vh-60px)] max-h-[88vh]"
     >
       <div className="space-y-4 pb-6">
-        {/* Tabs: Pendientes vs Completadas */}
-        <div className="grid grid-cols-2 p-1 rounded-2xl bg-[#242426] border border-white/5">
+        {/* Tabs: Pendientes vs Completadas (Apple Fitness Segmented Control) */}
+        <div className="grid grid-cols-2 p-1 rounded-full bg-[#2C2C2E] border border-white/5">
           <button
             onClick={() => setActiveTab('pending')}
-            className={`py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+            className={`py-2 rounded-full text-xs font-black transition-all flex items-center justify-center gap-1.5 fitness-press ${
               activeTab === 'pending'
-                ? 'bg-[#18181A] text-[#F5F5F7] shadow-sm'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+                ? 'bg-white text-black shadow-sm'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
           >
             <span>Pendientes</span>
             <span
               className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
-                pendingCount > 0 ? 'bg-[#FF9500]/20 text-[#FF9500]' : 'bg-white/10 text-[#8E8E93]'
+                pendingCount > 0 ? 'bg-[#FFD60A]/20 text-[#FFD60A]' : 'bg-black/20 text-[#8E8E93]'
               }`}
             >
               {pendingCount}
@@ -71,14 +71,14 @@ export const TasksModal: React.FC<TasksModalProps> = ({
 
           <button
             onClick={() => setActiveTab('completed')}
-            className={`py-2 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-1.5 ${
+            className={`py-2 rounded-full text-xs font-black transition-all flex items-center justify-center gap-1.5 fitness-press ${
               activeTab === 'completed'
-                ? 'bg-[#18181A] text-[#F5F5F7] shadow-sm'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7]'
+                ? 'bg-white text-black shadow-sm'
+                : 'text-[#8E8E93] hover:text-white'
             }`}
           >
             <span>Completadas</span>
-            <span className="px-2 py-0.5 rounded-full bg-white/10 text-[#8E8E93] text-[10px] font-black">
+            <span className="px-2 py-0.5 rounded-full bg-black/20 text-[#8E8E93] text-[10px] font-black">
               {completedCount}
             </span>
           </button>
@@ -89,10 +89,10 @@ export const TasksModal: React.FC<TasksModalProps> = ({
           <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1">
             <button
               onClick={() => setFilterSubjectId('all')}
-              className={`px-3 py-1 rounded-full text-xs font-black shrink-0 transition-all ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all fitness-press ${
                 filterSubjectId === 'all'
-                  ? 'bg-white text-black'
-                  : 'bg-[#242426] text-[#8E8E93] hover:text-[#F5F5F7]'
+                  ? 'bg-white text-black font-black shadow-sm'
+                  : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
               }`}
             >
               Todas
@@ -101,10 +101,10 @@ export const TasksModal: React.FC<TasksModalProps> = ({
               <button
                 key={sub.id}
                 onClick={() => setFilterSubjectId(sub.id)}
-                className={`px-3 py-1 rounded-full text-xs font-black shrink-0 transition-all flex items-center gap-1.5 ${
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold shrink-0 transition-all flex items-center gap-1.5 fitness-press ${
                   filterSubjectId === sub.id
-                    ? 'bg-[#34C759] text-black shadow-sm'
-                    : 'bg-[#242426] text-[#8E8E93] hover:text-[#F5F5F7]'
+                    ? 'bg-[#A1F524] text-black font-black shadow-sm'
+                    : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
                 }`}
               >
                 <span>{sub.emoji}</span>
@@ -118,11 +118,11 @@ export const TasksModal: React.FC<TasksModalProps> = ({
         <div className="space-y-2.5">
           {filteredTasks.length === 0 ? (
             <div className="py-12 flex flex-col items-center justify-center text-center space-y-3">
-              <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-3xl">
+              <div className="w-16 h-16 rounded-full bg-[#242426] flex items-center justify-center text-3xl border border-white/5">
                 {activeTab === 'pending' ? '🎉' : '📂'}
               </div>
               <div>
-                <h4 className="text-sm font-black text-[#F5F5F7]">
+                <h4 className="text-sm font-black text-white">
                   {activeTab === 'pending' ? '¡No tienes tareas pendientes!' : 'Sin tareas archivadas'}
                 </h4>
                 <p className="text-xs text-[#8E8E93] mt-1 max-w-xs">
@@ -139,20 +139,20 @@ export const TasksModal: React.FC<TasksModalProps> = ({
               return (
                 <div
                   key={task.id}
-                  className={`p-4 rounded-[22px] bg-[#1C1C1E] border transition-all flex items-start gap-3.5 group ${
+                  className={`p-4 rounded-[22px] bg-[#242426] border transition-all flex items-start gap-3.5 group ${
                     task.completed
                       ? 'border-white/5 opacity-60'
-                      : 'border-white/10 hover:border-white/20'
+                      : 'border-white/[0.08] hover:border-white/20'
                   }`}
                 >
                   {/* Interactive Checkbox */}
                   <button
                     type="button"
                     onClick={() => toggleTask(task.id)}
-                    className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-black transition-all shrink-0 mt-0.5 ${
+                    className={`w-6 h-6 rounded-full border flex items-center justify-center text-xs font-black transition-all shrink-0 mt-0.5 fitness-press ${
                       task.completed
-                        ? 'bg-[#34C759] border-[#34C759] text-black shadow-glowGreen'
-                        : 'border-white/20 hover:border-[#34C759] bg-[#242426]'
+                        ? 'bg-[#A1F524] border-[#A1F524] text-black shadow-[0_0_8px_#A1F524]'
+                        : 'border-white/20 hover:border-[#A1F524] bg-[#2C2C2E]'
                     }`}
                   >
                     {task.completed ? '✓' : ''}
@@ -165,7 +165,7 @@ export const TasksModal: React.FC<TasksModalProps> = ({
                         className={`text-sm font-black tracking-tight truncate ${
                           task.completed
                             ? 'line-through text-[#8E8E93]'
-                            : 'text-[#F5F5F7]'
+                            : 'text-white'
                         }`}
                       >
                         {task.title}
@@ -173,12 +173,12 @@ export const TasksModal: React.FC<TasksModalProps> = ({
 
                       {/* Priority Tag */}
                       <span
-                        className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase shrink-0 ${
+                        className={`px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase shrink-0 ${
                           task.priority === 'high'
-                            ? 'bg-[#FF453A]/20 text-[#FF453A]'
+                            ? 'bg-[#FA114F]/15 text-[#FA114F]'
                             : task.priority === 'medium'
-                            ? 'bg-[#FF9500]/20 text-[#FF9500]'
-                            : 'bg-[#34C759]/20 text-[#34C759]'
+                            ? 'bg-[#FFD60A]/15 text-[#FFD60A]'
+                            : 'bg-[#A1F524]/15 text-[#A1F524]'
                         }`}
                       >
                         {task.priority}
@@ -213,14 +213,14 @@ export const TasksModal: React.FC<TasksModalProps> = ({
                   <div className="flex items-center gap-1 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => onEditTask(task)}
-                      className="w-7 h-7 rounded-full bg-[#242426] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                      className="w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white fitness-press"
                       title="Editar tarea"
                     >
                       ✏️
                     </button>
                     <button
                       onClick={() => deleteTask(task.id)}
-                      className="w-7 h-7 rounded-full bg-[#242426] flex items-center justify-center text-xs text-[#8E8E93] hover:text-[#FF453A]"
+                      className="w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center text-xs text-[#8E8E93] hover:text-[#FA114F] fitness-press"
                       title="Eliminar tarea"
                     >
                       ✕

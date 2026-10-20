@@ -4,7 +4,6 @@ import React from 'react';
 import { useHubStore } from '@/stores/useHubStore';
 import { formatCurrency } from '@/lib/utils';
 import { AnimatedNumber } from '../common/AnimatedNumber';
-import { IconTrendingDown, IconArrowUpRight, IconShield } from '../common/Icons';
 
 interface HeroFinancialsProps {
   monthlyTotal: number;
@@ -19,7 +18,6 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
   annualTotal,
   monthlyBudget,
   activeCount,
-  potentialSavings,
 }) => {
   const currency = useHubStore((s) => s.currency);
 
@@ -29,16 +27,16 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
 
   return (
     <div className="space-y-3">
-      {/* Claymorphism Hero Card */}
-      <div className="clay-surface-elevated rounded-[32px] p-6 shadow-2xl flex flex-col items-center justify-center text-center relative overflow-hidden">
+      {/* Apple Fitness Hero Card */}
+      <div className="fitness-card-elevated rounded-3xl p-6 shadow-2xl flex flex-col items-center justify-center text-center relative overflow-hidden border border-white/[0.08]">
         {/* Subtle accent glow */}
-        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-20 bg-[#DE7356]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-48 h-24 bg-[#BF5AF2]/10 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93] mb-1.5">
+        <div className="text-[10px] font-bold uppercase tracking-widest text-[#8E8E93] mb-1.5">
           Gasto Mensual en Suscripciones
         </div>
 
-        <div className="text-3xl sm:text-4xl font-black text-[#F5F5F7] tracking-tight">
+        <div className="text-3xl sm:text-4xl font-black text-white tracking-tight">
           <AnimatedNumber
             value={monthlyTotal}
             formatter={(v) => formatCurrency(v, currency)}
@@ -48,11 +46,11 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
         <div className="flex items-center gap-2 mt-2">
           <span className="text-xs text-[#8E8E93]">
             Proyección anual:{' '}
-            <strong className="text-[#F5F5F7]">
+            <strong className="text-white">
               {formatCurrency(annualTotal, currency)}
             </strong>
           </span>
-          <span className="text-[10px] font-bold clay-pill text-[#DE7356] px-2.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold bg-[#BF5AF2]/15 text-[#BF5AF2] border border-[#BF5AF2]/30 px-2.5 py-0.5 rounded-full">
             {activeCount} activas
           </span>
         </div>
@@ -62,18 +60,18 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
           <div className="w-full mt-4 pt-3 border-t border-white/5 space-y-1.5">
             <div className="flex items-center justify-between text-[11px]">
               <span className="text-[#8E8E93]">Presupuesto Mensual</span>
-              <span className={isOverBudget ? 'text-[#DC2626] font-bold' : 'text-[#DE7356] font-bold'}>
+              <span className={isOverBudget ? 'text-[#FA114F] font-bold' : 'text-[#A1F524] font-bold'}>
                 {budgetRatio}% ({formatCurrency(monthlyBudget || 0, currency)})
               </span>
             </div>
-            <div className="w-full h-2.5 rounded-full clay-pill overflow-hidden p-0.5">
+            <div className="w-full h-2 rounded-full bg-[#2C2C2E] overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${
                   isOverBudget
-                    ? 'bg-[#DC2626]'
+                    ? 'bg-[#FA114F]'
                     : budgetRatio > 80
-                    ? 'bg-[#D97706]'
-                    : 'bg-[#DE7356]'
+                    ? 'bg-[#FFD60A]'
+                    : 'bg-[#A1F524]'
                 }`}
                 style={{ width: `${Math.min(budgetRatio, 100)}%` }}
               />

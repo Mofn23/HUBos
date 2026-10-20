@@ -106,8 +106,8 @@ export const TrainingSection: React.FC = () => {
         </p>
       </div>
 
-      {/* 2. Bento Card: Rutina de Hoy (New Split) */}
-      <div className="glass-surface rounded-[28px] p-5 border-t-white/20 shadow-lg space-y-3">
+      {/* 2. Bento Card: Rutina de Hoy */}
+      <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-5 shadow-xl space-y-3">
         <div className="flex items-center justify-between pb-1 border-b border-white/5">
           <div className="flex items-center gap-2">
             <span className="text-xl">{routine.icon}</span>
@@ -115,7 +115,7 @@ export const TrainingSection: React.FC = () => {
               <span className="text-[10px] font-black uppercase tracking-wider text-[#8E8E93] block">
                 Sesión Programada
               </span>
-              <h3 className="text-base font-black text-[#F5F5F7] tracking-tight">
+              <h3 className="text-base font-black text-white tracking-tight">
                 {routine.title}
               </h3>
             </div>
@@ -124,8 +124,8 @@ export const TrainingSection: React.FC = () => {
           <span
             className={`px-3 py-1 rounded-full text-xs font-black border ${
               routine.isRest
-                ? 'bg-white/10 text-[#8E8E93] border-white/15'
-                : 'bg-[#34C759]/15 text-[#34C759] border-[#34C759]/30 shadow-[0_0_10px_rgba(52,199,89,0.25)]'
+                ? 'bg-[#2C2C2E] text-[#8E8E93] border-white/10'
+                : 'bg-[#A1F524]/15 text-[#A1F524] border-[#A1F524]/30 shadow-[0_0_10px_rgba(161,245,36,0.25)]'
             }`}
           >
             {routine.focus}
@@ -141,22 +141,22 @@ export const TrainingSection: React.FC = () => {
       <MuscleHeatmap />
 
       {/* 4. Training Date Selector Card */}
-      <div className="glass-surface p-4 rounded-[26px] flex items-center justify-between border-t-white/20 shadow-sm">
-        <span className="text-xs font-black text-[#F5F5F7]">Fecha del entrenamiento</span>
+      <div className="bg-[#1C1C1E] border border-white/[0.08] p-4 rounded-2xl flex items-center justify-between shadow-md">
+        <span className="text-xs font-black text-white">Fecha del entrenamiento</span>
         <button
           onClick={() => setIsDateModalOpen(true)}
-          className="glass-pill px-4 py-1.5 rounded-full text-xs font-black text-[#F5F5F7] capitalize hover:border-white/30 active:scale-95 transition-transform"
+          className="bg-[#2C2C2E] border border-white/5 px-4 py-1.5 rounded-full text-xs font-black text-white capitalize hover:bg-white/10 fitness-press transition-all"
         >
           🗓️ {formattedDate}
         </button>
       </div>
 
       {/* 5. Subir Capturas de Symmetry Card */}
-      <div className="glass-surface rounded-[28px] p-5.5 border-t-white/20 shadow-lg space-y-3.5 text-center">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-5.5 shadow-xl space-y-3.5 text-center">
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={isAnalyzing}
-          className="w-full py-4 px-6 rounded-full bg-[#FF453A] text-white font-black text-sm flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(255,69,58,0.4)] active:scale-95 hover:scale-[1.01] transition-all disabled:opacity-50"
+          className="w-full py-4 px-6 rounded-full bg-[#FA114F] text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#FA114F]/25 fitness-press hover:scale-[1.01] transition-all disabled:opacity-40"
         >
           {isAnalyzing ? (
             <>
@@ -184,9 +184,9 @@ export const TrainingSection: React.FC = () => {
       </div>
 
       {/* 6. Historial de Entrenamientos */}
-      <div className="glass-surface rounded-[28px] p-5 space-y-3.5 border-t-white/20 shadow-md">
+      <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-5 space-y-3.5 shadow-xl">
         <div className="flex items-center justify-between pb-1 border-b border-white/5">
-          <div className="glass-pill inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
+          <div className="bg-[#242426] border border-white/5 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-white">
             <span>🏋️</span>
             <span>Historial de Sesiones</span>
           </div>
@@ -208,14 +208,14 @@ export const TrainingSection: React.FC = () => {
               <div
                 key={log.id}
                 onClick={() => setSelectedLog(log)}
-                className="glass-pill p-4 rounded-[22px] flex items-center justify-between cursor-pointer hover:border-white/30 active:scale-[0.98] transition-all shadow-sm group"
+                className="bg-[#242426] border border-white/5 p-4 rounded-2xl flex items-center justify-between cursor-pointer hover:border-white/20 fitness-press transition-all shadow-sm group"
               >
                 <div className="flex items-center gap-3.5 overflow-hidden">
-                  <div className="w-12 h-12 rounded-2xl glass-surface flex items-center justify-center text-2xl shrink-0 shadow-inner group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-2xl shrink-0 shadow-inner group-hover:scale-105 transition-transform">
                     🏋️
                   </div>
                   <div className="overflow-hidden">
-                    <h4 className="text-xs font-black text-[#F5F5F7] truncate group-hover:text-[#34C759] transition-colors">
+                    <h4 className="text-xs font-black text-white truncate transition-colors">
                       {log.title}
                     </h4>
                     <p className="text-[11px] font-bold text-[#8E8E93] mt-0.5">
@@ -230,7 +230,7 @@ export const TrainingSection: React.FC = () => {
         )}
       </div>
 
-      {/* Workout Detail Modal (Glassmorphism Elevated) */}
+      {/* Workout Detail Modal */}
       {selectedLog && (
         <div className="fixed inset-0 z-[99999] flex items-end justify-center animate-fade-in">
           <div
@@ -238,17 +238,17 @@ export const TrainingSection: React.FC = () => {
             onClick={() => setSelectedLog(null)}
           />
           <div
-            className="relative glass-surface-elevated border-t border-white/20 w-full max-w-md rounded-t-[38px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl"
+            className="relative bg-[#1C1C1E] border-t border-white/[0.08] w-full max-w-md rounded-t-[32px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[85vh] overflow-y-auto no-scrollbar shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">{selectedLog.title}</h3>
-                <p className="text-xs font-black text-[#34C759] mt-0.5">{selectedLog.date} • {selectedLog.totalVolumeKg || 0} kg total</p>
+                <h3 className="text-lg font-black text-white tracking-tight">{selectedLog.title}</h3>
+                <p className="text-xs font-black text-[#A1F524] mt-0.5">{selectedLog.date} • {selectedLog.totalVolumeKg || 0} kg total</p>
               </div>
               <button
                 onClick={() => setSelectedLog(null)}
-                className="glass-pill w-9 h-9 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-white"
+                className="w-9 h-9 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-[#8E8E93] hover:text-white fitness-press"
               >
                 <span className="text-sm font-bold">✕</span>
               </button>
@@ -259,10 +259,10 @@ export const TrainingSection: React.FC = () => {
                 Ejercicios & Series
               </div>
               {selectedLog.exercises.map((ex, idx) => (
-                <div key={idx} className="glass-surface p-3.5 rounded-2xl space-y-1.5 shadow-sm border-t-white/10">
-                  <div className="text-xs font-black text-[#F5F5F7] flex items-center justify-between">
+                <div key={idx} className="bg-[#242426] border border-white/5 p-3.5 rounded-2xl space-y-1.5 shadow-sm">
+                  <div className="text-xs font-black text-white flex items-center justify-between">
                     <span>{ex.name}</span>
-                    <span className="text-[10px] text-[#34C759] font-black px-2 py-0.5 rounded-full bg-[#34C759]/15">
+                    <span className="text-[10px] text-[#A1F524] font-black px-2.5 py-0.5 rounded-full bg-[#A1F524]/15">
                       {ex.sets.length} series
                     </span>
                   </div>
@@ -270,7 +270,7 @@ export const TrainingSection: React.FC = () => {
                     {ex.sets.map((s, sIdx) => (
                       <span
                         key={sIdx}
-                        className="glass-pill px-2.5 py-1 rounded-xl text-[10px] font-black text-[#F5F5F7]"
+                        className="bg-[#2C2C2E] border border-white/5 px-2.5 py-1 rounded-xl text-[10px] font-black text-white"
                       >
                         S{s.setNumber}: {s.weightKg}kg × {s.reps} {s.rpe ? `(RPE ${s.rpe})` : ''}
                       </span>
@@ -281,7 +281,7 @@ export const TrainingSection: React.FC = () => {
             </div>
 
             {selectedLog.symmetryNotes && (
-              <div className="glass-surface p-3.5 rounded-2xl border border-[#34C759]/30 text-xs font-bold text-[#34C759] leading-relaxed">
+              <div className="bg-[#242426] p-3.5 rounded-2xl border border-[#A1F524]/30 text-xs font-bold text-[#A1F524] leading-relaxed">
                 💡 {selectedLog.symmetryNotes}
               </div>
             )}
@@ -296,7 +296,7 @@ export const TrainingSection: React.FC = () => {
                     showToast('🗑️ Sesión eliminada.');
                   }
                 }}
-                className="py-3 px-4 rounded-full bg-[#FF453A]/15 text-[#FF453A] border border-[#FF453A]/30 text-xs font-black flex items-center justify-center gap-1.5 active:scale-95 transition-all shadow-sm"
+                className="py-3 px-4 rounded-full bg-[#2C2C2E] text-[#FA114F] border border-white/5 text-xs font-black flex items-center justify-center gap-1.5 fitness-press transition-all shadow-sm"
               >
                 <IconTrash className="w-4 h-4" />
                 <span>Eliminar</span>
@@ -304,7 +304,7 @@ export const TrainingSection: React.FC = () => {
 
               <button
                 onClick={() => setSelectedLog(null)}
-                className="flex-1 py-3 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-95 transition-all shadow-md"
+                className="flex-1 py-3 rounded-full bg-[#A1F524] text-black font-black text-xs fitness-press transition-all shadow-md"
               >
                 Cerrar Detalle
               </button>

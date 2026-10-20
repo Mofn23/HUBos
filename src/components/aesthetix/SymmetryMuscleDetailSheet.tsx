@@ -184,9 +184,9 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
         }}
       />
 
-      {/* Bottom Sheet Container matching Image 5 */}
+      {/* Bottom Sheet Container */}
       <div
-        className="relative w-full max-w-lg bg-[#0F0F11] border-t border-white/20 rounded-t-[36px] p-6 pb-[max(env(safe-area-inset-bottom),32px)] shadow-[0_-10px_40px_rgba(0,0,0,0.8)] z-10 space-y-4 animate-slide-up flex flex-col max-h-[85vh] overscroll-contain"
+        className="relative w-full max-w-lg bg-[#1C1C1E] border-t border-white/15 rounded-t-[36px] p-6 pb-[max(env(safe-area-inset-bottom),32px)] shadow-2xl z-10 space-y-4 animate-slide-up flex flex-col max-h-[85vh] overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Subtle pill drag handle */}
@@ -211,9 +211,9 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
             </div>
           </div>
 
-          {/* Official Symmetry Rank Badge Image (Image 5 style) */}
+          {/* Official Symmetry Rank Badge Image */}
           <div
-            className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-white/[0.04] p-1.5 flex items-center justify-center shrink-0 border border-white/10 shadow-lg relative group"
+            className="w-14 h-14 sm:w-16 sm:h-16 rounded-[22px] bg-[#242426] p-1.5 flex items-center justify-center shrink-0 border border-white/10 shadow-lg relative group"
             style={{
               boxShadow: `0 0 25px ${tierInfo.color}35`,
             }}
@@ -237,13 +237,13 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
             </span>
           </div>
 
-          {/* Horizontal Exercises Carousel matching Image 5 */}
+          {/* Horizontal Exercises Carousel */}
           <div className="flex items-stretch gap-3 overflow-x-auto pb-3 pt-1 no-scrollbar -mx-6 px-6">
             {exerciseCards.map(({ exercise, tier, media }) => (
               <div
                 key={exercise.id}
                 onClick={() => setSelectedExerciseForModal(exercise)}
-                className="w-40 sm:w-44 flex-shrink-0 bg-[#19191C] rounded-[24px] p-2.5 border border-white/10 shadow-xl flex flex-col justify-between group hover:border-white/25 active:scale-98 transition-all cursor-pointer"
+                className="w-40 sm:w-44 flex-shrink-0 bg-[#242426] rounded-[24px] p-2.5 border border-white/5 shadow-xl flex flex-col justify-between group hover:border-white/20 active:scale-98 transition-all cursor-pointer fitness-press"
               >
                 {/* Image / GIF display on OLED black container */}
                 <div className="w-full h-36 rounded-[18px] bg-black overflow-hidden flex items-center justify-center p-2 relative border border-white/5 group-hover:border-white/15 transition-colors">
@@ -286,7 +286,7 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
         <button
           type="button"
           onClick={onClose}
-          className="w-full py-3.5 rounded-full bg-white/[0.08] hover:bg-white/[0.14] text-white font-black text-xs active:scale-98 transition-all border border-white/15 mt-2 shadow-md"
+          className="w-full py-3.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-white font-black text-xs fitness-press transition-all border border-white/5 mt-2 shadow-md"
         >
           Cerrar
         </button>
@@ -299,7 +299,7 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
             className="fixed inset-0 bg-black/85 backdrop-blur-md"
             onClick={() => setSelectedExerciseForModal(null)}
           />
-          <div className="relative w-full max-w-sm bg-[#18181B] rounded-[32px] p-5 border border-white/20 shadow-2xl z-10 space-y-3 animate-slide-up">
+          <div className="relative w-full max-w-sm bg-[#1C1C1E] rounded-[32px] p-5 border border-white/15 shadow-2xl z-10 space-y-3 animate-slide-up">
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
               <h3 className="text-xs font-black text-white capitalize truncate pr-2">
                 {selectedExerciseForModal.name}
@@ -307,7 +307,7 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
               <button
                 type="button"
                 onClick={() => setSelectedExerciseForModal(null)}
-                className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                className="w-7 h-7 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white fitness-press"
               >
                 ✕
               </button>
@@ -347,7 +347,7 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
                 setSelectedExerciseForModal(null);
                 onClose();
               }}
-              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-98 transition-all shadow-md"
+              className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs fitness-press transition-all shadow-md shadow-[#A1F524]/20"
             >
               Seleccionar este Ejercicio
             </button>

@@ -95,8 +95,8 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
             {graphData.currentWeight} kg
           </strong>
           <span
-            className={`tag-pill text-[10px] font-black ${
-              graphData.trend <= 0 ? 'tag-pill-green' : 'tag-pill-coral'
+            className={`px-2 py-0.5 rounded-full text-[10px] font-black ${
+              graphData.trend <= 0 ? 'bg-[#A1F524]/20 text-[#A1F524]' : 'bg-[#FA114F]/20 text-[#FA114F]'
             }`}
           >
             {graphData.trend > 0 ? '↑' : graphData.trend < 0 ? '↓' : '•'}
@@ -106,7 +106,7 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
       </div>
 
       {/* SVG Moving Average Graph */}
-      <div className="w-full h-24 relative overflow-hidden rounded-xl bg-[#242426]/50 p-2">
+      <div className="w-full h-24 relative overflow-hidden rounded-xl bg-[#242426] border border-white/5 p-2">
         <svg
           viewBox={`0 0 ${graphData.svgWidth} ${graphData.svgHeight}`}
           preserveAspectRatio="none"
@@ -131,7 +131,7 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
           <path
             d={graphData.avgPath}
             fill="none"
-            stroke="#34C759"
+            stroke="#A1F524"
             strokeWidth="2.5"
             strokeLinecap="round"
           />
@@ -143,13 +143,13 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
                 cx={graphData.avgPoints[graphData.avgPoints.length - 1]?.x}
                 cy={graphData.avgPoints[graphData.avgPoints.length - 1]?.y}
                 r="5"
-                fill="#34C759"
+                fill="#A1F524"
               />
               <circle
                 cx={graphData.avgPoints[graphData.avgPoints.length - 1]?.x}
                 cy={graphData.avgPoints[graphData.avgPoints.length - 1]?.y}
                 r="2"
-                fill="#FFFFFF"
+                fill="#000000"
               />
             </>
           )}

@@ -44,7 +44,7 @@ export const BottomModal: React.FC<BottomModalProps> = ({
 
       {/* Sheet Content */}
       <div
-        className={`relative w-full max-w-lg bg-[#18181A] rounded-t-[36px] border-t border-white/10 shadow-2xl flex flex-col ${maxHeightClass} animate-slide-up z-10 overflow-hidden`}
+        className={`relative w-full max-w-lg bg-[#1C1C1E] rounded-t-[32px] border-t border-white/10 shadow-2xl flex flex-col ${maxHeightClass} animate-slide-up z-10 overflow-hidden`}
       >
         {/* Grab Handle */}
         <div className="pt-3 pb-1 flex justify-center cursor-pointer" onClick={onClose}>
@@ -55,14 +55,14 @@ export const BottomModal: React.FC<BottomModalProps> = ({
         {(title || headerAction) && (
           <div className="flex items-center justify-between px-6 py-3 border-b border-white/5">
             <div>
-              {title && <h2 className="text-lg font-bold text-[#F5F5F7] tracking-tight">{title}</h2>}
+              {title && <h2 className="text-lg font-bold text-white tracking-tight">{title}</h2>}
               {subtitle && <p className="text-xs text-[#8E8E93] mt-0.5">{subtitle}</p>}
             </div>
             <div className="flex items-center gap-2">
               {headerAction}
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-full bg-[#2A2A2C] flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors active:scale-95"
+                className="w-8 h-8 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors active:scale-95 fitness-press"
               >
                 <IconX className="w-4 h-4" />
               </button>

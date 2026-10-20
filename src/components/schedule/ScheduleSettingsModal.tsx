@@ -63,15 +63,15 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
     >
       <div className="space-y-4 pb-6">
         {/* 1. Notifications Lead Time */}
-        <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-2.5">
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] space-y-2.5">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-xs font-black text-[#F5F5F7]">Anticipación de Alerta de Clase</h4>
+              <h4 className="text-xs font-black text-white">Anticipación de Alerta de Clase</h4>
               <p className="text-[10px] font-bold text-[#8E8E93]">
                 Te avisaremos antes de que comience tu clase
               </p>
             </div>
-            <span className="px-2.5 py-1 rounded-full bg-[#34C759]/20 text-[#34C759] text-xs font-black">
+            <span className="px-3 py-1 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-xs font-black border border-[#A1F524]/30">
               {notifyBeforeMinutes} min
             </span>
           </div>
@@ -81,10 +81,10 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
               <button
                 key={mins}
                 onClick={() => setNotifyBeforeMinutes(mins)}
-                className={`py-2 rounded-xl text-xs font-black transition-all ${
+                className={`py-2 rounded-xl text-xs font-black transition-all fitness-press ${
                   notifyBeforeMinutes === mins
-                    ? 'bg-[#34C759] text-black shadow-glowGreen'
-                    : 'bg-[#242426] text-[#8E8E93] hover:text-white border border-white/5'
+                    ? 'bg-[#A1F524] text-black shadow-md'
+                    : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white border border-white/5'
                 }`}
               >
                 {mins} min
@@ -94,9 +94,9 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
         </div>
 
         {/* 2. Nightly Task Prep Alert */}
-        <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] flex items-center justify-between">
           <div className="space-y-0.5">
-            <h4 className="text-xs font-black text-[#F5F5F7]">Alerta Nocturna de Preparación</h4>
+            <h4 className="text-xs font-black text-white">Alerta Nocturna de Preparación</h4>
             <p className="text-[10px] font-bold text-[#8E8E93]">
               Resumen a las 8:30 PM con tus clases y tareas de mañana
             </p>
@@ -104,8 +104,8 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
 
           <button
             onClick={() => setNightlyAlertEnabled(!nightlyAlertEnabled)}
-            className={`w-12 h-7 rounded-full transition-colors relative ${
-              nightlyAlertEnabled ? 'bg-[#34C759]' : 'bg-[#2A2A2C]'
+            className={`w-12 h-7 rounded-full transition-colors relative fitness-press ${
+              nightlyAlertEnabled ? 'bg-[#A1F524]' : 'bg-[#2C2C2E]'
             }`}
           >
             <div
@@ -117,11 +117,11 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
         </div>
 
         {/* 3. Export to Apple Calendar */}
-        <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-2">
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-lg">📲</span>
             <div>
-              <h4 className="text-xs font-black text-[#F5F5F7]">Exportar a Calendario iOS (.ics)</h4>
+              <h4 className="text-xs font-black text-white">Exportar a Calendario iOS (.ics)</h4>
               <p className="text-[10px] font-bold text-[#8E8E93]">
                 Sincroniza tus clases con la app de Calendario de tu iPhone/iPad
               </p>
@@ -130,7 +130,7 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
 
           <button
             onClick={handleExportIcs}
-            className="w-full py-3 rounded-full bg-[#242426] border border-white/10 text-xs font-black text-[#F5F5F7] hover:bg-[#2A2A2C] active:scale-95 transition-all flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-full bg-[#2C2C2E] border border-white/5 text-xs font-bold text-white hover:bg-white/10 fitness-press transition-all flex items-center justify-center gap-2"
           >
             <span>📥</span>
             <span>Descargar Archivo .ics para iOS</span>
@@ -138,23 +138,23 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
         </div>
 
         {/* 4. Schedule Profiles Management */}
-        <div className="p-4 rounded-[22px] bg-[#1C1C1E] border border-white/5 space-y-3">
-          <h4 className="text-xs font-black text-[#F5F5F7]">Gestión de Perfiles</h4>
+        <div className="p-4 rounded-[22px] bg-[#242426] border border-white/[0.08] space-y-3">
+          <h4 className="text-xs font-black text-white">Gestión de Perfiles</h4>
 
           <div className="space-y-1.5 max-h-36 overflow-y-auto no-scrollbar">
             {profiles.map((p) => (
               <div
                 key={p.id}
-                className="p-2.5 rounded-xl bg-[#242426] border border-white/5 flex items-center justify-between"
+                className="p-2.5 rounded-xl bg-[#2C2C2E] border border-white/5 flex items-center justify-between"
               >
                 <div className="flex items-center gap-2">
                   <span className="text-base">{p.icon}</span>
-                  <span className="text-xs font-black text-[#F5F5F7]">{p.name}</span>
+                  <span className="text-xs font-bold text-white">{p.name}</span>
                 </div>
                 {p.id !== 'all' && (
                   <button
                     onClick={() => deleteProfile(p.id)}
-                    className="text-xs text-[#FF453A] hover:opacity-80 px-2"
+                    className="text-xs text-[#FA114F] hover:opacity-80 px-2 fitness-press"
                   >
                     Eliminar
                   </button>
@@ -169,7 +169,7 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
               type="text"
               value={newProfileIcon}
               onChange={(e) => setNewProfileIcon(e.target.value)}
-              className="w-10 bg-[#28282C] border border-white/10 rounded-xl py-2 text-center text-sm"
+              className="w-10 bg-[#2C2C2E] border border-white/10 rounded-xl py-2 text-center text-sm"
               title="Emoji del perfil"
             />
             <input
@@ -177,12 +177,12 @@ export const ScheduleSettingsModal: React.FC<ScheduleSettingsModalProps> = ({
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
               placeholder="Nuevo perfil (ej. Inglés)"
-              className="flex-1 bg-[#28282C] border border-white/10 rounded-xl px-3 py-2 text-xs text-[#F5F5F7] font-bold focus:outline-none focus:border-[#34C759]"
+              className="flex-1 bg-[#2C2C2E] border border-white/10 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-[#A1F524]"
             />
             <button
               type="submit"
               disabled={!newProfileName.trim()}
-              className="px-4 py-2 rounded-xl bg-[#34C759] disabled:opacity-50 text-black text-xs font-black"
+              className="px-4 py-2 rounded-xl bg-[#A1F524] disabled:opacity-40 text-black text-xs font-black fitness-press shadow-sm"
             >
               + Crear
             </button>

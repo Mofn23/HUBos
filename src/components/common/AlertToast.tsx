@@ -22,13 +22,13 @@ export const AlertToast: React.FC = () => {
   const getAlertColor = (type: InAppAlert['type']) => {
     switch (type) {
       case 'sodium':
-        return 'border-[#E8505B] bg-[#1C1C1E] text-[#E8505B]';
+        return 'border-[#FA114F]/40 bg-[#1C1C1E] text-[#FA114F]';
       case 'protein':
-        return 'border-[#FECA57] bg-[#1C1C1E] text-[#FECA57]';
+        return 'border-[#FFD60A]/40 bg-[#1C1C1E] text-[#FFD60A]';
       case 'creatine':
-        return 'border-[#54A0FF] bg-[#1C1C1E] text-[#54A0FF]';
+        return 'border-[#00F0FF]/40 bg-[#1C1C1E] text-[#00F0FF]';
       default:
-        return 'border-[#34C759] bg-[#1C1C1E] text-[#34C759]';
+        return 'border-[#A1F524]/40 bg-[#1C1C1E] text-[#A1F524]';
     }
   };
 

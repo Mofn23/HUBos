@@ -56,17 +56,17 @@ export const AnatomyRanksTab: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-fade-in">
-      {/* 1. Overall Rank Hero Bento Card (Symmetry OLED Style) */}
+      {/* 1. Overall Rank Hero Bento Card (Apple Fitness Style) */}
       <div
-        className="glass-surface rounded-[30px] p-5 border-t-white/20 shadow-2xl space-y-4 relative overflow-hidden"
+        className="bg-[#1C1C1E] rounded-[28px] p-5 border border-white/5 space-y-4 relative overflow-hidden"
         style={{
-          boxShadow: `0 12px 40px -10px ${overall.overallTier.color}40`,
+          boxShadow: `0 12px 40px -10px ${overall.overallTier.color}30`,
         }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className="w-3 h-3 rounded-full shadow-md animate-pulse"
+              className="w-2.5 h-2.5 rounded-full shadow-md animate-pulse"
               style={{ backgroundColor: overall.overallTier.color }}
             />
             <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
@@ -77,7 +77,7 @@ export const AnatomyRanksTab: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsGlobalRanksOpen(true)}
-            className="px-3 py-1 rounded-full text-xs font-black border backdrop-blur-md transition-all active:scale-95 flex items-center gap-1.5 hover:bg-white/10"
+            className="px-3 py-1 rounded-full text-xs font-black border transition-all active:scale-95 flex items-center gap-1.5 hover:bg-white/10"
             style={{
               backgroundColor: `${overall.overallTier.color}20`,
               color: overall.overallTier.color,
@@ -110,9 +110,9 @@ export const AnatomyRanksTab: React.FC = () => {
           {/* Rank Badge Graphic */}
           <div
             onClick={() => setIsGlobalRanksOpen(true)}
-            className="w-16 h-16 rounded-[22px] bg-white/[0.04] p-1.5 flex items-center justify-center shrink-0 border border-white/15 cursor-pointer active:scale-95 transition-transform"
+            className="w-16 h-16 rounded-[22px] bg-[#2C2C2E] p-1.5 flex items-center justify-center shrink-0 border border-white/10 cursor-pointer active:scale-95 transition-transform"
             style={{
-              boxShadow: `0 0 20px ${overall.overallTier.color}40`,
+              boxShadow: `0 0 20px ${overall.overallTier.color}35`,
             }}
           >
             <img
@@ -132,7 +132,7 @@ export const AnatomyRanksTab: React.FC = () => {
             </span>
           </div>
 
-          <div className="w-full h-2 rounded-full bg-white/[0.08] overflow-hidden p-0.5">
+          <div className="w-full h-2 rounded-full bg-[#2C2C2E] overflow-hidden p-0.5">
             <div
               className="h-full rounded-full transition-all duration-500 shadow-sm"
               style={{
@@ -171,7 +171,7 @@ export const AnatomyRanksTab: React.FC = () => {
           </h3>
           <button
             onClick={() => setIsCalcOpen(!isCalcOpen)}
-            className="text-[11px] font-bold text-[#64D2FF] hover:underline"
+            className="text-[11px] font-bold text-[#00F0FF] hover:underline"
           >
             {isCalcOpen ? 'Ocultar Calculadora' : 'Calculadora 1RM'}
           </button>
@@ -179,8 +179,8 @@ export const AnatomyRanksTab: React.FC = () => {
 
         {/* Optional 1RM Quick Calculator Widget */}
         {isCalcOpen && (
-          <div className="glass-surface rounded-[24px] p-4 border border-[#64D2FF]/30 space-y-3 animate-fade-in">
-            <h4 className="text-xs font-black text-[#64D2FF] flex items-center gap-1.5">
+          <div className="bg-[#242426] rounded-[24px] p-4 border border-white/5 space-y-3 animate-fade-in">
+            <h4 className="text-xs font-black text-[#00F0FF] flex items-center gap-1.5">
               <span>⚡</span>
               <span>Calculadora de 1 Repetición Máxima (1RM Epley)</span>
             </h4>
@@ -191,7 +191,7 @@ export const AnatomyRanksTab: React.FC = () => {
                   type="number"
                   value={calcWeight}
                   onChange={(e) => setCalcWeight(e.target.value)}
-                  className="w-full glass-pill rounded-[14px] px-3 py-2 text-xs font-black text-center text-[#F5F5F7]"
+                  className="w-full bg-[#2C2C2E] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-center text-white focus:outline-none focus:border-[#00F0FF]/50"
                 />
               </div>
               <div>
@@ -200,11 +200,11 @@ export const AnatomyRanksTab: React.FC = () => {
                   type="number"
                   value={calcReps}
                   onChange={(e) => setCalcReps(e.target.value)}
-                  className="w-full glass-pill rounded-[14px] px-3 py-2 text-xs font-black text-center text-[#F5F5F7]"
+                  className="w-full bg-[#2C2C2E] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-center text-white focus:outline-none focus:border-[#00F0FF]/50"
                 />
               </div>
-              <div className="flex flex-col items-center justify-center p-2 rounded-[14px] bg-[#64D2FF]/15 border border-[#64D2FF]/30">
-                <span className="text-[9px] font-bold text-[#64D2FF]">1RM Estimado</span>
+              <div className="flex flex-col items-center justify-center p-2 rounded-[14px] bg-[#00F0FF]/15 border border-[#00F0FF]/30">
+                <span className="text-[9px] font-bold text-[#00F0FF]">1RM Estimado</span>
                 <span className="text-base font-black text-[#F5F5F7] font-mono">
                   {estimated1RMCalc} kg
                 </span>
@@ -222,7 +222,7 @@ export const AnatomyRanksTab: React.FC = () => {
               <div
                 key={muscle}
                 onClick={() => setSelectedMuscleForDetail(muscle)}
-                className="glass-surface rounded-[22px] p-3 flex items-center justify-between border-t-white/10 gap-3 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all group"
+                className="bg-[#1C1C1E] rounded-[20px] p-3.5 flex items-center justify-between border border-white/5 gap-3 cursor-pointer hover:border-white/15 active:scale-[0.98] transition-all group"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <span className="text-xl shrink-0">{config.icon}</span>
@@ -250,7 +250,7 @@ export const AnatomyRanksTab: React.FC = () => {
                   </span>
 
                   {/* Muscle Rank Badge Thumbnail */}
-                  <div className="w-8 h-8 rounded-full bg-white/[0.04] p-1 flex items-center justify-center border border-white/10 shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#2C2C2E] p-1 flex items-center justify-center border border-white/10 shrink-0">
                     <img
                       src={tierInfo.badgeImage || '/ranks/rubi_2.png'}
                       alt={tierInfo.label}
@@ -272,7 +272,7 @@ export const AnatomyRanksTab: React.FC = () => {
       {isGlobalRanksOpen && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
             onClick={() => setIsGlobalRanksOpen(false)}
             onTouchMove={(e) => {
               e.preventDefault();
@@ -281,7 +281,7 @@ export const AnatomyRanksTab: React.FC = () => {
           />
 
           <div
-            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            className="relative w-full max-w-md bg-[#1C1C1E] rounded-[32px] p-5 z-10 border border-white/10 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
             onTouchMove={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -296,7 +296,7 @@ export const AnatomyRanksTab: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsGlobalRanksOpen(false)}
-                className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                className="w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white transition-colors"
               >
                 ✕
               </button>
@@ -311,12 +311,12 @@ export const AnatomyRanksTab: React.FC = () => {
                     key={tier.tier}
                     className={`p-3 rounded-[20px] flex items-center justify-between gap-3 border transition-all ${
                       isCurrent
-                        ? 'bg-[#F43F5E]/15 border-[#F43F5E]/60 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
-                        : 'glass-surface border-white/5'
+                        ? 'bg-[#FA114F]/15 border-[#FA114F]/60 shadow-[0_0_15px_rgba(250,17,79,0.25)]'
+                        : 'bg-[#242426] border-white/5'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-[14px] bg-white/[0.04] p-1 flex items-center justify-center shrink-0 border border-white/10">
+                      <div className="w-10 h-10 rounded-[14px] bg-[#2C2C2E] p-1 flex items-center justify-center shrink-0 border border-white/10">
                         <img
                           src={tier.badgeImage || '/ranks/rubi_2.png'}
                           alt={tier.label}
@@ -353,7 +353,7 @@ export const AnatomyRanksTab: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsGlobalRanksOpen(false)}
-              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
+              className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-sm shadow-md active:scale-98 transition-all shrink-0 fitness-press"
             >
               Cerrar
             </button>

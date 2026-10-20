@@ -108,12 +108,12 @@ export const ProfileHistoryTab: React.FC = () => {
   return (
     <div className="space-y-4 animate-fade-in">
       {/* 1. Profile Hero Avatar & Weight Card */}
-      <div className="glass-surface rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-4">
+      <div className="bg-[#1C1C1E] rounded-[28px] p-5 border border-white/5 space-y-4">
         <div className="flex items-center gap-4">
           {/* Avatar with click to upload */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#34C759] shadow-[0_0_20px_rgba(52,199,89,0.3)] cursor-pointer group bg-black/40 flex items-center justify-center shrink-0"
+            className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-[#A1F524] shadow-[0_0_20px_rgba(161,245,36,0.3)] cursor-pointer group bg-black/40 flex items-center justify-center shrink-0"
             title="Subir foto de perfil"
           >
             {avatarUrl ? (
@@ -134,7 +134,7 @@ export const ProfileHistoryTab: React.FC = () => {
           />
 
           <div className="flex-1">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] text-[10px] font-black uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-[10px] font-black uppercase tracking-wider">
               Atleta Aesthetix
             </span>
             <h2 className="text-xl font-black text-[#F5F5F7] tracking-tight mt-0.5">
@@ -148,7 +148,7 @@ export const ProfileHistoryTab: React.FC = () => {
 
           <button
             onClick={() => setIsLogMeasureOpen(true)}
-            className="glass-pill px-3 py-2 rounded-full text-xs font-black text-[#64D2FF] hover:text-white active:scale-95 transition-all shadow-sm"
+            className="bg-[#2C2C2E] border border-white/5 px-3 py-2 rounded-full text-xs font-black text-[#00F0FF] hover:text-white active:scale-95 transition-all shadow-sm fitness-press"
           >
             + Medidas
           </button>
@@ -157,25 +157,25 @@ export const ProfileHistoryTab: React.FC = () => {
         {/* Quick Body Metrics Row */}
         {measurements.length > 0 && (
           <div className="grid grid-cols-4 gap-2 pt-2 border-t border-white/5">
-            <div className="glass-pill p-2 rounded-[16px] text-center">
+            <div className="bg-[#242426] border border-white/5 p-2 rounded-[16px] text-center">
               <span className="text-[9px] font-bold text-[#8E8E93] block">Bíceps</span>
               <span className="text-xs font-black text-[#F5F5F7] font-mono">
                 {measurements[0].armsCm ? `${measurements[0].armsCm}cm` : '--'}
               </span>
             </div>
-            <div className="glass-pill p-2 rounded-[16px] text-center">
+            <div className="bg-[#242426] border border-white/5 p-2 rounded-[16px] text-center">
               <span className="text-[9px] font-bold text-[#8E8E93] block">Pecho</span>
               <span className="text-xs font-black text-[#F5F5F7] font-mono">
                 {measurements[0].chestCm ? `${measurements[0].chestCm}cm` : '--'}
               </span>
             </div>
-            <div className="glass-pill p-2 rounded-[16px] text-center">
+            <div className="bg-[#242426] border border-white/5 p-2 rounded-[16px] text-center">
               <span className="text-[9px] font-bold text-[#8E8E93] block">Cintura</span>
               <span className="text-xs font-black text-[#F5F5F7] font-mono">
                 {measurements[0].waistCm ? `${measurements[0].waistCm}cm` : '--'}
               </span>
             </div>
-            <div className="glass-pill p-2 rounded-[16px] text-center">
+            <div className="bg-[#242426] border border-white/5 p-2 rounded-[16px] text-center">
               <span className="text-[9px] font-bold text-[#8E8E93] block">Muslo</span>
               <span className="text-xs font-black text-[#F5F5F7] font-mono">
                 {measurements[0].thighsCm ? `${measurements[0].thighsCm}cm` : '--'}
@@ -186,15 +186,15 @@ export const ProfileHistoryTab: React.FC = () => {
       </div>
 
       {/* 2. Cumulative Lifetime Volume & Symmetry Progress Bento */}
-      <div className="glass-surface-elevated rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-3">
+      <div className="bg-[#1C1C1E] rounded-[28px] p-5 border border-white/5 space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#34C759] shadow-[0_0_8px_#34C759]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#A1F524] shadow-[0_0_8px_#A1F524]" />
             <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
               Volumen Acumulado (Año)
             </span>
           </div>
-          <span className="text-[11px] font-black text-[#34C759] font-mono">
+          <span className="text-[11px] font-black text-[#A1F524] font-mono">
             +1,1 M% ↑
           </span>
         </div>
@@ -212,19 +212,19 @@ export const ProfileHistoryTab: React.FC = () => {
 
         {/* Symmetry Stats Row */}
         <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
-          <div className="glass-pill p-2.5 rounded-[16px] text-center">
+          <div className="bg-[#242426] border border-white/5 p-2.5 rounded-[16px] text-center">
             <span className="text-[10px] font-bold text-[#8E8E93] block">Entrenos</span>
             <span className="text-sm font-black text-[#F5F5F7] font-mono">
               {totalWorkoutsCount || 112}
             </span>
           </div>
-          <div className="glass-pill p-2.5 rounded-[16px] text-center">
+          <div className="bg-[#242426] border border-white/5 p-2.5 rounded-[16px] text-center">
             <span className="text-[10px] font-bold text-[#8E8E93] block">Total PRs</span>
             <span className="text-sm font-black text-[#FFD60A] font-mono">
               {Math.max(204, prList.length)}
             </span>
           </div>
-          <div className="glass-pill p-2.5 rounded-[16px] text-center">
+          <div className="bg-[#242426] border border-white/5 p-2.5 rounded-[16px] text-center">
             <span className="text-[10px] font-bold text-[#8E8E93] block">Racha</span>
             <span className="text-sm font-black text-[#FF9500] font-mono">
               🔥 {currentStreak || 7} días
@@ -237,7 +237,7 @@ export const ProfileHistoryTab: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsBodyScanOpen(true)}
-            className="py-3 px-3 rounded-[18px] bg-[#64D2FF]/15 border border-[#64D2FF]/30 text-[#64D2FF] font-black text-xs hover:bg-[#64D2FF]/25 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+            className="py-3 px-3 rounded-[18px] bg-[#00F0FF]/15 border border-[#00F0FF]/30 text-[#00F0FF] font-black text-xs hover:bg-[#00F0FF]/25 active:scale-95 transition-all flex items-center justify-center gap-1.5 fitness-press"
           >
             <span>🧬</span>
             <span>Escaneo Físico IA</span>
@@ -245,7 +245,7 @@ export const ProfileHistoryTab: React.FC = () => {
           <button
             type="button"
             onClick={() => setIsSymmetryImportOpen(true)}
-            className="py-3 px-3 rounded-[18px] bg-[#34C759]/15 border border-[#34C759]/30 text-[#34C759] font-black text-xs hover:bg-[#34C759]/25 active:scale-95 transition-all flex items-center justify-center gap-1.5"
+            className="py-3 px-3 rounded-[18px] bg-[#A1F524]/15 border border-[#A1F524]/30 text-[#A1F524] font-black text-xs hover:bg-[#A1F524]/25 active:scale-95 transition-all flex items-center justify-center gap-1.5 fitness-press"
           >
             <span>📥</span>
             <span>Importar Symmetry</span>
@@ -254,7 +254,7 @@ export const ProfileHistoryTab: React.FC = () => {
       </div>
 
       {/* 3. Personal Records (PRs) Bento Section */}
-      <div className="glass-surface-elevated rounded-[28px] p-5 border-t-white/10 space-y-3">
+      <div className="bg-[#1C1C1E] rounded-[28px] p-5 border border-white/5 space-y-3">
         <div className="flex items-center justify-between pb-1 border-b border-white/5">
           <div className="flex items-center gap-2">
             <span className="text-base">🏆</span>
@@ -277,7 +277,7 @@ export const ProfileHistoryTab: React.FC = () => {
               {displayedPrs.map((pr) => (
                 <div
                   key={pr.exerciseId}
-                  className="glass-pill p-3 rounded-[20px] space-y-1 border-t-white/15"
+                  className="bg-[#242426] p-3 rounded-[20px] space-y-1 border border-white/5"
                 >
                   <span className="text-xs font-black text-[#F5F5F7] capitalize block truncate">
                     {pr.exerciseName}
@@ -288,7 +288,7 @@ export const ProfileHistoryTab: React.FC = () => {
                     </span>
                     <span className="text-[10px] font-bold text-[#8E8E93]">x {pr.maxReps} reps</span>
                   </div>
-                  <div className="text-[9px] font-bold text-[#34C759]">
+                  <div className="text-[9px] font-bold text-[#A1F524]">
                     1RM Est: {pr.estimated1RM} kg • {pr.date}
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export const ProfileHistoryTab: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowAllPrs(!showAllPrs)}
-                className="w-full py-2.5 px-3 rounded-[18px] bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] active:scale-98 transition-all flex items-center justify-center gap-2 text-xs font-black text-[#64D2FF]"
+                className="w-full py-2.5 px-3 rounded-[18px] bg-[#2C2C2E] border border-white/5 hover:bg-white/[0.08] active:scale-98 transition-all flex items-center justify-center gap-2 text-xs font-black text-[#00F0FF] fitness-press"
               >
                 <span>{showAllPrs ? 'Mostrar menos' : `Mostrar más (${prList.length - 4} restantes)`}</span>
                 <span className="text-sm leading-none">{showAllPrs ? '⌃' : '⌄'}</span>
@@ -321,7 +321,7 @@ export const ProfileHistoryTab: React.FC = () => {
         </div>
 
         {history.length === 0 ? (
-          <div className="glass-surface rounded-[24px] p-6 text-center text-xs text-[#8E8E93] space-y-2">
+          <div className="bg-[#1C1C1E] rounded-[24px] p-6 text-center text-xs text-[#8E8E93] border border-white/5 space-y-2">
             <span className="text-2xl">📋</span>
             <p>No tienes entrenamientos finalizados aún.</p>
           </div>
@@ -331,17 +331,17 @@ export const ProfileHistoryTab: React.FC = () => {
               <div
                 key={session.id}
                 onClick={() => setSelectedSessionForDetail(session)}
-                className="glass-surface rounded-[24px] p-4 border-t-white/10 space-y-3 cursor-pointer hover:border-[#64D2FF]/40 active:scale-98 transition-all group shadow-md"
+                className="bg-[#1C1C1E] rounded-[24px] p-4 border border-white/5 space-y-3 cursor-pointer hover:border-white/20 active:scale-98 transition-all group shadow-md"
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h4 className="text-xs font-black text-[#F5F5F7] group-hover:text-[#64D2FF] transition-colors">
+                    <h4 className="text-xs font-black text-[#F5F5F7] group-hover:text-[#A1F524] transition-colors">
                       {session.routineName}
                     </h4>
-                    <p className="text-[10px] font-bold text-[#34C759]">{session.dayName}</p>
+                    <p className="text-[10px] font-bold text-[#A1F524]">{session.dayName}</p>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[10px] font-bold text-[#8E8E93]">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[#2C2C2E] text-[10px] font-bold text-[#8E8E93]">
                       {session.date}
                     </span>
                     <span className="text-xs text-[#8E8E93] group-hover:text-white transition-colors">
@@ -350,14 +350,14 @@ export const ProfileHistoryTab: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 text-xs pt-1 border-t border-white/5">
-                  <span className="glass-pill px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-[#F5F5F7]">
+                <div className="flex items-center gap-2 text-xs pt-1 border-t border-white/5">
+                  <span className="bg-[#242426] border border-white/5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-[#F5F5F7]">
                     ⏱️ {session.durationMinutes}m
                   </span>
-                  <span className="glass-pill px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-[#34C759]">
+                  <span className="bg-[#242426] border border-white/5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-[#A1F524]">
                     ⚡ {session.totalVolumeKg} kg vol.
                   </span>
-                  <span className="glass-pill px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-[#64D2FF]">
+                  <span className="bg-[#242426] border border-white/5 px-2.5 py-1 rounded-full text-[11px] font-mono font-bold text-[#00F0FF]">
                     💪 {session.totalSets} series
                   </span>
                 </div>
@@ -392,12 +392,12 @@ export const ProfileHistoryTab: React.FC = () => {
             className="fixed inset-0 bg-black/80 backdrop-blur-md"
             onClick={() => setIsLogMeasureOpen(false)}
           />
-          <div className="relative w-full max-w-sm glass-surface-elevated rounded-t-[36px] p-5 pb-[max(env(safe-area-inset-bottom),28px)] z-10 border-t border-white/20 shadow-2xl space-y-3 animate-slide-up">
+          <div className="relative w-full max-w-sm bg-[#1C1C1E] rounded-t-[36px] p-5 pb-[max(env(safe-area-inset-bottom),28px)] z-10 border-t border-white/10 shadow-2xl space-y-3 animate-slide-up">
             <div className="flex items-center justify-between pb-2 border-b border-white/10">
               <h3 className="text-sm font-black text-[#F5F5F7]">Registrar Peso & Medidas</h3>
               <button
                 onClick={() => setIsLogMeasureOpen(false)}
-                className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs"
+                className="w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white transition-colors"
               >
                 ✕
               </button>
@@ -413,7 +413,7 @@ export const ProfileHistoryTab: React.FC = () => {
                   step="0.1"
                   value={newWeight}
                   onChange={(e) => setNewWeight(e.target.value)}
-                  className="w-full glass-surface rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none"
+                  className="w-full bg-[#242426] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none focus:border-[#A1F524]/50"
                 />
               </div>
 
@@ -426,7 +426,7 @@ export const ProfileHistoryTab: React.FC = () => {
                     value={newArms}
                     onChange={(e) => setNewArms(e.target.value)}
                     placeholder="Ej. 38"
-                    className="w-full glass-surface rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none"
+                    className="w-full bg-[#242426] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none focus:border-[#A1F524]/50"
                   />
                 </div>
                 <div>
@@ -437,7 +437,7 @@ export const ProfileHistoryTab: React.FC = () => {
                     value={newChest}
                     onChange={(e) => setNewChest(e.target.value)}
                     placeholder="Ej. 102"
-                    className="w-full glass-surface rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none"
+                    className="w-full bg-[#242426] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none focus:border-[#A1F524]/50"
                   />
                 </div>
               </div>
@@ -451,7 +451,7 @@ export const ProfileHistoryTab: React.FC = () => {
                     value={newWaist}
                     onChange={(e) => setNewWaist(e.target.value)}
                     placeholder="Ej. 78"
-                    className="w-full glass-surface rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none"
+                    className="w-full bg-[#242426] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none focus:border-[#A1F524]/50"
                   />
                 </div>
                 <div>
@@ -462,7 +462,7 @@ export const ProfileHistoryTab: React.FC = () => {
                     value={newThighs}
                     onChange={(e) => setNewThighs(e.target.value)}
                     placeholder="Ej. 60"
-                    className="w-full glass-surface rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none"
+                    className="w-full bg-[#242426] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none focus:border-[#A1F524]/50"
                   />
                 </div>
                 <div>
@@ -473,7 +473,7 @@ export const ProfileHistoryTab: React.FC = () => {
                     value={newCalves}
                     onChange={(e) => setNewCalves(e.target.value)}
                     placeholder="Ej. 39"
-                    className="w-full glass-surface rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none"
+                    className="w-full bg-[#242426] border border-white/5 rounded-[14px] px-3 py-2 text-xs font-black text-[#F5F5F7] outline-none focus:border-[#A1F524]/50"
                   />
                 </div>
               </div>
@@ -481,7 +481,7 @@ export const ProfileHistoryTab: React.FC = () => {
 
             <button
               onClick={handleSaveMeasurement}
-              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-95 transition-all mt-2"
+              className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-sm shadow-md active:scale-95 transition-all mt-2 fitness-press"
             >
               Guardar Medidas
             </button>

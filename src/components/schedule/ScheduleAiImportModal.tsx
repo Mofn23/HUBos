@@ -131,15 +131,15 @@ export const ScheduleAiImportModal: React.FC<ScheduleAiImportModalProps> = ({
                   <img src={imageBase64} alt="Horario" className="max-h-48 object-contain" />
                   <button
                     onClick={() => setImageBase64(null)}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/80 text-white flex items-center justify-center text-xs"
+                    className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/80 text-white flex items-center justify-center text-xs fitness-press"
                   >
                     ✕
                   </button>
                 </div>
               ) : (
-                <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-white/10 rounded-[22px] bg-[#1C1C1E] hover:border-[#34C759]/50 cursor-pointer transition-colors group">
+                <label className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-white/10 rounded-[22px] bg-[#242426] hover:border-[#00F0FF]/50 cursor-pointer transition-colors group">
                   <span className="text-3xl mb-1 group-hover:scale-110 transition-transform">📷</span>
-                  <span className="text-xs font-black text-[#F5F5F7]">
+                  <span className="text-xs font-black text-white">
                     Toca para subir foto o captura
                   </span>
                   <span className="text-[10px] text-[#8E8E93] mt-0.5">
@@ -165,13 +165,13 @@ export const ScheduleAiImportModal: React.FC<ScheduleAiImportModalProps> = ({
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 placeholder="Ej: Conducción los martes y jueves de 7 a 9 AM con el profesor Carlos en Pista Norte..."
-                className="w-full bg-[#242426] border border-white/10 rounded-[18px] p-3 text-xs text-[#F5F5F7] font-medium focus:outline-none focus:border-[#34C759] resize-none"
+                className="w-full bg-[#2C2C2E] border border-white/10 rounded-[18px] p-3 text-xs text-white font-medium focus:outline-none focus:border-[#00F0FF] resize-none"
               />
             </div>
 
             {/* Error Message */}
             {errorMsg && (
-              <div className="p-3 rounded-xl bg-[#FF453A]/15 border border-[#FF453A]/30 text-xs text-[#FF453A] font-bold">
+              <div className="p-3 rounded-xl bg-[#FA114F]/15 border border-[#FA114F]/30 text-xs text-[#FA114F] font-bold">
                 ⚠️ {errorMsg}
               </div>
             )}
@@ -180,7 +180,7 @@ export const ScheduleAiImportModal: React.FC<ScheduleAiImportModalProps> = ({
             <button
               onClick={handleAnalyze}
               disabled={isLoading || (!inputText.trim() && !imageBase64)}
-              className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#0A84FF] to-[#BF5AF2] text-white font-black text-sm shadow-card disabled:opacity-50 active:scale-95 transition-transform flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-full bg-[#00F0FF] text-black font-black text-sm fitness-press disabled:opacity-40 transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#00F0FF]/20"
             >
               {isLoading ? (
                 <>
@@ -199,12 +199,12 @@ export const ScheduleAiImportModal: React.FC<ScheduleAiImportModalProps> = ({
           /* Step 2: Confirmation stage */
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h4 className="text-xs font-black text-[#34C759] uppercase tracking-wider">
+              <h4 className="text-xs font-black text-[#A1F524] uppercase tracking-wider">
                 ✓ Clases Detectadas ({parsedSubjects.length})
               </h4>
               <button
                 onClick={() => setParsedSubjects(null)}
-                className="text-xs font-bold text-[#8E8E93] hover:text-white"
+                className="text-xs font-bold text-[#8E8E93] hover:text-white fitness-press"
               >
                 Volver a escanear
               </button>
@@ -214,13 +214,13 @@ export const ScheduleAiImportModal: React.FC<ScheduleAiImportModalProps> = ({
               {parsedSubjects.map((sub, idx) => (
                 <div
                   key={idx}
-                  className="p-3 rounded-[18px] bg-[#1C1C1E] border border-white/10 flex items-center justify-between"
+                  className="p-3 rounded-[18px] bg-[#242426] border border-white/[0.08] flex items-center justify-between"
                   style={{ borderLeft: `6px solid ${sub.color}` }}
                 >
                   <div>
                     <div className="flex items-center gap-1.5">
                       <span>{sub.emoji}</span>
-                      <h5 className="text-xs font-black text-[#F5F5F7]">{sub.name}</h5>
+                      <h5 className="text-xs font-black text-white">{sub.name}</h5>
                     </div>
                     <p className="text-[10px] font-bold text-[#8E8E93] mt-0.5">
                       {sub.slots
@@ -237,7 +237,7 @@ export const ScheduleAiImportModal: React.FC<ScheduleAiImportModalProps> = ({
 
             <button
               onClick={handleConfirmImport}
-              className="w-full py-4 rounded-full bg-[#34C759] text-black font-black text-sm shadow-glowGreen active:scale-95 transition-transform flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-full bg-[#A1F524] text-black font-black text-sm fitness-press transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#A1F524]/20"
             >
               <span>✓</span>
               <span>Guardar Todo en mi Horario</span>

@@ -17,10 +17,10 @@ export const TimelineView: React.FC = () => {
   return (
     <div className="space-y-4 animate-fade-in pb-12">
       <div className="flex items-center justify-between px-1">
-        <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">
           Calendario Mensual de Cobros
         </h3>
-        <span className="text-[11px] text-[#DE7356] font-bold">Día actual: {currentDay}</span>
+        <span className="text-[11px] text-[#A1F524] font-bold">Día actual: {currentDay}</span>
       </div>
 
       <div className="space-y-2.5">
@@ -31,34 +31,34 @@ export const TimelineView: React.FC = () => {
           return (
             <div
               key={sub.id}
-              className={`p-4 rounded-[22px] flex items-center justify-between transition-all ${
+              className={`fitness-card p-4 rounded-3xl flex items-center justify-between transition-all ${
                 isToday
-                  ? 'clay-surface-elevated border border-[#DE7356]/40 shadow-[0_12px_30px_rgba(222,115,86,0.25)]'
+                  ? 'border border-[#A1F524]/50 shadow-[0_0_24px_rgba(161,245,36,0.25)] bg-gradient-to-r from-[#A1F524]/10 to-transparent'
                   : isPassed
-                  ? 'clay-surface opacity-60'
-                  : 'clay-surface'
+                  ? 'opacity-60 border border-white/5'
+                  : 'border border-white/[0.08]'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-11 h-11 rounded-2xl flex flex-col items-center justify-center font-bold ${
                     isToday
-                      ? 'clay-btn-accent text-white shadow-md'
+                      ? 'bg-[#A1F524] text-black shadow-md'
                       : isPassed
-                      ? 'clay-pill text-[#8E8E93]'
-                      : 'clay-pill text-[#F5F5F7]'
+                      ? 'bg-[#2C2C2E] text-[#8E8E93]'
+                      : 'bg-[#2C2C2E] text-white'
                   }`}
                 >
-                  <span className="text-[8px] uppercase font-black">Día</span>
+                  <span className="text-[8px] uppercase font-bold">Día</span>
                   <span className="text-sm font-black">{sub.billingDay}</span>
                 </div>
 
                 <div>
                   <div className="flex items-center gap-1.5">
                     <span>{sub.emoji}</span>
-                    <h4 className="text-sm font-black text-[#F5F5F7]">{sub.name}</h4>
+                    <h4 className="text-sm font-bold text-white">{sub.name}</h4>
                   </div>
-                  <p className="text-[11px] text-[#8E8E93] font-bold mt-0.5">
+                  <p className="text-[11px] text-[#8E8E93] font-medium mt-0.5">
                     {sub.category} •{' '}
                     {isToday ? '¡Cobro hoy!' : isPassed ? 'Cobrado este mes' : 'Próximo cobro'}
                   </p>
@@ -66,7 +66,7 @@ export const TimelineView: React.FC = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <p className="text-sm font-black text-[#F5F5F7]">
+                <p className="text-sm font-bold text-white">
                   {formatCurrency(sub.amount, currency)}
                 </p>
                 <button
@@ -74,10 +74,10 @@ export const TimelineView: React.FC = () => {
                     paySubscription(sub.id);
                     showToast(`✅ Pago registrado: ${sub.name}`);
                   }}
-                  className="clay-pill w-9 h-9 rounded-full flex items-center justify-center text-[#8E8E93] hover:text-[#DE7356] active:scale-90 transition-all cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[#8E8E93] hover:text-[#A1F524] active:scale-90 transition-all cursor-pointer fitness-press"
                   title="Marcar como pagado"
                 >
-                  <IconCheck className="w-4 h-4" />
+                  <IconCheck className="w-4 h-4 stroke-[2.5]" />
                 </button>
               </div>
             </div>
