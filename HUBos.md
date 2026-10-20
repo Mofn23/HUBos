@@ -43,7 +43,6 @@ graph TD
     HUBos --> Recomp[🥗 RecompAI: Nutrición & Macros]
     HUBos --> Aesthetix[💪 Aesthetix: Simetría, Ranks & Rutinas]
     HUBos --> Subs[💳 Subscription Manager: Finanzas Recurrentes]
-    HUBos --> Schedule[📅 Schedule: Horarios de Clases & Alertas]
 ```
 
 ### 1. 🏠 HUB Launcher
@@ -64,9 +63,7 @@ graph TD
 - **Control Financiero:** Historial de cargos recurrentes, cálculo de gasto mensual/anual y timeline de renovación.
 - **Detección Inteligente:** Sugerencias de optimización y cancelación de servicios innecesarios.
 
-### 5. 📅 Schedule (Horarios y Tareas)
-- **Grid de Clases Semanal:** Visualización de asignaturas, salones y recordatorios nativos.
-- **Importador de Horarios por IA:** Conversión de PDFs o fotos de mallas curriculares a eventos nativos.
+> ℹ️ **Nota (2026-10-20):** el módulo *📅 Schedule* (horarios de clases) fue **retirado** del producto por decisión de uso. Las notificaciones nativas de suscripciones siguen activas en `src/lib/notifications.ts`.
 
 ---
 

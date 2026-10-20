@@ -9,7 +9,8 @@
 ```
 HUBos Container
 ├── 🏠 HUB Launcher (Dashboard central, telemetría consolidada, accesos rápidos y Omnibar de IA)
-├── 🥗 RecompAI (Tracker de recomposición corporal, macros, escáner de platos con IA y auditoría Symmetry)
+├── 🥗 RecompAI (Tracker de recomposición corporal, macros, escáner de platos con IA y coach)
+├── 💪 Aesthetix (Entrenamiento: rutinas PPL x UL, catálogo de 1.324 ejercicios, rangos y live workout)
 └── 💳 Subscription Manager (Control de suscripciones, gastos recurrentes, timeline y alertas nativas)
 ```
 
@@ -39,7 +40,7 @@ HUBos Container
 2. Abre **SideStore** (o AltStore) en tu iPhone.
 3. Ve a la sección **My Apps** y presiona **`+`**.
 4. Selecciona `HUBos.ipa`.
-5. ¡Listo! Tendrás RecompAI y Subscription Manager activos consumiendo **1 solo slot** de sideloading.
+5. ¡Listo! Tendrás RecompAI, Aesthetix y Subscription Manager activos consumiendo **1 solo slot** de sideloading.
 
 ---
 
