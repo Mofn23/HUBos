@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { WorkoutHistoryItem } from '@/types/workout';
+import { getDailyAesthetixActivity, getLocalDateKey } from '@/lib/aesthetixActivity';
 
 interface AppleActivityRingsCardProps {
   history: WorkoutHistoryItem[];
@@ -12,53 +13,25 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
   history,
   onOpenLiveWorkout,
 }) => {
-  // Compute today's stats if any session exists, or default to realistic targets
-  const todayStr = useMemo(() => new Date().toISOString().split('T')[0], []);
-  const todayWorkouts = useMemo(
-    () => history.filter((h) => h.date && h.date.startsWith(todayStr)),
-    [history, todayStr]
-  );
-
+  const [showExplanation, setShowExplanation] = useState(false);
+  const todayStr = useMemo(() => getLocalDateKey(new Date()), []);
   const stats = useMemo(() => {
-    if (todayWorkouts.length > 0) {
-      const totalVol = todayWorkouts.reduce((acc, w) => acc + (w.totalVolumeKg || 0), 0);
-      const totalMin = todayWorkouts.reduce(
-        (acc, w) => acc + (w.durationMinutes || 30),
-        0
-      );
-      const totalSets = todayWorkouts.reduce(
-        (acc, w) => acc + (w.exercises ? w.exercises.reduce((sAcc, e) => sAcc + (e.sets?.length || 3), 0) : 12),
-        0
-      );
-
-      // Estimated calories from volume and time
-      const estimatedCal = Math.round(totalMin * 8.5 + totalVol * 0.02);
-
-      return {
-        move: Math.max(estimatedCal, 642),
-        moveGoal: 600,
-        exercise: Math.max(totalMin, 41),
-        exerciseGoal: 30,
-        stand: Math.max(totalSets, 12),
-        standGoal: 12,
-      };
-    }
-
+    const daily = getDailyAesthetixActivity(history, todayStr);
     return {
-      move: 642,
+      move: daily.movementCalories,
       moveGoal: 600,
-      exercise: 41,
+      exercise: daily.exerciseMinutes,
       exerciseGoal: 30,
-      stand: 12,
-      standGoal: 12,
+      sets: daily.completedSets,
+      setsGoal: 12,
     };
-  }, [todayWorkouts]);
+  }, [history, todayStr]);
 
   const movePct = Math.min(stats.move / stats.moveGoal, 1.4);
   const exercisePct = Math.min(stats.exercise / stats.exerciseGoal, 1.5);
-  const standPct = Math.min(stats.stand / stats.standGoal, 1.5);
+  const setsPct = Math.min(stats.sets / stats.setsGoal, 1.5);
 
-  const allClosed = movePct >= 1 && exercisePct >= 1 && standPct >= 1;
+  const allClosed = movePct >= 1 && exercisePct >= 1 && setsPct >= 1;
 
   // Concentric ring radii and stroke widths
   // viewBox = 0 0 260 260. Center = 130, 130
@@ -78,7 +51,6 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
   // Ring 3 (Stand / Cyan): Radius = 46
   const rStand = 46;
   const cStand = 2 * Math.PI * rStand; // ~289.02
-  const offsetStand = cStand - (cStand * Math.min(standPct, 1));
 
   // Terminal cap angle calculation for 3D overlay shadow
   const getCapCoords = (radius: number, pct: number) => {
@@ -91,7 +63,7 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
 
   const capMove = getCapCoords(rMove, Math.min(movePct, 1));
   const capExercise = getCapCoords(rExercise, Math.min(exercisePct, 1));
-  const capStand = getCapCoords(rStand, Math.min(standPct, 1));
+  const capStand = getCapCoords(rStand, Math.min(setsPct, 1));
 
   return (
     <div className="fitness-card p-5 relative overflow-hidden shadow-2xl border border-white/[0.08]">
@@ -101,7 +73,7 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
 
       {/* Card Header */}
       <div className="flex items-center justify-between mb-2 relative z-10">
-        <h2 className="text-xl font-black text-white tracking-tight">Activity</h2>
+        <h2 className="text-xl font-black text-white tracking-tight">Actividad de hoy</h2>
         <div
           className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black border transition-all ${
             allClosed
@@ -109,10 +81,28 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
               : 'bg-white/[0.06] border-white/10 text-[#8E8E93]'
           }`}
         >
-          <span>✨</span>
-          <span>{allClosed ? 'All rings closed' : `${[movePct >= 1, exercisePct >= 1, standPct >= 1].filter(Boolean).length}/3 closed`}</span>
+          <span>{allClosed ? '✓' : '○'}</span>
+          <span>{allClosed ? '3 metas alcanzadas' : `${[movePct >= 1, exercisePct >= 1, setsPct >= 1].filter(Boolean).length}/3 metas`}</span>
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setShowExplanation((shown) => !shown)}
+        aria-expanded={showExplanation}
+        className="relative z-10 -mt-1 mb-1 text-[11px] font-bold text-[#64D2FF] hover:text-white transition-colors"
+      >
+        {showExplanation ? 'Ocultar explicación' : '¿Qué mide cada anillo?'}
+      </button>
+      {showExplanation && (
+        <div className="relative z-10 mb-3 rounded-2xl bg-white/[0.05] border border-white/[0.08] p-3 text-[11px] leading-relaxed text-[#C7C7CC]">
+          <p>Los anillos solo avanzan con entrenamientos guardados:</p>
+          <p className="mt-1"><strong className="text-[#FA114F]">Movimiento:</strong> calorías estimadas con el tiempo y volumen de la sesión; Aesthetix no usa un sensor de movimiento.</p>
+          <p><strong className="text-[#A1F524]">Ejercicio:</strong> minutos registrados.</p>
+          <p><strong className="text-[#00F0FF]">Series:</strong> series completadas, no horas de pie.</p>
+          <p className="mt-1 text-[#8E8E93]">Metas de referencia: 600 kcal estimadas, 30 min y 12 series.</p>
+        </div>
+      )}
 
       {/* Center Apple Fitness Rings */}
       <div className="flex items-center justify-center my-3 relative z-10">
@@ -210,7 +200,7 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={cStand}
-            strokeDashoffset={offsetStand}
+            strokeDashoffset={cStand - cStand * Math.min(setsPct, 1)}
             className="transition-all duration-1000 ease-out"
           />
 
@@ -235,7 +225,7 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
             />
           )}
 
-          {standPct > 0.05 && (
+          {setsPct > 0.05 && (
             <circle
               cx={capStand.x}
               cy={capStand.y}
@@ -253,20 +243,20 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1.5 mb-0.5">
             <span className="w-2 h-2 rounded-full bg-[#FA114F] shadow-[0_0_8px_#FA114F]" />
-            <span className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wide">Move</span>
+            <span className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wide">Movimiento</span>
           </div>
           <div className="text-sm font-black text-white">
             <span className="text-[#FA114F]">{stats.move}</span>
             <span className="text-[#8E8E93] text-xs font-bold">/{stats.moveGoal}</span>
           </div>
-          <span className="text-[9px] font-bold text-[#8E8E93] uppercase tracking-widest">CAL</span>
+            <span className="text-[9px] font-bold text-[#8E8E93] uppercase tracking-widest">KCAL EST.</span>
         </div>
 
         {/* Exercise */}
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1.5 mb-0.5">
             <span className="w-2 h-2 rounded-full bg-[#A1F524] shadow-[0_0_8px_#A1F524]" />
-            <span className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wide">Exercise</span>
+            <span className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wide">Ejercicio</span>
           </div>
           <div className="text-sm font-black text-white">
             <span className="text-[#A1F524]">{stats.exercise}</span>
@@ -279,13 +269,13 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
         <div className="flex flex-col items-center">
           <div className="flex items-center gap-1.5 mb-0.5">
             <span className="w-2 h-2 rounded-full bg-[#00F0FF] shadow-[0_0_8px_#00F0FF]" />
-            <span className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wide">Stand</span>
+            <span className="text-[11px] font-black text-[#8E8E93] uppercase tracking-wide">Series</span>
           </div>
           <div className="text-sm font-black text-white">
-            <span className="text-[#00F0FF]">{stats.stand}</span>
-            <span className="text-[#8E8E93] text-xs font-bold">/{stats.standGoal}</span>
+            <span className="text-[#00F0FF]">{stats.sets}</span>
+            <span className="text-[#8E8E93] text-xs font-bold">/{stats.setsGoal}</span>
           </div>
-          <span className="text-[9px] font-bold text-[#8E8E93] uppercase tracking-widest">HRS</span>
+            <span className="text-[9px] font-bold text-[#8E8E93] uppercase tracking-widest">COMPLETADAS</span>
         </div>
       </div>
     </div>

@@ -77,7 +77,6 @@ export const HubSettingsSheet: React.FC = () => {
       }
       if (target === 'all') {
         await nativeStorage.removeItem('hubos_main_v1');
-        await nativeStorage.removeItem('hubos_schedule_store_v1');
         await nativeStorage.removeItem('hubos_aesthetix_v1');
       }
       showToast('Datos restablecidos. Reiniciando...');
@@ -88,11 +87,11 @@ export const HubSettingsSheet: React.FC = () => {
   return (
     <div className="fixed inset-0 z-[99999] flex items-end justify-center">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={() => setIsSettingsOpen(false)} />
+      <div className="fixed inset-0 bg-black/70" onClick={() => setIsSettingsOpen(false)} />
 
-      {/* Claymorphism Settings Sheet */}
+      {/* Fitness style Settings Sheet */}
       <div
-        className="relative clay-surface-elevated rounded-t-[36px] p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative bg-[#1C1C1E] border border-white/10 rounded-t-3xl p-6 pb-16 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -105,7 +104,7 @@ export const HubSettingsSheet: React.FC = () => {
           </div>
           <button
             onClick={() => setIsSettingsOpen(false)}
-            className="w-10 h-10 rounded-full clay-pill flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-95 transition-all cursor-pointer"
+            className="w-10 h-10 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
           >
             <span className="text-base font-bold">✕</span>
           </button>
@@ -113,7 +112,7 @@ export const HubSettingsSheet: React.FC = () => {
 
         <form onSubmit={handleSaveGeneral} className="space-y-4 pt-1">
           {/* Card 1: User & Currency */}
-          <div className="p-4.5 rounded-[24px] clay-surface space-y-3">
+          <div className="p-4.5 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-3">
             <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
               <span>👤</span>
               <span>Perfil y Moneda</span>
@@ -126,7 +125,7 @@ export const HubSettingsSheet: React.FC = () => {
                   type="text"
                   value={tempName}
                   onChange={(e) => setTempName(e.target.value)}
-                  className="clay-pill px-3.5 py-2.5 text-sm font-black w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                  className="bg-[#2C2C2E] border border-white/5 px-3.5 py-2.5 text-sm font-black w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
                 />
               </div>
 
@@ -135,7 +134,7 @@ export const HubSettingsSheet: React.FC = () => {
                 <select
                   value={tempCurrency}
                   onChange={(e) => setTempCurrency(e.target.value)}
-                  className="clay-pill px-3 py-2.5 text-xs font-black w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                  className="bg-[#2C2C2E] border border-white/5 px-3 py-2.5 text-xs font-black w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
                 >
                   <option value="COP" className="bg-[#191922] text-[#F5F5F7]">COP ($)</option>
                   <option value="USD" className="bg-[#191922] text-[#F5F5F7]">USD ($)</option>
@@ -147,15 +146,15 @@ export const HubSettingsSheet: React.FC = () => {
           </div>
 
           {/* Card 2: Gemini API Key */}
-          <div className="p-4.5 rounded-[24px] clay-surface space-y-2.5">
+          <div className="p-4.5 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
-                <IconSparkles className="w-4 h-4 text-[#DE7356]" />
+                <IconSparkles className="w-4 h-4 text-[#FF375F]" />
                 <span>API Key de Gemini</span>
               </div>
               <span
-                className={`clay-pill px-3 py-1 text-[10px] font-black ${
-                  tempApiKey ? 'text-[#DE7356]' : 'text-[#DC2626]'
+                className={`bg-[#2C2C2E] border border-white/5 px-3 py-1 text-[10px] font-black ${
+                  tempApiKey ? 'text-[#FF375F]' : 'text-[#DC2626]'
                 }`}
               >
                 {tempApiKey ? 'Activo' : 'Pendiente'}
@@ -167,14 +166,14 @@ export const HubSettingsSheet: React.FC = () => {
               value={tempApiKey}
               onChange={(e) => setTempApiKey(e.target.value)}
               placeholder="AQ.Ab8..."
-              className="clay-pill px-3.5 py-2.5 tracking-widest text-xs w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+              className="bg-[#2C2C2E] border border-white/5 px-3.5 py-2.5 tracking-widest text-xs w-full text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
             />
           </div>
 
           {/* Card 3: Notificaciones */}
-          <div className="p-4.5 rounded-[24px] clay-surface flex items-center justify-between">
+          <div className="p-4.5 rounded-[24px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full clay-pill flex items-center justify-center text-base">
+              <div className="w-10 h-10 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-base">
                 🔔
               </div>
               <div>
@@ -186,14 +185,14 @@ export const HubSettingsSheet: React.FC = () => {
             <button
               type="button"
               onClick={handleTestNotification}
-              className="clay-pill px-3.5 py-2 text-xs font-black text-[#DE7356] active:scale-90 transition-transform cursor-pointer"
+              className="bg-[#2C2C2E] border border-white/5 px-3.5 py-2 text-xs font-black text-[#FF375F] active:scale-90 transition-transform duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
             >
               Probar
             </button>
           </div>
 
           {/* Card 4: Backup y Limpieza */}
-          <div className="p-4.5 rounded-[24px] clay-surface space-y-2.5">
+          <div className="p-4.5 rounded-[24px] bg-[#1C1C1E] border border-white/5 space-y-2.5">
             <div className="flex items-center gap-2 text-xs font-black text-[#F5F5F7]">
               <span>📦</span>
               <span>Copias de Seguridad & Datos</span>
@@ -203,7 +202,7 @@ export const HubSettingsSheet: React.FC = () => {
               <button
                 type="button"
                 onClick={handleExportBackup}
-                className="clay-pill py-2.5 px-2 text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+                className="bg-[#2C2C2E] border border-white/5 py-2.5 px-2 text-xs font-extrabold text-[#F5F5F7] flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
               >
                 <span>📤</span>
                 <span>Exportar</span>
@@ -212,7 +211,7 @@ export const HubSettingsSheet: React.FC = () => {
               <button
                 type="button"
                 onClick={() => handleResetData('all')}
-                className="clay-pill py-2.5 px-2 text-xs font-extrabold text-[#DC2626] flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer"
+                className="bg-[#2C2C2E] border border-white/5 py-2.5 px-2 text-xs font-extrabold text-[#DC2626] flex items-center justify-center gap-1.5 active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
               >
                 <IconTrash className="w-3.5 h-3.5" />
                 <span>Restablecer</span>
@@ -224,7 +223,7 @@ export const HubSettingsSheet: React.FC = () => {
           <div className="pt-2 pb-6">
             <button
               type="submit"
-              className="clay-btn-emerald w-full py-4 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer"
+              className="bg-[#C8FF45] rounded-full text-black w-full py-4 font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
             >
               <span>✓</span>
               <span>Guardar Ajustes</span>

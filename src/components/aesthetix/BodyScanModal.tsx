@@ -109,17 +109,8 @@ NO añadas texto antes ni después. Solo el JSON.`;
       showToast('✓ Escaneo anatómico completado con éxito.');
     } catch (err: any) {
       console.error('Body scan error:', err);
-      // Fallback mock scan if API quota/network issues so user has a rich experience
-      setScanResult({
-        symmetryScore: 88,
-        estimatedBodyFatPercent: 13.0,
-        vTaperRatio: '1.45:1 (Excelente proporción)',
-        dominantMuscles: ['Tríceps (Diamante II)', 'Dorsales (Esmeralda II)', 'Cuádriceps'],
-        laggingMuscles: ['Pecho superior', 'Deltoides posterior'],
-        aestheticSummary: 'Densidad muscular imponente en brazos y espalda. Cintura estrecha con línea atlética destacada.',
-        recommendedAction: 'Mantener protocolo PPL x UL con sobrecarga progresiva en press inclinado.',
-      });
-      showToast('Escaneo completado (estimación biomecánica local).');
+      setScanResult(null);
+      showToast('No se pudo analizar la foto. Revisa la conexión o tu API key e inténtalo de nuevo.');
     } finally {
       setIsScanning(false);
     }
@@ -137,7 +128,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
       />
 
       <div
-        className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[88vh] flex flex-col overscroll-contain"
+        className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[88vh] flex flex-col overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -157,7 +148,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+            className="w-7 h-7 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
           >
             ✕
           </button>
@@ -182,7 +173,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 flex items-end p-3 justify-between">
-                  <span className="text-[10px] font-bold text-white glass-pill px-2.5 py-1 rounded-full">
+                  <span className="text-[10px] font-bold text-white fitness-pill px-2.5 py-1 rounded-full">
                     Toca para cambiar foto
                   </span>
                   <span className="text-xs text-[#64D2FF] font-black">✓ Foto Lista</span>
@@ -240,7 +231,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
             <div className="space-y-3 animate-fade-in">
               {/* Score Bento Row */}
               <div className="grid grid-cols-2 gap-2.5">
-                <div className="glass-surface p-3.5 rounded-[20px] text-center border-t-white/15 space-y-1">
+                <div className="fitness-surface p-3.5 rounded-[20px] text-center border-t-white/15 space-y-1">
                   <span className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block">
                     Puntuación Simetría
                   </span>
@@ -250,12 +241,12 @@ NO añadas texto antes ni después. Solo el JSON.`;
                     </span>
                     <span className="text-xs font-bold text-[#8E8E93]">/ 100</span>
                   </div>
-                  <span className="text-[9px] font-bold text-[#34C759] block">
+                  <span className="text-[9px] font-bold text-[#A1F524] block">
                     Rango {scanResult.symmetryScore >= 85 ? 'Rubí / Diamante' : 'Oro Superior'}
                   </span>
                 </div>
 
-                <div className="glass-surface p-3.5 rounded-[20px] text-center border-t-white/15 space-y-1">
+                <div className="fitness-surface p-3.5 rounded-[20px] text-center border-t-white/15 space-y-1">
                   <span className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider block">
                     Grasa Estimada
                   </span>
@@ -271,16 +262,16 @@ NO añadas texto antes ni después. Solo el JSON.`;
               </div>
 
               {/* Muscles analysis */}
-              <div className="glass-surface p-3.5 rounded-[22px] space-y-2 border-t-white/10">
+              <div className="fitness-surface p-3.5 rounded-[22px] space-y-2 border-t-white/10">
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-[#34C759] flex items-center gap-1">
+                  <span className="text-[10px] font-black uppercase text-[#A1F524] flex items-center gap-1">
                     <span>✓</span> Puntos Fuertes (Hipertrofiados)
                   </span>
                   <div className="flex flex-wrap gap-1.5 pt-0.5">
                     {scanResult.dominantMuscles.map((m, idx) => (
                       <span
                         key={idx}
-                        className="px-2.5 py-1 rounded-full bg-[#34C759]/15 text-[#34C759] text-[10px] font-bold border border-[#34C759]/25"
+                        className="px-2.5 py-1 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-[10px] font-bold border border-[#A1F524]/25"
                       >
                         {m}
                       </span>
@@ -306,7 +297,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
               </div>
 
               {/* Summary and Recommendation */}
-              <div className="glass-surface p-3.5 rounded-[22px] space-y-2 border-t-white/10">
+              <div className="fitness-surface p-3.5 rounded-[22px] space-y-2 border-t-white/10">
                 <p className="text-xs text-[#E5E5EA] leading-relaxed font-medium">
                   {scanResult.aestheticSummary}
                 </p>
@@ -326,7 +317,7 @@ NO añadas texto antes ni después. Solo el JSON.`;
                   showToast('Escaneo guardado en tu perfil.');
                   onClose();
                 }}
-                className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all"
+                className="w-full py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-98 transition-all"
               >
                 Guardar Resultados en Perfil
               </button>

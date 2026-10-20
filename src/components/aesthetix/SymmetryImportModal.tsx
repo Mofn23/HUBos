@@ -70,10 +70,10 @@ export const SymmetryImportModal: React.FC<SymmetryImportModalProps> = ({
 Analiza esta captura de pantalla de Symmetry (puede ser una lista de PRs, un resumen de entrenamiento o historial de ejercicios).
 Extrae la información del entrenamiento o PRs visibles y devuélvela EXCLUSIVAMENTE en formato JSON con la siguiente estructura:
 {
-  "date": "2026-09-17",
-  "routineName": "Symmetry Import",
-  "dayName": "Sesión Importada",
-  "durationMinutes": 65,
+  "date": "",
+  "routineName": "",
+  "dayName": "",
+  "durationMinutes": 0,
   "exercises": [
     {
       "name": "Press de banca inclinado con mancuernas",
@@ -83,7 +83,7 @@ Extrae la información del entrenamiento o PRs visibles y devuélvela EXCLUSIVAM
     }
   ]
 }
-Si hay múltiples ejercicios, inclúyelos todos con sus pesos en kg y repeticiones. Si es un PR (ej: 45 kg x 11), ponlo como 1 serie con ese peso y reps.
+Si hay múltiples ejercicios, inclúyelos todos con sus pesos en kg y repeticiones. Si es un PR, ponlo como 1 serie. No inventes fechas, duración, ejercicios ni marcas que no sean legibles: usa fecha vacía, duración 0 y omite datos inciertos.
 Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
 
       const contents = [
@@ -108,27 +108,19 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
       const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
       const parsed: ParsedWorkout = JSON.parse(cleaned);
 
-      if (!parsed.exercises || parsed.exercises.length === 0) {
-        throw new Error('No se detectaron ejercicios válidos en la imagen.');
+      const hasValidSet = parsed.exercises?.some((exercise) =>
+        exercise.sets?.some((set) => Number(set.weightKg) > 0 && Number(set.reps) > 0)
+      );
+      if (!hasValidSet) {
+        throw new Error('No se detectaron series con peso y repeticiones legibles.');
       }
 
       setParsedWorkout(parsed);
       showToast(`✓ Se detectaron ${parsed.exercises.length} ejercicios.`);
     } catch (err: any) {
       console.error('Symmetry import error:', err);
-      // Helpful fallback demo so the user can see it work
-      setParsedWorkout({
-        date: new Date().toISOString().split('T')[0],
-        routineName: 'Symmetry Sesión Importada',
-        dayName: 'Torso & Hipertrofia',
-        durationMinutes: 60,
-        exercises: [
-          { name: 'Press De Banca Inclinado (Mancuerna)', sets: [{ weightKg: 45, reps: 11 }] },
-          { name: 'Elevaciones Laterales (Mancuerna)', sets: [{ weightKg: 14, reps: 10 }] },
-          { name: 'Press De Hombros Sentado (Mancuerna)', sets: [{ weightKg: 30, reps: 9 }] },
-        ],
-      });
-      showToast('Captura procesada.');
+      setParsedWorkout(null);
+      showToast('No se pudo leer la captura. Revisa la imagen o tu API key e inténtalo de nuevo.');
     } finally {
       setIsProcessing(false);
     }
@@ -136,6 +128,10 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
 
   const handleConfirmImport = () => {
     if (!parsedWorkout) return;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(parsedWorkout.date)) {
+      showToast('Confirma la fecha del entrenamiento antes de importarlo.');
+      return;
+    }
 
     let totalVolume = 0;
     let totalSets = 0;
@@ -146,15 +142,18 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
       const dbMatch = matches[0];
       const exId = dbMatch ? dbMatch.id : `custom_${Date.now()}_${exIdx}`;
 
-      const sets: SetLog[] = ex.sets.map((s, sIdx) => {
-        const vol = (s.weightKg || 0) * (s.reps || 0);
+      const validSets = (ex.sets || []).filter((set) => Number(set.weightKg) > 0 && Number(set.reps) > 0);
+      const sets: SetLog[] = validSets.map((s, sIdx) => {
+        const weightKg = Number(s.weightKg);
+        const reps = Number(s.reps);
+        const vol = weightKg * reps;
         totalVolume += vol;
         totalSets += 1;
         return {
           id: `imp_set_${Date.now()}_${exIdx}_${sIdx}`,
           setNumber: sIdx + 1,
-          weightKg: s.weightKg || 0,
-          reps: s.reps || 10,
+          weightKg,
+          reps,
           completed: true,
         };
       });
@@ -170,14 +169,14 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
 
     const historyItem: WorkoutHistoryItem = {
       id: `imported_symmetry_${Date.now()}`,
-      routineName: parsedWorkout.routineName || 'Symmetry Import',
-      dayName: parsedWorkout.dayName || 'Sesión Symmetry',
-      date: parsedWorkout.date || new Date().toISOString().split('T')[0],
-      durationMinutes: parsedWorkout.durationMinutes || 60,
+      routineName: parsedWorkout.routineName || 'Entrenamiento importado',
+      dayName: parsedWorkout.dayName || 'Sesión importada',
+      date: parsedWorkout.date,
+      durationMinutes: Math.max(0, Number(parsedWorkout.durationMinutes) || 0),
       totalVolumeKg: Math.round(totalVolume),
       totalSets,
       exercises: sessionExercises,
-      prCount: parsedWorkout.exercises.length,
+      prCount: 0,
     };
 
     addHistoricalWorkout(historyItem);
@@ -197,13 +196,13 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
       />
 
       <div
-        className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+        className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
           <div className="flex items-center gap-2">
-            <span className="w-8 h-8 rounded-full bg-[#34C759]/20 text-[#34C759] flex items-center justify-center text-sm font-black border border-[#34C759]/30">
+            <span className="w-8 h-8 rounded-full bg-[#A1F524]/20 text-[#A1F524] flex items-center justify-center text-sm font-black border border-[#A1F524]/30">
               📥
             </span>
             <div>
@@ -217,7 +216,7 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
           <button
             type="button"
             onClick={onClose}
-            className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+            className="w-7 h-7 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
           >
             ✕
           </button>
@@ -230,8 +229,8 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
             onClick={() => !isProcessing && fileInputRef.current?.click()}
             className={`w-full aspect-[16/10] rounded-[22px] overflow-hidden border-2 border-dashed flex flex-col items-center justify-center cursor-pointer transition-all relative ${
               screenshot
-                ? 'border-[#34C759]/60 bg-black/40'
-                : 'border-white/20 hover:border-[#34C759]/40 bg-white/[0.02]'
+                ? 'border-[#A1F524]/60 bg-black/40'
+                : 'border-white/20 hover:border-[#A1F524]/40 bg-white/[0.02]'
             }`}
           >
             {screenshot ? (
@@ -274,7 +273,7 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
               className={`w-full py-3.5 rounded-full font-black text-xs transition-all flex items-center justify-center gap-2 shadow-lg ${
                 !screenshot || isProcessing
                   ? 'bg-white/10 text-[#8E8E93] cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#34C759] to-[#2ECC71] text-black hover:scale-[1.01] active:scale-98 shadow-[0_0_25px_rgba(52,199,89,0.4)]'
+                  : 'bg-gradient-to-r from-[#A1F524] to-[#2ECC71] text-black hover:scale-[1.01] active:scale-98 shadow-[0_0_25px_rgba(161,245,36,0.4)]'
               }`}
             >
               {isProcessing ? (
@@ -294,27 +293,34 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
           {/* Parsed Workout Preview */}
           {parsedWorkout && (
             <div className="space-y-3 animate-fade-in">
-              <div className="glass-surface p-3.5 rounded-[22px] space-y-2 border border-[#34C759]/30">
-                <div className="flex items-center justify-between">
+              <div className="fitness-surface p-3.5 rounded-[22px] space-y-2 border border-[#A1F524]/30">
+                <div className="flex items-center justify-between gap-2">
                   <h4 className="text-xs font-black text-[#F5F5F7]">
-                    {parsedWorkout.routineName}
+                    {parsedWorkout.routineName || 'Entrenamiento detectado'}
                   </h4>
-                  <span className="text-[10px] font-mono text-[#34C759] font-black">
-                    {parsedWorkout.date}
-                  </span>
+                  <label className="shrink-0">
+                    <span className="sr-only">Fecha del entrenamiento</span>
+                    <input
+                      type="date"
+                      value={parsedWorkout.date || ''}
+                      onChange={(event) => setParsedWorkout((current) => current ? { ...current, date: event.target.value } : current)}
+                      className="w-[116px] bg-black/30 border border-white/10 rounded-lg px-2 py-1 text-[10px] text-[#A1F524] font-mono"
+                      aria-label="Fecha del entrenamiento"
+                    />
+                  </label>
                 </div>
 
                 <div className="space-y-1.5 pt-1">
                   {parsedWorkout.exercises.map((ex, idx) => (
                     <div
                       key={idx}
-                      className="glass-pill p-2 rounded-[14px] flex items-center justify-between text-xs"
+                      className="fitness-pill p-2 rounded-[14px] flex items-center justify-between text-xs"
                     >
                       <span className="font-bold text-[#F5F5F7] truncate max-w-[200px]">
                         {ex.name}
                       </span>
                       <span className="font-mono text-[#64D2FF] font-black text-[11px]">
-                        {ex.sets.map((s) => `${s.weightKg}k x ${s.reps}`).join(', ')}
+                        {ex.sets.filter((s) => Number(s.weightKg) > 0 && Number(s.reps) > 0).map((s) => `${s.weightKg} kg × ${s.reps}`).join(', ')}
                       </span>
                     </div>
                   ))}
@@ -324,7 +330,7 @@ Devuelve SOLO el JSON sin bloques de código ni texto adicional.`;
               <button
                 type="button"
                 onClick={handleConfirmImport}
-                className="w-full py-3.5 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-98 transition-all flex items-center justify-center gap-1.5"
               >
                 <span>✓</span>
                 <span>Confirmar e Importar al Historial</span>

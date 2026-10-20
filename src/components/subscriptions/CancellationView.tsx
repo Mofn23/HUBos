@@ -29,8 +29,8 @@ export const CancellationView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-fade-in pb-12">
-      <div className="clay-surface p-4.5 rounded-[24px] flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl clay-pill text-[#DC2626] flex items-center justify-center shrink-0">
+      <div className="bg-[#1C1C1E] border border-white/5 p-4.5 rounded-[24px] flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-[#2C2C2E] border border-white/5 text-[#DC2626] flex items-center justify-center shrink-0">
           <IconShield className="w-5 h-5" />
         </div>
         <div className="text-xs">
@@ -50,7 +50,7 @@ export const CancellationView: React.FC = () => {
         {activeSubsWithCancel.map((sub) => (
           <div
             key={sub.id}
-            className="clay-surface p-4.5 rounded-[24px] space-y-2.5"
+            className="bg-[#1C1C1E] border border-white/5 p-4.5 rounded-[24px] space-y-2.5"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -63,7 +63,7 @@ export const CancellationView: React.FC = () => {
                   href={sub.cancelUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="clay-pill px-3 py-1 text-[#DC2626] text-xs font-bold flex items-center gap-1 hover:brightness-110 active:scale-95 transition-transform cursor-pointer"
+                  className="bg-[#2C2C2E] border border-white/5 px-3 py-1 text-[#DC2626] text-xs font-bold flex items-center gap-1 hover:brightness-110 active:scale-95 transition-transform duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
                 >
                   <span>Portal Oficial</span>
                   <IconExternalLink className="w-3.5 h-3.5" />
@@ -72,7 +72,7 @@ export const CancellationView: React.FC = () => {
             </div>
 
             {sub.cancelSteps && (
-              <p className="text-xs text-[#8E8E93] clay-pill p-3">
+              <p className="text-xs text-[#8E8E93] bg-[#2C2C2E] border border-white/5 p-3">
                 <strong className="text-[#F5F5F7]">Pasos: </strong>
                 {sub.cancelSteps}
               </p>
@@ -88,20 +88,20 @@ export const CancellationView: React.FC = () => {
         </h3>
 
         {defaultGuides.map((g, i) => (
-          <div key={i} className="clay-surface p-4.5 rounded-[24px] space-y-2.5">
+          <div key={i} className="bg-[#1C1C1E] border border-white/5 p-4.5 rounded-[24px] space-y-2.5">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-[#F5F5F7]">{g.name}</span>
               <a
                 href={g.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="clay-pill px-3 py-1 text-xs font-bold text-[#DE7356] flex items-center gap-1 hover:brightness-110 active:scale-95 transition-transform cursor-pointer"
+                className="bg-[#2C2C2E] border border-white/5 px-3 py-1 text-xs font-bold text-[#FF375F] flex items-center gap-1 hover:brightness-110 active:scale-95 transition-transform duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
               >
                 <span>Abrir</span>
                 <IconExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-            <p className="text-xs text-[#8E8E93] clay-pill p-3">
+            <p className="text-xs text-[#8E8E93] bg-[#2C2C2E] border border-white/5 p-3">
               {g.steps}
             </p>
           </div>

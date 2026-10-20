@@ -6,6 +6,7 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { useSubsStore } from '@/stores/useSubsStore';
 import { parseQuickActionWithGemini, parseMealWithGemini, parseSubscriptionWithGemini } from '@/lib/gemini';
+import { audioEngine } from '@/lib/audio';
 import { IconSparkles, IconSend, IconDumbbell, IconCreditCard } from '../common/Icons';
 
 export const HubQuickPromptSheet: React.FC = () => {
@@ -28,6 +29,8 @@ export const HubQuickPromptSheet: React.FC = () => {
     const text = textToProcess || prompt;
     if (!text.trim()) return;
 
+    // Unlock audio on the tap before the asynchronous Gemini request.
+    audioEngine.unlock();
     setIsLoading(true);
     setStatusText('Procesando con Gemini 2.0 Flash...');
 
@@ -107,7 +110,7 @@ export const HubQuickPromptSheet: React.FC = () => {
     >
       <div className="space-y-4 pb-6">
         {/* Input Box */}
-        <div className="relative bg-[#242426] rounded-2xl border border-white/10 p-3 focus-within:border-[#34C759] transition-colors">
+        <div className="relative bg-[#1C1C1E] rounded-2xl border border-white/10 p-3 focus-within:border-[#C8FF45] transition-colors duration-200">
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
@@ -119,14 +122,14 @@ export const HubQuickPromptSheet: React.FC = () => {
 
           <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
             <div className="flex items-center gap-1.5 text-xs text-[#8E8E93]">
-              <IconSparkles className="w-3.5 h-3.5 text-[#34C759]" />
+              <IconSparkles className="w-3.5 h-3.5 text-[#C8FF45]" />
               <span>Gemini 2.0 Flash</span>
             </div>
 
             <button
               onClick={() => handleExecutePrompt()}
               disabled={isLoading || !prompt.trim()}
-              className="px-4 py-1.5 rounded-full bg-[#34C759] text-black font-bold text-xs flex items-center gap-1.5 disabled:opacity-40 active:scale-95 transition-all shadow-md"
+              className="px-4 py-1.5 rounded-full bg-[#C8FF45] text-black font-bold text-xs flex items-center gap-1.5 disabled:opacity-40 hover:brightness-110 active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               {isLoading ? (
                 <span>Procesando...</span>
@@ -142,7 +145,7 @@ export const HubQuickPromptSheet: React.FC = () => {
 
         {statusText && (
           <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-center animate-pulse">
-            <p className="text-xs text-[#34C759] font-medium">{statusText}</p>
+            <p className="text-xs text-[#C8FF45] font-medium">{statusText}</p>
           </div>
         )}
 
@@ -160,7 +163,7 @@ export const HubQuickPromptSheet: React.FC = () => {
                   handleExecutePrompt(sample);
                 }}
                 disabled={isLoading}
-                className="w-full text-left p-3 rounded-xl bg-[#1C1C1E] border border-white/5 hover:border-white/20 text-xs text-[#F5F5F7] transition-all active:scale-[0.98] flex items-center justify-between"
+                className="w-full text-left p-3 rounded-xl bg-[#1C1C1E] border border-white/5 hover:bg-[#2C2C2E] hover:border-white/15 text-xs text-[#F5F5F7] transition-all duration-200 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] flex items-center justify-between"
               >
                 <span className="truncate pr-2">{sample}</span>
                 <IconSparkles className="w-3.5 h-3.5 text-[#8E8E93] shrink-0" />

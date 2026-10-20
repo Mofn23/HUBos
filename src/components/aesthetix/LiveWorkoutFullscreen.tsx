@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { useHubStore } from '@/stores/useHubStore';
 import {
@@ -203,17 +204,17 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
     return '-';
   };
 
-  return (
-    <div className="fixed inset-0 z-[60] bg-[#000000] flex flex-col overflow-hidden text-[#F5F5F7] animate-fade-in overscroll-contain select-none">
+  return createPortal((
+    <div className="live-workout-ui fixed inset-0 z-[60] bg-black flex flex-col overflow-hidden text-[#F5F5F7] animate-fade-in overscroll-contain select-none">
       {/* ======================================================== */}
       {/* 1. TOP HEADER BAR (Symmetry Style)                       */}
       {/* ======================================================== */}
-      <div className="relative z-20 px-4 pt-[max(env(safe-area-inset-top),44px)] pb-3 flex items-center justify-between border-b border-white/5 bg-[#000000]">
+      <div className="relative z-20 px-4 pt-[max(env(safe-area-inset-top),32px)] pb-3 flex items-center justify-between border-b border-white/[0.07] bg-black">
         {/* Left: Minimize button */}
         <div className="flex items-center gap-2">
           <button
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white active:scale-95 transition-all shadow-sm"
+            className="w-10 h-10 rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] border border-white/[0.08] flex items-center justify-center text-white active:scale-95 transition-all"
             title="Minimizar sesión"
           >
             <svg
@@ -232,7 +233,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
           {/* Three dots options menu */}
           <button
             onClick={() => setShowMenuOptions(!showMenuOptions)}
-            className="w-9 h-9 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-xs text-[#8E8E93] hover:text-white active:scale-95 transition-all"
+            className="w-10 h-10 rounded-full bg-[#1C1C1E] hover:bg-[#2C2C2E] border border-white/[0.08] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white active:scale-95 transition-all"
             title="Opciones de entrenamiento"
           >
             •••
@@ -240,15 +241,15 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
         </div>
 
         {/* Center: Live Timer */}
-        <div className="flex items-center gap-1.5 font-mono text-base font-black text-[#F5F5F7] tracking-wider">
-          <span className="w-2 h-2 rounded-full bg-[#34C759] shadow-[0_0_8px_#34C759] animate-pulse" />
+        <div className="flex items-center gap-2 rounded-full bg-[#1C1C1E] px-3.5 py-2 font-mono text-sm font-black text-[#F5F5F7] tracking-wider tabular-nums">
+          <span className="w-2 h-2 rounded-full bg-[#A1F524] shadow-[0_0_8px_#A1F524] animate-pulse" />
           <span>{formatTime(elapsedSeconds)}</span>
         </div>
 
         {/* Right: Terminar button */}
         <button
           onClick={handleFinish}
-          className="px-4 py-1.5 rounded-full bg-[#1C1C1E] border border-white/15 hover:border-[#34C759] text-xs font-black text-[#F5F5F7] hover:text-[#34C759] active:scale-95 transition-all shadow-md"
+          className="px-4 py-2.5 rounded-full bg-[#A1F524] text-black text-xs font-black hover:bg-[#B7FF43] active:scale-95 transition-all"
         >
           Terminar
         </button>
@@ -256,7 +257,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
 
       {/* Dropdown menu for more options */}
       {showMenuOptions && (
-        <div className="absolute top-24 left-4 z-30 w-56 rounded-[22px] glass-surface-elevated p-2 border border-white/15 shadow-2xl space-y-1 animate-scale-up">
+        <div className="absolute top-24 left-4 z-30 w-56 rounded-[22px] fitness-surface-elevated p-2 border border-white/15 shadow-2xl space-y-1 animate-scale-up">
           <button
             onClick={() => {
               setShowMenuOptions(false);
@@ -283,8 +284,8 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
       {/* ======================================================== */}
       {/* 2. TOP EXERCISE BUBBLES CAROUSEL ("Las Bolas de Arriba") */}
       {/* ======================================================== */}
-      <div className="relative z-10 px-3 py-2 border-b border-white/5 bg-[#000000] overflow-visible">
-        <div className="flex items-center gap-4 overflow-x-auto no-scrollbar px-3 py-3.5 min-h-[96px]">
+      <div className="relative z-10 px-3 py-2 border-b border-white/[0.07] bg-black overflow-visible">
+        <div className="flex items-center gap-3 overflow-x-auto no-scrollbar px-2 py-3 min-h-[88px]">
           {activeSession.exercises.map((ex, idx) => {
             const isCurrent = idx === activeSession.currentExerciseIndex;
             const completedSets = ex.sets.filter((s) => s.completed).length;
@@ -297,15 +298,15 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                 key={idx}
                 onClick={() => setCurrentExerciseIndex(idx)}
                 className={`shrink-0 relative transition-all duration-200 group flex flex-col items-center p-1 ${
-                  isCurrent ? 'scale-105' : 'opacity-50 hover:opacity-85'
+                  isCurrent ? 'scale-105' : 'opacity-60 hover:opacity-90'
                 }`}
               >
                 {/* Circular Bubble Avatar */}
                 <div
                   className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center p-1.5 bg-[#000000] transition-all ${
                     isCurrent
-                      ? 'ring-2 ring-white ring-offset-2 ring-offset-black shadow-[0_0_25px_rgba(255,255,255,0.45)]'
-                      : 'border border-white/20'
+                    ? 'ring-2 ring-[#A1F524] ring-offset-2 ring-offset-black shadow-[0_0_20px_rgba(161,245,36,0.25)]'
+                      : 'border border-white/10 bg-[#1C1C1E]'
                   }`}
                 >
                   {bubbleMedia?.imageUrl ? (
@@ -325,27 +326,38 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
 
                 {/* Completed Badge Indicator */}
                 {isAllDone && (
-                  <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#34C759] text-black text-[9px] font-black flex items-center justify-center shadow-md">
+                  <span className="absolute bottom-1 right-1 w-4 h-4 rounded-full bg-[#A1F524] text-black text-[9px] font-black flex items-center justify-center shadow-md">
                     ✓
                   </span>
                 )}
               </button>
             );
           })}
+          {onOpenExercisesCatalog && (
+            <button
+              type="button"
+              onClick={onOpenExercisesCatalog}
+              aria-label="Añadir ejercicio a la sesión"
+              title="Añadir ejercicio"
+              className="w-16 h-16 shrink-0 rounded-full border border-dashed border-[#A1F524]/55 bg-[#A1F524]/[0.07] text-[#A1F524] flex items-center justify-center text-3xl font-light transition-all hover:bg-[#A1F524]/15 active:scale-95"
+            >
+              ×
+            </button>
+          )}
         </div>
       </div>
 
       {/* ======================================================== */}
       {/* 3. MAIN SCROLLABLE CONTENT BODY                         */}
       {/* ======================================================== */}
-      <div className="flex-1 overflow-y-auto px-4 pt-2 pb-44 space-y-4 no-scrollbar overscroll-contain">
+      <div className="flex-1 overflow-y-auto px-4 pt-3 pb-[calc(env(safe-area-inset-bottom)+7rem)] space-y-4 no-scrollbar overscroll-contain">
         {/* Large Central Animated Figure (Pure Black Seamless OLED Background) */}
         {currentExercise && (
-          <div className="w-full h-64 sm:h-72 bg-[#000000] flex items-center justify-center relative overflow-hidden rounded-[24px]">
+          <div className="w-full h-[min(34svh,280px)] min-h-[210px] bg-[#101012] flex items-center justify-center relative overflow-hidden rounded-[28px] border border-white/[0.07]">
             {/* Subtle Biomechanical Glow behind the figure */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.07)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(161,245,36,0.10)_0%,rgba(0,0,0,0)_68%)] pointer-events-none" />
             {media?.gifUrl || media?.imageUrl ? (
-              <div className="relative w-full max-w-[280px] h-full flex items-center justify-center p-2">
+              <div className="relative w-full max-w-[320px] h-full flex items-center justify-center p-3">
                 <img
                   src={media.gifUrl || media.imageUrl}
                   alt={currentExercise.exerciseName}
@@ -370,40 +382,39 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
         {currentExercise && (
           <div className="space-y-3">
             {/* Title */}
-            <h1 className="text-lg sm:text-xl font-black text-[#F5F5F7] tracking-tight capitalize px-1">
-              {currentExercise.exerciseName}
-            </h1>
-
-            {/* Action Pills Row */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
-              {/* Muscle Rank Badge Thumbnail */}
-              <div
-                className="w-8 h-8 rounded-full bg-white/[0.06] border border-white/15 p-1 flex items-center justify-center shrink-0 shadow-sm"
-                title="Rango anatómico"
-              >
-                <img
-                  src={currentTierBadge}
-                  alt="Rango"
-                  className="w-full h-full object-contain"
-                />
+            <div className="flex items-center gap-3 px-1">
+              <div className="w-10 h-10 rounded-2xl bg-[#1C1C1E] border border-white/[0.08] p-1.5 shrink-0">
+                <img src={currentTierBadge} alt="Rango muscular" className="w-full h-full object-contain" />
               </div>
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#8E8E93]">Ejercicio {activeSession.currentExerciseIndex + 1} de {activeSession.exercises.length}</p>
+                <h1 className="text-lg sm:text-xl font-black text-[#F5F5F7] tracking-tight capitalize line-clamp-2">
+                  {currentExercise.exerciseName}
+                </h1>
+              </div>
+            </div>
+
+            {/* Compact actions grid */}
+            <div className="flex items-center justify-around gap-3 px-1">
 
               {/* ▶ Tutorial Button */}
               <button
                 onClick={() => setShowTutorial(true)}
-                className="px-3.5 py-2 rounded-full bg-[#1C1C1E] border border-white/10 hover:border-white/25 text-xs font-bold text-[#F5F5F7] active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
+                aria-label="Tutorial"
+                title="Tutorial"
+                className="w-12 h-12 rounded-full bg-[#1C1C1E] border border-white/[0.08] hover:border-white/20 text-lg text-[#A1F524] active:scale-95 transition-all flex items-center justify-center"
               >
-                <span className="text-[11px] text-[#34C759]">▶</span>
-                <span>Tutorial</span>
+                ▶
               </button>
 
               {/* 🔄 Reemplazar Button */}
               <button
                 onClick={() => setShowReplaceModal(true)}
-                className="px-3.5 py-2 rounded-full bg-[#1C1C1E] border border-white/10 hover:border-white/25 text-xs font-bold text-[#F5F5F7] active:scale-95 transition-all flex items-center gap-1.5 shrink-0"
+                aria-label="Reemplazar ejercicio"
+                title="Reemplazar ejercicio"
+                className="w-12 h-12 rounded-full bg-[#1C1C1E] border border-white/[0.08] hover:border-white/20 text-base text-[#64D2FF] active:scale-95 transition-all flex items-center justify-center"
               >
-                <span className="text-[11px] text-[#64D2FF]">🔄</span>
-                <span>Reemplazar</span>
+                ↻
               </button>
 
               {/* ✎ Notas Button */}
@@ -412,21 +423,23 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                   setNotesInput(currentExercise.notes || '');
                   setShowNotesModal(true);
                 }}
-                className={`px-3.5 py-2 rounded-full border text-xs font-bold active:scale-95 transition-all flex items-center gap-1.5 shrink-0 ${
+                aria-label="Notas del ejercicio"
+                title="Notas del ejercicio"
+                className={`w-12 h-12 rounded-full border text-base font-bold active:scale-95 transition-all flex items-center justify-center ${
                   currentExercise.notes
                     ? 'bg-[#FFD60A]/15 border-[#FFD60A]/40 text-[#FFD60A]'
                     : 'bg-[#1C1C1E] border-white/10 text-[#F5F5F7] hover:border-white/25'
                 }`}
               >
-                <span className="text-[11px]">✎</span>
-                <span>Notas</span>
+                ✎
               </button>
 
               {/* ⏱ Rest Timer Button */}
               <button
                 onClick={() => triggerRestTimer(150)}
-                className="w-8 h-8 rounded-full bg-[#1C1C1E] border border-white/10 hover:border-[#34C759]/40 flex items-center justify-center text-xs text-[#34C759] active:scale-95 transition-all shrink-0"
-                title="Iniciar descanso de 2:30 min"
+                aria-label="Iniciar descanso de 2 minutos y 30 segundos"
+                title="Iniciar descanso"
+                className="w-12 h-12 rounded-full bg-[#1C1C1E] border border-white/[0.08] hover:border-[#A1F524]/40 flex items-center justify-center text-base text-[#A1F524] active:scale-95 transition-all"
               >
                 ⏱
               </button>
@@ -438,9 +451,9 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
         {/* 4. SETS TABLE (Exact Symmetry Layout)                    */}
         {/* ======================================================== */}
         {currentExercise && (
-          <div className="space-y-2.5 pt-1">
+          <div className="space-y-3 rounded-[28px] border border-white/[0.07] bg-[#141416] p-3.5">
             {/* Header Row */}
-            <div className="grid grid-cols-12 gap-2 text-[10px] font-black uppercase tracking-widest text-[#8E8E93] px-2 items-center">
+            <div className="grid grid-cols-12 gap-1.5 text-[9px] font-black uppercase tracking-[0.12em] text-[#8E8E93] px-1 items-center">
               <span className="col-span-2 text-center">SERIE</span>
               <span className="col-span-3 text-center">PREVIA</span>
               <span className="col-span-3 text-center">KG</span>
@@ -451,7 +464,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             </div>
 
             {/* Set Rows */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {currentExercise.sets.map((set, sIdx) => {
                 const isDone = set.completed;
                 const previaStr = getPreviousPerformance(sIdx);
@@ -459,13 +472,13 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                 return (
                   <div
                     key={set.id}
-                    className={`grid grid-cols-12 gap-2 items-center px-1 py-1 rounded-[18px] transition-all ${
-                      isDone ? 'opacity-90' : ''
+                    className={`grid grid-cols-12 gap-1.5 items-center px-1.5 py-2 rounded-[20px] border transition-all ${
+                      isDone ? 'bg-[#A1F524]/[0.07] border-[#A1F524]/20' : 'bg-[#1C1C1E] border-white/[0.045]'
                     }`}
                   >
                     {/* SERIE: Pill Number */}
                     <div className="col-span-2 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-[12px] bg-[#1C1C1E] border border-white/10 flex items-center justify-center text-xs font-black text-[#8E8E93] font-mono">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-black font-mono ${isDone ? 'bg-[#A1F524] text-black' : 'bg-[#2C2C2E] text-[#8E8E93]'}`}>
                         {sIdx + 1}
                       </div>
                     </div>
@@ -489,7 +502,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                             })
                           }
                           placeholder="0"
-                          className="w-full h-10 rounded-[12px] bg-[#1C1C1E] border border-white/10 text-center text-sm font-black text-[#F5F5F7] font-mono outline-none focus:border-[#34C759] transition-all"
+                          className="w-full h-10 rounded-xl bg-[#2C2C2E] border border-white/[0.06] text-center text-sm font-black text-[#F5F5F7] font-mono outline-none focus:border-[#A1F524] transition-all"
                         />
                       </div>
                     </div>
@@ -507,7 +520,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                           })
                         }
                         placeholder="8"
-                        className="w-full h-10 rounded-[12px] bg-[#1C1C1E] border border-white/10 text-center text-sm font-black text-[#F5F5F7] font-mono outline-none focus:border-[#34C759] transition-all"
+                        className="w-full h-10 rounded-xl bg-[#2C2C2E] border border-white/[0.06] text-center text-sm font-black text-[#F5F5F7] font-mono outline-none focus:border-[#A1F524] transition-all"
                       />
                     </div>
 
@@ -518,8 +531,8 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                         onClick={() => handleToggleSetComplete(sIdx)}
                         className={`w-9 h-9 rounded-full flex items-center justify-center transition-all ${
                           isDone
-                            ? 'bg-[#34C759] text-black font-black shadow-[0_0_15px_rgba(52,199,89,0.6)] scale-105'
-                            : 'bg-[#2C2C2E] text-[#8E8E93] border border-white/10 hover:border-white/30 hover:text-white'
+                            ? 'bg-[#A1F524] text-black font-black shadow-[0_0_15px_rgba(161,245,36,0.6)] scale-105'
+                            : 'bg-[#2C2C2E] text-[#8E8E93] border border-white/[0.07] hover:border-white/30 hover:text-white'
                         }`}
                       >
                         <span className="text-sm leading-none font-black">{isDone ? '✓' : ''}</span>
@@ -535,7 +548,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               <button
                 type="button"
                 onClick={() => addSet(activeSession.currentExerciseIndex)}
-                className="w-full py-3.5 rounded-[16px] bg-[#1C1C1E] border border-white/10 hover:border-white/20 text-xs font-black text-[#F5F5F7] active:scale-98 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+                className="w-full py-3.5 rounded-2xl bg-[#2C2C2E] hover:bg-[#38383A] border border-white/[0.06] text-xs font-black text-[#F5F5F7] active:scale-98 transition-all flex items-center justify-center gap-1.5"
               >
                 <span className="text-sm font-bold leading-none">+</span>
                 <span>Añadir serie</span>
@@ -559,19 +572,6 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               )}
             </div>
 
-            {/* Add another exercise button */}
-            {onOpenExercisesCatalog && (
-              <div className="pt-3">
-                <button
-                  type="button"
-                  onClick={onOpenExercisesCatalog}
-                  className="w-full py-3 rounded-[16px] glass-pill text-xs font-bold text-[#64D2FF] hover:border-cyan-400/40 active:scale-98 transition-all flex items-center justify-center gap-2"
-                >
-                  <span>+</span>
-                  <span>Añadir otro ejercicio del catálogo (1.324 disponibles)</span>
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -580,10 +580,10 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
       {/* 5. FLOATING 2:30 REST TIMER POD                          */}
       {/* ======================================================== */}
       {activeSession.isRestTimerRunning && (
-        <div className="fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto glass-surface-elevated rounded-[28px] p-4 border border-[#34C759]/40 shadow-[0_12px_40px_rgba(0,0,0,0.85)] backdrop-blur-3xl animate-slide-up overscroll-contain">
+        <div className="fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto fitness-surface-elevated rounded-[28px] p-4 border border-[#A1F524]/40 shadow-[0_12px_40px_rgba(0,0,0,0.85)] backdrop-blur-3xl animate-slide-up overscroll-contain">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-[#34C759]/20 border border-[#34C759]/40 flex items-center justify-center text-sm font-black text-[#34C759] font-mono shadow-[0_0_15px_rgba(52,199,89,0.35)]">
+              <div className="w-12 h-12 rounded-full bg-[#A1F524]/20 border border-[#A1F524]/40 flex items-center justify-center text-sm font-black text-[#A1F524] font-mono shadow-[0_0_15px_rgba(161,245,36,0.35)]">
                 {formatTime(timerRemaining)}
               </div>
               <div>
@@ -595,19 +595,19 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => adjustRestTimer(-10)}
-                className="glass-pill px-2.5 py-1.5 rounded-full text-xs font-black text-[#8E8E93] hover:text-white active:scale-90"
+                className="fitness-pill px-2.5 py-1.5 rounded-full text-xs font-black text-[#8E8E93] hover:text-white active:scale-90"
               >
                 -10s
               </button>
               <button
                 onClick={() => adjustRestTimer(10)}
-                className="glass-pill px-2.5 py-1.5 rounded-full text-xs font-black text-[#34C759] hover:text-white active:scale-90"
+                className="fitness-pill px-2.5 py-1.5 rounded-full text-xs font-black text-[#A1F524] hover:text-white active:scale-90"
               >
                 +10s
               </button>
               <button
                 onClick={stopRestTimer}
-                className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs font-bold text-[#8E8E93] hover:text-white active:scale-90"
+                className="w-8 h-8 rounded-full fitness-pill flex items-center justify-center text-xs font-bold text-[#8E8E93] hover:text-white active:scale-90"
                 title="Saltar descanso"
               >
                 ✕
@@ -631,7 +631,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             }}
           />
           <div
-            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
             onTouchMove={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
@@ -639,13 +639,13 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                 <h3 className="text-sm font-black text-[#F5F5F7] capitalize">
                   {dbExercise.name}
                 </h3>
-                <p className="text-[11px] font-bold text-[#34C759] capitalize">
+                <p className="text-[11px] font-bold text-[#A1F524] capitalize">
                   {BODY_PART_TRANSLATIONS[dbExercise.body_part] || dbExercise.body_part} • {dbExercise.target}
                 </p>
               </div>
               <button
                 onClick={() => setShowTutorial(false)}
-                className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                className="w-8 h-8 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -688,7 +688,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             <button
               type="button"
               onClick={() => setShowTutorial(false)}
-              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
+              className="w-full py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
             >
               Entendido
             </button>
@@ -710,7 +710,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             }}
           />
           <div
-            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
             onTouchMove={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
@@ -722,7 +722,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               </div>
               <button
                 onClick={() => setShowReplaceModal(false)}
-                className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                className="w-8 h-8 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -735,7 +735,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                 value={replaceQuery}
                 onChange={(e) => setReplaceQuery(e.target.value)}
                 placeholder="Buscar ejercicio sustituto..."
-                className="w-full glass-surface rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#34C759]"
+                className="w-full fitness-surface rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#A1F524]"
               />
             </div>
 
@@ -756,7 +756,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                       setShowReplaceModal(false);
                       showToast(`Ejercicio reemplazado por "${cand.name}".`);
                     }}
-                    className="glass-surface p-2.5 rounded-[18px] flex items-center justify-between gap-3 hover:border-[#34C759]/50 cursor-pointer active:scale-98 transition-all"
+                    className="fitness-surface p-2.5 rounded-[18px] flex items-center justify-between gap-3 hover:border-[#A1F524]/50 cursor-pointer active:scale-98 transition-all"
                   >
                     <div className="w-10 h-10 rounded-[12px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 p-0.5">
                       {candMedia.imageUrl ? (
@@ -778,7 +778,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
                         {BODY_PART_TRANSLATIONS[cand.body_part] || cand.body_part} • {cand.target}
                       </p>
                     </div>
-                    <span className="text-xs text-[#34C759] font-black shrink-0">Elegir →</span>
+                    <span className="text-xs text-[#A1F524] font-black shrink-0">Elegir →</span>
                   </div>
                 );
               })}
@@ -801,7 +801,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
             }}
           />
           <div
-            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
             onTouchMove={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
@@ -813,7 +813,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               </div>
               <button
                 onClick={() => setShowNotesModal(false)}
-                className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                className="w-8 h-8 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -823,7 +823,7 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
               value={notesInput}
               onChange={(e) => setNotesInput(e.target.value)}
               placeholder="Ej: Asiento en posición 4, agarre prono abierto, sensación sólida en dorsales..."
-              className="w-full h-32 glass-surface rounded-[18px] p-3 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#FFD60A] resize-none"
+              className="w-full h-32 fitness-surface rounded-[18px] p-3 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#FFD60A] resize-none"
             />
 
             <button
@@ -854,5 +854,5 @@ export const LiveWorkoutFullscreen: React.FC<LiveWorkoutFullscreenProps> = ({
         />
       )}
     </div>
-  );
+  ), document.body);
 };

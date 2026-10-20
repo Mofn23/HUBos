@@ -347,7 +347,7 @@ export const SymmetryMuscleDetailSheet: React.FC<SymmetryMuscleDetailSheetProps>
                 setSelectedExerciseForModal(null);
                 onClose();
               }}
-              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs active:scale-98 transition-all shadow-md"
+              className="w-full py-3 rounded-full bg-[#A1F524] text-black font-black text-xs active:scale-98 transition-all shadow-md"
             >
               Seleccionar este Ejercicio
             </button>

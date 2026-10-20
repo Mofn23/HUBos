@@ -36,39 +36,48 @@ import {
   Send,
 } from 'lucide-react';
 
-export {
-  Home as IconHome,
-  Dumbbell as IconDumbbell,
-  CreditCard as IconCreditCard,
-  Plus as IconPlus,
-  Sparkles as IconSparkles,
-  Settings as IconSettings,
-  ChevronRight as IconChevronRight,
-  ChevronLeft as IconChevronLeft,
-  X as IconX,
-  Check as IconCheck,
-  Trash2 as IconTrash,
-  Edit2 as IconEdit,
-  Calendar as IconCalendar,
-  Flame as IconFlame,
-  Droplets as IconDroplets,
-  Camera as IconCamera,
-  Activity as IconActivity,
-  Layers as IconLayers,
-  ArrowUpRight as IconArrowUpRight,
-  TrendingDown as IconTrendingDown,
-  TrendingUp as IconTrendingUp,
-  PieChart as IconPieChart,
-  ShieldCheck as IconShield,
-  Zap as IconZap,
-  Info as IconInfo,
-  Clock as IconClock,
-  Search as IconSearch,
-  ExternalLink as IconExternalLink,
-  MessageSquare as IconMessage,
-  BarChart3 as IconBarChart,
-  ListFilter as IconFilter,
-  RefreshCw as IconRefresh,
-  Bell as IconBell,
-  Send as IconSend,
+const withHydrationSafeSvg = <T extends React.ComponentType<React.SVGProps<SVGSVGElement>>>(Icon: T) => {
+  const HydrationSafeSvg = Icon as React.ComponentType<
+    React.ComponentProps<T> & { suppressHydrationWarning?: boolean }
+  >;
+  const HydrationSafeIcon = (props: React.ComponentProps<T>) => (
+    <HydrationSafeSvg {...props} suppressHydrationWarning />
+  );
+  HydrationSafeIcon.displayName = `HydrationSafe(${Icon.displayName || Icon.name || 'Icon'})`;
+  return HydrationSafeIcon;
 };
+
+export const IconHome = withHydrationSafeSvg(Home);
+export const IconDumbbell = withHydrationSafeSvg(Dumbbell);
+export const IconCreditCard = withHydrationSafeSvg(CreditCard);
+export const IconPlus = withHydrationSafeSvg(Plus);
+export const IconSparkles = withHydrationSafeSvg(Sparkles);
+export const IconSettings = withHydrationSafeSvg(Settings);
+export const IconChevronRight = withHydrationSafeSvg(ChevronRight);
+export const IconChevronLeft = withHydrationSafeSvg(ChevronLeft);
+export const IconX = withHydrationSafeSvg(X);
+export const IconCheck = withHydrationSafeSvg(Check);
+export const IconTrash = withHydrationSafeSvg(Trash2);
+export const IconEdit = withHydrationSafeSvg(Edit2);
+export const IconCalendar = withHydrationSafeSvg(Calendar);
+export const IconFlame = withHydrationSafeSvg(Flame);
+export const IconDroplets = withHydrationSafeSvg(Droplets);
+export const IconCamera = withHydrationSafeSvg(Camera);
+export const IconActivity = withHydrationSafeSvg(Activity);
+export const IconLayers = withHydrationSafeSvg(Layers);
+export const IconArrowUpRight = withHydrationSafeSvg(ArrowUpRight);
+export const IconTrendingDown = withHydrationSafeSvg(TrendingDown);
+export const IconTrendingUp = withHydrationSafeSvg(TrendingUp);
+export const IconPieChart = withHydrationSafeSvg(PieChart);
+export const IconShield = withHydrationSafeSvg(ShieldCheck);
+export const IconZap = withHydrationSafeSvg(Zap);
+export const IconInfo = withHydrationSafeSvg(Info);
+export const IconClock = withHydrationSafeSvg(Clock);
+export const IconSearch = withHydrationSafeSvg(Search);
+export const IconExternalLink = withHydrationSafeSvg(ExternalLink);
+export const IconMessage = withHydrationSafeSvg(MessageSquare);
+export const IconBarChart = withHydrationSafeSvg(BarChart3);
+export const IconFilter = withHydrationSafeSvg(ListFilter);
+export const IconRefresh = withHydrationSafeSvg(RefreshCw);
+export const IconBell = withHydrationSafeSvg(Bell);
+export const IconSend = withHydrationSafeSvg(Send);

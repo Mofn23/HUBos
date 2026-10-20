@@ -7,7 +7,7 @@ import { audioEngine } from '@/lib/audio';
 import { deleteMealImage } from '@/lib/imageStorage';
 import { nativeStorage } from '@/lib/nativeStorage';
 
-export type RecompTab = 'dashboard' | 'meals' | 'training' | 'progress' | 'coach' | 'profile';
+export type RecompTab = 'dashboard' | 'meals' | 'progress' | 'coach' | 'profile';
 
 export interface MealItem {
   id: string;
@@ -260,6 +260,7 @@ export const useRecompStore = create<RecompState>()(
           category: meal.category || 'almuerzo',
         };
         set((state) => ({ meals: [newMeal, ...state.meals] }));
+        audioEngine.playMealLogged();
         get().updateStreaks();
         get().checkAchievements();
       },
@@ -276,6 +277,7 @@ export const useRecompStore = create<RecompState>()(
         set((state) => ({
           meals: state.meals.filter((m) => m.id !== id),
         }));
+        audioEngine.playRemove();
         get().updateStreaks();
       },
 
@@ -304,15 +306,17 @@ export const useRecompStore = create<RecompState>()(
           const current = state.waterLogs[key] || 0;
           return { waterLogs: { ...state.waterLogs, [key]: Math.min(current + 1, 20) } };
         });
+        audioEngine.playWaterAdded();
         get().checkAchievements();
       },
 
       removeWaterGlass: (dateStr) => {
         const key = dateStr || get().selectedDate || getTodayKey();
+        const current = get().waterLogs[key] || 0;
         set((state) => {
-          const current = state.waterLogs[key] || 0;
           return { waterLogs: { ...state.waterLogs, [key]: Math.max(current - 1, 0) } };
         });
+        if (current > 0) audioEngine.playRemove();
       },
 
       trainingLogs: [],
@@ -349,19 +353,27 @@ export const useRecompStore = create<RecompState>()(
       ],
 
       addMeasurement: (measurement) =>
-        set((state) => ({
-          measurements: [{ ...measurement, id: `meas-${Date.now()}` }, ...state.measurements],
-        })),
+        {
+          set((state) => ({
+            measurements: [{ ...measurement, id: `meas-${Date.now()}` }, ...state.measurements],
+          }));
+          audioEngine.playMeasurementSaved();
+        },
 
       deleteMeasurement: (id) =>
-        set((state) => ({
-          measurements: state.measurements.filter((m) => m.id !== id),
-        })),
+        {
+          set((state) => ({
+            measurements: state.measurements.filter((m) => m.id !== id),
+          }));
+          audioEngine.playRemove();
+        },
 
       supplements: DEFAULT_SUPPLEMENTS,
 
       toggleSupplement: (id, dateStr) => {
         const todayKey = dateStr || get().selectedDate || getTodayKey();
+        const supplement = get().supplements.find((item) => item.id === id);
+        const willBeTaken = Boolean(supplement && !supplement.takenDates.includes(todayKey));
         set((state) => ({
           supplements: state.supplements.map((s) => {
             if (s.id !== id) return s;
@@ -374,17 +386,24 @@ export const useRecompStore = create<RecompState>()(
             };
           }),
         }));
+        audioEngine.playSupplementToggle(willBeTaken);
       },
 
       addSupplement: (supp) =>
-        set((state) => ({
-          supplements: [...state.supplements, { ...supp, id: `supp-${Date.now()}`, takenDates: [] }],
-        })),
+        {
+          set((state) => ({
+            supplements: [...state.supplements, { ...supp, id: `supp-${Date.now()}`, takenDates: [] }],
+          }));
+          audioEngine.playSupplementToggle(true);
+        },
 
       deleteSupplement: (id) =>
-        set((state) => ({
-          supplements: state.supplements.filter((s) => s.id !== id),
-        })),
+        {
+          set((state) => ({
+            supplements: state.supplements.filter((s) => s.id !== id),
+          }));
+          audioEngine.playRemove();
+        },
 
       photos: [],
       addProgressPhoto: (photo) =>

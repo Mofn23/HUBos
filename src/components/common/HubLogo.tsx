@@ -31,7 +31,7 @@ export const HubLogo: React.FC<HubLogoProps> = ({ size = 48, className = '' }) =
         <rect x="22" y="44" width="56" height="12" rx="6" fill="url(#hub_silver)" />
 
         {/* Core Nexus Dot (Emerald / Electric Accent) */}
-        <circle cx="50" cy="50" r="5" fill="#34C759" />
+        <circle cx="50" cy="50" r="5" fill="#A1F524" />
 
         <defs>
           <radialGradient
@@ -42,7 +42,7 @@ export const HubLogo: React.FC<HubLogoProps> = ({ size = 48, className = '' }) =
             gradientUnits="userSpaceOnUse"
             gradientTransform="translate(50 50) rotate(90) scale(40)"
           >
-            <stop stopColor="#34C759" />
+            <stop stopColor="#A1F524" />
             <stop offset="1" stopColor="#0B0B0D" stopOpacity="0" />
           </radialGradient>
 

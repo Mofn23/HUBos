@@ -17,9 +17,9 @@ export const InsightsView: React.FC = () => {
   return (
     <div className="space-y-4 animate-fade-in pb-12">
       {/* Daily Cost Metric */}
-      <div className="clay-surface p-5 rounded-[26px] flex items-center justify-between">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[26px] flex items-center justify-between">
         <div>
-          <span className="text-[11px] font-black uppercase tracking-wider text-[#DE7356]">
+          <span className="text-[11px] font-black uppercase tracking-wider text-[#FF375F]">
             Gasto Diario Promedio
           </span>
           <h3 className="text-2xl font-black text-[#F5F5F7] mt-0.5 tracking-tight">
@@ -29,13 +29,13 @@ export const InsightsView: React.FC = () => {
           <p className="text-xs font-bold text-[#8E8E93] mt-0.5">En suscripciones y servicios fijos</p>
         </div>
 
-        <div className="w-12 h-12 rounded-2xl clay-pill flex items-center justify-center text-[#DE7356]">
+        <div className="w-12 h-12 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-[#FF375F]">
           <IconZap className="w-6 h-6" />
         </div>
       </div>
 
       {/* Category Breakdown */}
-      <div className="clay-surface p-5 rounded-[26px] space-y-4">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[26px] space-y-4">
         <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
           Distribución por Categoría
         </h3>
@@ -45,14 +45,14 @@ export const InsightsView: React.FC = () => {
             <div key={cat.category} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs font-bold">
                 <span className="text-[#F5F5F7]">{cat.category} ({cat.count})</span>
-                <span className="text-[#DE7356] font-black">
+                <span className="text-[#FF375F] font-black">
                   {formatCurrency(cat.monthlyAmount, currency)}{' '}
                   <span className="text-[10px] text-[#8E8E93] font-normal">({Math.round(cat.percentage)}%)</span>
                 </span>
               </div>
-              <div className="w-full h-2.5 rounded-full clay-pill overflow-hidden p-0.5">
+              <div className="w-full h-2.5 rounded-full bg-[#2C2C2E] border border-white/5 overflow-hidden p-0.5">
                 <div
-                  className="h-full rounded-full bg-[#DE7356] transition-all duration-700 shadow-[0_0_8px_rgba(222,115,86,0.5)]"
+                  className="h-full rounded-full bg-[#FF375F] transition-all duration-700"
                   style={{ width: `${cat.percentage}%` }}
                 />
               </div>
@@ -62,23 +62,23 @@ export const InsightsView: React.FC = () => {
       </div>
 
       {/* AI Optimization Tips */}
-      <div className="clay-surface p-5 rounded-[26px] space-y-3.5">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[26px] space-y-3.5">
         <div className="flex items-center gap-2">
-          <IconSparkles className="w-4 h-4 text-[#DE7356]" />
+          <IconSparkles className="w-4 h-4 text-[#FF375F]" />
           <h3 className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
             Recomendaciones de Ahorro IA
           </h3>
         </div>
 
         <div className="space-y-2.5 text-xs text-[#8E8E93]">
-          <div className="clay-pill p-3.5 rounded-2xl space-y-1">
+          <div className="bg-[#2C2C2E] border border-white/5 p-3.5 rounded-2xl space-y-1">
             <p className="font-extrabold text-[#F5F5F7]">💡 Optimización de Streaming</p>
             <p className="text-[11px] font-bold text-[#8E8E93] leading-relaxed">
               Tienes múltiples servicios de entretenimiento activos. Alternar entre Netflix y YouTube Premium mes a mes podría ahorrarte hasta $240.000 COP al año.
             </p>
           </div>
 
-          <div className="clay-pill p-3.5 rounded-2xl space-y-1">
+          <div className="bg-[#2C2C2E] border border-white/5 p-3.5 rounded-2xl space-y-1">
             <p className="font-extrabold text-[#F5F5F7]">⚡ Planes Anuales con Descuento</p>
             <p className="text-[11px] font-bold text-[#8E8E93] leading-relaxed">
               Servicios como Spotify o iCloud ofrecen hasta un 20% de descuento al facturarse en planes familiares o anuales.

@@ -28,7 +28,7 @@ export const AlertToast: React.FC = () => {
       case 'creatine':
         return 'border-[#54A0FF] bg-[#1C1C1E] text-[#54A0FF]';
       default:
-        return 'border-[#34C759] bg-[#1C1C1E] text-[#34C759]';
+        return 'border-[#A1F524] bg-[#1C1C1E] text-[#A1F524]';
     }
   };
 

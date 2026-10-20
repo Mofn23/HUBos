@@ -79,7 +79,7 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
       />
 
       <div
-        className="relative w-full max-w-lg glass-surface-elevated rounded-t-[36px] max-h-[90vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up overscroll-contain"
+        className="relative w-full max-w-lg fitness-surface-elevated rounded-t-[36px] max-h-[90vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Handle */}
@@ -97,7 +97,7 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full glass-pill flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90"
+            className="w-8 h-8 rounded-full fitness-pill flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90"
           >
             ✕
           </button>
@@ -125,8 +125,8 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                     onClick={() => setGoal(item.title)}
                     className={`p-3.5 rounded-[22px] cursor-pointer transition-all ${
                       goal === item.title
-                        ? 'glass-pill-active border-[#64D2FF]/40 bg-[#64D2FF]/10 shadow-[0_0_20px_rgba(100,210,255,0.2)]'
-                        : 'glass-surface hover:border-white/20'
+                        ? 'fitness-pill-active border-[#64D2FF]/40 bg-[#64D2FF]/10 shadow-[0_0_20px_rgba(100,210,255,0.2)]'
+                        : 'fitness-surface hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -145,7 +145,7 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
 
               <button
                 onClick={() => setStep(2)}
-                className="w-full py-3 mt-4 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-95 transition-all"
+                className="w-full py-3 mt-4 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-95 transition-all"
               >
                 Siguiente: Frecuencia Semanal →
               </button>
@@ -172,16 +172,16 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                     onClick={() => setDaysPerWeek(item.days)}
                     className={`p-4 rounded-[22px] cursor-pointer transition-all space-y-1 ${
                       daysPerWeek === item.days
-                        ? 'glass-pill-active border-[#34C759]/40 bg-[#34C759]/10 shadow-[0_0_20px_rgba(52,199,89,0.2)]'
-                        : 'glass-surface hover:border-white/20'
+                        ? 'fitness-pill-active border-[#A1F524]/40 bg-[#A1F524]/10 shadow-[0_0_20px_rgba(161,245,36,0.2)]'
+                        : 'fitness-surface hover:border-white/20'
                     }`}
                   >
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-black text-[#F5F5F7]">{item.label}</span>
-                      {daysPerWeek === item.days && <span className="text-[#34C759] font-black">✓</span>}
+                      {daysPerWeek === item.days && <span className="text-[#A1F524] font-black">✓</span>}
                     </div>
                     <p className="text-[11px] font-bold text-[#8E8E93]">{item.sub}</p>
-                    <span className="inline-block px-2 py-0.5 rounded-full bg-white/[0.06] text-[10px] text-[#34C759] font-black">
+                    <span className="inline-block px-2 py-0.5 rounded-full bg-white/[0.06] text-[10px] text-[#A1F524] font-black">
                       {item.rest}
                     </span>
                   </div>
@@ -191,13 +191,13 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
               <div className="flex gap-2 mt-4">
                 <button
                   onClick={() => setStep(1)}
-                  className="px-4 py-3 rounded-full glass-pill text-xs font-black text-[#8E8E93]"
+                  className="px-4 py-3 rounded-full fitness-pill text-xs font-black text-[#8E8E93]"
                 >
                   ← Atrás
                 </button>
                 <button
                   onClick={() => setStep(3)}
-                  className="flex-1 py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-95 transition-all"
+                  className="flex-1 py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-95 transition-all"
                 >
                   Siguiente: Nivel & Enfoque →
                 </button>
@@ -221,8 +221,8 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                       onClick={() => setLevel(l)}
                       className={`py-2 rounded-full text-xs font-black transition-all ${
                         level.startsWith(l)
-                          ? 'bg-[#34C759] text-black shadow-md'
-                          : 'glass-pill text-[#8E8E93] hover:text-white'
+                          ? 'bg-[#A1F524] text-black shadow-md'
+                          : 'fitness-pill text-[#8E8E93] hover:text-white'
                       }`}
                     >
                       {l}
@@ -240,20 +240,20 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                   value={focus}
                   onChange={(e) => setFocus(e.target.value)}
                   placeholder="Ej: Pecho superior, Hombros 3D y Brazos"
-                  className="w-full glass-surface rounded-[18px] px-4 py-3 text-xs text-[#F5F5F7] font-bold placeholder-[#636366] border border-white/10 outline-none focus:border-[#64D2FF]"
+                  className="w-full fitness-surface rounded-[18px] px-4 py-3 text-xs text-[#F5F5F7] font-bold placeholder-[#636366] border border-white/10 outline-none focus:border-[#64D2FF]"
                 />
               </div>
 
               <div className="flex gap-2 mt-4">
                 <button
                   onClick={() => setStep(2)}
-                  className="px-4 py-3 rounded-full glass-pill text-xs font-black text-[#8E8E93]"
+                  className="px-4 py-3 rounded-full fitness-pill text-xs font-black text-[#8E8E93]"
                 >
                   ← Atrás
                 </button>
                 <button
                   onClick={() => setStep(4)}
-                  className="flex-1 py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-95 transition-all"
+                  className="flex-1 py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-95 transition-all"
                 >
                   Siguiente: Equipamiento →
                 </button>
@@ -277,8 +277,8 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                     onClick={() => setEquipment(eq)}
                     className={`p-3 rounded-[18px] cursor-pointer text-xs font-black flex items-center justify-between ${
                       equipment === eq
-                        ? 'glass-pill-active border-[#34C759]/40 text-[#34C759]'
-                        : 'glass-surface text-[#8E8E93]'
+                        ? 'fitness-pill-active border-[#A1F524]/40 text-[#A1F524]'
+                        : 'fitness-surface text-[#8E8E93]'
                     }`}
                   >
                     <span>{eq}</span>
@@ -299,7 +299,7 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                       className={`py-2 rounded-full text-xs font-black transition-all ${
                         duration === d
                           ? 'bg-[#64D2FF] text-black shadow-md'
-                          : 'glass-pill text-[#8E8E93]'
+                          : 'fitness-pill text-[#8E8E93]'
                       }`}
                     >
                       {d}m
@@ -311,14 +311,14 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
               <div className="flex gap-2 mt-4">
                 <button
                   onClick={() => setStep(3)}
-                  className="px-4 py-3 rounded-full glass-pill text-xs font-black text-[#8E8E93]"
+                  className="px-4 py-3 rounded-full fitness-pill text-xs font-black text-[#8E8E93]"
                 >
                   ← Atrás
                 </button>
                 <button
                   onClick={handleGenerate}
                   disabled={loading}
-                  className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#64D2FF] to-[#34C759] text-black font-black text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  className="flex-1 py-3 rounded-full bg-gradient-to-r from-[#64D2FF] to-[#A1F524] text-black font-black text-xs shadow-lg active:scale-95 transition-all flex items-center justify-center gap-1.5 disabled:opacity-50"
                 >
                   {loading ? (
                     <span>Diseñando rutina con Gemini IA...</span>
@@ -336,9 +336,9 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
           {/* Step 6: Routine Preview */}
           {step === 6 && generatedRoutine && (
             <div className="space-y-4 animate-fade-in">
-              <div className="glass-surface p-4 rounded-[26px] border-t-white/20 space-y-2">
+              <div className="fitness-surface p-4 rounded-[26px] border-t-white/20 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="px-3 py-1 rounded-full bg-[#34C759]/15 text-[#34C759] text-xs font-black border border-[#34C759]/25">
+                  <span className="px-3 py-1 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-xs font-black border border-[#A1F524]/25">
                     {generatedRoutine.targetDaysPerWeek} Días / Semana
                   </span>
                   <span className="text-xs font-bold text-[#8E8E93] uppercase">Gemini 2.0 Flash</span>
@@ -354,10 +354,10 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
                   Estructura de la Rutina
                 </h4>
                 {generatedRoutine.days.map((day, dIdx) => (
-                  <div key={dIdx} className="glass-pill p-3.5 rounded-[22px] space-y-2">
+                  <div key={dIdx} className="fitness-pill p-3.5 rounded-[22px] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-black text-[#F5F5F7]">{day.dayName}</span>
-                      <span className="text-[10px] font-bold text-[#34C759]">{day.focus}</span>
+                      <span className="text-[10px] font-bold text-[#A1F524]">{day.focus}</span>
                     </div>
 
                     <div className="space-y-1.5 pt-1 border-t border-white/5">
@@ -379,7 +379,7 @@ export const AiRoutineBuilderModal: React.FC<AiRoutineBuilderModalProps> = ({
 
               <button
                 onClick={handleSaveAndActivate}
-                className="w-full py-3.5 rounded-full bg-[#34C759] text-black font-black text-xs shadow-[0_0_24px_rgba(52,199,89,0.3)] active:scale-95 transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-[0_0_24px_rgba(161,245,36,0.3)] active:scale-95 transition-all flex items-center justify-center gap-1.5"
               >
                 <span>🚀</span>
                 <span>Guardar y Activar Rutina en Aesthetix</span>

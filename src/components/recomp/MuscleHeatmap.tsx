@@ -7,7 +7,7 @@ import { useRecompStore } from '@/stores/useRecompStore';
 import { getMusclesForExercise } from '@/lib/muscleMap';
 
 const HIGHLIGHT_COLORS = [
-  '#34C759', // 1 set
+  '#A1F524', // 1 set
   '#86E39E', // 2 sets
   '#FECA57', // 3 sets
   '#FF9F43', // 4 sets
@@ -51,7 +51,7 @@ export const MuscleHeatmap: React.FC = () => {
   }, [trainingLogs]);
 
   return (
-    <div className="glass-surface rounded-[28px] p-5 border-t-white/20 shadow-lg space-y-3">
+    <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-[28px] p-5 border-t-white/20 shadow-sm space-y-3">
       <div className="flex items-center justify-between pb-1 border-b border-white/5">
         <div className="flex items-center gap-2">
           <span className="text-base">🔥</span>
@@ -93,10 +93,10 @@ export const MuscleHeatmap: React.FC = () => {
 
       {/* Legend */}
       <div className="flex justify-center gap-1.5 pt-1 flex-wrap">
-        <span className="glass-pill px-2.5 py-0.5 rounded-full text-[10px] font-black text-[#8E8E93]">
+        <span className="bg-[#2C2C2E] border border-white/[0.08] px-2.5 py-0.5 rounded-full text-[10px] font-black text-[#8E8E93]">
           0 (Descansado)
         </span>
-        <span className="px-2.5 py-0.5 rounded-full bg-[#34C759]/15 text-[#34C759] border border-[#34C759]/25 text-[10px] font-black">
+        <span className="px-2.5 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] border border-[#A1F524]/25 text-[10px] font-black">
           1-2 Series
         </span>
         <span className="px-2.5 py-0.5 rounded-full bg-[#FECA57]/15 text-[#FECA57] border border-[#FECA57]/25 text-[10px] font-black">

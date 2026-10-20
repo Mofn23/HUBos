@@ -2,14 +2,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { useHubStore } from '@/stores/useHubStore';
-import { useRecompStore, RecompTab } from '@/stores/useRecompStore';
+import { useRecompStore } from '@/stores/useRecompStore';
 import { getTodayKey } from '@/lib/date';
 import { calculateDailyNutrition } from '@/lib/nutritionEngine';
 import { initNativeNotifications } from '@/lib/notifications';
 import { RecompHeader } from './RecompHeader';
 import { CalorieRing } from './CalorieRing';
 import { MacroBars } from './MacroBars';
-import { GlycogenPumpMeter } from './GlycogenPumpMeter';
 import { QuickStatsRow } from './QuickStatsRow';
 import { WaterTracker } from './WaterTracker';
 import { SupplementTracker } from './SupplementTracker';
@@ -17,14 +16,11 @@ import { AchievementsGrid } from './AchievementsGrid';
 import { MealLog } from './MealLog';
 import { MealCaptureModal } from './MealCaptureModal';
 import { MealsSection } from './MealsSection';
-import { TrainingSection } from './TrainingSection';
+import { BodyRecordSection } from './BodyRecordSection';
 import { ProfilePage } from './ProfilePage';
 import { AlertToast } from '../common/AlertToast';
 import { AchievementUnlockedToast } from './AchievementUnlockedToast';
-import {
-  IconHome,
-  IconDumbbell,
-} from '../common/Icons';
+import { IconActivity, IconHome } from '../common/Icons';
 
 export const RecompView: React.FC = () => {
   const {
@@ -110,20 +106,13 @@ export const RecompView: React.FC = () => {
     }
   }, [meals, addAlert]);
 
-  const nutrition = calculateDailyNutrition(meals, selectedDate, targetCalories, targetCarbs);
+  const nutrition = calculateDailyNutrition(meals, selectedDate);
   const selectedDayMeals = meals.filter((m) => m.date === selectedDate);
   const selectedDayWater = waterLogs[selectedDate] || 0;
 
   return (
-    <div className="flex-1 flex flex-col px-4 pt-16 pb-36 overflow-y-auto no-scrollbar animate-fade-in relative">
-      {/* Ambient Radial Glowing Orbs for Glass Refraction */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
-        <div className="absolute -top-16 -left-16 w-80 h-80 rounded-full bg-[#34C759]/10 blur-[100px]" />
-        <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-[#BF5AF2]/10 blur-[110px]" />
-        <div className="absolute -bottom-16 left-1/4 w-80 h-80 rounded-full bg-[#0A84FF]/10 blur-[100px]" />
-      </div>
-
-      {/* Achievement Unlocked Toast Notification */}
+    <div className="flex-1 flex flex-col px-4 pt-16 pb-36 overflow-y-auto no-scrollbar animate-fade-in motion-reduce:animate-none relative">
+{/* Achievement Unlocked Toast Notification */}
       <AchievementUnlockedToast />
 
       {/* Dynamic Island In-App Alert */}
@@ -139,8 +128,6 @@ export const RecompView: React.FC = () => {
           <CalorieRing
             consumed={nutrition.consumedCalories}
             target={targetCalories}
-            difference={nutrition.calorieDifference}
-            status={nutrition.status}
           />
 
           {/* 3. MacroBars */}
@@ -150,10 +137,7 @@ export const RecompView: React.FC = () => {
             fat={{ consumed: nutrition.consumedFat, target: targetFat }}
           />
 
-          {/* 4. Glycogen Pump Meter */}
-          <GlycogenPumpMeter percent={nutrition.glycogenPumpPercent || 50} />
-
-          {/* 5. 3 Quick Stat Cards */}
+          {/* 4. 3 Quick Stat Cards */}
           <QuickStatsRow />
 
           {/* 6. Hidratación (12 Glass Circles Grid) */}
@@ -189,9 +173,9 @@ export const RecompView: React.FC = () => {
         </div>
       )}
 
-      {currentTab === 'training' && (
+      {currentTab === 'progress' && (
         <div className="relative z-10">
-          <TrainingSection />
+          <BodyRecordSection />
         </div>
       )}
 
@@ -201,20 +185,20 @@ export const RecompView: React.FC = () => {
         </div>
       )}
 
-      {/* Native Floating Bottom Nav Dock (Glassmorphism Elevated Capsule) */}
+      {/* Floating bottom navigation */}
       <div
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 transition-[opacity,transform] duration-200 motion-reduce:transition-none ${
           isModalOpen || isMealModalOpen
             ? 'opacity-0 pointer-events-none translate-y-24 scale-90'
             : 'opacity-100 translate-y-0 scale-100'
         }`}
       >
-        <nav className="glass-surface-elevated rounded-full p-1.5 flex items-center gap-1 shadow-2xl backdrop-blur-3xl border border-white/20">
+        <nav className="bg-[#1C1C1E] border border-white/[0.08] rounded-full p-1.5 flex items-center gap-1 shadow-sm border border-white/[0.08]">
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-colors duration-150 motion-reduce:transition-none ${
               currentTab === 'dashboard'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-[#3A3A3C] text-[#A1F524] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95 motion-reduce:active:scale-100'
             }`}
             onClick={() => setCurrentTab('dashboard')}
             aria-label="Inicio"
@@ -222,10 +206,10 @@ export const RecompView: React.FC = () => {
             <IconHome className="w-5 h-5" />
           </button>
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-colors duration-150 motion-reduce:transition-none ${
               currentTab === 'meals'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-[#3A3A3C] text-[#A1F524] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95 motion-reduce:active:scale-100'
             }`}
             onClick={() => setCurrentTab('meals')}
             aria-label="Comidas"
@@ -233,21 +217,22 @@ export const RecompView: React.FC = () => {
             <span className="text-lg leading-none">🍴</span>
           </button>
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
-              currentTab === 'training'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-colors duration-150 motion-reduce:transition-none ${
+              currentTab === 'progress'
+                ? 'bg-[#3A3A3C] text-[#A1F524] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95 motion-reduce:active:scale-100'
             }`}
-            onClick={() => setCurrentTab('training')}
-            aria-label="Entrenamiento"
+            onClick={() => setCurrentTab('progress')}
+            aria-label="Registro corporal"
+            title="Registro corporal"
           >
-            <IconDumbbell className="w-5 h-5" />
+            <IconActivity className="w-5 h-5" />
           </button>
           <button
-            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-all ${
+            className={`px-4 py-2.5 rounded-full flex items-center justify-center transition-colors duration-150 motion-reduce:transition-none ${
               currentTab === 'profile'
-                ? 'glass-pill-active text-[#34C759] shadow-sm border border-white/20'
-                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95'
+                ? 'bg-[#3A3A3C] text-[#A1F524] shadow-sm border border-white/20'
+                : 'text-[#8E8E93] hover:text-[#F5F5F7] active:scale-95 motion-reduce:active:scale-100'
             }`}
             onClick={() => setCurrentTab('profile')}
             aria-label="Perfil y Ajustes"

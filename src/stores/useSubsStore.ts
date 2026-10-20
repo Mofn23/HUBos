@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { nativeStorage } from '@/lib/nativeStorage';
+import { getTodayKey } from '@/lib/date';
 
 export type SubFrequency = 'weekly' | 'monthly' | 'bimonthly' | 'quarterly' | 'yearly';
-export type SubTab = 'all' | 'timeline' | 'insights' | 'cancellation';
+export type SubTab = 'all' | 'timeline';
 
 export interface SubscriptionItem {
   id: string;
@@ -20,6 +21,7 @@ export interface SubscriptionItem {
   reminderDays: number; // e.g. 3, 1, 0
   status: 'active' | 'paused' | 'canceled';
   lastPaidDate?: string; // YYYY-MM-DD
+  nextBillingDate?: string; // YYYY-MM-DD
   tags: string[];
   createdAt: string;
 }
@@ -60,6 +62,52 @@ const DEFAULT_CATEGORIES = [
   'Música',
   'Servicios',
 ];
+
+function parseDateKey(key: string): Date {
+  const [year, month, day] = key.split('-').map(Number);
+  return new Date(year, month - 1, day, 12);
+}
+
+function toDateKey(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function advanceBillingDate(date: Date, frequency: SubFrequency, billingDay: number): Date {
+  const next = new Date(date);
+  if (frequency === 'weekly') {
+    next.setDate(next.getDate() + 7);
+    return next;
+  }
+
+  const months = frequency === 'bimonthly' ? 2 : frequency === 'quarterly' ? 3 : frequency === 'yearly' ? 12 : 1;
+  const targetMonth = new Date(next.getFullYear(), next.getMonth() + months, 1, 12);
+  const lastDay = new Date(targetMonth.getFullYear(), targetMonth.getMonth() + 1, 0).getDate();
+  return new Date(targetMonth.getFullYear(), targetMonth.getMonth(), Math.min(billingDay || date.getDate(), lastDay), 12);
+}
+
+function getNextBillingDate(sub: SubscriptionItem, todayKey: string): string {
+  const today = parseDateKey(todayKey);
+  if (sub.nextBillingDate) {
+    let next = advanceBillingDate(parseDateKey(sub.nextBillingDate), sub.frequency, sub.billingDay);
+    while (next <= today) next = advanceBillingDate(next, sub.frequency, sub.billingDay);
+    return toDateKey(next);
+  }
+
+  if (sub.frequency === 'weekly') return toDateKey(advanceBillingDate(today, 'weekly', sub.billingDay));
+
+  const anchor = parseDateKey(sub.createdAt.slice(0, 10));
+  const monthInterval = sub.frequency === 'bimonthly' ? 2 : sub.frequency === 'quarterly' ? 3 : sub.frequency === 'yearly' ? 12 : 1;
+  let due = new Date(today.getFullYear(), anchor.getMonth(), Math.min(sub.billingDay || anchor.getDate(), new Date(today.getFullYear(), anchor.getMonth() + 1, 0).getDate()), 12);
+  while (due < today) {
+    const next = new Date(due.getFullYear(), due.getMonth() + monthInterval, 1, 12);
+    due = new Date(next.getFullYear(), next.getMonth(), Math.min(sub.billingDay || anchor.getDate(), new Date(next.getFullYear(), next.getMonth() + 1, 0).getDate()), 12);
+  }
+  if (due.getTime() === today.getTime()) due = advanceBillingDate(due, sub.frequency, sub.billingDay);
+  return toDateKey(due);
+}
 
 const INITIAL_SUBSCRIPTIONS: SubscriptionItem[] = [
   {
@@ -183,10 +231,10 @@ export const useSubsStore = create<SubsState>()(
         })),
 
       paySubscription: (id) => {
-        const todayStr = new Date().toISOString().split('T')[0];
+        const todayStr = getTodayKey();
         set((state) => {
           const sub = state.subscriptions.find((s) => s.id === id);
-          if (!sub) return state;
+          if (!sub || sub.lastPaidDate === todayStr) return state;
 
           const paymentRecord: PaymentRecord = {
             id: `pay-${Date.now()}`,
@@ -198,7 +246,7 @@ export const useSubsStore = create<SubsState>()(
 
           return {
             subscriptions: state.subscriptions.map((s) =>
-              s.id === id ? { ...s, lastPaidDate: todayStr } : s
+              s.id === id ? { ...s, lastPaidDate: todayStr, nextBillingDate: getNextBillingDate(s, todayStr) } : s
             ),
             paymentHistory: [paymentRecord, ...state.paymentHistory],
           };

@@ -20,7 +20,7 @@ export const SupplementTracker: React.FC<SupplementTrackerProps> = ({
     <div className="mb-4 space-y-2.5">
       {/* Header */}
       <div className="flex items-center justify-between px-1">
-        <div className="glass-pill px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+        <div className="bg-[#2C2C2E] border border-white/[0.08] px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
           <span>💊</span>
           <span className="text-xs font-black text-[#F5F5F7]">Suplementos</span>
         </div>
@@ -35,15 +35,15 @@ export const SupplementTracker: React.FC<SupplementTrackerProps> = ({
           return (
             <div
               key={supp.id}
-              className={`glass-surface rounded-[22px] p-3.5 flex items-center justify-between cursor-pointer active:scale-[0.99] transition-all border ${
+              className={`bg-[#1C1C1E] border border-white/[0.08] rounded-[22px] p-3.5 flex items-center justify-between cursor-pointer active:scale-[0.99] motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none border ${
                 isTaken
-                  ? 'border-[#34C759]/30 bg-gradient-to-r from-white/[0.06] to-[#34C759]/10'
+                  ? 'border-[#A1F524]/30 bg-gradient-to-r from-white/[0.06] to-[#A1F524]/10'
                   : 'hover:border-white/20'
               }`}
               onClick={() => onToggle(supp.id)}
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-lg shadow-sm">
+                <div className="w-10 h-10 rounded-2xl bg-[#2C2C2E] border border-white/[0.08] flex items-center justify-center text-lg shadow-sm">
                   {supp.icon || '💊'}
                 </div>
 
@@ -59,10 +59,10 @@ export const SupplementTracker: React.FC<SupplementTrackerProps> = ({
 
               {/* Custom Liquid Glass Checkbox */}
               <div
-                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black transition-all ${
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-black transition-colors duration-150 motion-reduce:transition-none ${
                   isTaken
-                    ? 'bg-[#34C759] text-black shadow-[0_0_12px_#34C759]'
-                    : 'glass-pill text-transparent'
+                    ? 'bg-[#A1F524] text-black '
+                    : 'bg-[#2C2C2E] border border-white/[0.08] text-transparent'
                 }`}
               >
                 {isTaken ? '✓' : ''}

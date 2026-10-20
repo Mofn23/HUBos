@@ -7,19 +7,15 @@ import { AppleFitnessTab } from './appleFitness/AppleFitnessNavDock';
 
 interface AesthetixHeaderProps {
   activeTab: AppleFitnessTab;
-  onOpenAiBuilder: () => void;
   onOpenLiveWorkout: () => void;
-  onOpenProfile?: () => void;
 }
 
 export const AesthetixHeader: React.FC<AesthetixHeaderProps> = ({
   activeTab,
-  onOpenAiBuilder,
   onOpenLiveWorkout,
-  onOpenProfile,
 }) => {
   const { setCurrentApp } = useHubStore();
-  const { currentStreak, activeSession, workoutDaysTarget } = useAesthetixStore();
+  const { activeSession } = useAesthetixStore();
 
   // Formatted Apple Fitness date e.g. "FRIDAY, SEPTEMBER 25" or Spanish "LUNES, 19 DE OCTUBRE"
   const formattedDate = new Intl.DateTimeFormat('es-ES', {
@@ -29,10 +25,10 @@ export const AesthetixHeader: React.FC<AesthetixHeaderProps> = ({
   }).format(new Date()).toUpperCase();
 
   const tabTitles: Record<AppleFitnessTab, string> = {
-    summary: 'Summary',
-    workouts: 'Workouts',
-    awards: 'Awards',
-    profile: 'Profile',
+    summary: 'Resumen',
+    workouts: 'Entrenamientos',
+    awards: 'Premios',
+    profile: 'Perfil',
   };
 
   return (
@@ -48,32 +44,16 @@ export const AesthetixHeader: React.FC<AesthetixHeaderProps> = ({
           <span>HUB</span>
         </button>
 
-        {/* Center: Live Session Pulse or Streak Pill */}
+        {/* A live session remains available without duplicating the streak. */}
         {activeSession ? (
           <button
             onClick={onOpenLiveWorkout}
-            className="h-8 px-3.5 rounded-full bg-[#FA114F]/20 border border-[#FA114F]/40 backdrop-blur-xl text-[#FA114F] text-xs font-black flex items-center gap-2 animate-pulse shadow-[0_0_16px_rgba(250,17,79,0.4)] fitness-press"
+          className="h-8 px-3.5 rounded-full bg-[#FA114F]/15 border border-[#FA114F]/30 text-[#FA114F] text-xs font-black flex items-center gap-2 fitness-press"
           >
             <span className="w-2 h-2 rounded-full bg-[#FA114F]" />
             <span>En vivo: {activeSession.dayName || 'Entreno'}</span>
           </button>
-        ) : (
-          <div className="fitness-card h-8 px-3 rounded-full flex items-center gap-1.5 text-xs font-black text-[#FFD60A] border-white/10">
-            <span>🔥</span>
-            <span>{currentStreak}d racha</span>
-            <span className="text-[10px] text-[#8E8E93] font-bold">({workoutDaysTarget}d/sem)</span>
-          </div>
-        )}
-
-        {/* Right: AI Builder Button */}
-        <button
-          onClick={onOpenAiBuilder}
-          className="fitness-card h-8 px-3 rounded-full flex items-center gap-1.5 text-xs font-black text-[#00F0FF] hover:text-white hover:border-[#00F0FF]/40 fitness-press shadow-sm"
-          title="Crear rutina con IA"
-        >
-          <span>✨</span>
-          <span>IA Builder</span>
-        </button>
+        ) : <span aria-hidden="true" />}
       </div>
 
       {/* Big Apple Fitness Title & Date */}

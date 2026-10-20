@@ -5,17 +5,12 @@ export interface DailyNutritionSummary {
   consumedProtein: number;
   consumedCarbs: number;
   consumedFat: number;
-  calorieDifference: number; // target - consumed
-  status: 'optimal' | 'deficit' | 'surplus';
-  glycogenPumpPercent: number; // 0 - 100%
   mealsCount: number;
 }
 
 export function calculateDailyNutrition(
   meals: MealItem[],
-  dateStr: string,
-  targetCalories: number,
-  targetCarbs: number
+  dateStr: string
 ): DailyNutritionSummary {
   const dayMeals = meals.filter((m) => m.date === dateStr);
 
@@ -31,28 +26,11 @@ export function calculateDailyNutrition(
     consumedFat += Number(meal.fat) || 0;
   }
 
-  const calorieDiff = targetCalories - consumedCalories;
-  let status: 'optimal' | 'deficit' | 'surplus' = 'optimal';
-  if (calorieDiff > 250) {
-    status = 'deficit';
-  } else if (calorieDiff < -250) {
-    status = 'surplus';
-  }
-
-  // Glycogen Pump Meter calculation (carbs consumed vs target carbs)
-  const glycogenPumpPercent = Math.min(
-    100,
-    Math.round((consumedCarbs / Math.max(targetCarbs, 100)) * 100)
-  );
-
   return {
     consumedCalories,
     consumedProtein,
     consumedCarbs,
     consumedFat,
-    calorieDifference: calorieDiff,
-    status,
-    glycogenPumpPercent,
     mealsCount: dayMeals.length,
   };
 }

@@ -108,11 +108,11 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   return (
     <div className="fixed inset-0 z-[99999] flex items-end justify-center">
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/70" onClick={onClose} />
 
-      {/* Claymorphism Bottom Sheet Modal */}
+      {/* Fitness style Bottom Sheet Modal */}
       <div
-        className="relative clay-surface-elevated rounded-t-[36px] p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-2xl"
+        className="relative bg-[#1C1C1E] border border-white/10 rounded-t-3xl p-6 pb-20 z-20 animate-sheet-up space-y-4 max-h-[90vh] overflow-y-auto no-scrollbar shadow-xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -127,7 +127,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-full clay-pill flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-95 transition-all cursor-pointer"
+            className="w-10 h-10 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
           >
             <span className="text-base font-bold">✕</span>
           </button>
@@ -140,7 +140,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               Nombre del Servicio
             </label>
             <div className="flex gap-2.5">
-              <div className="w-12 h-12 rounded-2xl clay-pill flex items-center justify-center text-2xl shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-2xl shrink-0">
                 {emoji}
               </div>
               <input
@@ -148,7 +148,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 value={name}
                 onChange={(e) => handleNameChange(e.target.value)}
                 placeholder="ej: Spotify, Netflix, ChatGPT, iCloud"
-                className="clay-pill flex-1 h-12 px-4 text-sm font-black text-[#F5F5F7] placeholder-[#636366] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                className="bg-[#2C2C2E] border border-white/5 flex-1 h-12 px-4 text-sm font-black text-[#F5F5F7] placeholder-[#636366] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
                 required
               />
             </div>
@@ -161,10 +161,10 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 key={em}
                 type="button"
                 onClick={() => setEmoji(em)}
-                className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg shrink-0 transition-all cursor-pointer ${
+                className={`w-10 h-10 rounded-2xl flex items-center justify-center text-lg shrink-0 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer ${
                   emoji === em
-                    ? 'clay-pill-active border-2 border-[#DE7356] scale-105'
-                    : 'clay-pill opacity-75 hover:opacity-100'
+                    ? 'bg-[#FF375F]/15 border border-[#FF375F]/50 border-2 border-[#FF375F] scale-105'
+                    : 'bg-[#2C2C2E] border border-white/5 opacity-75 hover:opacity-100'
                 }`}
               >
                 {em}
@@ -184,7 +184,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="44900"
-                className="clay-pill h-12 px-4 text-base font-black text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                className="bg-[#2C2C2E] border border-white/5 h-12 px-4 text-base font-black text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
                 required
               />
             </div>
@@ -196,7 +196,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <select
                 value={frequency}
                 onChange={(e) => setFrequency(e.target.value as SubFrequency)}
-                className="clay-pill h-12 px-3 text-xs font-black capitalize text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                className="bg-[#2C2C2E] border border-white/5 h-12 px-3 text-xs font-black capitalize text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
               >
                 <option value="monthly" className="bg-[#191922] text-[#F5F5F7]">Mensual</option>
                 <option value="yearly" className="bg-[#191922] text-[#F5F5F7]">Anual</option>
@@ -218,7 +218,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 value={billingDay}
                 onChange={(e) => setBillingDay(e.target.value)}
                 placeholder="3"
-                className="clay-pill h-12 px-4 text-sm font-black text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                className="bg-[#2C2C2E] border border-white/5 h-12 px-4 text-sm font-black text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
                 required
               />
             </div>
@@ -230,7 +230,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="clay-pill h-12 px-3 text-xs font-black text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#DE7356]/50"
+                className="bg-[#2C2C2E] border border-white/5 h-12 px-3 text-xs font-black text-[#F5F5F7] outline-none focus:ring-1 focus:ring-[#FF375F]/50"
               >
                 {categories.map((c) => (
                   <option key={c} value={c} className="bg-[#191922] text-[#F5F5F7]">
@@ -245,7 +245,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           <div className="pt-4 pb-4 flex justify-center">
             <button
               type="submit"
-              className="clay-btn-accent px-8 py-3.5 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer"
+              className="bg-[#FF375F] rounded-full px-8 py-3.5 text-white font-black text-sm flex items-center justify-center gap-2 active:scale-95 transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
             >
               <span className="text-base font-black">✓</span>
               <span>Guardar Suscripción</span>

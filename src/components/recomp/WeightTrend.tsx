@@ -88,7 +88,7 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm">📈</span>
-          <span className="text-xs font-black text-[#F5F5F7]">Tendencia de Peso (7 Días)</span>
+          <span className="text-xs font-black text-[#F5F5F7]">7 días</span>
         </div>
         <div className="flex items-center gap-2">
           <strong className="text-xs font-black text-[#F5F5F7]">
@@ -131,7 +131,7 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
           <path
             d={graphData.avgPath}
             fill="none"
-            stroke="#34C759"
+            stroke="#A1F524"
             strokeWidth="2.5"
             strokeLinecap="round"
           />
@@ -143,7 +143,7 @@ export const WeightTrend: React.FC<WeightTrendProps> = ({ measurements }) => {
                 cx={graphData.avgPoints[graphData.avgPoints.length - 1]?.x}
                 cy={graphData.avgPoints[graphData.avgPoints.length - 1]?.y}
                 r="5"
-                fill="#34C759"
+                fill="#A1F524"
               />
               <circle
                 cx={graphData.avgPoints[graphData.avgPoints.length - 1]?.x}

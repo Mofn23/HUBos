@@ -30,6 +30,7 @@ export const AnatomyRanksTab: React.FC = () => {
   const [calcWeight, setCalcWeight] = useState<string>('80');
   const [calcReps, setCalcReps] = useState<string>('8');
   const [isCalcOpen, setIsCalcOpen] = useState(false);
+  const [showAllMuscles, setShowAllMuscles] = useState(false);
   const [isGlobalRanksOpen, setIsGlobalRanksOpen] = useState(false);
   const [selectedMuscleForDetail, setSelectedMuscleForDetail] = useState<AnatomicalMuscle | null>(
     null
@@ -55,22 +56,20 @@ export const AnatomyRanksTab: React.FC = () => {
   const allRanksDesc = useMemo(() => getAllRanksCatalog('desc'), []);
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="aesthetix-tab-redesign aesthetix-awards space-y-4 animate-fade-in">
       {/* 1. Overall Rank Hero Bento Card (Symmetry OLED Style) */}
       <div
-        className="glass-surface rounded-[30px] p-5 border-t-white/20 shadow-2xl space-y-4 relative overflow-hidden"
-        style={{
-          boxShadow: `0 12px 40px -10px ${overall.overallTier.color}40`,
-        }}
+        className="fitness-surface rounded-[30px] p-5 border-t-white/20 shadow-2xl space-y-4 relative overflow-hidden"
+        style={{ borderColor: `${overall.overallTier.color}40` }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span
-              className="w-3 h-3 rounded-full shadow-md animate-pulse"
+              className="w-3 h-3 rounded-full shadow-md"
               style={{ backgroundColor: overall.overallTier.color }}
             />
             <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
-              RANGO SYMMETRY
+              RANGO
             </span>
           </div>
 
@@ -84,7 +83,7 @@ export const AnatomyRanksTab: React.FC = () => {
               borderColor: `${overall.overallTier.color}40`,
             }}
           >
-            <span>Rangos Globales</span>
+            <span>Rangos</span>
             <span>→</span>
           </button>
         </div>
@@ -97,13 +96,15 @@ export const AnatomyRanksTab: React.FC = () => {
             >
               {overall.overallTier.label}
             </h2>
-            <p className="text-xs font-bold text-[#E5E5EA]">
-              {overall.overallTier.percentile
-                ? `Eres parte del ${overall.overallTier.percentile.toLowerCase()} más fuerte`
-                : overall.overallTier.description}
-            </p>
+            {overall.overallTier.level > 0 && (
+              <p className="text-xs font-bold text-[#E5E5EA]">
+                {overall.overallTier.percentile
+                  ? `Eres parte del ${overall.overallTier.percentile.toLowerCase()} más fuerte`
+                  : overall.overallTier.description}
+              </p>
+            )}
             <p className="text-[11px] font-bold text-[#8E8E93]">
-              Nivel {overall.overallTier.level} / 25 • {overall.overallTier.description}
+              Nivel {overall.overallTier.level} / 25
             </p>
           </div>
 
@@ -146,16 +147,6 @@ export const AnatomyRanksTab: React.FC = () => {
 
       {/* 2. Interactive 2D Anatomical Human Model (Official Symmetry OLED Model) */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <span className="text-base">🧬</span>
-            <h3 className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
-              Mapa Anatómico de Proporciones
-            </h3>
-          </div>
-          <span className="text-[10px] font-bold text-[#8E8E93]">Color = Rango Muscular</span>
-        </div>
-
         <SymmetryAnatomyModel
           muscleTiers={muscleTiers}
           onSelectMuscle={(muscle) => setSelectedMuscleForDetail(muscle)}
@@ -171,7 +162,7 @@ export const AnatomyRanksTab: React.FC = () => {
           </h3>
           <button
             onClick={() => setIsCalcOpen(!isCalcOpen)}
-            className="text-[11px] font-bold text-[#64D2FF] hover:underline"
+            className="text-[11px] font-bold text-[#A1F524] hover:underline"
           >
             {isCalcOpen ? 'Ocultar Calculadora' : 'Calculadora 1RM'}
           </button>
@@ -179,8 +170,8 @@ export const AnatomyRanksTab: React.FC = () => {
 
         {/* Optional 1RM Quick Calculator Widget */}
         {isCalcOpen && (
-          <div className="glass-surface rounded-[24px] p-4 border border-[#64D2FF]/30 space-y-3 animate-fade-in">
-            <h4 className="text-xs font-black text-[#64D2FF] flex items-center gap-1.5">
+          <div className="fitness-surface rounded-[24px] p-4 border border-[#A1F524]/30 space-y-3 animate-fade-in">
+            <h4 className="text-xs font-black text-[#A1F524] flex items-center gap-1.5">
               <span>⚡</span>
               <span>Calculadora de 1 Repetición Máxima (1RM Epley)</span>
             </h4>
@@ -191,7 +182,7 @@ export const AnatomyRanksTab: React.FC = () => {
                   type="number"
                   value={calcWeight}
                   onChange={(e) => setCalcWeight(e.target.value)}
-                  className="w-full glass-pill rounded-[14px] px-3 py-2 text-xs font-black text-center text-[#F5F5F7]"
+                  className="w-full fitness-pill rounded-[14px] px-3 py-2 text-xs font-black text-center text-[#F5F5F7]"
                 />
               </div>
               <div>
@@ -200,11 +191,11 @@ export const AnatomyRanksTab: React.FC = () => {
                   type="number"
                   value={calcReps}
                   onChange={(e) => setCalcReps(e.target.value)}
-                  className="w-full glass-pill rounded-[14px] px-3 py-2 text-xs font-black text-center text-[#F5F5F7]"
+                  className="w-full fitness-pill rounded-[14px] px-3 py-2 text-xs font-black text-center text-[#F5F5F7]"
                 />
               </div>
-              <div className="flex flex-col items-center justify-center p-2 rounded-[14px] bg-[#64D2FF]/15 border border-[#64D2FF]/30">
-                <span className="text-[9px] font-bold text-[#64D2FF]">1RM Estimado</span>
+              <div className="flex flex-col items-center justify-center p-2 rounded-[14px] bg-[#A1F524]/15 border border-[#A1F524]/30">
+                <span className="text-[9px] font-bold text-[#A1F524]">1RM Estimado</span>
                 <span className="text-base font-black text-[#F5F5F7] font-mono">
                   {estimated1RMCalc} kg
                 </span>
@@ -214,7 +205,9 @@ export const AnatomyRanksTab: React.FC = () => {
         )}
 
         <div className="grid grid-cols-1 gap-2">
-          {(Object.keys(ANATOMY_CONFIG) as AnatomicalMuscle[]).map((muscle) => {
+          {(Object.keys(ANATOMY_CONFIG) as AnatomicalMuscle[])
+            .slice(0, showAllMuscles ? undefined : 3)
+            .map((muscle) => {
             const config = ANATOMY_CONFIG[muscle];
             const tierInfo = muscleTiers[muscle] || TIERS_CATALOG.rubi_2;
 
@@ -222,7 +215,7 @@ export const AnatomyRanksTab: React.FC = () => {
               <div
                 key={muscle}
                 onClick={() => setSelectedMuscleForDetail(muscle)}
-                className="glass-surface rounded-[22px] p-3 flex items-center justify-between border-t-white/10 gap-3 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all group"
+                className="fitness-surface rounded-[22px] p-3 flex items-center justify-between border-t-white/10 gap-3 cursor-pointer hover:border-white/25 active:scale-[0.98] transition-all group"
               >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <span className="text-xl shrink-0">{config.icon}</span>
@@ -264,8 +257,18 @@ export const AnatomyRanksTab: React.FC = () => {
                 </div>
               </div>
             );
-          })}
+            })}
         </div>
+        {Object.keys(ANATOMY_CONFIG).length > 3 && (
+          <button
+            type="button"
+            onClick={() => setShowAllMuscles((shown) => !shown)}
+            aria-expanded={showAllMuscles}
+            className="w-full rounded-full border border-white/10 bg-white/[0.04] py-3 text-xs font-bold text-[#A1F524] transition-colors hover:bg-white/[0.08]"
+          >
+            {showAllMuscles ? 'Mostrar menos' : `Mostrar más · ${Object.keys(ANATOMY_CONFIG).length - 3}`}
+          </button>
+        )}
       </div>
 
       {/* 4. Global Ranks Modal (Symmetry 25-Tier Scale) */}
@@ -281,13 +284,13 @@ export const AnatomyRanksTab: React.FC = () => {
           />
 
           <div
-            className="relative w-full max-w-md glass-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
             onTouchMove={(e) => e.stopPropagation()}
           >
             {/* Header */}
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
               <div>
-                <h3 className="text-sm font-black text-[#F5F5F7]">Rangos Globales</h3>
+                <h3 className="text-sm font-black text-[#F5F5F7]">Rangos</h3>
                 <p className="text-[10px] font-bold text-[#8E8E93]">
                   Escala oficial de fuerza y simetría
                 </p>
@@ -296,7 +299,7 @@ export const AnatomyRanksTab: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsGlobalRanksOpen(false)}
-                className="w-7 h-7 rounded-full glass-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
+                className="w-7 h-7 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -312,7 +315,7 @@ export const AnatomyRanksTab: React.FC = () => {
                     className={`p-3 rounded-[20px] flex items-center justify-between gap-3 border transition-all ${
                       isCurrent
                         ? 'bg-[#F43F5E]/15 border-[#F43F5E]/60 shadow-[0_0_15px_rgba(244,63,94,0.3)]'
-                        : 'glass-surface border-white/5'
+                        : 'fitness-surface border-white/5'
                     }`}
                   >
                     <div className="flex items-center gap-3">
@@ -353,7 +356,7 @@ export const AnatomyRanksTab: React.FC = () => {
             <button
               type="button"
               onClick={() => setIsGlobalRanksOpen(false)}
-              className="w-full py-3 rounded-full bg-[#34C759] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
+              className="w-full py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
             >
               Cerrar
             </button>

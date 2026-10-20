@@ -29,10 +29,8 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
 
   return (
     <div className="space-y-3">
-      {/* Claymorphism Hero Card */}
-      <div className="clay-surface-elevated rounded-[32px] p-6 shadow-2xl flex flex-col items-center justify-center text-center relative overflow-hidden">
-        {/* Subtle accent glow */}
-        <div className="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-20 bg-[#DE7356]/15 rounded-full blur-3xl pointer-events-none" />
+      {/* Fitness-inspired financial summary */}
+      <div className="bg-[#1C1C1E] border border-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center relative overflow-hidden">
 
         <div className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93] mb-1.5">
           Gasto Mensual en Suscripciones
@@ -52,7 +50,7 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
               {formatCurrency(annualTotal, currency)}
             </strong>
           </span>
-          <span className="text-[10px] font-bold clay-pill text-[#DE7356] px-2.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold bg-[#2C2C2E] border border-white/5 text-[#FF375F] px-2.5 py-0.5 rounded-full">
             {activeCount} activas
           </span>
         </div>
@@ -62,18 +60,18 @@ export const HeroFinancials: React.FC<HeroFinancialsProps> = ({
           <div className="w-full mt-4 pt-3 border-t border-white/5 space-y-1.5">
             <div className="flex items-center justify-between text-[11px]">
               <span className="text-[#8E8E93]">Presupuesto Mensual</span>
-              <span className={isOverBudget ? 'text-[#DC2626] font-bold' : 'text-[#DE7356] font-bold'}>
+              <span className={isOverBudget ? 'text-[#DC2626] font-bold' : 'text-[#FF375F] font-bold'}>
                 {budgetRatio}% ({formatCurrency(monthlyBudget || 0, currency)})
               </span>
             </div>
-            <div className="w-full h-2.5 rounded-full clay-pill overflow-hidden p-0.5">
+            <div className="w-full h-2.5 rounded-full bg-[#2C2C2E] border border-white/5 overflow-hidden p-0.5">
               <div
                 className={`h-full rounded-full transition-all duration-700 ${
                   isOverBudget
                     ? 'bg-[#DC2626]'
                     : budgetRatio > 80
                     ? 'bg-[#D97706]'
-                    : 'bg-[#DE7356]'
+                    : 'bg-[#FF375F]'
                 }`}
                 style={{ width: `${Math.min(budgetRatio, 100)}%` }}
               />

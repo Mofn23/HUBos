@@ -13,7 +13,7 @@ interface RecompHeaderProps {
 
 export const RecompHeader: React.FC<RecompHeaderProps> = () => {
   const { userName, setCurrentApp } = useHubStore();
-  const { selectedDate, streak, nutritionStreak } = useRecompStore();
+  const { selectedDate } = useRecompStore();
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
 
   const todayKey = getTodayKey();
@@ -33,11 +33,6 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
     }
   }
 
-  const hour = new Date().getHours();
-  let greeting = 'Buenas noches';
-  if (hour >= 5 && hour < 12) greeting = 'Buenos días';
-  else if (hour >= 12 && hour < 19) greeting = 'Buenas tardes';
-
   return (
     <>
       <header className="mb-4 space-y-2 relative z-20">
@@ -45,7 +40,7 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
         <div className="flex items-center justify-between gap-2">
           {/* Date Selector Pill (Glassmorphism) */}
           <button
-            className="glass-pill h-8 px-3.5 rounded-full text-xs font-black text-[#F5F5F7] inline-flex items-center gap-1.5 shadow-sm hover:border-white/30 active:scale-95 transition-all relative shrink-0"
+            className="bg-[#2C2C2E] border border-white/[0.08] h-8 px-3.5 rounded-full text-xs font-black text-[#F5F5F7] inline-flex items-center gap-1.5 shadow-sm hover:border-white/30 active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none relative shrink-0"
             onClick={() => setIsDateModalOpen(true)}
             aria-label="Seleccionar fecha"
           >
@@ -53,55 +48,33 @@ export const RecompHeader: React.FC<RecompHeaderProps> = () => {
             <span>{dateLabel}</span>
             <span className="text-[10px] text-[#8E8E93] ml-0.5">▾</span>
             {!isToday && (
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#34C759] shadow-[0_0_8px_#34C759]" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#A1F524] " />
             )}
           </button>
 
           <div className="flex items-center gap-2">
-            {/* Unified Streaks Pill (Workout + Nutrition) */}
-            <div
-              className="glass-pill h-8 px-3 rounded-full text-xs font-black shadow-sm inline-flex items-center gap-2"
-              title="Rachas de Entrenamiento y Nutrición"
-            >
-              <div className="flex items-center gap-1">
-                <span>💪</span>
-                <span className="text-[#F5F5F7]">{streak?.currentStreak ?? 0}d</span>
-              </div>
-              <span className="text-white/20">|</span>
-              <div className="flex items-center gap-1">
-                <span>🥑</span>
-                <span style={{ color: nutritionStreak?.hasLoggedToday ? '#34C759' : '#FF9F43' }}>
-                  {nutritionStreak?.currentStreak ?? 0}d
-                </span>
-              </div>
-            </div>
-
             {/* Return to HUB Button */}
             <button
               onClick={() => setCurrentApp('hub')}
-              className="glass-pill h-8 px-3 rounded-full inline-flex items-center gap-1.5 hover:border-white/30 active:scale-95 transition-all text-xs font-black text-[#F5F5F7] shadow-sm group"
+              className="bg-[#2C2C2E] border border-white/[0.08] h-8 px-3 rounded-full inline-flex items-center gap-1.5 hover:border-white/30 active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none text-xs font-black text-[#F5F5F7] shadow-sm group"
               title="Regresar al HUB principal"
               aria-label="Regresar al HUB"
             >
-              <span className="text-sm leading-none group-hover:-translate-x-0.5 transition-transform">‹</span>
+              <span className="text-sm leading-none group-hover:-translate-x-0.5 transition-transform duration-150 motion-reduce:transition-none">‹</span>
               <span className="text-[11px] font-black tracking-tight">HUB</span>
             </button>
           </div>
         </div>
 
-        {/* Greeting Sub-header */}
+        {/* User Sub-header */}
         <div className="px-1 flex items-center justify-between">
-          <span className="text-xs font-bold text-[#8E8E93]">
-            {greeting},{' '}
-            <strong className="text-[#F5F5F7] font-black">{userName}</strong> 👋
+          <span className="text-xs font-bold text-[#F5F5F7]">
+            <strong className="font-black">{userName}</strong> 👋
             {!isToday && (
-              <span className="text-xs text-[#34C759] font-black ml-2">
+              <span className="text-xs text-[#A1F524] font-black ml-2">
                 • {isYesterday ? 'Ayer' : selectedDate}
               </span>
             )}
-          </span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-[#636366]">
-            Recomp AI
           </span>
         </div>
       </header>

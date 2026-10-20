@@ -33,7 +33,7 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
     <div className="mb-8 space-y-3">
       {/* Header */}
       <div className="flex items-center justify-between px-1">
-        <div className="glass-pill px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+        <div className="bg-[#2C2C2E] border border-white/[0.08] px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
           <span>🍽️</span>
           <span className="text-xs font-black text-[#F5F5F7]">Comidas de Hoy</span>
         </div>
@@ -44,8 +44,8 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
 
       {/* Empty State or Meal List */}
       {meals.length === 0 ? (
-        <div className="glass-surface rounded-[28px] p-8 text-center space-y-3.5 flex flex-col items-center justify-center border-t-white/20">
-          <div className="w-14 h-14 rounded-2xl glass-pill flex items-center justify-center text-3xl shadow-inner">
+        <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-[28px] p-8 text-center space-y-3.5 flex flex-col items-center justify-center border-t-white/20">
+          <div className="w-14 h-14 rounded-2xl bg-[#2C2C2E] border border-white/[0.08] flex items-center justify-center text-3xl shadow-inner">
             🍽️
           </div>
           <div className="space-y-1">
@@ -57,7 +57,7 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
             </span>
           </div>
           <button
-            className="px-5 py-2.5 rounded-full bg-[#34C759] text-black font-black text-xs flex items-center gap-1.5 shadow-md active:scale-95 transition-all mt-1"
+            className="px-5 py-2.5 rounded-full bg-[#A1F524] text-black font-black text-xs flex items-center gap-1.5 shadow-sm active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none mt-1"
             onClick={onAddMeal}
           >
             <IconPlus className="w-4 h-4 stroke-[3]" />
@@ -74,10 +74,10 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
               <div
                 key={meal.id}
                 onClick={() => setSelectedMeal(meal)}
-                className="glass-surface rounded-[24px] p-3.5 flex items-center justify-between shadow-sm cursor-pointer hover:border-white/25 active:scale-[0.99] transition-all group"
+                className="bg-[#1C1C1E] border border-white/[0.08] rounded-[24px] p-3.5 flex items-center justify-between shadow-sm cursor-pointer hover:border-white/25 active:scale-[0.99] motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none group"
               >
                 <div className="flex items-center gap-3 overflow-hidden">
-                  <div className="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center text-xl shrink-0 overflow-hidden shadow-inner group-hover:scale-105 transition-transform">
+                  <div className="w-12 h-12 rounded-2xl bg-[#2C2C2E] border border-white/[0.08] flex items-center justify-center text-xl shrink-0 overflow-hidden shadow-inner group-hover:scale-105 transition-transform duration-150 motion-reduce:transition-none">
                     {hasPhoto ? (
                       <img
                         src={meal.imageUrl || meal.imageBase64}
@@ -95,7 +95,7 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
                         {meal.name}
                       </h4>
                       {meal.isAiGenerated && (
-                        <span className="text-[9px] text-[#34C759] font-black animate-pulse">✨</span>
+                        <span className="text-[9px] text-[#A1F524] font-black">✨</span>
                       )}
                     </div>
 
@@ -114,7 +114,7 @@ export const MealLog: React.FC<MealLogProps> = ({ meals, onAddMeal, onDeleteMeal
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0 pl-2">
-                  <div className="glass-pill px-3 py-1.5 rounded-full text-xs font-black text-[#F5F5F7]">
+                  <div className="bg-[#2C2C2E] border border-white/[0.08] px-3 py-1.5 rounded-full text-xs font-black text-[#F5F5F7]">
                     {meal.calories} kcal
                   </div>
                 </div>

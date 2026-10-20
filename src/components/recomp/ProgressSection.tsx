@@ -41,16 +41,16 @@ export const ProgressSection: React.FC = () => {
   const latest = measurements[0];
 
   return (
-    <div className="space-y-5 animate-fade-in pb-12">
+    <div className="space-y-5 animate-fade-in motion-reduce:animate-none pb-12">
       {/* Latest Metrics Hero */}
-      <div className="p-5 rounded-[28px] bg-[#1C1C1E] border border-white/10 shadow-xl space-y-4">
+      <div className="p-5 rounded-[28px] bg-[#1C1C1E] border border-white/10 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-[10px] font-black uppercase tracking-wider text-[#34C759]">
+          <span className="text-[10px] font-black uppercase tracking-wider text-[#A1F524]">
             Composición Corporal
           </span>
           <button
             onClick={() => setIsAddOpen(true)}
-            className="px-3 py-1 rounded-full bg-[#34C759] text-black font-bold text-xs flex items-center gap-1 active:scale-95 transition-all shadow"
+            className="px-3 py-1 rounded-full bg-[#A1F524] text-black font-bold text-xs flex items-center gap-1 active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none shadow"
           >
             <IconPlus className="w-3.5 h-3.5" />
             <span>Registrar Peso</span>
@@ -67,7 +67,7 @@ export const ProgressSection: React.FC = () => {
 
           <div className="p-3.5 rounded-2xl bg-[#141416] border border-white/5 text-center">
             <p className="text-[10px] text-[#8E8E93] font-bold">% Grasa</p>
-            <p className="text-lg font-black text-[#34C759] mt-0.5">
+            <p className="text-lg font-black text-[#A1F524] mt-0.5">
               {latest?.bodyFatPercentage ? `${latest.bodyFatPercentage}%` : '—'}
             </p>
           </div>
@@ -111,7 +111,7 @@ export const ProgressSection: React.FC = () => {
       </div>
 
       {/* Achievements Showcase */}
-      <div className="p-5 rounded-[28px] bg-[#1C1C1E] border border-white/10 shadow-xl space-y-3">
+      <div className="p-5 rounded-[28px] bg-[#1C1C1E] border border-white/10 shadow-sm space-y-3">
         <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
           Logros Desbloqueados
         </h3>
@@ -136,10 +136,10 @@ export const ProgressSection: React.FC = () => {
       {isAddOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div
-            className="fixed inset-0 bg-black/75 backdrop-blur-md animate-fade-in"
+            className="fixed inset-0 bg-black/75  animate-fade-in motion-reduce:animate-none"
             onClick={() => setIsAddOpen(false)}
           />
-          <div className="relative w-full max-w-lg bg-[#18181A] rounded-t-[36px] border-t border-white/10 shadow-2xl p-6 h-auto max-h-[90vh] z-10 space-y-4 animate-slide-up">
+          <div className="relative w-full max-w-lg bg-[#18181A] rounded-t-[36px] border-t border-white/10 shadow-sm p-6 h-auto max-h-[90vh] z-10 space-y-4 animate-slide-up motion-reduce:animate-none">
             <div className="w-12 h-1.5 bg-white/20 rounded-full mx-auto mb-2" />
             <h2 className="text-lg font-black text-[#F5F5F7]">Nueva Medida Corporal</h2>
 
@@ -152,7 +152,7 @@ export const ProgressSection: React.FC = () => {
                   value={weight}
                   onChange={(e) => setWeight(e.target.value)}
                   placeholder="Ej: 75.5"
-                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#34C759]"
+                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#A1F524]"
                 />
               </div>
 
@@ -164,7 +164,7 @@ export const ProgressSection: React.FC = () => {
                   value={bodyFat}
                   onChange={(e) => setBodyFat(e.target.value)}
                   placeholder="Ej: 14.0"
-                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#34C759]"
+                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#A1F524]"
                 />
               </div>
 
@@ -176,7 +176,7 @@ export const ProgressSection: React.FC = () => {
                   value={waist}
                   onChange={(e) => setWaist(e.target.value)}
                   placeholder="Ej: 80"
-                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#34C759]"
+                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#A1F524]"
                 />
               </div>
 
@@ -188,14 +188,14 @@ export const ProgressSection: React.FC = () => {
                   value={arms}
                   onChange={(e) => setArms(e.target.value)}
                   placeholder="Ej: 38.5"
-                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#34C759]"
+                  className="w-full bg-[#242426] border border-white/10 rounded-xl px-3 py-2.5 text-sm text-[#F5F5F7] focus:outline-none focus:border-[#A1F524]"
                 />
               </div>
             </div>
 
             <button
               onClick={handleSaveMeasurement}
-              className="w-full py-3 rounded-2xl bg-[#34C759] text-black font-extrabold text-xs active:scale-98 transition-all shadow-lg mt-2"
+              className="w-full py-3 rounded-2xl bg-[#A1F524] text-black font-extrabold text-xs active:scale-98 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none shadow-sm mt-2"
             >
               Guardar Medición
             </button>

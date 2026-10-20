@@ -28,12 +28,12 @@ export const AppleFitnessNavDock: React.FC<AppleFitnessNavDockProps> = ({
     >
       {/* Live Workout Floating Mini Dynamic Island if active */}
       {activeSession && (
-        <div className="flex justify-center mb-2 animate-bounce">
+        <div className="flex justify-center mb-2">
           <button
             onClick={onOpenLiveWorkout}
             className="px-4 py-1.5 rounded-full bg-[#FA114F] text-white text-xs font-black shadow-[0_0_20px_rgba(250,17,79,0.5)] border border-white/20 flex items-center gap-2 fitness-press"
           >
-            <span className="w-2 h-2 rounded-full bg-white animate-ping" />
+            <span className="w-2 h-2 rounded-full bg-white" />
             <span>En vivo: {activeSession.dayName || 'Entreno'}</span>
             <span className="text-[10px] bg-black/20 px-1.5 py-0.5 rounded-full font-mono">
               Reanudar ›
@@ -92,7 +92,7 @@ export const AppleFitnessNavDock: React.FC<AppleFitnessNavDockProps> = ({
               activeTab === 'summary' ? 'text-[#A1F524] font-black' : 'text-[#8E8E93]'
             }`}
           >
-            Summary
+            Resumen
           </span>
         </button>
 
@@ -115,7 +115,7 @@ export const AppleFitnessNavDock: React.FC<AppleFitnessNavDockProps> = ({
               activeTab === 'workouts' ? 'text-[#A1F524] font-black' : 'text-[#8E8E93]'
             }`}
           >
-            Workouts
+            Entrenos
           </span>
         </button>
 
@@ -138,7 +138,7 @@ export const AppleFitnessNavDock: React.FC<AppleFitnessNavDockProps> = ({
               activeTab === 'awards' ? 'text-[#A1F524] font-black' : 'text-[#8E8E93]'
             }`}
           >
-            Awards
+            Premios
           </span>
         </button>
 
@@ -161,7 +161,7 @@ export const AppleFitnessNavDock: React.FC<AppleFitnessNavDockProps> = ({
               activeTab === 'profile' ? 'text-[#A1F524] font-black' : 'text-[#8E8E93]'
             }`}
           >
-            Profile
+            Perfil
           </span>
         </button>
       </nav>
