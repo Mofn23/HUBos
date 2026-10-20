@@ -37,5 +37,5 @@ tags:
 - [x] Guardado inmediato al añadir ejercicios y al cambiar su orden, con cierre del editor después de añadir.
 - [x] Reordenamiento de ejercicios con controles de flecha y arrastre táctil, con animación.
 - [x] Correcciones de interfaz Aesthetix: contenido libre del dock, regreso al HUB, perfil y encabezado de modal móvil.
-- [x] Registro de versión en `UPDATES.md`, proyecto Xcode y workflow iOS; IPA v2.8.1 preparado para GitHub Actions.
+- [x] Registro de versión en `UPDATES.md`, proyecto Xcode y workflow iOS; IPA v2.8.1 compilado y publicado en GitHub Releases.
 
