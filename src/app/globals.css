@@ -959,6 +959,28 @@ input[type='number'] {
   animation: shrinkWidth linear forwards;
 }
 
+/* Entrada de las notificaciones in-app: misma curva que el resto del sistema. */
+@keyframes notificationIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-notification-in {
+  animation: notificationIn 240ms cubic-bezier(0.32, 0.72, 0.28, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-notification-in {
+    animation: none;
+  }
+}
+
 /* Shared Fitness surfaces for every module, list, sheet and modal. */
 .fitness-surface,
 .fitness-surface-elevated {

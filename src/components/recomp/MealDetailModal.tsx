@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { MealItem, useRecompStore } from '@/stores/useRecompStore';
 import { useStoredPhoto } from '@/lib/useStoredPhoto';
 import { IconTrash } from '../common/Icons';
@@ -20,6 +21,11 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
 }) => {
   const { setIsModalOpen } = useRecompStore();
   const { src: hdPhoto } = useStoredPhoto('meal', meal?.id, meal?.imageUrl || meal?.imageBase64 || null);
+  const [portalRoot, setPortalRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setPortalRoot(document.querySelector<HTMLElement>('.app-frame'));
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -32,7 +38,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
     };
   }, [isOpen, setIsModalOpen]);
 
-  if (!isOpen || !meal) return null;
+  if (!isOpen || !meal || !portalRoot) return null;
 
   const getCategoryBadge = (cat?: string) => {
     switch (cat) {
@@ -64,7 +70,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
     onClose();
   };
 
-  return (
+  return createPortal((
     <div className="fixed inset-0 z-[99999] flex items-end justify-center animate-fade-in motion-reduce:animate-none">
       {/* Backdrop */}
       <div
@@ -84,11 +90,6 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
               <span>{catInfo.icon}</span>
               <span>{catInfo.label}</span>
             </span>
-            {meal.isAiGenerated && (
-              <span className="px-2.5 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] border border-[#A1F524]/25 text-[10px] font-black">
-                ✨ Escaneo con IA
-              </span>
-            )}
           </div>
 
           <button
@@ -111,19 +112,21 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
         )}
 
         {/* Title & Calories Card */}
-        <div className="bg-[#1C1C1E] border border-white/[0.08] p-4.5 rounded-[24px] flex items-center justify-between border-t-white/20 shadow-sm">
-          <div>
-            <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight">{meal.name}</h3>
-            <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
+        <div className="bg-[#1C1C1E] border border-white/[0.08] p-4 rounded-[24px] flex items-start gap-3 border-t-white/20 shadow-sm">
+          <div className="min-w-0 flex-1">
+            <h3 className="text-lg font-black text-[#F5F5F7] tracking-tight leading-tight break-words">
+              {meal.name}
+            </h3>
+            <p className="text-xs font-bold text-[#8E8E93] mt-1">
               Fecha: {meal.date}
             </p>
           </div>
 
-          <div className="bg-[#2C2C2E] border border-white/[0.08] px-4 py-2 rounded-2xl text-right">
-            <span className="text-base font-black text-[#A1F524] block leading-none">
+          <div className="shrink-0 bg-[#2C2C2E] border border-white/[0.08] px-3.5 py-2 rounded-2xl text-right">
+            <span className="text-base font-black text-[#A1F524] block leading-none tabular-nums">
               {meal.calories}
             </span>
-            <span className="text-[9px] font-black text-[#8E8E93] uppercase tracking-wider block mt-0.5">
+            <span className="text-[9px] font-black text-[#8E8E93] uppercase tracking-wider block mt-1">
               kcal
             </span>
           </div>
@@ -196,5 +199,5 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
         </div>
       </div>
     </div>
-  );
+  ), portalRoot);
 };

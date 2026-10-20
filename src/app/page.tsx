@@ -13,7 +13,7 @@ import { useRecompStore } from '@/stores/useRecompStore';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { nativeStorage } from '@/lib/nativeStorage';
 import { ToastNotification } from '@/components/common/ToastNotification';
-import { checkAndNotifyUpcomingSubscriptions } from '@/lib/notifications';
+import { checkAndNotifyUpcomingSubscriptions, initNativeNotifications } from '@/lib/notifications';
 
 export default function Home() {
   const { currentApp, currency, notificationsEnabled, themeMode } = useHubStore();
@@ -24,6 +24,11 @@ export default function Home() {
       checkAndNotifyUpcomingSubscriptions(subscriptions, currency);
     }
   }, [notificationsEnabled, subscriptions, currency]);
+
+  // Programa (o cancela) los recordatorios diarios según el ajuste del usuario.
+  useEffect(() => {
+    initNativeNotifications(notificationsEnabled);
+  }, [notificationsEnabled]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode;

@@ -2,6 +2,46 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.8.3] - 2026-10-20 (Detalle de comida legible y notificaciones unificadas)
+
+### 🍽️ Detalle de la comida
+- El nombre del plato ya no se solapa con la caja de calorías: el texto envuelve en varias líneas y la caja conserva su espacio a la derecha.
+- Corregido el padding de la tarjeta de título (`p-4.5` no existe en Tailwind y no generaba espacio).
+- Retirada la píldora "Escaneo con IA" de la cabecera del modal.
+- El modal se renderiza ahora en un portal sobre `.app-frame`: el encabezado de RecompAI ya no se dibuja por encima de la hoja.
+
+### 🔔 Notificaciones
+- Nuevo componente `InAppNotification` como base única: superficie `#1C1C1E` translúcida, borde tenue, icono circular con acento por tipo, tipografía del sistema y barra de tiempo.
+- Rediseñados con ese lenguaje el toast global, las alertas nutricionales y el aviso de logro; antes cada uno usaba estilos distintos.
+- Entrada breve de 240 ms con soporte para `prefers-reduced-motion`.
+- Inventario nativo de RecompAI: **09:00** progreso físico, 10:00 desayuno, 14:00 almuerzo, 18:00 creatina, 20:30 cena y 21:30 racha; más los recordatorios de pago de suscripciones.
+- Añadido el recordatorio diario de las **09:00** para registrar peso, medidas o foto de progreso.
+- Los recordatorios se reprograman al iniciar la app y respetan el interruptor de notificaciones.
+- Ajustes: tarjeta de notificaciones rediseñada con interruptor, horario visible y botón de prueba.
+
+### ✅ Verificación
+- `npx tsc -p tsconfig.json --noEmit` sin errores.
+- `next build` y exportación estática completados.
+- Revisión visual del modal y de la notificación en viewport de iPhone.
+
+### 📦 Versión y distribución
+- Actualizados `package.json`, `package-lock.json`, el proyecto Xcode y el workflow de iOS a `2.8.3`.
+- El workflow genera `HUBos-2.8.3-codex.ipa`, publica un release numerado por ejecución y lo marca como versión más reciente.
+
+### 📁 Archivos de versión y registro
+- `[MODIFICADO]` `src/components/recomp/MealDetailModal.tsx` - Título, caja de calorías, retirada de la píldora de IA y portal.
+- `[CREADO]` `src/components/common/InAppNotification.tsx` - Tarjeta base de notificaciones in-app.
+- `[MODIFICADO]` `src/components/common/ToastNotification.tsx` - Toast global con el nuevo diseño.
+- `[MODIFICADO]` `src/components/common/AlertToast.tsx` - Alertas nutricionales con el nuevo diseño.
+- `[MODIFICADO]` `src/components/recomp/AchievementUnlockedToast.tsx` - Logros con el nuevo diseño.
+- `[MODIFICADO]` `src/lib/notifications.ts` - Horario único, recordatorio de las 09:00 y cancelación de recordatorios.
+- `[MODIFICADO]` `src/app/page.tsx` - Programación de recordatorios al iniciar y según el interruptor.
+- `[MODIFICADO]` `src/app/globals.css` - Animación de entrada de notificaciones.
+- `[MODIFICADO]` `src/components/hub/HubSettingsSheet.tsx` - Tarjeta de notificaciones con interruptor y horario.
+- `[MODIFICADO]` `package.json`, `package-lock.json`, `ios/App/App.xcodeproj/project.pbxproj`, `.github/workflows/build-ios.yml` - Versión v2.8.3.
+
+---
+
 ## 🚀 [v2.8.2] - 2026-10-20 (RecompAI: galería limpia, fotos HD y escaneo con Gemini más rápido)
 
 ### 🖼️ Galería de comidas

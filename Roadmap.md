@@ -47,3 +47,12 @@ tags:
 - [x] Fotos de progreso corporal con el mismo tratamiento de alta definición.
 - [x] Escaneo con Gemini más rápido: `gemini-3.6-flash` como modelo de visión, JSON nativo, sin razonamiento previo y payload de 896 px.
 - [x] v2.8.2 preparada y enviada al workflow de iOS para publicar el IPA en GitHub Releases.
+
+## 🟢 Fase 5: Detalle de comida y notificaciones (Completada - 2026-10-20)
+- [x] Detalle de comida: nombre sin solaparse con la caja de calorías y padding correcto.
+- [x] Retirada la píldora "Escaneo con IA" del modal.
+- [x] Modal de detalle en portal: el encabezado ya no se dibuja encima de la hoja.
+- [x] Componente único de notificaciones in-app (toast, alertas nutricionales y logros) con el lenguaje Apple Fitness.
+- [x] Recordatorio diario de las 09:00 para registrar el progreso físico en RecompAI.
+- [x] Interruptor de notificaciones y horario visible en Ajustes.
+- [x] Versión v2.8.3 enviada al workflow de iOS.

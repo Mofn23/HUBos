@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useHubStore } from '@/stores/useHubStore';
-import { requestNotificationPermissions, sendLocalNotification } from '@/lib/notifications';
+import { DAILY_REMINDERS, requestNotificationPermissions, sendLocalNotification } from '@/lib/notifications';
 import { nativeStorage, exportAllHubosData } from '@/lib/nativeStorage';
 import { IconSparkles, IconTrash, IconBell, IconRefresh } from '../common/Icons';
 
@@ -38,16 +38,32 @@ export const HubSettingsSheet: React.FC = () => {
 
   const handleTestNotification = async () => {
     const granted = await requestNotificationPermissions();
-    if (granted || true) {
-      await sendLocalNotification(
-        999,
-        '🚀 HUBos: Notificación Nativa Activa',
-        'Tu sistema de recordatorios de comidas y suscripciones está operando al 100% en iOS.'
-      );
-      showToast('🔔 Notificación de prueba enviada.');
-    } else {
+    if (!granted) {
       showToast('Permiso de notificaciones denegado.');
+      return;
     }
+
+    await sendLocalNotification(
+      999,
+      'HUBos',
+      'Las notificaciones están activas. Recibirás tus recordatorios diarios de RecompAI.'
+    );
+    showToast('Notificación de prueba enviada.');
+  };
+
+  const handleToggleNotifications = async () => {
+    const next = !notificationsEnabled;
+
+    if (next) {
+      const granted = await requestNotificationPermissions();
+      if (!granted) {
+        showToast('Permiso de notificaciones denegado.');
+        return;
+      }
+    }
+
+    setNotificationsEnabled(next);
+    showToast(next ? 'Notificaciones activadas.' : 'Notificaciones desactivadas.');
   };
 
   const handleExportBackup = async () => {
@@ -171,23 +187,60 @@ export const HubSettingsSheet: React.FC = () => {
           </div>
 
           {/* Card 3: Notificaciones */}
-          <div className="p-4.5 rounded-[24px] bg-[#1C1C1E] border border-white/5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-base">
-                🔔
+          <div className="p-4 rounded-[24px] bg-[#1C1C1E] border border-white/[0.08] space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="w-10 h-10 rounded-full bg-[#A1F524]/12 flex items-center justify-center shrink-0">
+                  <IconBell className="w-5 h-5 text-[#A1F524]" />
+                </div>
+                <div className="min-w-0">
+                  <h4 className="text-xs font-black text-[#F5F5F7]">Notificaciones</h4>
+                  <p className="text-[11px] font-bold text-[#8E8E93]">Recordatorios diarios y cobros</p>
+                </div>
               </div>
-              <div>
-                <h4 className="text-xs font-black text-[#F5F5F7]">Notificaciones Nativas</h4>
-                <p className="text-[11px] font-bold text-[#8E8E93]">Recordatorios y cobros de iOS</p>
-              </div>
+
+              <button
+                type="button"
+                role="switch"
+                aria-checked={notificationsEnabled}
+                aria-label="Activar o desactivar notificaciones"
+                onClick={handleToggleNotifications}
+                className={`relative h-7 w-12 shrink-0 rounded-full border transition-colors duration-200 motion-reduce:transition-none ${
+                  notificationsEnabled
+                    ? 'bg-[#A1F524] border-[#A1F524]'
+                    : 'bg-[#2C2C2E] border-white/15'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 h-[22px] w-[22px] rounded-full bg-white shadow-sm transition-transform duration-200 ease-out motion-reduce:transition-none ${
+                    notificationsEnabled ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
             </div>
+
+            {notificationsEnabled && (
+              <div className="rounded-2xl bg-[#2C2C2E]/70 border border-white/[0.06] px-3 py-1.5">
+                {DAILY_REMINDERS.map((reminder) => (
+                  <div
+                    key={reminder.id}
+                    className="flex items-center justify-between gap-3 py-1.5 border-b border-white/[0.05] last:border-b-0"
+                  >
+                    <span className="text-[11px] font-bold text-[#F5F5F7]">{reminder.title}</span>
+                    <span className="text-[11px] font-black text-[#8E8E93] tabular-nums">
+                      {String(reminder.hour).padStart(2, '0')}:{String(reminder.minute).padStart(2, '0')}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
 
             <button
               type="button"
               onClick={handleTestNotification}
-              className="bg-[#2C2C2E] border border-white/5 px-3.5 py-2 text-xs font-black text-[#FF375F] active:scale-90 transition-transform duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
+              className="w-full rounded-full bg-[#2C2C2E] border border-white/[0.08] py-2.5 text-xs font-black text-[#F5F5F7] active:scale-[0.98] motion-reduce:active:scale-100 transition-transform duration-150 motion-reduce:transition-none"
             >
-              Probar
+              Probar notificación
             </button>
           </div>
 

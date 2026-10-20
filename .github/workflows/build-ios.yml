@@ -1,4 +1,4 @@
-name: Build HUBos version 2.8.2 (codex)
+name: Build HUBos version 2.8.3 (codex)
 
 on:
   push:
@@ -48,7 +48,7 @@ jobs:
             -destination 'generic/platform=iOS' \
             -archivePath build/HUBos.xcarchive \
             archive \
-            MARKETING_VERSION=2.8.2 \
+            MARKETING_VERSION=2.8.3 \
             CURRENT_PROJECT_VERSION="$BUILD_NUMBER" \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO \
@@ -57,27 +57,27 @@ jobs:
           mkdir -p build/Payload
           cp -R build/HUBos.xcarchive/Products/Applications/App.app build/Payload/
           cd build
-          ditto -c -k --sequesterRsrc --keepParent Payload HUBos-2.8.2-codex.ipa
-          unzip -t HUBos-2.8.2-codex.ipa
+          ditto -c -k --sequesterRsrc --keepParent Payload HUBos-2.8.3-codex.ipa
+          unzip -t HUBos-2.8.3-codex.ipa
 
       - name: Upload IPA artifact
         uses: actions/upload-artifact@v4
         with:
-          name: HUBos-version-2.8.2-codex-IPA
-          path: ios/App/build/HUBos-2.8.2-codex.ipa
+          name: HUBos-version-2.8.3-codex-IPA
+          path: ios/App/build/HUBos-2.8.3-codex.ipa
           if-no-files-found: error
           retention-days: 30
 
       - name: Publish GitHub release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v2.8.2-codex-${{ github.run_number }}
-          name: HUBos version 2.8.2 (codex)
+          tag_name: v2.8.3-codex-${{ github.run_number }}
+          name: HUBos version 2.8.3 (codex)
           body: |
-            Build **${{ github.run_number }}** de HUBos version 2.8.2 (codex).
+            Build **${{ github.run_number }}** de HUBos version 2.8.3 (codex).
 
-            Descarga `HUBos-2.8.2-codex.ipa` desde los archivos de este release. Esta versión corrige la galería de fotos de comida, mejora la calidad HD de las imágenes y acelera el escaneo nutricional con Gemini. El IPA se compila sin certificado de distribución y se puede firmar e instalar desde SideStore o AltStore.
-          files: ios/App/build/HUBos-2.8.2-codex.ipa
+            Descarga `HUBos-2.8.3-codex.ipa` desde los archivos de este release. Esta versión corrige el detalle de la comida (nombre y calorías sin solaparse) y unifica el diseño de las notificaciones, además del recordatorio diario de progreso físico a las 9:00. El IPA se compila sin certificado de distribución y se puede firmar e instalar desde SideStore o AltStore.
+          files: ios/App/build/HUBos-2.8.3-codex.ipa
           make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

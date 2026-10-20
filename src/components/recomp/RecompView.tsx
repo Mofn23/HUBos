@@ -5,7 +5,6 @@ import { useHubStore } from '@/stores/useHubStore';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { getTodayKey } from '@/lib/date';
 import { calculateDailyNutrition } from '@/lib/nutritionEngine';
-import { initNativeNotifications } from '@/lib/notifications';
 import { RecompHeader } from './RecompHeader';
 import { CalorieRing } from './CalorieRing';
 import { MacroBars } from './MacroBars';
@@ -76,11 +75,6 @@ export const RecompView: React.FC = () => {
     };
   }, [setSelectedDate]);
 
-  // Initialize notifications on mount
-  useEffect(() => {
-    initNativeNotifications();
-  }, []);
-
   // Nutritional checks (Sodium, Protein, Creatine)
   useEffect(() => {
     const today = getTodayKey();
@@ -91,7 +85,7 @@ export const RecompView: React.FC = () => {
     if (totalSodium > 2300) {
       addAlert({
         type: 'sodium',
-        title: '⚠️ Exceso de Sodio Detectado',
+        title: 'Exceso de sodio detectado',
         message: `Has acumulado ${totalSodium}mg de sodio hoy. Aumenta tu hidratación.`,
       });
     }
@@ -100,7 +94,7 @@ export const RecompView: React.FC = () => {
     if (hour >= 20 && totalProtein < 120 && todayMeals.length > 0) {
       addAlert({
         type: 'protein',
-        title: '🥩 Meta Proteica Incompleta',
+        title: 'Meta proteica incompleta',
         message: `Llevas ${totalProtein}g de proteína. Te sugerimos un batido o cena alta en proteína.`,
       });
     }

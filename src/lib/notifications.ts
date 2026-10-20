@@ -67,75 +67,102 @@ export async function sendLocalNotification(
   }
 }
 
-export async function initNativeNotifications() {
+/** IDs de los recordatorios diarios de RecompAI (rango 1xx). */
+export const DAILY_REMINDER_IDS = [101, 102, 103, 104, 105, 106];
+
+/**
+ * Horario único de los recordatorios diarios. La UI de ajustes lo usa para
+ * mostrar exactamente cuándo notifica la app.
+ */
+export const DAILY_REMINDERS = [
+  {
+    id: 106,
+    hour: 9,
+    minute: 0,
+    title: 'Progreso físico',
+    body: 'Registra tu peso, tus medidas o una foto de progreso para ver tu evolución real en RecompAI.',
+  },
+  {
+    id: 101,
+    hour: 10,
+    minute: 0,
+    title: 'Desayuno',
+    body: 'Registra tu desayuno o escanea el plato con IA para ajustar tus macros del día.',
+  },
+  {
+    id: 102,
+    hour: 14,
+    minute: 0,
+    title: 'Almuerzo y entrenamiento',
+    body: 'Revisa tus carbohidratos y la rutina que toca hoy.',
+  },
+  {
+    id: 103,
+    hour: 18,
+    minute: 0,
+    title: 'Creatina',
+    body: 'Tu dosis de 3-5 g para mantener la saturación muscular.',
+  },
+  {
+    id: 104,
+    hour: 20,
+    minute: 30,
+    title: 'Cena y cierre de macros',
+    body: 'Completa la proteína que te falta antes de cerrar el día.',
+  },
+  {
+    id: 105,
+    hour: 21,
+    minute: 30,
+    title: 'Racha de nutrición',
+    body: 'Aún no registras comidas hoy. Mantén tu racha con un registro rápido.',
+  },
+] as const;
+
+/** Cancela los recordatorios diarios que ya estén programados en iOS. */
+export async function cancelDailyReminders(): Promise<void> {
   if (!Capacitor.isNativePlatform()) return;
 
   try {
-    const perm = await LocalNotifications.requestPermissions();
-    if (perm.display !== 'granted') return;
-
-    // Flush cache of previously scheduled notifications with daily reminder IDs (101-105)
     const pending = await LocalNotifications.getPending();
-    const routineIds = [101, 102, 103, 104, 105];
-    const toCancel = pending.notifications.filter((n) => routineIds.includes(n.id));
+    const toCancel = pending.notifications.filter((n) => DAILY_REMINDER_IDS.includes(n.id));
     if (toCancel.length > 0) {
       await LocalNotifications.cancel({ notifications: toCancel });
     }
+  } catch (error) {
+    console.warn('[Notifications] Error cancelando recordatorios diarios:', error);
+  }
+}
 
-    // Schedule daily recurrent notifications
+/**
+ * Programa (o cancela) los recordatorios diarios de RecompAI.
+ * Se reprograman desde cero en cada arranque para aplicar cambios de texto u horario.
+ */
+export async function initNativeNotifications(enabled = true) {
+  if (!Capacitor.isNativePlatform()) return;
+
+  try {
+    if (!enabled) {
+      await cancelDailyReminders();
+      return;
+    }
+
+    const perm = await LocalNotifications.requestPermissions();
+    if (perm.display !== 'granted') return;
+
+    await cancelDailyReminders();
+
     await LocalNotifications.schedule({
-      notifications: [
-        {
-          id: 101,
-          title: '🥐 Hora del Desayuno',
-          body: 'Registra tu desayuno o toma una foto para que la IA calcule tus macros.',
-          schedule: {
-            on: { hour: 10, minute: 0 },
-            allowWhileIdle: true,
-          },
-          sound: 'default',
+      notifications: DAILY_REMINDERS.map((reminder) => ({
+        id: reminder.id,
+        title: reminder.title,
+        body: reminder.body,
+        schedule: {
+          on: { hour: reminder.hour, minute: reminder.minute },
+          allowWhileIdle: true,
         },
-        {
-          id: 102,
-          title: '🍲 Almuerzo & Entrenamiento',
-          body: '¡Mantén la energía alta! Revisa tus carbohidratos y tu rutina de hoy.',
-          schedule: {
-            on: { hour: 14, minute: 0 },
-            allowWhileIdle: true,
-          },
-          sound: 'default',
-        },
-        {
-          id: 103,
-          title: '💊 Snack & Creatina',
-          body: 'No olvides tomar tu dosis de 3-5g de creatina para mantener la saturación.',
-          schedule: {
-            on: { hour: 18, minute: 0 },
-            allowWhileIdle: true,
-          },
-          sound: 'default',
-        },
-        {
-          id: 104,
-          title: '🍽️ Cena & Cierre de Macros',
-          body: 'Ajusta tus proteínas y calorías restantes antes de finalizar tu día.',
-          schedule: {
-            on: { hour: 20, minute: 30 },
-            allowWhileIdle: true,
-          },
-          sound: 'default',
-        },
-        {
-          id: 105,
-          title: '🔥 ¡Defiende tu Racha!',
-          body: 'Aún no has registrado tus comidas de hoy. ¡No dejes romper tu racha de nutrición!',
-          schedule: {
-            on: { hour: 21, minute: 30 },
-            allowWhileIdle: true,
-          },
-          sound: 'default',
-        },
-      ],
+        sound: 'default',
+      })),
     });
   } catch (error) {
     console.warn('Local notifications error:', error);
@@ -197,7 +224,7 @@ export async function scheduleAllSubscriptionReminders(
 
         newNotifications.push({
           id: 20000 + (index % 60000),
-          title: `🔔 Recordatorio de Pago: ${sub.name}`,
+          title: `Recordatorio de pago · ${sub.name}`,
           body: bodyText,
           schedule: {
             at: alertDate,
@@ -248,7 +275,7 @@ export function checkAndNotifyUpcomingSubscriptions(
           ? `Tu suscripción a ${sub.name} vence hoy por un valor de $${formattedPrice} ${effectiveCurrency}.`
           : `Tu suscripción a ${sub.name} renovará en ${diff} ${diff === 1 ? 'día' : 'días'} por un valor de $${formattedPrice} ${effectiveCurrency}.`;
 
-      sendLocalNotification(`🔔 Recordatorio de Pago: ${sub.name}`, msg, sub.billingDay * 100);
+      sendLocalNotification(`Recordatorio de pago · ${sub.name}`, msg, sub.billingDay * 100);
     }
   });
 
