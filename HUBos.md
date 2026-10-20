@@ -2,7 +2,7 @@
 tipo: proyecto
 nombre: HUBos
 status: activo
-version_actual: 2.8.1
+version_actual: 2.8.2
 actualizado: 2026-10-20
 area: "[[02_Areas/Desarrollo_y_Tech]]"
 fecha_inicio: 2026-08-13
@@ -29,7 +29,7 @@ tags:
 
 # 🚀 Proyecto: HUBos — Super-App Modular para iOS
 
-> **Versión vigente publicada:** `v2.8.1` · [Release más reciente e IPA para SideStore/AltStore](https://github.com/Mofn23/HUBos/releases/latest). La versión `v2.8.0` se conserva en el historial; cada build de iOS usa un tag único por ejecución.
+> **Versión vigente publicada:** `v2.8.2` · [Release más reciente e IPA para SideStore/AltStore](https://github.com/Mofn23/HUBos/releases/latest). Las versiones `v2.8.1` y `v2.8.0` se conservan en el historial; cada build de iOS usa un tag único por ejecución.
 
 > **Resumen Ejecutivo:** **HUBos** es un contenedor modular unificado y Super-App nativa para iOS (compatible con SideStore / AltStore). Permite ejecutar múltiples aplicaciones completas e independientes dentro de un solo archivo `.ipa`, **superando la restricción estricta de 3 aplicaciones activas de sideloading**.
 
@@ -114,3 +114,4 @@ git push origin main
 - Área vinculada: [[02_Areas/Desarrollo_y_Tech]]
 - MOC de referencia: [[00_Meta/MOCs/MOC_Desarrollo_Software]]
 - Torre de Control Global: [[AI_ATLAS]]
+- 🧭 Bitácora de la última entrega: [[00_Meta/Logs/2026-10-20_Correccion_Galeria_Calidad_Fotos_Gemini_HUBos_v2_8_2|v2.8.2 — Galería, fotos HD y Gemini]]

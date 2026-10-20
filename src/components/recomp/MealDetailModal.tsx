@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { MealItem, useRecompStore } from '@/stores/useRecompStore';
-import { getMealImage } from '@/lib/imageStorage';
+import { useStoredPhoto } from '@/lib/useStoredPhoto';
 import { IconTrash } from '../common/Icons';
 
 interface MealDetailModalProps {
@@ -19,7 +19,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
   onDelete,
 }) => {
   const { setIsModalOpen } = useRecompStore();
-  const [hdPhoto, setHdPhoto] = useState<string | null>(null);
+  const { src: hdPhoto } = useStoredPhoto('meal', meal?.id, meal?.imageUrl || meal?.imageBase64 || null);
 
   useEffect(() => {
     if (isOpen) {
@@ -31,16 +31,6 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
       setIsModalOpen(false);
     };
   }, [isOpen, setIsModalOpen]);
-
-  useEffect(() => {
-    if (meal?.id) {
-      getMealImage(meal.id).then((img) => {
-        if (img) setHdPhoto(img);
-      });
-    } else {
-      setHdPhoto(null);
-    }
-  }, [meal?.id]);
 
   if (!isOpen || !meal) return null;
 
@@ -59,7 +49,7 @@ export const MealDetailModal: React.FC<MealDetailModalProps> = ({
   };
 
   const catInfo = getCategoryBadge(meal.category);
-  const photo = hdPhoto || meal.imageUrl || meal.imageBase64;
+  const photo = hdPhoto;
 
   const handleDelete = () => {
     if (confirm(`¿Eliminar ${meal.name}?`)) {

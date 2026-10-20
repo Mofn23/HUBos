@@ -6,9 +6,10 @@ import { BodyMeasurementEntry, ProgressPhotoItem, useRecompStore } from '@/store
 import { getTodayKey } from '@/lib/date';
 import { calculateDailyNutrition } from '@/lib/nutritionEngine';
 import { callGemini } from '@/lib/gemini';
-import { compressImage, createThumbnail } from '@/lib/image';
+import { AI_MAX_EDGE, AI_QUALITY, compressImage, createThumbnail, PREVIEW_MAX_EDGE, PREVIEW_QUALITY } from '@/lib/image';
 import { deleteProgressPhoto as deleteStoredPhoto, saveProgressPhoto } from '@/lib/imageStorage';
 import { WeightTrend } from './WeightTrend';
+import { StoredPhoto } from './StoredPhoto';
 import { IconCamera, IconPlus, IconSparkles, IconTrash } from '../common/Icons';
 
 const DAY_LABELS = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
@@ -135,14 +136,21 @@ export const BodyRecordSection: React.FC = () => {
     if (!file) return;
     setIsAnalyzingPhoto(true);
     try {
-      const base64 = await compressImage(file, 1200, 0.85);
+      const base64 = await compressImage(file);
       let analysis = 'Foto guardada. Añade una clave de Gemini en Perfil si quieres generar un análisis.';
       if (geminiApiKey) {
         try {
-          analysis = await callGemini(geminiApiKey, [
-            { text: 'Analiza esta foto de progreso físico con un tono respetuoso. Resume composición corporal observable, postura y recomendaciones prácticas para nutrición y entrenamiento durante los próximos 7 días. No infieras datos médicos ni porcentajes exactos.' },
-            { inlineData: { data: base64.replace(/^data:[^;]+;base64,/, ''), mimeType: 'image/jpeg' } },
-          ]);
+          // La IA no necesita la copia HD: con 896 px analiza igual y responde antes.
+          const aiCopy = await createThumbnail(base64, AI_MAX_EDGE, AI_QUALITY);
+          analysis = await callGemini(
+            geminiApiKey,
+            [
+              { text: 'Analiza esta foto de progreso físico con un tono respetuoso. Resume composición corporal observable, postura y recomendaciones prácticas para nutrición y entrenamiento durante los próximos 7 días. No infieras datos médicos ni porcentajes exactos.' },
+              { inlineData: { data: aiCopy.replace(/^data:[^;]+;base64,/, ''), mimeType: 'image/jpeg' } },
+            ],
+            undefined,
+            { timeoutMs: 20000, generationConfig: { maxOutputTokens: 500, temperature: 0.4 } }
+          );
         } catch (error) {
           console.error('Progress photo analysis failed:', error);
           analysis = 'Foto guardada. No se pudo generar el análisis; puedes intentarlo de nuevo más tarde.';
@@ -150,7 +158,7 @@ export const BodyRecordSection: React.FC = () => {
       }
       const photoId = `photo-${Date.now()}`;
       await saveProgressPhoto(photoId, base64);
-      const thumbnail = await createThumbnail(base64, 360, 0.6);
+      const thumbnail = await createThumbnail(base64, PREVIEW_MAX_EDGE, PREVIEW_QUALITY);
       const photo: ProgressPhotoItem = { id: photoId, date: todayKey, type: 'front', imageBase64: thumbnail, aiAnalysis: analysis };
       addProgressPhoto(photo);
       showToast(geminiApiKey ? 'Foto de progreso guardada.' : 'Foto guardada. Configura Gemini para analizarla.');
@@ -265,7 +273,13 @@ export const BodyRecordSection: React.FC = () => {
         {latestPhoto ? (
           <div className="overflow-hidden rounded-2xl bg-[#2C2C2E]">
             <div className="relative aspect-[4/3] w-full overflow-hidden">
-              <img src={latestPhoto.imageBase64} alt={`Foto de progreso del ${latestPhoto.date}`} className="h-full w-full object-cover" />
+              <StoredPhoto
+                kind="progress"
+                id={latestPhoto.id}
+                fallback={latestPhoto.imageBase64}
+                alt={`Foto de progreso del ${latestPhoto.date}`}
+                className="h-full w-full object-cover"
+              />
               <span className="absolute bottom-3 left-3 rounded-full bg-black/65 px-3 py-1 text-xs font-bold text-white">{latestPhoto.date}</span>
               <button type="button" onClick={() => void handleDeletePhoto(latestPhoto.id)} className="absolute right-3 top-3 rounded-full bg-black/65 p-2 text-white" aria-label="Eliminar foto"><IconTrash className="w-4 h-4" /></button>
             </div>

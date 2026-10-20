@@ -39,3 +39,11 @@ tags:
 - [x] Correcciones de interfaz Aesthetix: contenido libre del dock, regreso al HUB, perfil y encabezado de modal móvil.
 - [x] Registro de versión en `UPDATES.md`, proyecto Xcode y workflow iOS; IPA v2.8.1 compilado y publicado en GitHub Releases.
 
+
+## 🟢 Fase 4: Galería de fotos, calidad HD y velocidad de Gemini (Completada - 2026-10-20)
+- [x] Galería de comida sin rótulo redundante, contador de fotos centrado y padding corregido dentro de la tarjeta.
+- [x] Visor de foto casi a pantalla completa, sin recorte y alimentado por la copia HD de IndexedDB.
+- [x] Captura HD a 1600 px / calidad 0.88, miniaturas de 320 px y carga diferida en la cuadrícula.
+- [x] Fotos de progreso corporal con el mismo tratamiento de alta definición.
+- [x] Escaneo con Gemini más rápido: `gemini-3.6-flash` como modelo de visión, JSON nativo, sin razonamiento previo y payload de 896 px.
+- [x] v2.8.2 preparada y enviada al workflow de iOS para publicar el IPA en GitHub Releases.

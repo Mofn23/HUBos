@@ -7,6 +7,7 @@ import { IconCamera, IconPlus, IconTrash } from '../common/Icons';
 import { MealCaptureModal } from './MealCaptureModal';
 import { DateSelectionModal } from './DateSelectionModal';
 import { MealDetailModal } from './MealDetailModal';
+import { StoredPhoto } from './StoredPhoto';
 
 export function getMealCategory(meal: MealItem): 'desayuno' | 'almuerzo' | 'cena' | 'snack' {
   if (meal.category && ['desayuno', 'almuerzo', 'cena', 'snack'].includes(meal.category)) {
@@ -319,36 +320,37 @@ export const MealsSection: React.FC = () => {
         </div>
       )}
 
-      {/* 6. Galería de Fotos Reales (Fotos de comidas tomadas por el usuario) */}
+      {/* 6. Galería de fotos de comidas: solo el contador, centrado */}
       {mealsWithPhotos.length > 0 && (
-        <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-[28px] p-4.5 space-y-3 border-t-white/20 shadow-sm">
-          <div className="flex items-center justify-between pb-1 border-b border-white/5">
-            <div className="bg-[#2C2C2E] border border-white/[0.08] inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-black text-[#F5F5F7]">
-              <span>📸</span>
-              <span>Galería de Fotos Reales</span>
-            </div>
-            <span className="text-xs font-bold text-[#8E8E93]">
+        <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-[28px] p-4 space-y-3 border-t-white/20 shadow-sm">
+          <div className="flex items-center justify-center pb-2 border-b border-white/5">
+            <span className="text-xs font-bold text-[#8E8E93] tabular-nums">
               {mealsWithPhotos.length} {mealsWithPhotos.length === 1 ? 'foto' : 'fotos'}
             </span>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
             {mealsWithPhotos.map((meal) => (
-              <div
+              <button
+                type="button"
                 key={meal.id}
                 onClick={() => setSelectedPhotoMeal(meal)}
-                className="relative aspect-square rounded-[20px] overflow-hidden border border-white/15 group cursor-pointer active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none shadow-sm hover:border-white/30"
+                aria-label={'Abrir foto de ' + meal.name}
+                className="relative aspect-square rounded-[20px] overflow-hidden border border-white/15 group cursor-pointer active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none shadow-sm hover:border-white/30 bg-[#2C2C2E]"
               >
-                <img
-                  src={meal.imageBase64 || meal.imageUrl}
+                <StoredPhoto
+                  lazy
+                  kind="meal"
+                  id={meal.id}
+                  fallback={meal.imageBase64 || meal.imageUrl}
                   alt={meal.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-150 motion-reduce:transition-none"
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-[opacity,transform] duration-150 motion-reduce:transition-none"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                <span className="absolute bottom-1.5 left-1.5 text-[9px] font-black text-white px-2 py-0.5 rounded-full bg-black/60  border border-white/10">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+                <span className="absolute bottom-1.5 left-1.5 text-[9px] font-black text-white px-2 py-0.5 rounded-full bg-black/60 border border-white/10">
                   {meal.calories} kcal
                 </span>
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -460,32 +462,35 @@ export const MealsSection: React.FC = () => {
         </div>
       )}
 
-      {/* Modal de Detalle de Foto */}
+      {/* Visor de foto: copia HD, sin recorte */}
       {selectedPhotoMeal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 animate-fade-in motion-reduce:animate-none">
-          <div
-            className="fixed inset-0 bg-black/80 "
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center px-5 py-10 animate-fade-in motion-reduce:animate-none">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/95"
             onClick={() => setSelectedPhotoMeal(null)}
+            aria-label="Cerrar foto"
           />
-          <div
-            className="relative bg-[#1C1C1E] border border-white/[0.08] border border-white/15 rounded-[32px] overflow-hidden max-w-xs w-full z-10 animate-scale-up motion-reduce:animate-none shadow-sm"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative aspect-video">
-              <img
-                src={selectedPhotoMeal.imageBase64 || selectedPhotoMeal.imageUrl}
-                alt={selectedPhotoMeal.name}
-                className="w-full h-full object-cover"
-              />
-              <button
-                onClick={() => setSelectedPhotoMeal(null)}
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/70  text-white flex items-center justify-center text-xs shadow-sm"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="p-4.5 space-y-2 text-center">
-              <h4 className="text-sm font-black text-[#F5F5F7] tracking-tight">
+          <div className="relative z-10 flex w-full max-w-md flex-col items-center gap-4">
+            <button
+              type="button"
+              onClick={() => setSelectedPhotoMeal(null)}
+              className="absolute -top-2 right-0 z-20 w-9 h-9 rounded-full bg-[#2C2C2E] border border-white/15 text-[#F5F5F7] flex items-center justify-center text-sm active:scale-95 motion-reduce:active:scale-100 transition-transform duration-150 motion-reduce:transition-none"
+              aria-label="Cerrar"
+            >
+              ✕
+            </button>
+
+            <StoredPhoto
+              kind="meal"
+              id={selectedPhotoMeal.id}
+              fallback={selectedPhotoMeal.imageBase64 || selectedPhotoMeal.imageUrl}
+              alt={selectedPhotoMeal.name}
+              className="max-h-[62dvh] w-auto max-w-full rounded-[26px] object-contain border border-white/10"
+            />
+
+            <div className="w-full space-y-2.5 text-center">
+              <h4 className="text-base font-black text-[#F5F5F7] tracking-tight">
                 {selectedPhotoMeal.name}
               </h4>
               <div className="inline-block px-3 py-1 rounded-full bg-[#2C2C2E] border border-white/[0.08] text-xs font-black text-[#A1F524]">
@@ -493,7 +498,7 @@ export const MealsSection: React.FC = () => {
               </div>
               <button
                 onClick={() => setSelectedPhotoMeal(null)}
-                className="bg-[#2C2C2E] border border-white/[0.08] w-full py-2 rounded-full text-xs font-black text-[#F5F5F7] hover:border-white/30 active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none mt-1"
+                className="bg-[#2C2C2E] border border-white/[0.08] w-full py-3 rounded-full text-xs font-black text-[#F5F5F7] hover:border-white/30 active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none"
               >
                 Cerrar
               </button>

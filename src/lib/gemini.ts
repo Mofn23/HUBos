@@ -3,33 +3,60 @@ import { AI_CONFIG, GEMINI_MODEL_CANDIDATES } from '@/constants/ai';
 
 export { AI_CONFIG, GEMINI_MODEL_CANDIDATES };
 
-/** Wraps a promise with a timeout. */
-function withTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
-  return new Promise((resolve, reject) => {
-    const timer = setTimeout(() => {
-      reject(new Error(`Timeout: ${label} tardó más de ${Math.round(ms / 1000)}s`));
-    }, ms);
+/** Modelos con 503/500 recientes: se evitan durante unos minutos. */
+const coolingDownUntil = new Map<string, number>();
+const COOLDOWN_MS = 2 * 60 * 1000;
 
-    promise
-      .then((val) => {
-        clearTimeout(timer);
-        resolve(val);
-      })
-      .catch((err) => {
-        clearTimeout(timer);
-        reject(err);
-      });
-  });
+/** Modelos que respondieron 404 en esta sesión. */
+const deadModels = new Set<string>();
+
+export interface GeminiRequestOptions {
+  /** Tiempo máximo por intento antes de abortar y probar el siguiente modelo. */
+  timeoutMs?: number;
+  /** Presupuesto total para toda la cadena de modelos. */
+  totalTimeoutMs?: number;
+  /** Configuración de generación (JSON, temperatura, tokens...). */
+  generationConfig?: Record<string, unknown>;
+  /**
+   * Tokens de "thinking" permitidos. 0 desactiva el razonamiento previo, que es
+   * lo que más latencia añade en tareas simples. Solo se aplica en los modelos
+   * que lo soportan (gemini-3.6-flash responde 400 en los demás).
+   */
+  thinkingBudget?: number;
+}
+
+function errorMessage(err: unknown): string {
+  return String((err as { message?: string } | null)?.message || err);
+}
+
+function isMissingModelError(message: string): boolean {
+  return /404|not found|is not supported|unsupported|does not exist|invalid model|model not/i.test(message);
+}
+
+function isOverloadedError(message: string): boolean {
+  return /503|500|502|504|service unavailable|high demand|overloaded/i.test(message);
+}
+
+function isQuotaError(message: string): boolean {
+  return /RESOURCE_EXHAUSTED|quota|429/i.test(message);
 }
 
 /**
- * Executes generateContent trying candidate models in order if 404 or model error occurs.
- * Each model attempt has a 25-second timeout to prevent hanging.
+ * Ejecuta generateContent probando modelos en orden.
+ *
+ * - Arranca por el modelo preferido (el más rápido verificado) y sigue con los
+ *   candidatos; los modelos con 404 se descartan y los que devuelven 503 entran
+ *   en un enfriamiento de dos minutos.
+ * - Usa el `timeout` nativo del SDK, que aborta la petición en vuelo en lugar
+ *   de dejarla corriendo mientras se prueba otro modelo.
+ * - La cuota es por modelo, así que un 429 no cancela la cadena: otro modelo
+ *   puede tener cuota disponible.
  */
 export async function generateContentWithFallback(
   apiKey: string,
   contents: any,
-  preferredModel: string = AI_CONFIG.DEFAULT_MODEL
+  preferredModel: string = AI_CONFIG.DEFAULT_MODEL,
+  options: GeminiRequestOptions = {}
 ): Promise<GenerateContentResult> {
   const cleanKey = (apiKey || process.env.NEXT_PUBLIC_GEMINI_API_KEY || '').trim();
   if (!cleanKey) {
@@ -37,37 +64,93 @@ export async function generateContentWithFallback(
   }
 
   const genAI = new GoogleGenerativeAI(cleanKey);
+  const timeoutMs = options.timeoutMs ?? 15000;
+  // Presupuesto global: aunque falle un modelo, la espera nunca se dispara.
+  const deadline = Date.now() + (options.totalTimeoutMs ?? 30000);
 
-  const modelsToTry = [
-    preferredModel,
-    ...GEMINI_MODEL_CANDIDATES.filter((m) => m !== preferredModel),
-  ];
+  const allModels = Array.from(
+    new Set([preferredModel, ...GEMINI_MODEL_CANDIDATES].filter((model): model is string => Boolean(model)))
+  );
 
-  let lastError: any = null;
+  const notCoolingDown = allModels.filter((model) => {
+    const until = coolingDownUntil.get(model);
+    return !until || until <= Date.now();
+  });
 
-  for (const modelName of modelsToTry) {
+  const orderedModels = (notCoolingDown.length ? notCoolingDown : allModels).filter(
+    (model) => !deadModels.has(model)
+  );
+
+  let lastError: unknown = null;
+  let quotaError: unknown = null;
+
+  for (const modelName of orderedModels) {
+    const remaining = deadline - Date.now();
+    if (remaining < 1500) break;
+
+    const attemptTimeout = Math.min(timeoutMs, remaining);
+    const controller = new AbortController();
+    const abortTimer = setTimeout(() => controller.abort(), attemptTimeout);
+
     try {
-      const model = genAI.getGenerativeModel({ model: modelName });
-      const result = await withTimeout(
-        model.generateContent(contents),
-        25000,
-        modelName
-      );
+      const supportsThinkingControl = modelName === 'gemini-3.6-flash';
+      const generationConfig = options.generationConfig
+        ? {
+            ...options.generationConfig,
+            ...(supportsThinkingControl && options.thinkingBudget !== undefined
+              ? { thinkingConfig: { thinkingBudget: options.thinkingBudget } }
+              : {}),
+          }
+        : undefined;
+
+      const model = genAI.getGenerativeModel({
+        model: modelName,
+        ...(generationConfig ? { generationConfig: generationConfig as any } : {}),
+      });
+
+      const result = await model.generateContent(contents, {
+        timeout: attemptTimeout,
+        signal: controller.signal,
+      });
+
       return result;
     } catch (err: any) {
-      const errMsg = err?.message || String(err);
+      const errMsg = errorMessage(err);
       console.warn(`[Gemini AI] Model ${modelName} failed:`, errMsg);
       lastError = err;
 
-      // Immediate bail-out errors (don't try other models)
+      // Errores que no mejoran probando otro modelo.
       if (errMsg.includes('API_KEY_INVALID') || errMsg.includes('API key not valid')) {
         throw new Error('Tu API Key de Gemini no es válida. Revisa la configuración en tu Perfil.');
       }
 
-      if (errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('quota')) {
-        throw new Error('Se ha excedido la cuota de la API de Gemini. Intenta de nuevo en unos minutos.');
+      if (isQuotaError(errMsg)) {
+        quotaError = err;
+        continue;
       }
+
+      if (isOverloadedError(errMsg)) {
+        coolingDownUntil.set(modelName, Date.now() + COOLDOWN_MS);
+        continue;
+      }
+
+      if (isMissingModelError(errMsg)) {
+        deadModels.add(modelName);
+        continue;
+      }
+
+      // Timeout, red o fallo puntual del proveedor: se prueba el siguiente.
+    } finally {
+      clearTimeout(abortTimer);
     }
+  }
+
+  if (quotaError) {
+    throw new Error('Se ha excedido la cuota de la API de Gemini. Intenta de nuevo en unos minutos.');
+  }
+
+  if (lastError && /abort|timeout/i.test(errorMessage(lastError))) {
+    throw new Error('Gemini tardó demasiado en responder. Revisa tu conexión e intenta de nuevo.');
   }
 
   throw lastError || new Error('No se pudo conectar con ningún modelo disponible de Gemini.');
@@ -76,11 +159,24 @@ export async function generateContentWithFallback(
 export async function callGemini(
   apiKey: string,
   contents: any,
-  preferredModel: string = AI_CONFIG.DEFAULT_MODEL
+  preferredModel: string = AI_CONFIG.DEFAULT_MODEL,
+  options: GeminiRequestOptions = {}
 ): Promise<string> {
-  const result = await generateContentWithFallback(apiKey, contents, preferredModel);
+  const result = await generateContentWithFallback(apiKey, contents, preferredModel, options);
   const response = await result.response;
   return response.text();
+}
+
+/** Extrae el primer objeto JSON válido de una respuesta del modelo. */
+function parseJsonResponse<T = any>(raw: string): T {
+  const cleaned = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
+  try {
+    return JSON.parse(cleaned) as T;
+  } catch {
+    const match = cleaned.match(/\{[\s\S]*\}/);
+    if (match) return JSON.parse(match[0]) as T;
+    throw new Error('Respuesta de IA sin JSON válido');
+  }
 }
 
 /**
@@ -130,10 +226,20 @@ Opciones válidas para mealType: "desayuno", "almuerzo", "cena", "snack", "pre-e
     contents.push({ text: `Descripción del usuario: "${input.text}"` });
   }
 
-  const raw = await callGemini(apiKey, contents, AI_CONFIG.VISION_MODEL);
+  const raw = await callGemini(apiKey, contents, AI_CONFIG.VISION_MODEL, {
+    // Respuesta JSON pura y corta, sin razonamiento previo: menos espera.
+    timeoutMs: 15000,
+    totalTimeoutMs: 30000,
+    thinkingBudget: 0,
+    generationConfig: {
+      responseMimeType: 'application/json',
+      temperature: 0.2,
+      maxOutputTokens: 400,
+    },
+  });
+
   try {
-    const cleanJson = raw.replace(/```json/g, '').replace(/```/g, '').trim();
-    return JSON.parse(cleanJson);
+    return parseJsonResponse(raw);
   } catch (e) {
     console.error('Failed to parse Gemini meal response:', raw);
     throw new Error('No se pudo estructurar la información nutricional. Intenta de nuevo.');

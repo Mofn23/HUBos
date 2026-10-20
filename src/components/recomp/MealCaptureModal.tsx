@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { useRecompStore } from '@/stores/useRecompStore';
 import { useHubStore } from '@/stores/useHubStore';
 import { parseMealWithGemini } from '@/lib/gemini';
-import { compressImage, createThumbnail } from '@/lib/image';
+import { compressImage, createThumbnail, AI_MAX_EDGE, AI_QUALITY, PREVIEW_MAX_EDGE, PREVIEW_QUALITY } from '@/lib/image';
 import { deleteMealImage, saveMealImage } from '@/lib/imageStorage';
 import { audioEngine } from '@/lib/audio';
 import { getTodayKey } from '@/lib/date';
@@ -21,8 +21,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   const { geminiApiKey, showToast } = useHubStore();
 
   const [category, setCategory] = useState<'desayuno' | 'almuerzo' | 'cena' | 'snack'>('almuerzo');
-  const [imageForApi, setImageForApi] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [hdImage, setHdImage] = useState<string | null>(null);
+  const [aiImage, setAiImage] = useState<string | null>(null);
+  const [isPreparing, setIsPreparing] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [description, setDescription] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,30 +49,42 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     };
   }, [isOpen, setIsModalOpen]);
 
+  useEffect(() => {
+    if (!isLoading) return;
+    const startedAt = Date.now();
+    const timer = window.setInterval(() => {
+      setElapsedSeconds(Math.floor((Date.now() - startedAt) / 1000));
+    }, 500);
+    return () => window.clearInterval(timer);
+  }, [isLoading]);
+
   if (!isOpen || !portalRoot) return null;
 
   const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setIsPreparing(true);
     try {
-      // Compress to high-definition (1200px, 0.8 quality) for crystal-clear clarity & accurate IA macro calculation
-      const compressed = await compressImage(file, 1200, 0.8);
-      setImageForApi(compressed);
-      setImagePreview(compressed);
+      // Copia HD (1600 px, calidad 0.88): es la que se ve al abrir la foto y
+      // la que se guarda en IndexedDB.
+      const hd = await compressImage(file);
+      setHdImage(hd);
+      setAiImage(null);
     } catch (err: any) {
       console.error('Error compressing image:', err);
       showToast('No se pudo procesar la imagen seleccionada.');
-    }
-
-    // Reset file input so same file can be re-selected
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    } finally {
+      setIsPreparing(false);
+      // Reset file input so same file can be re-selected
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
   const handleAnalyze = async () => {
-    if (!description.trim() && !imageForApi) {
+    if (!description.trim() && !hdImage) {
       showToast('Por favor toma una foto o escribe qué vas a comer.');
       return;
     }
@@ -79,33 +93,39 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
     audioEngine.unlock();
     const requestId = ++requestSequenceRef.current;
     setIsLoading(true);
+    setElapsedSeconds(0);
     try {
       showToast('🤖 Analizando comida con Gemini...');
+
+      // Copia ligera para la IA: mismo detalle útil, mucho menos peso de subida.
+      let aiPayload = aiImage;
+      if (hdImage && !aiPayload) {
+        aiPayload = await createThumbnail(hdImage, AI_MAX_EDGE, AI_QUALITY);
+        setAiImage(aiPayload);
+      }
+      if (requestId !== requestSequenceRef.current) return;
+
       const result = await parseMealWithGemini(geminiApiKey, {
         text: description.trim() || undefined,
-        imageBase64: imageForApi || undefined,
+        imageBase64: aiPayload || undefined,
       });
       if (requestId !== requestSequenceRef.current) return;
 
       const mealId = `meal-${Date.now()}`;
 
-      // Save high-resolution image to IndexedDB (unlimited iPhone storage quota)
-      if (imageForApi) {
-        await saveMealImage(mealId, imageForApi);
+      // Guardado en paralelo: la copia HD va a IndexedDB y la miniatura ligera
+      // se queda en el estado persistido para las listas.
+      let thumbnail: string | undefined;
+      if (hdImage) {
+        const [thumb] = await Promise.all([
+          createThumbnail(hdImage, PREVIEW_MAX_EDGE, PREVIEW_QUALITY).catch(() => undefined),
+          saveMealImage(mealId, hdImage),
+        ]);
+        thumbnail = thumb;
       }
       if (requestId !== requestSequenceRef.current) {
-        if (imageForApi) await deleteMealImage(mealId);
+        if (hdImage) await deleteMealImage(mealId);
         return;
-      }
-
-      // Generate an ultra-lightweight 160px thumbnail (~4-6KB) for instant saving in native storage
-      let thumbnail: string | undefined;
-      if (imageForApi) {
-        try {
-          thumbnail = await createThumbnail(imageForApi, 160, 0.5);
-        } catch {
-          thumbnail = undefined;
-        }
       }
 
       const targetDate = selectedDate || getTodayKey();
@@ -161,8 +181,10 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
   };
 
   const resetForm = () => {
-    setImageForApi(null);
-    setImagePreview(null);
+    setHdImage(null);
+    setAiImage(null);
+    setIsPreparing(false);
+    setElapsedSeconds(0);
     setDescription('');
     setCategory('almuerzo');
     setIsFavorite(false);
@@ -242,10 +264,15 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           onClick={() => fileInputRef.current?.click()}
           className="relative w-full h-44 sm:h-52 rounded-[24px] border-2 border-dashed border-white/20 bg-[#1C1C1E] border border-white/[0.08] flex flex-col items-center justify-center cursor-pointer hover:border-white/40 active:scale-[0.99] motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none overflow-hidden group shadow-inner"
         >
-          {imagePreview ? (
+          {isPreparing ? (
+            <div className="flex flex-col items-center gap-2 text-center px-4">
+              <IconSparkles className="w-6 h-6 animate-spin text-[#A1F524]" />
+              <span className="text-xs font-bold text-[#8E8E93]">Procesando foto…</span>
+            </div>
+          ) : hdImage ? (
             <div className="relative w-full h-full">
               <img
-                src={imagePreview}
+                src={hdImage}
                 alt="Foto de la comida"
                 className="w-full h-full object-cover"
               />
@@ -253,8 +280,8 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setImageForApi(null);
-                  setImagePreview(null);
+                  setHdImage(null);
+                  setAiImage(null);
                 }}
                 className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/75  text-white flex items-center justify-center text-xs shadow-sm hover:scale-110 active:scale-95 motion-reduce:active:scale-100 transition-transform duration-150 motion-reduce:transition-none"
               >
@@ -270,7 +297,7 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
                 Toca para tomar foto de tu plato
               </span>
               <span className="text-[11px] font-semibold text-[#8E8E93]">
-                Alta resolución HD para cálculo exacto de macros con Gemini
+                Foto nítida; Gemini calcula los macros automáticamente
               </span>
             </div>
           )}
@@ -326,10 +353,19 @@ export const MealCaptureModal: React.FC<MealCaptureModalProps> = ({ isOpen, onCl
           <button
             type="button"
             onClick={handleAnalyze}
-            disabled={isLoading || (!description.trim() && !imageForApi)}
+            disabled={isLoading || isPreparing || (!description.trim() && !hdImage)}
             className="w-full min-h-12 rounded-full bg-[#A1F524] text-black font-black text-sm flex items-center justify-center gap-2 hover:brightness-105 active:scale-[.98] motion-reduce:active:scale-100 transition-[filter,transform] duration-150 motion-reduce:transition-none disabled:opacity-40"
           >
-            {isLoading ? <><IconSparkles className="w-5 h-5 animate-spin text-black" /><span>Analizando con Gemini…</span></> : <><IconSparkles className="w-5 h-5 text-black" /><span>Analizar comida</span></>}
+            {isLoading ? (
+              <>
+                <IconSparkles className="w-5 h-5 animate-spin text-black" />
+                <span>Analizando… {elapsedSeconds}s</span>
+              </>
+            ) : isPreparing ? (
+              <span>Preparando foto…</span>
+            ) : (
+              <><IconSparkles className="w-5 h-5 text-black" /><span>Analizar comida</span></>
+            )}
           </button>
         </footer>
       </section>

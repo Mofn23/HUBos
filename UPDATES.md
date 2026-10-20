@@ -2,6 +2,51 @@
 
 Este documento lleva el registro cronológico completo de todas las versiones, mejoras de arquitectura, módulos integrados y optimizaciones implementadas en la Super-App **HUBos**.
 
+## 🚀 [v2.8.2] - 2026-10-20 (RecompAI: galería limpia, fotos HD y escaneo con Gemini más rápido)
+
+### 🖼️ Galería de comidas
+- Retirado el rótulo "Galería de Fotos Reales": la sección ahora muestra únicamente el contador de fotos, centrado.
+- Corregido el padding de la tarjeta: usaba `p-4.5`, una clase inexistente en Tailwind, y por eso los tiles y el contador se pegaban al borde.
+- El visor de foto pasó a una vista casi a pantalla completa con `object-contain`, sin recortar la imagen.
+
+### 📸 Calidad de imagen
+- La copia HD se guarda a 1600 px con calidad 0.88 (antes 1200 px / 0.80) en IndexedDB.
+- Al abrir una comida se carga esa copia HD; la cuadrícula también la carga, de forma diferida cuando el tile entra en pantalla, para no leer decenas de fotos a la vez.
+- Las miniaturas del estado persistido suben de 160 px a 320 px y se generan con decodificación y compresión asíncronas (`createImageBitmap` + `toBlob`).
+- Las fotos de progreso corporal reciben el mismo tratamiento HD.
+
+### ⚡ Velocidad de Gemini
+- Medición contra la API real: `gemini-3.6-flash` tarda 2-4 s en visión frente a 9-11 s de `gemini-3.5-flash-lite`; `gemini-3.1-flash-lite` se quedaba colgado más de 20 s y se retiró de la cadena.
+- Modelo de visión principal actualizado a `gemini-3.6-flash`.
+- `thinkingBudget: 0` en el escaneo de comida: la misma tarea bajó de 3.5 s a 1.8 s en las pruebas.
+- Respuesta en JSON nativo, `maxOutputTokens: 400` y payload de imagen de 896 px (~80 KB frente a ~250 KB anteriores).
+- La cuota se evalúa por modelo: un 429 ya no cancela la cadena. Los 503 entran en un enfriamiento de dos minutos.
+- Timeouts con aborto real de la petición y presupuesto total de 30 s; el modal muestra los segundos transcurridos.
+- La imagen HD y la miniatura se guardan en paralelo; el botón indica "Procesando foto…" mientras se prepara.
+
+### ✅ Verificación
+- `npx tsc -p tsconfig.json --noEmit` sin errores.
+- `next build` y exportación estática completados (compilado en `%TEMP%` por la limitación de escritura atómica de Google Drive).
+- Prueba en vivo de `parseMealWithGemini`: JSON válido y respuestas de 3-7 s.
+
+### 📦 Versión y distribución
+- Actualizados `package.json`, `package-lock.json`, el proyecto Xcode y el workflow de iOS a `2.8.2`.
+- El workflow genera `HUBos-2.8.2-codex.ipa`, publica un release numerado por ejecución y lo marca como versión más reciente.
+
+### 📁 Archivos de versión y registro
+- `[MODIFICADO]` `src/components/recomp/MealsSection.tsx` - Galería sin rótulo, contador centrado y visor HD.
+- `[MODIFICADO]` `src/components/recomp/MealCaptureModal.tsx` - Captura HD, copia para IA y estado de preparación.
+- `[MODIFICADO]` `src/components/recomp/MealDetailModal.tsx` - Detalle con la copia HD desde IndexedDB.
+- `[MODIFICADO]` `src/components/recomp/BodyRecordSection.tsx` - Fotos de progreso en HD.
+- `[CREADO]` `src/components/recomp/StoredPhoto.tsx` - Imagen con miniatura, HD diferido y fundido inicial.
+- `[CREADO]` `src/lib/useStoredPhoto.ts` - Resolución de la copia HD guardada en IndexedDB.
+- `[MODIFICADO]` `src/lib/image.ts` - Constantes de calidad, decodificación y compresión asíncronas.
+- `[MODIFICADO]` `src/lib/gemini.ts` - Cadena de modelos con enfriamiento, cuotas por modelo y JSON nativo.
+- `[MODIFICADO]` `src/constants/ai.ts` - Modelos verificados y retirada del modelo que se colgaba.
+- `[MODIFICADO]` `package.json`, `package-lock.json`, `ios/App/App.xcodeproj/project.pbxproj`, `.github/workflows/build-ios.yml` - Versión v2.8.2.
+
+---
+
 ## 🚀 [v2.8.1] - 2026-10-20 (Aesthetix: edición de rutinas, orden persistente y ajustes de interfaz móvil)
 
 ### 💪 Rutinas y perfil de Aesthetix
