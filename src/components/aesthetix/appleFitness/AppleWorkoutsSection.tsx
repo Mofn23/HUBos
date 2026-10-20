@@ -134,7 +134,7 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
               <div className="text-[10px] font-bold text-[#8E8E93] uppercase tracking-wider">
                 HOY TOCA
               </div>
-              <div className="text-sm font-black text-white">{currentDay.name}</div>
+              <div className="text-sm font-black text-white">{currentDay.dayName}</div>
             </div>
           </div>
           <button
