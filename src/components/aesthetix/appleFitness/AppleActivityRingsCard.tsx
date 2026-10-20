@@ -23,7 +23,7 @@ export const AppleActivityRingsCard: React.FC<AppleActivityRingsCardProps> = ({
     if (todayWorkouts.length > 0) {
       const totalVol = todayWorkouts.reduce((acc, w) => acc + (w.totalVolumeKg || 0), 0);
       const totalMin = todayWorkouts.reduce(
-        (acc, w) => acc + Math.round((w.durationSeconds || 1800) / 60),
+        (acc, w) => acc + (w.durationMinutes || 30),
         0
       );
       const totalSets = todayWorkouts.reduce(

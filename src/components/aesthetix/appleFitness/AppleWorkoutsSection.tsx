@@ -34,7 +34,7 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
         const themeColor = isRunOrLegs ? '#A1F524' : isHIITorPush ? '#FA114F' : '#00F0FF';
         const icon = isRunOrLegs ? '🏃' : isHIITorPush ? '⚡' : '🏋️';
 
-        const min = Math.round((h.durationSeconds || 2400) / 60);
+        const min = h.durationMinutes || 40;
 
         return {
           id: h.id,
