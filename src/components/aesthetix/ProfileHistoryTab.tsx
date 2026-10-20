@@ -7,7 +7,6 @@ import { saveProgressPhoto, getProgressPhoto } from '@/lib/imageStorage';
 import { WorkoutHistoryItem } from '@/types/workout';
 import { SessionDetailModal } from './SessionDetailModal';
 import { BodyScanModal } from './BodyScanModal';
-import { SymmetryImportModal } from './SymmetryImportModal';
 
 export const ProfileHistoryTab: React.FC = () => {
   const { userName, showToast } = useHubStore();
@@ -31,7 +30,6 @@ export const ProfileHistoryTab: React.FC = () => {
   const [showAllPrs, setShowAllPrs] = useState(false);
   const [isLogMeasureOpen, setIsLogMeasureOpen] = useState(false);
   const [isBodyScanOpen, setIsBodyScanOpen] = useState(false);
-  const [isSymmetryImportOpen, setIsSymmetryImportOpen] = useState(false);
   const [selectedSessionForDetail, setSelectedSessionForDetail] = useState<WorkoutHistoryItem | null>(null);
   const [newWeight, setNewWeight] = useState(userWeightKg.toString());
   const [newChest, setNewChest] = useState('');
@@ -41,7 +39,7 @@ export const ProfileHistoryTab: React.FC = () => {
   const [newCalves, setNewCalves] = useState('');
 
   const isAnyProfileModalOpen =
-    isLogMeasureOpen || isBodyScanOpen || isSymmetryImportOpen || !!selectedSessionForDetail;
+    isLogMeasureOpen || isBodyScanOpen || !!selectedSessionForDetail;
 
   useEffect(() => {
     if (isAnyProfileModalOpen) {
@@ -132,15 +130,12 @@ export const ProfileHistoryTab: React.FC = () => {
             className="hidden"
           />
 
-          <div className="flex-1">
-            <span className="px-2.5 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] text-[10px] font-black uppercase tracking-wider">
-              Atleta Aesthetix
-            </span>
-            <h2 className="text-xl font-black text-[#F5F5F7] tracking-tight mt-0.5">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl font-black text-[#F5F5F7] tracking-tight">
               {userName}
             </h2>
-            <p className="text-xs font-bold text-[#8E8E93]">
-              Peso Actual:{' '}
+            <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
+              Peso:{' '}
               <span className="text-[#F5F5F7] font-black font-mono">{userWeightKg} kg</span>
             </p>
           </div>
@@ -184,64 +179,51 @@ export const ProfileHistoryTab: React.FC = () => {
         )}
       </div>
 
-      {/* 2. Cumulative Lifetime Volume & Symmetry Progress Bento */}
-      <div className="fitness-surface-elevated rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#A1F524] shadow-[0_0_8px_#A1F524]" />
-            <span className="text-[11px] font-black uppercase tracking-widest text-[#8E8E93]">
-              Volumen registrado
-            </span>
+      {/* 2. Apple Fitness activity overview */}
+      <div className="fitness-card p-4 space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#00F0FF]" />
+              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#8E8E93]">
+                Volumen registrado
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2 mt-2">
+              <span className="text-3xl font-black text-white font-mono tracking-tight">
+                {Math.round(getTotalLifetimeVolumeKg()).toLocaleString('es-CO')}
+              </span>
+              <span className="text-sm font-bold text-[#8E8E93]">kg</span>
+            </div>
           </div>
-        </div>
-
-        <div className="flex items-baseline gap-2">
-          <span className="text-3xl font-black text-[#F5F5F7] font-mono tracking-tight">
-            {Math.round(getTotalLifetimeVolumeKg()).toLocaleString('es-CO')} kg
+          <span className="shrink-0 w-10 h-10 rounded-full bg-[#00F0FF]/10 text-[#00F0FF] flex items-center justify-center text-lg" aria-hidden="true">
+            ↗
           </span>
         </div>
 
-        {/* Symmetry Stats Row */}
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/5">
-          <div className="fitness-pill p-2.5 rounded-[16px] text-center">
-            <span className="text-[10px] font-bold text-[#8E8E93] block">Entrenos</span>
-            <span className="text-sm font-black text-[#F5F5F7] font-mono">
-              {history.length}
-            </span>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="min-w-0 rounded-[18px] bg-[#242426] border border-white/[0.05] px-2.5 py-3">
+            <span className="block text-[9px] font-bold uppercase tracking-wide text-[#8E8E93]">Entrenos</span>
+            <span className="mt-1 block text-lg font-black text-white font-mono">{history.length}</span>
           </div>
-          <div className="fitness-pill p-2.5 rounded-[16px] text-center">
-            <span className="text-[10px] font-bold text-[#8E8E93] block">Total PRs</span>
-            <span className="text-sm font-black text-[#FFD60A] font-mono">
-              {prList.length}
-            </span>
+          <div className="min-w-0 rounded-[18px] bg-[#242426] border border-white/[0.05] px-2.5 py-3">
+            <span className="block text-[9px] font-bold uppercase tracking-wide text-[#8E8E93]">PRs</span>
+            <span className="mt-1 block text-lg font-black text-[#FFD60A] font-mono">{prList.length}</span>
           </div>
-          <div className="fitness-pill p-2.5 rounded-[16px] text-center">
-            <span className="text-[10px] font-bold text-[#8E8E93] block">Racha</span>
-            <span className="text-sm font-black text-[#FF9500] font-mono">
-              🔥 {currentStreak} días
-            </span>
+          <div className="min-w-0 rounded-[18px] bg-[#242426] border border-white/[0.05] px-2.5 py-3">
+            <span className="block text-[9px] font-bold uppercase tracking-wide text-[#8E8E93]">Racha</span>
+            <span className="mt-1 block text-lg font-black text-[#A1F524] font-mono">{currentStreak}<span className="ml-1 text-[10px] font-bold">d</span></span>
           </div>
         </div>
 
-        {/* Action Buttons: Body Scan & Symmetry Import */}
-        <div className="grid grid-cols-2 gap-2.5 pt-2">
-          <button
-            type="button"
-            onClick={() => setIsBodyScanOpen(true)}
-            className="py-3 px-3 rounded-[18px] bg-[#A1F524]/15 border border-[#A1F524]/30 text-[#A1F524] font-black text-xs hover:bg-[#A1F524]/25 active:scale-95 transition-all flex items-center justify-center gap-1.5"
-          >
-            <span>🧬</span>
-            <span>Escaneo Físico IA</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsSymmetryImportOpen(true)}
-            className="py-3 px-3 rounded-[18px] bg-[#A1F524]/15 border border-[#A1F524]/30 text-[#A1F524] font-black text-xs hover:bg-[#A1F524]/25 active:scale-95 transition-all flex items-center justify-center gap-1.5"
-          >
-            <span>📥</span>
-            <span>Importar Symmetry</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsBodyScanOpen(true)}
+          className="w-full py-3 px-4 rounded-full bg-[#00F0FF]/10 border border-[#00F0FF]/20 text-[#00F0FF] font-black text-xs hover:bg-[#00F0FF]/15 fitness-press flex items-center justify-center gap-2"
+        >
+          <span aria-hidden="true">🧬</span>
+          <span>Escaneo físico IA</span>
+        </button>
       </div>
 
       {/* 3. Personal Records (PRs) Bento Section */}
@@ -494,11 +476,6 @@ export const ProfileHistoryTab: React.FC = () => {
         onClose={() => setIsBodyScanOpen(false)}
       />
 
-      {/* Symmetry Screenshot Import Modal */}
-      <SymmetryImportModal
-        isOpen={isSymmetryImportOpen}
-        onClose={() => setIsSymmetryImportOpen(false)}
-      />
     </div>
   );
 };

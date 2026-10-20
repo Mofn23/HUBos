@@ -34,26 +34,27 @@ export const AesthetixHeader: React.FC<AesthetixHeaderProps> = ({
   return (
     <header className="relative z-20 w-full mb-3 space-y-2">
       {/* Top Utilities Bar */}
-      <div className="flex items-center justify-between w-full">
-        {/* Left: Return to HUB button */}
-        <button
-          onClick={() => setCurrentApp('hub')}
-          className="fitness-card h-8 px-3 rounded-full flex items-center gap-1 text-xs font-black text-[#F5F5F7] hover:text-white hover:border-white/30 fitness-press shadow-sm"
-        >
-          <span className="text-sm font-bold leading-none">‹</span>
-          <span>HUB</span>
-        </button>
-
+      <div className="flex items-center justify-end gap-2 w-full">
         {/* A live session remains available without duplicating the streak. */}
         {activeSession ? (
           <button
             onClick={onOpenLiveWorkout}
-          className="h-8 px-3.5 rounded-full bg-[#FA114F]/15 border border-[#FA114F]/30 text-[#FA114F] text-xs font-black flex items-center gap-2 fitness-press"
+            className="h-8 px-3.5 rounded-full bg-[#FA114F]/15 border border-[#FA114F]/30 text-[#FA114F] text-xs font-black flex items-center gap-2 fitness-press"
           >
             <span className="w-2 h-2 rounded-full bg-[#FA114F]" />
             <span>En vivo: {activeSession.dayName || 'Entreno'}</span>
           </button>
-        ) : <span aria-hidden="true" />}
+        ) : null}
+
+        <button
+          onClick={() => setCurrentApp('hub')}
+          className="bg-[#2C2C2E] border border-white/[0.08] h-8 px-3 rounded-full inline-flex items-center gap-1.5 hover:border-white/30 fitness-press text-xs font-black text-[#F5F5F7] shadow-sm group"
+          title="Regresar al HUB principal"
+          aria-label="Regresar al HUB"
+        >
+          <span className="text-sm leading-none group-hover:-translate-x-0.5 transition-transform duration-150">‹</span>
+          <span className="text-[11px] font-black tracking-tight">HUB</span>
+        </button>
       </div>
 
       {/* Big Apple Fitness Title & Date */}

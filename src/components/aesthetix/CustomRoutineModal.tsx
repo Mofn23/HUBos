@@ -1,22 +1,26 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useAesthetixStore } from '@/stores/useAesthetixStore';
 import { useHubStore } from '@/stores/useHubStore';
 import { WorkoutRoutine, RoutineDay, RoutineExercise, Exercise } from '@/types/workout';
-import { getAllExercises, searchExercises, getExerciseMediaUrls, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
+import { getExerciseById, searchExercises, getExerciseMediaUrls, BODY_PART_TRANSLATIONS } from '@/lib/exercisesDb';
 import { useScrollLock } from '@/lib/useScrollLock';
 
 interface CustomRoutineModalProps {
   isOpen: boolean;
   onClose: () => void;
+  routineToEdit?: WorkoutRoutine;
+  onRoutineUpdated?: (dayIndex: number) => void;
 }
 
 export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
   isOpen,
   onClose,
+  routineToEdit,
+  onRoutineUpdated,
 }) => {
-  const { addRoutine, setActiveRoutineId } = useAesthetixStore();
+  const { addRoutine, updateRoutine, setActiveRoutineId } = useAesthetixStore();
   const { showToast } = useHubStore();
 
   // Lock background scroll in iOS WebKit
@@ -82,12 +86,46 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
       ],
     },
   ]);
+  const initialDaysRef = useRef(days);
 
   const [activeDayIdx, setActiveDayIdx] = useState(0);
 
   // Catalog picker state (used when currentView === 'catalog')
   const [pickerSearch, setPickerSearch] = useState('');
   const [pickerBodyPart, setPickerBodyPart] = useState('all');
+  const [exerciseIndexToReplace, setExerciseIndexToReplace] = useState<number | null>(null);
+  const [draggedExerciseIndex, setDraggedExerciseIndex] = useState<number | null>(null);
+  const [recentlyMovedExerciseId, setRecentlyMovedExerciseId] = useState<string | null>(null);
+  const draggedExerciseIndexRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    setCurrentView('editor');
+    setActiveDayIdx(0);
+    setPickerSearch('');
+    setPickerBodyPart('all');
+    setExerciseIndexToReplace(null);
+
+    if (routineToEdit) {
+      setRoutineName(routineToEdit.name);
+      setDescription(routineToEdit.description);
+      setTargetDays(routineToEdit.targetDaysPerWeek);
+      setDays(routineToEdit.days.map((day) => ({
+        ...day,
+        exercises: day.exercises.map((exercise) => ({ ...exercise })),
+      })));
+      return;
+    }
+
+    setRoutineName('Mi Rutina Personalizada');
+    setDescription('Protocolo personalizado diseñado a medida.');
+    setTargetDays(5);
+    setDays(initialDaysRef.current.map((day) => ({
+      ...day,
+      exercises: day.exercises.map((exercise) => ({ ...exercise })),
+    })));
+  }, [isOpen, routineToEdit]);
 
   const filteredPickerExercises = useMemo(() => {
     return searchExercises(pickerSearch, {
@@ -168,14 +206,18 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
   const handleAddExerciseToCurrentDay = (dbEx: Exercise) => {
     const targetDayIndex = activeDayIdx;
     const currentExercises = days[targetDayIndex]?.exercises || [];
+    const exerciseToReplace =
+      exerciseIndexToReplace === null ? undefined : currentExercises[exerciseIndexToReplace];
 
     const newRoutineExercise: RoutineExercise = {
-      id: `ex_${Date.now()}_${currentExercises.length + 1}`,
+      id: exerciseToReplace?.id || `ex_${Date.now()}_${currentExercises.length + 1}`,
       exerciseId: dbEx.id,
       name: dbEx.name,
-      targetSets: 3,
-      targetReps: '8',
-      restSeconds: 120,
+      targetSets: exerciseToReplace?.targetSets ?? 3,
+      targetReps: exerciseToReplace?.targetReps ?? '8',
+      restSeconds: exerciseToReplace?.restSeconds ?? 120,
+      targetRpe: exerciseToReplace?.targetRpe,
+      notes: exerciseToReplace?.notes,
       category: dbEx.body_part,
       target: dbEx.target,
     };
@@ -183,11 +225,31 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
     const updatedDays = [...days];
     updatedDays[targetDayIndex] = {
       ...updatedDays[targetDayIndex],
-      exercises: [...currentExercises, newRoutineExercise],
+      exercises: exerciseToReplace
+        ? currentExercises.map((exercise, index) =>
+            index === exerciseIndexToReplace ? newRoutineExercise : exercise
+          )
+        : [...currentExercises, newRoutineExercise],
     };
 
     setDays(updatedDays);
-    showToast(`✓ ${dbEx.name} añadido`);
+    if (exerciseToReplace) {
+      setExerciseIndexToReplace(null);
+      setCurrentView('editor');
+      showToast(`Ejercicio cambiado por ${dbEx.name}.`);
+    } else if (routineToEdit) {
+      updateRoutine(routineToEdit.id, {
+        name: routineName.trim(),
+        description: description.trim() || 'Rutina personalizada diseñada en Aesthetix.',
+        targetDaysPerWeek: updatedDays.length,
+        days: updatedDays,
+      });
+      onRoutineUpdated?.(targetDayIndex);
+      showToast(`${dbEx.name} añadido a ${updatedDays[targetDayIndex]?.dayName || 'la rutina'}.`);
+      onClose();
+    } else {
+      showToast(`${dbEx.name} añadido.`);
+    }
   };
 
   const handleRemoveExerciseFromDay = (dayIndex: number, exIndex: number) => {
@@ -195,6 +257,59 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
     const targetExercises = updatedDays[dayIndex].exercises.filter((_, i) => i !== exIndex);
     updatedDays[dayIndex] = { ...updatedDays[dayIndex], exercises: targetExercises };
     setDays(updatedDays);
+  };
+
+  const handleMoveExerciseInDay = (dayIndex: number, exerciseIndex: number, direction: -1 | 1) => {
+    const day = days[dayIndex];
+    const nextIndex = exerciseIndex + direction;
+    if (!day || nextIndex < 0 || nextIndex >= day.exercises.length) return;
+
+    const exercises = [...day.exercises];
+    [exercises[exerciseIndex], exercises[nextIndex]] = [exercises[nextIndex], exercises[exerciseIndex]];
+
+    const updatedDays = [...days];
+    updatedDays[dayIndex] = { ...day, exercises };
+    setDays(updatedDays);
+    if (routineToEdit) {
+      updateRoutine(routineToEdit.id, {
+        days: updatedDays,
+        targetDaysPerWeek: updatedDays.length,
+      });
+    }
+    setRecentlyMovedExerciseId(exercises[nextIndex].id);
+  };
+
+  const handleExerciseDragMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    const fromIndex = draggedExerciseIndexRef.current;
+    if (fromIndex === null) return;
+
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    const card = element?.closest<HTMLElement>('[data-exercise-index]');
+    const toIndex = Number(card?.dataset.exerciseIndex);
+    if (!Number.isInteger(toIndex) || toIndex === fromIndex) return;
+
+    const day = days[activeDayIdx];
+    if (!day || toIndex < 0 || toIndex >= day.exercises.length) return;
+    const exercises = [...day.exercises];
+    const [movedExercise] = exercises.splice(fromIndex, 1);
+    exercises.splice(toIndex, 0, movedExercise);
+    const updatedDays = [...days];
+    updatedDays[activeDayIdx] = { ...day, exercises };
+    setDays(updatedDays);
+    if (routineToEdit) {
+      updateRoutine(routineToEdit.id, {
+        days: updatedDays,
+        targetDaysPerWeek: updatedDays.length,
+      });
+    }
+    draggedExerciseIndexRef.current = toIndex;
+    setDraggedExerciseIndex(toIndex);
+    setRecentlyMovedExerciseId(movedExercise.id);
+  };
+
+  const handleExerciseDragEnd = () => {
+    draggedExerciseIndexRef.current = null;
+    setDraggedExerciseIndex(null);
   };
 
   const handleUpdateExerciseInDay = (
@@ -223,19 +338,29 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
       return;
     }
 
-    const newRoutine: WorkoutRoutine = {
-      id: `routine_custom_${Date.now()}`,
-      name: routineName.trim(),
-      description: description.trim() || 'Rutina personalizada diseñada en Aesthetix.',
-      splitType: 'custom',
-      targetDaysPerWeek: days.length,
-      days,
-      createdAt: new Date().toISOString(),
-    };
+    if (routineToEdit) {
+      updateRoutine(routineToEdit.id, {
+        name: routineName.trim(),
+        description: description.trim() || 'Rutina personalizada diseñada en Aesthetix.',
+        targetDaysPerWeek: days.length,
+        days,
+      });
+      showToast(`Rutina "${routineName.trim()}" actualizada.`);
+    } else {
+      const newRoutine: WorkoutRoutine = {
+        id: `routine_custom_${Date.now()}`,
+        name: routineName.trim(),
+        description: description.trim() || 'Rutina personalizada diseñada en Aesthetix.',
+        splitType: 'custom',
+        targetDaysPerWeek: days.length,
+        days,
+        createdAt: new Date().toISOString(),
+      };
 
-    addRoutine(newRoutine);
-    setActiveRoutineId(newRoutine.id);
-    showToast(`Rutina "${newRoutine.name}" creada y activada.`);
+      addRoutine(newRoutine);
+      setActiveRoutineId(newRoutine.id);
+      showToast(`Rutina "${newRoutine.name}" creada y activada.`);
+    }
     onClose();
   };
 
@@ -253,7 +378,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
 
       {/* Main Single Modal Container */}
       <div
-        className="relative w-full max-w-lg fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[90vh] flex flex-col overscroll-contain"
+        className="relative w-full max-w-lg fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[calc(100dvh-120px)] sm:max-h-[90vh] flex flex-col overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         
@@ -269,9 +394,13 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                   🛠️
                 </span>
                 <div>
-                  <h3 className="text-sm font-black text-[#F5F5F7]">Creador de Rutina</h3>
+                  <h3 className="text-sm font-black text-[#F5F5F7]">
+                    {routineToEdit ? 'Editar rutina' : 'Creador de Rutina'}
+                  </h3>
                   <p className="text-[10px] font-bold text-[#8E8E93]">
-                    Personaliza días, series, repeticiones y descansos
+                    {routineToEdit
+                      ? 'Modifica los ejercicios, series, repeticiones y descansos'
+                      : 'Personaliza días, series, repeticiones y descansos'}
                   </p>
                 </div>
               </div>
@@ -286,9 +415,14 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
             </div>
 
             {/* Scrollable Editor Content */}
-            <div className="flex-1 overflow-y-auto space-y-4 pr-1 no-scrollbar">
+            <div
+              className="flex-1 overflow-y-auto space-y-4 pr-1 no-scrollbar"
+              onPointerMove={handleExerciseDragMove}
+              onPointerUp={handleExerciseDragEnd}
+              onPointerCancel={handleExerciseDragEnd}
+            >
               {/* Quick Template Presets */}
-              <div className="space-y-1.5">
+              {!routineToEdit && <div className="space-y-1.5">
                 <p className="text-[10px] font-black uppercase tracking-widest text-[#8E8E93]">
                   Plantillas Rápidas
                 </p>
@@ -315,7 +449,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                     📝 En Blanco
                   </button>
                 </div>
-              </div>
+              </div>}
 
               {/* Routine Basic Info Inputs */}
               <div className="space-y-2.5">
@@ -424,87 +558,179 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                         </p>
                       </div>
                     ) : (
-                      currentDay.exercises.map((ex, exIdx) => (
-                        <div
-                          key={ex.id || exIdx}
-                          className="fitness-pill p-2.5 rounded-[18px] flex items-center justify-between gap-2"
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                            <span className="w-5 h-5 rounded-full bg-white/[0.08] flex items-center justify-center text-[10px] font-black text-[#8E8E93] shrink-0">
-                              {exIdx + 1}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-xs font-black text-[#F5F5F7] capitalize truncate">
-                                {ex.name}
-                              </p>
-                              <div className="flex items-center gap-2 text-[10px] font-bold text-[#8E8E93]">
-                                <span>Descanso:</span>
+                      currentDay.exercises.map((ex, exIdx) => {
+                        const dbEx = getExerciseById(ex.exerciseId) || searchExercises(ex.name).find(
+                          (exercise) => exercise.name.trim().toLowerCase() === ex.name.trim().toLowerCase()
+                        );
+                        const media = getExerciseMediaUrls(dbEx);
+                        const muscleLabel = dbEx
+                          ? BODY_PART_TRANSLATIONS[dbEx.body_part] || dbEx.body_part
+                          : BODY_PART_TRANSLATIONS[ex.category || ''] || ex.category || 'Entrenamiento';
+
+                        return (
+                          <div
+                            key={ex.id || exIdx}
+                            data-exercise-index={exIdx}
+                            className={`rounded-[20px] bg-[#1C1C1E] border border-white/[0.07] p-3 space-y-3 transition-[transform,opacity,box-shadow] duration-200 ${
+                              draggedExerciseIndex === exIdx ? 'scale-[1.02] opacity-80 shadow-[0_0_22px_rgba(161,245,36,0.2)]' : ''
+                            } ${recentlyMovedExerciseId === ex.id ? 'animate-[exercise-reorder_220ms_ease-out]' : ''}`}
+                            onAnimationEnd={() => {
+                              if (recentlyMovedExerciseId === ex.id) setRecentlyMovedExerciseId(null);
+                            }}
+                          >
+                            <div className="flex items-center gap-3 min-w-0">
+                              <div className="relative w-[68px] h-[68px] rounded-[16px] bg-black overflow-hidden flex items-center justify-center shrink-0 border border-white/10">
+                                <span className="text-xl" aria-hidden="true">🏋️</span>
+                                {media.imageUrl && (
+                                  <img
+                                    src={media.imageUrl}
+                                    alt={ex.name}
+                                    className="absolute inset-0 w-full h-full object-contain exercise-media-dark"
+                                    loading="lazy"
+                                    onError={(event) => {
+                                      event.currentTarget.style.display = 'none';
+                                    }}
+                                  />
+                                )}
+                                <span className="absolute bottom-1 left-1 min-w-5 h-5 px-1 rounded-full bg-black/80 flex items-center justify-center text-[10px] text-[#A1F524] font-black">
+                                  {exIdx + 1}
+                                </span>
+                              </div>
+
+                              <div className="min-w-0 flex-1">
+                                <span className="block text-[9px] font-black uppercase tracking-widest text-[#8E8E93]">
+                                  Ejercicio {exIdx + 1}
+                                </span>
+                                <p className="mt-0.5 text-xs font-black text-white capitalize leading-snug line-clamp-2">
+                                  {ex.name}
+                                </p>
+                                <p className="mt-1 text-[10px] font-bold text-[#00F0FF] capitalize truncate">
+                                  {muscleLabel}{dbEx?.target ? ` · ${dbEx.target}` : ex.target ? ` · ${ex.target}` : ''}
+                                </p>
+                              </div>
+
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setPickerSearch('');
+                                  setExerciseIndexToReplace(exIdx);
+                                  setCurrentView('catalog');
+                                }}
+                                className="shrink-0 rounded-full bg-[#00F0FF]/10 px-2.5 py-2 text-[10px] font-black text-[#00F0FF] fitness-press"
+                                aria-label={`Cambiar ${ex.name}`}
+                              >
+                                Cambiar
+                              </button>
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2">
+                              <label className="min-w-0 rounded-[14px] bg-[#242426] border border-white/[0.05] px-2.5 py-2">
+                                <span className="block text-[9px] font-bold text-[#8E8E93]">Series</span>
                                 <input
                                   type="number"
-                                  min="30"
-                                  max="300"
-                                  step="15"
-                                  value={ex.restSeconds}
-                                  onChange={(e) =>
-                                    handleUpdateExerciseInDay(
+                                  min="1"
+                                  max="10"
+                                  value={ex.targetSets}
+                                  onChange={(event) => handleUpdateExerciseInDay(
+                                    activeDayIdx,
+                                    exIdx,
+                                    'targetSets',
+                                    parseInt(event.target.value) || 3
+                                  )}
+                                  className="mt-1 w-full bg-transparent text-sm font-black font-mono text-[#A1F524] outline-none"
+                                  aria-label={`Series para ${ex.name}`}
+                                />
+                              </label>
+                              <label className="min-w-0 rounded-[14px] bg-[#242426] border border-white/[0.05] px-2.5 py-2">
+                                <span className="block text-[9px] font-bold text-[#8E8E93]">Reps</span>
+                                <input
+                                  type="text"
+                                  value={ex.targetReps}
+                                  onChange={(event) => handleUpdateExerciseInDay(
+                                    activeDayIdx,
+                                    exIdx,
+                                    'targetReps',
+                                    event.target.value
+                                  )}
+                                  className="mt-1 w-full bg-transparent text-sm font-black font-mono text-white outline-none"
+                                  aria-label={`Repeticiones para ${ex.name}`}
+                                />
+                              </label>
+                              <label className="min-w-0 rounded-[14px] bg-[#242426] border border-white/[0.05] px-2.5 py-2">
+                                <span className="block text-[9px] font-bold text-[#8E8E93]">Descanso</span>
+                                <div className="mt-1 flex items-baseline gap-1">
+                                  <input
+                                    type="number"
+                                    min="30"
+                                    max="300"
+                                    step="15"
+                                    value={ex.restSeconds}
+                                    onChange={(event) => handleUpdateExerciseInDay(
                                       activeDayIdx,
                                       exIdx,
                                       'restSeconds',
-                                      parseInt(e.target.value) || 120
-                                    )
-                                  }
-                                  className="w-12 text-center bg-white/[0.06] rounded px-1 text-[10px] text-[#A1F524] font-mono outline-none"
-                                />
-                                <span>seg</span>
+                                      parseInt(event.target.value) || 120
+                                    )}
+                                    className="w-full min-w-0 bg-transparent text-sm font-black font-mono text-white outline-none"
+                                    aria-label={`Descanso en segundos para ${ex.name}`}
+                                  />
+                                  <span className="text-[9px] font-bold text-[#8E8E93]">s</span>
+                                </div>
+                              </label>
+                            </div>
+
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-1.5" aria-label={`Cambiar orden de ${ex.name}`}>
+                                <span className="text-[10px] font-bold text-[#8E8E93]">Orden</span>
+                                <button
+                                  type="button"
+                                  className="w-7 h-7 rounded-full fitness-pill text-xs font-black text-[#A1F524] touch-none cursor-grab active:cursor-grabbing"
+                                  aria-label={`Arrastrar ${ex.name} para cambiar su orden`}
+                                  title="Arrastrar para reordenar"
+                                  onPointerDown={(event) => {
+                                    event.preventDefault();
+                                    event.currentTarget.setPointerCapture(event.pointerId);
+                                    draggedExerciseIndexRef.current = exIdx;
+                                    setDraggedExerciseIndex(exIdx);
+                                  }}
+                                  onPointerUp={handleExerciseDragEnd}
+                                  onPointerCancel={handleExerciseDragEnd}
+                                >
+                                  ⠿
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMoveExerciseInDay(activeDayIdx, exIdx, -1)}
+                                  disabled={exIdx === 0}
+                                  className="w-7 h-7 rounded-full fitness-pill text-xs font-black text-[#A1F524] disabled:opacity-30 disabled:pointer-events-none"
+                                  aria-label={`Subir ${ex.name}`}
+                                  title="Subir"
+                                >
+                                  ↑
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleMoveExerciseInDay(activeDayIdx, exIdx, 1)}
+                                  disabled={exIdx === currentDay.exercises.length - 1}
+                                  className="w-7 h-7 rounded-full fitness-pill text-xs font-black text-[#A1F524] disabled:opacity-30 disabled:pointer-events-none"
+                                  aria-label={`Bajar ${ex.name}`}
+                                  title="Bajar"
+                                >
+                                  ↓
+                                </button>
                               </div>
+                              <button
+                                type="button"
+                                onClick={() => handleRemoveExerciseFromDay(activeDayIdx, exIdx)}
+                                className="px-2 py-1 text-[10px] font-bold text-[#FF453A] fitness-press"
+                                aria-label={`Quitar ${ex.name} de la rutina`}
+                              >
+                                Quitar ejercicio
+                              </button>
                             </div>
                           </div>
-
-                          {/* Sets x Reps Controls */}
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            <input
-                              type="number"
-                              min="1"
-                              max="10"
-                              value={ex.targetSets}
-                              onChange={(e) =>
-                                handleUpdateExerciseInDay(
-                                  activeDayIdx,
-                                  exIdx,
-                                  'targetSets',
-                                  parseInt(e.target.value) || 3
-                                )
-                              }
-                              className="w-9 text-center fitness-surface rounded-lg py-1 text-xs font-mono font-black text-[#64D2FF] outline-none"
-                              title="Series"
-                            />
-                            <span className="text-xs text-[#8E8E93] font-bold">x</span>
-                            <input
-                              type="text"
-                              value={ex.targetReps}
-                              onChange={(e) =>
-                                handleUpdateExerciseInDay(
-                                  activeDayIdx,
-                                  exIdx,
-                                  'targetReps',
-                                  e.target.value
-                                )
-                              }
-                              className="w-12 text-center fitness-surface rounded-lg py-1 text-xs font-mono font-black text-[#F5F5F7] outline-none"
-                              title="Repeticiones"
-                            />
-
-                            <button
-                              type="button"
-                              onClick={() => handleRemoveExerciseFromDay(activeDayIdx, exIdx)}
-                              className="w-6 h-6 rounded-full fitness-pill flex items-center justify-center text-[10px] text-[#FF453A] hover:bg-[#FF453A]/20 ml-1"
-                              title="Quitar ejercicio"
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        </div>
-                      ))
+                        );
+                      })
                     )}
 
                     {/* Open Catalog Button */}
@@ -512,12 +738,13 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                       type="button"
                       onClick={() => {
                         setPickerSearch('');
+                        setExerciseIndexToReplace(null);
                         setCurrentView('catalog');
                       }}
                       className="w-full py-3 rounded-full border border-dashed border-[#A1F524]/50 text-[#A1F524] hover:bg-[#A1F524]/10 text-xs font-black transition-all flex items-center justify-center gap-2"
                     >
                       <span className="text-sm">+</span>
-                      <span>Añadir Ejercicio desde Catálogo (1.324 con GIFs)</span>
+                      <span>Añadir ejercicio desde el catálogo</span>
                     </button>
                   </div>
                 </div>
@@ -540,7 +767,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                 className="flex-[2] py-3.5 rounded-full bg-gradient-to-r from-[#A1F524] to-[#2ECC71] text-black font-black text-xs shadow-[0_0_25px_rgba(161,245,36,0.35)] hover:scale-[1.01] active:scale-98 transition-all flex items-center justify-center gap-1.5"
               >
                 <span>✓</span>
-                <span>Guardar Rutina</span>
+                <span>{routineToEdit ? 'Guardar cambios' : 'Guardar Rutina'}</span>
               </button>
             </div>
           </>
@@ -564,10 +791,12 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
 
               <div className="text-right">
                 <h4 className="text-xs font-black text-[#F5F5F7] truncate max-w-[160px]">
-                  {currentDay.dayName}
+                  {exerciseIndexToReplace !== null ? 'Cambiar ejercicio' : currentDay.dayName}
                 </h4>
                 <p className="text-[10px] font-bold text-[#8E8E93]">
-                  {currentDay.exercises.length} ejercicios agregados
+                  {exerciseIndexToReplace !== null
+                    ? `Reemplaza ${currentDay.exercises[exerciseIndexToReplace]?.name || 'el ejercicio'}`
+                    : `${currentDay.exercises.length} ejercicios agregados`}
                 </p>
               </div>
             </div>
@@ -671,13 +900,15 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
 
                       {/* Action Button */}
                       <span
-                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all ${
-                          isAlreadyInDay
+                        className={`min-w-7 h-7 px-2 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all ${
+                          exerciseIndexToReplace !== null
+                            ? 'bg-[#00F0FF]/15 text-[#00F0FF]'
+                            : isAlreadyInDay
                             ? 'bg-[#A1F524] text-black shadow-md'
                             : 'bg-[#A1F524]/20 text-[#A1F524] hover:bg-[#A1F524] hover:text-black'
                         }`}
                       >
-                        {isAlreadyInDay ? '✓' : '+'}
+                        {exerciseIndexToReplace !== null ? 'Cambiar' : isAlreadyInDay ? '✓' : '+'}
                       </span>
                     </div>
                   );

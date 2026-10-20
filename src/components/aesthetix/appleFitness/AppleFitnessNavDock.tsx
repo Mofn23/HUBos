@@ -22,9 +22,10 @@ export const AppleFitnessNavDock: React.FC<AppleFitnessNavDockProps> = ({
 }) => {
   return (
     <div
-      className={`fixed bottom-6 left-4 right-4 z-40 max-w-md mx-auto transition-all duration-300 ease-out ${
+      className={`fixed left-4 right-4 z-40 max-w-md mx-auto transition-all duration-300 ease-out ${
         isHidden ? 'translate-y-28 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'
       }`}
+      style={{ bottom: 'calc(var(--safe-bottom) + 12px)' }}
     >
       {/* Live Workout Floating Mini Dynamic Island if active */}
       {activeSession && (

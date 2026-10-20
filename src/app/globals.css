@@ -1298,3 +1298,8 @@ html[data-theme="light"] .fitness-glass-dock {
   border-color: rgba(60, 60, 67, 0.16);
   box-shadow: 0 12px 32px rgba(30, 30, 40, 0.14), inset 0 1px 0 rgba(255,255,255,.9);
 }
+
+@keyframes exercise-reorder {
+  0% { transform: translateY(8px) scale(0.98); opacity: 0.72; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}

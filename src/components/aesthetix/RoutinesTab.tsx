@@ -19,6 +19,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
   const { showToast } = useHubStore();
 
   const [isCustomRoutineModalOpen, setIsCustomRoutineModalOpen] = useState(false);
+  const [routineToEdit, setRoutineToEdit] = useState<WorkoutRoutine | undefined>();
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
   const [showAllExercises, setShowAllExercises] = useState(false);
   const [selectedExerciseModal, setSelectedExerciseModal] = useState<Exercise | null>(null);
@@ -28,6 +29,11 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
   const activeRoutine =
     routines.find((r) => r.id === activeRoutineId) || routines[0];
+
+  const openRoutineCreator = () => {
+    setRoutineToEdit(undefined);
+    setIsCustomRoutineModalOpen(true);
+  };
 
   const handleDeleteCurrentRoutine = (routineId: string, name: string) => {
     if (routines.length <= 1) {
@@ -55,7 +61,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
         <h3 className="text-lg font-black text-[#F5F5F7]">No tienes ninguna rutina activa</h3>
         <p className="text-xs text-[#8E8E93]">Crea una rutina y organiza tus días de entrenamiento.</p>
         <button
-          onClick={() => setIsCustomRoutineModalOpen(true)}
+          onClick={openRoutineCreator}
           className="px-6 py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-95"
         >
           + Crear rutina
@@ -76,7 +82,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
           </span>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setIsCustomRoutineModalOpen(true)}
+              onClick={openRoutineCreator}
               className="text-[11px] font-black text-[#A1F524] hover:underline flex items-center gap-1"
             >
               <span>+ Manual (PPL x UL)</span>
@@ -134,10 +140,21 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
           </div>
         </div>
 
-        <div>
-          <h2 className="text-xl font-black text-[#F5F5F7] tracking-tight">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="min-w-0 text-xl font-black text-[#F5F5F7] tracking-tight truncate">
             {activeRoutine.name.replace(/^Protocolo\s+/i, '')}
           </h2>
+          <button
+            type="button"
+            onClick={() => {
+              setRoutineToEdit(activeRoutine);
+              setIsCustomRoutineModalOpen(true);
+            }}
+            className="fitness-pill shrink-0 px-3 py-2 rounded-full text-[11px] font-black text-[#A1F524] fitness-press"
+            aria-label={`Editar rutina ${activeRoutine.name}`}
+          >
+            ✎ Editar
+          </button>
         </div>
 
         {/* Start Today's Workout Quick Action */}
@@ -277,7 +294,15 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
       {/* Custom Routine Designer Modal */}
       <CustomRoutineModal
         isOpen={isCustomRoutineModalOpen}
-        onClose={() => setIsCustomRoutineModalOpen(false)}
+        routineToEdit={routineToEdit}
+        onClose={() => {
+          setIsCustomRoutineModalOpen(false);
+          setRoutineToEdit(undefined);
+        }}
+        onRoutineUpdated={(dayIndex) => {
+          setSelectedDayIdx(dayIndex);
+          setShowAllExercises(true);
+        }}
       />
 
       {/* Exercise Detail GIF & Instructions Modal */}
