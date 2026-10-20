@@ -13,20 +13,18 @@ export const MacroBars: React.FC<MacroBarsProps> = ({ protein, carbs, fat }) => 
     {
       key: 'protein',
       label: 'Proteína',
-      emoji: '🥩',
+      emoji: '💪',
       consumed: protein.consumed,
       target: protein.target,
-      barColor: '#FA114F',
-      glowColor: 'rgba(250, 17, 79, 0.4)',
+      gradient: 'from-[#0A84FF] to-[#64D2FF]',
     },
     {
       key: 'carbs',
       label: 'Carbohidratos',
-      emoji: '⚡',
+      emoji: '🍞',
       consumed: carbs.consumed,
       target: carbs.target,
-      barColor: '#00F0FF',
-      glowColor: 'rgba(0, 240, 255, 0.4)',
+      gradient: 'from-[#FF9F0A] to-[#FFD60A]',
     },
     {
       key: 'fat',
@@ -34,18 +32,16 @@ export const MacroBars: React.FC<MacroBarsProps> = ({ protein, carbs, fat }) => 
       emoji: '🥑',
       consumed: fat.consumed,
       target: fat.target,
-      barColor: '#FFD60A',
-      glowColor: 'rgba(255, 214, 10, 0.4)',
+      gradient: 'from-[#BF5AF2] to-[#DA8FFF]',
     },
   ];
 
   return (
-    <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-3xl p-5 mb-4 shadow-xl space-y-3.5">
-      <div className="flex items-center justify-between pb-1 border-b border-white/5">
+    <div className="bg-[#1C1C1E] border border-white/[0.08] rounded-[28px] p-5 mb-4 border-t-white/20 shadow-sm space-y-3.5">
+      <div className="flex items-center pb-1 border-b border-white/5">
         <span className="text-[11px] font-black uppercase tracking-wider text-[#8E8E93]">
           Macronutrientes Diarios
         </span>
-        <span className="text-[10px] font-bold text-[#8E8E93]">Meta por gramos</span>
       </div>
 
       <div className="space-y-3">
@@ -55,24 +51,21 @@ export const MacroBars: React.FC<MacroBarsProps> = ({ protein, carbs, fat }) => 
           return (
             <div key={m.key} className="space-y-1.5">
               <div className="flex items-center justify-between text-xs font-black">
-                <div className="flex items-center gap-1.5 text-white">
+                <div className="flex items-center gap-1.5 text-[#F5F5F7]">
                   <span className="text-sm">{m.emoji}</span>
                   <span>{m.label}</span>
                 </div>
-                <div className="text-[11px] font-black text-[#8E8E93]">
-                  <strong className="text-white font-black">{m.consumed}g</strong> / {m.target}g
-                  <span className="text-[10px] text-[#8E8E93] ml-1.5 font-bold">({pct}%)</span>
+                <div className="text-[11px] font-black text-[#8E8E93] whitespace-nowrap">
+                  <strong className="text-[#F5F5F7] font-black">{m.consumed}g</strong> / {m.target}g
                 </div>
               </div>
 
               {/* Progress Track */}
-              <div className="w-full h-2 rounded-full bg-[#2C2C2E] overflow-hidden p-0.5">
+              <div className="w-full h-2 rounded-full bg-white/[0.06] overflow-hidden p-0.5 border border-white/5">
                 <div
-                  className="h-full rounded-full transition-all duration-500"
+                  className={`h-full rounded-full bg-gradient-to-r ${m.gradient} transition-[width] duration-500 motion-reduce:transition-none`}
                   style={{
                     width: `${pct}%`,
-                    backgroundColor: m.barColor,
-                    boxShadow: `0 0 10px ${m.glowColor}`,
                   }}
                 />
               </div>

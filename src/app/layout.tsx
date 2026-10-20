@@ -17,7 +17,7 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#131313",
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -26,12 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es" className="dark" suppressHydrationWarning>
       <head>
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
-      <body className="antialiased select-none bg-[#131313] text-[#F5F5F7]">
+      <body className="antialiased select-none bg-black text-[#F5F5F7]">
         <div className="app-frame">
           {children}
         </div>

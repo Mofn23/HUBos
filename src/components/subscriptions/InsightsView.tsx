@@ -17,42 +17,42 @@ export const InsightsView: React.FC = () => {
   return (
     <div className="space-y-4 animate-fade-in pb-12">
       {/* Daily Cost Metric */}
-      <div className="fitness-card p-5 rounded-3xl flex items-center justify-between border border-white/[0.08]">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[26px] flex items-center justify-between">
         <div>
-          <span className="text-[11px] font-bold uppercase tracking-wider text-[#A1F524]">
+          <span className="text-[11px] font-black uppercase tracking-wider text-[#FF375F]">
             Gasto Diario Promedio
           </span>
-          <h3 className="text-2xl font-black text-white mt-0.5 tracking-tight">
+          <h3 className="text-2xl font-black text-[#F5F5F7] mt-0.5 tracking-tight">
             {formatCurrency(costPerDay, currency)}{' '}
-            <span className="text-xs font-semibold text-[#8E8E93]">/ día</span>
+            <span className="text-xs font-bold text-[#8E8E93]">/ día</span>
           </h3>
-          <p className="text-xs text-[#8E8E93] mt-0.5">En suscripciones y servicios fijos</p>
+          <p className="text-xs font-bold text-[#8E8E93] mt-0.5">En suscripciones y servicios fijos</p>
         </div>
 
-        <div className="w-12 h-12 rounded-2xl bg-[#A1F524]/15 border border-[#A1F524]/30 flex items-center justify-center text-[#A1F524]">
-          <IconZap className="w-6 h-6 text-[#A1F524]" />
+        <div className="w-12 h-12 rounded-2xl bg-[#2C2C2E] border border-white/5 flex items-center justify-center text-[#FF375F]">
+          <IconZap className="w-6 h-6" />
         </div>
       </div>
 
       {/* Category Breakdown */}
-      <div className="fitness-card p-5 rounded-3xl space-y-4 border border-white/[0.08]">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93]">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[26px] space-y-4">
+        <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93]">
           Distribución por Categoría
         </h3>
 
         <div className="space-y-3.5">
           {summary.categoryBreakdown.map((cat) => (
             <div key={cat.category} className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs font-semibold">
-                <span className="text-white">{cat.category} ({cat.count})</span>
-                <span className="text-[#A1F524] font-bold">
+              <div className="flex items-center justify-between text-xs font-bold">
+                <span className="text-[#F5F5F7]">{cat.category} ({cat.count})</span>
+                <span className="text-[#FF375F] font-black">
                   {formatCurrency(cat.monthlyAmount, currency)}{' '}
                   <span className="text-[10px] text-[#8E8E93] font-normal">({Math.round(cat.percentage)}%)</span>
                 </span>
               </div>
-              <div className="w-full h-2 rounded-full bg-[#2C2C2E] overflow-hidden">
+              <div className="w-full h-2.5 rounded-full bg-[#2C2C2E] border border-white/5 overflow-hidden p-0.5">
                 <div
-                  className="h-full rounded-full bg-[#A1F524] transition-all duration-700"
+                  className="h-full rounded-full bg-[#FF375F] transition-all duration-700"
                   style={{ width: `${cat.percentage}%` }}
                 />
               </div>
@@ -62,25 +62,25 @@ export const InsightsView: React.FC = () => {
       </div>
 
       {/* AI Optimization Tips */}
-      <div className="fitness-card p-5 rounded-3xl space-y-3.5 border border-white/[0.08]">
+      <div className="bg-[#1C1C1E] border border-white/5 p-5 rounded-[26px] space-y-3.5">
         <div className="flex items-center gap-2">
-          <IconSparkles className="w-4 h-4 text-[#A1F524]" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-white">
+          <IconSparkles className="w-4 h-4 text-[#FF375F]" />
+          <h3 className="text-xs font-black uppercase tracking-wider text-[#F5F5F7]">
             Recomendaciones de Ahorro IA
           </h3>
         </div>
 
         <div className="space-y-2.5 text-xs text-[#8E8E93]">
-          <div className="bg-[#242426] p-3.5 rounded-2xl border border-white/5 space-y-1">
-            <p className="font-bold text-white">💡 Optimización de Streaming</p>
-            <p className="text-[11px] text-[#8E8E93] leading-relaxed">
+          <div className="bg-[#2C2C2E] border border-white/5 p-3.5 rounded-2xl space-y-1">
+            <p className="font-extrabold text-[#F5F5F7]">💡 Optimización de Streaming</p>
+            <p className="text-[11px] font-bold text-[#8E8E93] leading-relaxed">
               Tienes múltiples servicios de entretenimiento activos. Alternar entre Netflix y YouTube Premium mes a mes podría ahorrarte hasta $240.000 COP al año.
             </p>
           </div>
 
-          <div className="bg-[#242426] p-3.5 rounded-2xl border border-white/5 space-y-1">
-            <p className="font-bold text-white">⚡ Planes Anuales con Descuento</p>
-            <p className="text-[11px] text-[#8E8E93] leading-relaxed">
+          <div className="bg-[#2C2C2E] border border-white/5 p-3.5 rounded-2xl space-y-1">
+            <p className="font-extrabold text-[#F5F5F7]">⚡ Planes Anuales con Descuento</p>
+            <p className="text-[11px] font-bold text-[#8E8E93] leading-relaxed">
               Servicios como Spotify o iCloud ofrecen hasta un 20% de descuento al facturarse en planes familiares o anuales.
             </p>
           </div>

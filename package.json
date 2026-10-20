@@ -1,6 +1,6 @@
 {
   "name": "hubos",
-  "version": "2.8.0",
+  "version": "2.7.0",
   "description": "HUBos — Super-App & Ecosistema Modular Nativo para iOS (SideStore/AltStore Compatible)",
   "private": true,
   "type": "module",

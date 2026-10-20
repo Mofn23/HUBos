@@ -204,7 +204,7 @@ export function getCachedStoreValue(name: string): string | null {
  * Export all HUBos persistent keys for backup / restore.
  */
 export async function exportAllHubosData(): Promise<Record<string, any>> {
-  const keys = ['hubos_main_v1', 'hubos_recomp_v1', 'hubos_subs_v1', 'hubos_schedule_store_v1', 'hubos_aesthetix_v1'];
+  const keys = ['hubos_main_v1', 'hubos_recomp_v1', 'hubos_subs_v1', 'hubos_aesthetix_v1'];
   const backup: Record<string, any> = {};
 
   for (const key of keys) {

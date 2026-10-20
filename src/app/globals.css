@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Baloo+2:wght@700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,44 +9,44 @@
    ============================================ */
 
 :root {
-  /* Dark Theme (Principal Apple Fitness OLED) */
+  /* Dark Theme (Principal OLED) */
   --bg-app: #000000;
   --bg-sheet: #1C1C1E;
   --surface: #1C1C1E;
-  --surface-elevated: #242426;
+  --surface-elevated: #2C2C2E;
   --tag: #2C2C2E;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border: rgba(255, 255, 255, 0.10);
+  --border-subtle: rgba(255, 255, 255, 0.06);
 
-  --text-primary: #FFFFFF;
+  --text-primary: #F5F5F7;
   --text-secondary: #8E8E93;
-  --text-placeholder: #48484A;
+  --text-placeholder: #3A3A3C;
   --text-muted: #636366;
 
-  --green: #A1F524;
-  --coral: #FA114F;
-  --pill-light: #FFFFFF;
-  --pill-light-text: #000000;
-  --water: #00F0FF;
+  --green: #C8FF45;
+  --coral: #FF375F;
+  --pill-light: #E9E9EC;
+  --pill-light-text: #1C1C1E;
+  --water: #A9C6FF;
 
-  --accent-green: #A1F524;
-  --accent-blue: #00F0FF;
+  --accent-green: #C8FF45;
+  --accent-blue: #0A84FF;
   --accent-orange: #FF9F0A;
   --accent-purple: #BF5AF2;
   --accent-yellow: #FFD60A;
-  --clay-accent: #A1F524;
+  --fitness-accent: #C8FF45;
 
   /* Radii MonAI */
   --radius-pill: 9999px;
   --radius-chart-bar: 24px;
   --radius-sheet-top: 32px;
   --radius-squircle: 22%;
-  --radius-card: 20px;
-  --radius-input: 16px;
+  --radius-card: 22px;
+  --radius-input: 14px;
 
   /* Typography MonAI */
-  --font-sans: 'Nunito', 'Baloo 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 
   --font-size-hero: 3.5rem;
@@ -55,10 +55,10 @@
   --font-size-sub: 0.875rem;
   --font-size-tag: 0.8125rem;
 
-  --motion-sheet: 240ms cubic-bezier(0.32, 0.72, 0.28, 1);
-  --motion-press: 100ms ease;
-  --transition-fast: 150ms ease;
-  --transition-base: 220ms ease;
+  --motion-sheet: 280ms cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-press: 120ms cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-fast: 150ms cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-base: 220ms cubic-bezier(0.23, 1, 0.32, 1);
 
   --safe-bottom: env(safe-area-inset-bottom, 16px);
   --safe-top: env(safe-area-inset-top, 44px);
@@ -83,7 +83,7 @@ html, body {
   background-color: var(--bg-app);
   color: var(--text-primary);
   font-family: var(--font-sans);
-  font-weight: 700;
+  font-weight: 400;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -99,16 +99,36 @@ input, textarea {
   user-select: text;
 }
 
+button {
+  transition-property: transform, color, background-color, border-color, opacity;
+  transition-duration: 120ms;
+  transition-timing-function: cubic-bezier(.23,1,.32,1);
+}
+
+button:active:not(:disabled) {
+  transform: scale(.97);
+}
+
+button:focus-visible, a:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--fitness-accent, #C8FF45);
+  outline-offset: 3px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
 /* Desktop framing wrapper */
 @media (min-width: 481px) {
   .app-frame {
-    width: 390px;
-    height: 844px;
+    width: min(390px, calc(100vw - 24px));
+    height: min(844px, calc(100dvh - 24px));
     border-radius: 48px;
     border: 10px solid #1C1C1E;
     box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.12);
     position: relative;
     overflow: hidden;
+    transform: translateZ(0);
     background-color: var(--bg-app);
     display: flex;
     flex-direction: column;
@@ -126,6 +146,7 @@ input, textarea {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    transform: translateZ(0);
   }
 }
 
@@ -938,198 +959,36 @@ input[type='number'] {
   animation: shrinkWidth linear forwards;
 }
 
-/* ============================================
-   Apple Fitness Design System & Emil Kowalski Motion Engine
-   OLED True Black (#000000), Apple Card Surfaces (#1C1C1E),
-   Vibrant Activity Neons, and Fluid Tactile Feedback.
-   ============================================ */
-
-/* 1. Base Apple Fitness Surfaces & Aliases */
-.fitness-card,
-.clay-surface,
-.glass-surface {
-  background-color: #1C1C1E;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease;
-}
-
-.fitness-card:hover,
-.clay-surface:hover,
-.glass-surface:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-}
-
-.fitness-card-elevated,
-.clay-surface-elevated,
-.glass-surface-elevated {
-  background-color: #242426;
-  border-radius: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease;
-}
-
-/* 2. Apple Fitness Pills & Segmented Controls */
-.fitness-pill,
-.clay-pill,
-.glass-pill {
-  background-color: #2C2C2E;
-  border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #FFFFFF;
+/* Shared Fitness surfaces for every module, list, sheet and modal. */
+.fitness-surface,
+.fitness-surface-elevated {
+  background: #1C1C1E;
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 22px;
   box-shadow: none;
-  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transition: transform 120ms cubic-bezier(.23,1,.32,1), border-color 150ms ease, background-color 150ms ease;
 }
 
-.fitness-pill:active,
-.clay-pill:active,
-.glass-pill:active {
-  transform: scale(0.96);
-  opacity: 0.85;
+.fitness-surface-elevated {
+  background: #242426;
+  border-color: rgba(255,255,255,.09);
 }
 
-.fitness-pill-active,
-.clay-pill-active,
-.glass-pill-active {
-  background-color: #FFFFFF;
-  color: #000000;
+.fitness-pill,
+.fitness-pill-active {
+  background: #2C2C2E;
+  border: 1px solid rgba(255,255,255,.08);
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  box-shadow: none;
+  transition: transform 120ms cubic-bezier(.23,1,.32,1), color 150ms ease, background-color 150ms ease;
 }
 
-/* 3. Floating Apple Bento Cards */
-.fitness-floating-card,
-.clay-floating-card,
-.glass-floating-card {
-  background-color: #1C1C1E;
-  border-radius: 24px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.18s ease;
-}
-
-.fitness-floating-card:hover,
-.clay-floating-card:hover,
-.glass-floating-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.65);
-}
-
-/* 4. Apple Fitness Vibrant Neon Action Buttons */
-/* Exercise Neon Lime Green (#A1F524) */
-.fitness-btn-lime,
-.clay-btn-emerald,
-.clay-btn-accent,
-.clay-btn-orange {
-  background-color: #A1F524;
-  color: #000000;
-  font-weight: 700;
-  border-radius: 9999px;
-  border: none;
-  box-shadow: 0 4px 16px rgba(161, 245, 36, 0.35);
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
-}
-
-.fitness-btn-lime:active,
-.clay-btn-emerald:active,
-.clay-btn-accent:active,
-.clay-btn-orange:active {
-  transform: scale(0.96);
-  filter: brightness(0.9);
-}
-
-/* Stand Neon Electric Cyan (#00F0FF) */
-.fitness-btn-cyan,
-.clay-btn-primary {
-  background-color: #00F0FF;
-  color: #000000;
-  font-weight: 700;
-  border-radius: 9999px;
-  border: none;
-  box-shadow: 0 4px 16px rgba(0, 240, 255, 0.35);
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
-}
-
-.fitness-btn-cyan:active,
-.clay-btn-primary:active {
-  transform: scale(0.96);
-  filter: brightness(0.9);
-}
-
-/* Move Neon Coral Red / Pink (#FA114F) */
-.fitness-btn-red,
-.clay-btn-coral {
-  background-color: #FA114F;
-  color: #FFFFFF;
-  font-weight: 700;
-  border-radius: 9999px;
-  border: none;
-  box-shadow: 0 4px 16px rgba(250, 17, 79, 0.35);
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
-}
-
-.fitness-btn-red:active,
-.clay-btn-coral:active {
-  transform: scale(0.96);
-  filter: brightness(0.9);
-}
-
-/* Awards / Steps Neon Yellow (#FFD60A) */
-.fitness-btn-yellow,
-.clay-btn-amber {
-  background-color: #FFD60A;
-  color: #000000;
-  font-weight: 700;
-  border-radius: 9999px;
-  border: none;
-  box-shadow: 0 4px 16px rgba(255, 214, 10, 0.35);
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
-}
-
-.fitness-btn-yellow:active,
-.clay-btn-amber:active {
-  transform: scale(0.96);
-  filter: brightness(0.9);
-}
-
-/* Purple / HIIT Accent (#BF5AF2) */
-.fitness-btn-purple,
-.clay-btn-purple {
-  background-color: #BF5AF2;
-  color: #FFFFFF;
-  font-weight: 700;
-  border-radius: 9999px;
-  border: none;
-  box-shadow: 0 4px 16px rgba(191, 90, 242, 0.35);
-  transition: transform 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.12s ease;
-}
-
-.fitness-btn-purple:active,
-.clay-btn-purple:active {
-  transform: scale(0.96);
-  filter: brightness(0.9);
-}
-
-/* 5. Apple Fitness Ambient Auras */
-.clay-glow-emerald,
-.glass-glow-emerald,
-.clay-glow-orange {
-  box-shadow: 0 0 24px rgba(161, 245, 36, 0.25);
-}
-
-.clay-glow-cyan,
-.glass-glow-cyan {
-  box-shadow: 0 0 24px rgba(0, 240, 255, 0.25);
-}
-
-.clay-glow-purple,
-.glass-glow-purple {
-  box-shadow: 0 0 24px rgba(191, 90, 242, 0.25);
+.fitness-pill-active {
+  background: rgba(161,245,36,.14);
+  border-color: rgba(161,245,36,.36);
+  color: #A1F524;
 }
 
 /* ========================================================
@@ -1164,7 +1023,8 @@ input[type='number'] {
   --fitness-red: #FA114F;
   --fitness-red-glow: rgba(250, 17, 79, 0.5);
   --fitness-green: #A1F524;
-  --fitness-green-glow: rgba(161, 245, 36, 0.5);
+  --fitness-accent: #C8FF45;
+  --fitness-green-glow: rgba(161, 245, 36, 0.28);
   --fitness-cyan: #00F0FF;
   --fitness-cyan-glow: rgba(0, 240, 255, 0.5);
   --fitness-yellow: #FFD60A;
@@ -1193,6 +1053,79 @@ input[type='number'] {
   border-radius: 24px;
 }
 
+/* Aesthetix tabs share the same quiet Apple Fitness surface hierarchy. */
+.aesthetix-tab-redesign .fitness-surface,
+.aesthetix-tab-redesign .fitness-surface-elevated,
+.aesthetix-tab-redesign .fitness-card,
+.aesthetix-tab-redesign .fitness-card-elevated {
+  border-radius: 26px;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.aesthetix-tab-redesign .fitness-surface {
+  background: #1c1c1e;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.aesthetix-tab-redesign .fitness-surface-elevated {
+  background: #242426;
+  border-color: rgba(255, 255, 255, 0.09);
+}
+
+.aesthetix-tab-redesign .fitness-pill {
+  background: #2c2c2e;
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+.aesthetix-tab-redesign button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.aesthetix-tab-redesign button:active {
+  transform: scale(0.97);
+  transition-duration: 100ms;
+}
+
+.live-workout-ui button {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 140ms cubic-bezier(.23, 1, .32, 1), background-color 160ms ease, border-color 160ms ease;
+}
+
+.live-workout-ui button:active {
+  transform: scale(.97);
+}
+
+.live-workout-ui input,
+.live-workout-ui textarea {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-workout-ui *,
+  .live-workout-ui *::before,
+  .live-workout-ui *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aesthetix-tab-redesign *,
+  .aesthetix-tab-redesign *::before,
+  .aesthetix-tab-redesign *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 .fitness-glass-dock {
   background: rgba(28, 28, 30, 0.84);
   backdrop-filter: blur(28px) saturate(200%);
@@ -1203,7 +1136,6 @@ input[type='number'] {
 
 .fitness-press {
   transition: transform 120ms var(--ease-out), opacity 120ms var(--ease-out);
-  will-change: transform;
 }
 
 .fitness-press:active {
@@ -1223,19 +1155,19 @@ input[type='number'] {
 }
 
 .stagger-1 {
-  animation: appleFadeUp 320ms var(--ease-out) 0ms both;
+  animation: appleFadeUp 180ms var(--ease-out) 0ms both;
 }
 .stagger-2 {
-  animation: appleFadeUp 320ms var(--ease-out) 40ms both;
+  animation: appleFadeUp 180ms var(--ease-out) 24ms both;
 }
 .stagger-3 {
-  animation: appleFadeUp 320ms var(--ease-out) 80ms both;
+  animation: appleFadeUp 180ms var(--ease-out) 48ms both;
 }
 .stagger-4 {
-  animation: appleFadeUp 320ms var(--ease-out) 120ms both;
+  animation: appleFadeUp 180ms var(--ease-out) 72ms both;
 }
 .stagger-5 {
-  animation: appleFadeUp 320ms var(--ease-out) 160ms both;
+  animation: appleFadeUp 180ms var(--ease-out) 96ms both;
 }
 
 @keyframes barGrowth {
@@ -1251,7 +1183,7 @@ input[type='number'] {
 
 .animate-bar-grow {
   transform-origin: bottom;
-  animation: barGrowth 480ms var(--ease-out) forwards;
+  animation: barGrowth 300ms var(--ease-out) forwards;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1271,3 +1203,98 @@ input[type='number'] {
 }
 
 
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* App-wide light appearance. Dark remains the default and all persisted screens
+   use the same small palette, so these overrides cover every module and sheet. */
+html[data-theme="light"] {
+  color-scheme: light;
+  background: #F2F2F7;
+}
+
+html[data-theme="light"] body,
+html[data-theme="light"] .app-frame,
+html[data-theme="light"] main.bg-black {
+  background-color: #F2F2F7 !important;
+  color: #1C1C1E !important;
+}
+
+@media (min-width: 481px) {
+  html[data-theme="light"] .app-frame {
+    border-color: #D1D1D6;
+    box-shadow: 0 18px 48px rgba(30, 30, 40, 0.18), 0 0 0 1px rgba(60, 60, 67, 0.12);
+  }
+}
+
+html[data-theme="light"] [class~="bg-[#000000]"],
+html[data-theme="light"] [class~="bg-black"] {
+  background-color: #F2F2F7 !important;
+}
+
+html[data-theme="light"] [class~="bg-[#1C1C1E]"],
+html[data-theme="light"] [class~="bg-[#18181A]"],
+html[data-theme="light"] [class~="bg-[#161618]"],
+html[data-theme="light"] [class~="bg-[#0B0B0D]"],
+html[data-theme="light"] [class~="bg-[#0F0F11]"],
+html[data-theme="light"] [class~="bg-[#18181B]"],
+html[data-theme="light"] [class~="bg-[#19191C]"],
+html[data-theme="light"] [class~="bg-[#191922]"] {
+  background-color: #FFFFFF !important;
+}
+
+html[data-theme="light"] [class~="bg-[#2C2C2E]"],
+html[data-theme="light"] [class~="bg-[#242426]"],
+html[data-theme="light"] [class~="bg-[#141416]"],
+html[data-theme="light"] [class~="bg-[#3A3A3C]"],
+html[data-theme="light"] [class~="bg-[#2A2A2C]"] {
+  background-color: #F2F2F7 !important;
+}
+
+html[data-theme="light"] [class~="text-[#F5F5F7]"],
+html[data-theme="light"] [class~="text-white"],
+html[data-theme="light"] [class~="text-[#E2E8F0]"],
+html[data-theme="light"] [class~="text-[#D1D1D6]"],
+html[data-theme="light"] [class~="text-[#E5E5EA]"] {
+  color: #1C1C1E !important;
+}
+
+html[data-theme="light"] [class~="border-white/[0.08]"],
+html[data-theme="light"] [class~="border-white/5"],
+html[data-theme="light"] [class~="border-white/10"],
+html[data-theme="light"] [class~="border-white/20"] {
+  border-color: rgba(60, 60, 67, 0.14) !important;
+}
+
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea,
+html[data-theme="light"] .input-field {
+  background-color: #F2F2F7 !important;
+  color: #1C1C1E !important;
+  border-color: rgba(60, 60, 67, 0.2) !important;
+  color-scheme: light !important;
+}
+
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+  color: #8E8E93 !important;
+}
+
+html[data-theme="light"] select option {
+  background-color: #FFFFFF !important;
+  color: #1C1C1E !important;
+}
+
+html[data-theme="light"] .fitness-glass-dock {
+  background: rgba(255, 255, 255, 0.88);
+  border-color: rgba(60, 60, 67, 0.16);
+  box-shadow: 0 12px 32px rgba(30, 30, 40, 0.14), inset 0 1px 0 rgba(255,255,255,.9);
+}

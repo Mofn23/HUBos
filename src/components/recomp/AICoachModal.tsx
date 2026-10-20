@@ -10,13 +10,13 @@ import { IconSparkles, IconSend, IconTrash } from '../common/Icons';
 
 export const AICoachModal: React.FC = () => {
   const { geminiApiKey, showToast } = useHubStore();
-  const { coachMessages, addCoachMessage, clearCoachChat, meals, targetCalories, targetProtein, targetCarbs, trainingLogs } = useRecompStore();
+  const { coachMessages, addCoachMessage, clearCoachChat, meals, targetCalories, targetProtein, trainingLogs } = useRecompStore();
 
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const todayKey = getTodayKey();
-  const nutrition = calculateDailyNutrition(meals, todayKey, targetCalories, targetCarbs);
+  const nutrition = calculateDailyNutrition(meals, todayKey);
   const lastWorkout = trainingLogs[0]?.title;
 
   const handleSendMessage = async () => {
@@ -61,22 +61,22 @@ export const AICoachModal: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-[calc(100vh-210px)] pb-12 animate-fade-in">
+    <div className="flex-1 flex flex-col h-[calc(100vh-210px)] pb-12 animate-fade-in motion-reduce:animate-none">
       {/* Coach Header */}
-      <div className="p-4 rounded-2xl bg-[#1C1C1E] border border-white/5 flex items-center justify-between mb-3">
+      <div className="p-4 rounded-2xl bg-[#1C1C1E] border border-white/10 flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-[#00F0FF]/20 border border-[#00F0FF]/30 flex items-center justify-center text-[#00F0FF] shadow-md">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#A1F524] to-[#0A84FF] flex items-center justify-center text-white shadow-sm">
             <IconSparkles className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-black text-[#F5F5F7]">Recomp Coach AI</h3>
-            <p className="text-[11px] text-[#A1F524] font-black">Gemini 2.0 Flash Activo</p>
+            <h3 className="text-sm font-extrabold text-[#F5F5F7]">Recomp Coach AI</h3>
+            <p className="text-[11px] text-[#A1F524] font-semibold">Gemini 2.0 Flash Activo</p>
           </div>
         </div>
 
         <button
           onClick={clearCoachChat}
-          className="w-8 h-8 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-[#8E8E93] hover:text-[#FA114F] transition-colors fitness-press"
+          className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-[#8E8E93] hover:text-[#E8505B] transition-colors"
           title="Limpiar Conversación"
         >
           <IconTrash className="w-4 h-4" />
@@ -95,8 +95,8 @@ export const AICoachModal: React.FC = () => {
               <div
                 className={`max-w-[85%] p-3.5 rounded-2xl text-xs leading-relaxed ${
                   isUser
-                    ? 'bg-[#A1F524] text-black font-black rounded-br-none shadow-md shadow-[#A1F524]/10'
-                    : 'bg-[#242426] text-[#F5F5F7] border border-white/5 rounded-bl-none shadow-sm font-semibold'
+                    ? 'bg-[#A1F524] text-black font-semibold rounded-br-none shadow-sm'
+                    : 'bg-[#1C1C1E] text-[#F5F5F7] border border-white/10 rounded-bl-none shadow-sm'
                 }`}
               >
                 {msg.text}
@@ -107,9 +107,9 @@ export const AICoachModal: React.FC = () => {
 
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-[#242426] border border-white/5 text-[#8E8E93] text-xs px-3.5 py-2.5 rounded-2xl rounded-bl-none flex items-center gap-2 animate-pulse">
+            <div className="bg-[#1C1C1E] border border-white/10 text-[#8E8E93] text-xs px-3.5 py-2.5 rounded-2xl rounded-bl-none flex items-center gap-2 animate-pulse">
               <IconSparkles className="w-3.5 h-3.5 text-[#A1F524]" />
-              <span className="font-bold">El Coach está escribiendo...</span>
+              <span>El Coach está escribiendo...</span>
             </div>
           </div>
         )}
@@ -126,12 +126,12 @@ export const AICoachModal: React.FC = () => {
           }}
           placeholder="Pregunta sobre tu dieta, déficit o rutina..."
           disabled={isLoading}
-          className="flex-1 bg-transparent text-xs text-[#F5F5F7] px-2 placeholder-[#8E8E93] font-bold focus:outline-none"
+          className="flex-1 bg-transparent text-xs text-[#F5F5F7] px-2 placeholder-[#8E8E93] focus:outline-none"
         />
         <button
           onClick={handleSendMessage}
           disabled={isLoading || !input.trim()}
-          className="w-9 h-9 rounded-full bg-[#A1F524] text-black flex items-center justify-center disabled:opacity-30 fitness-press transition-all shadow-md shadow-[#A1F524]/20"
+          className="w-9 h-9 rounded-xl bg-[#A1F524] text-black flex items-center justify-center disabled:opacity-30 active:scale-95 motion-reduce:active:scale-100 transition-colors duration-150 motion-reduce:transition-none shadow"
         >
           <IconSend className="w-4 h-4 stroke-[2.5]" />
         </button>

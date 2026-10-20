@@ -38,31 +38,35 @@ export const BottomModal: React.FC<BottomModalProps> = ({
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity animate-fade-in"
+        className="fixed inset-0 bg-black/72 backdrop-blur-sm transition-opacity animate-fade-in"
         onClick={onClose}
+        aria-hidden="true"
       />
 
       {/* Sheet Content */}
       <div
-        className={`relative w-full max-w-lg bg-[#1C1C1E] rounded-t-[32px] border-t border-white/10 shadow-2xl flex flex-col ${maxHeightClass} animate-slide-up z-10 overflow-hidden`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title || 'Ventana'}
+        className={`relative w-full max-w-lg bg-[#1C1C1E] rounded-t-[28px] border border-white/[0.08] shadow-[0_-12px_48px_rgba(0,0,0,.4)] flex flex-col ${maxHeightClass} animate-slide-up z-10 overflow-hidden`}
       >
         {/* Grab Handle */}
         <div className="pt-3 pb-1 flex justify-center cursor-pointer" onClick={onClose}>
-          <div className="w-12 h-1.5 bg-white/20 rounded-full" />
+          <div className="w-9 h-1 bg-white/25 rounded-full" />
         </div>
 
         {/* Header */}
         {(title || headerAction) && (
-          <div className="flex items-center justify-between px-6 py-3 border-b border-white/5">
+          <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.08]">
             <div>
-              {title && <h2 className="text-lg font-bold text-white tracking-tight">{title}</h2>}
+              {title && <h2 className="text-lg font-bold text-[#F5F5F7] tracking-tight">{title}</h2>}
               {subtitle && <p className="text-xs text-[#8E8E93] mt-0.5">{subtitle}</p>}
             </div>
             <div className="flex items-center gap-2">
               {headerAction}
               <button
                 onClick={onClose}
-                className="w-8 h-8 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors active:scale-95 fitness-press"
+                className="w-9 h-9 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[#8E8E93] hover:text-white transition-colors active:scale-95"
               >
                 <IconX className="w-4 h-4" />
               </button>

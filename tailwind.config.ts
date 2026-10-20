@@ -10,10 +10,10 @@ const config: Config = {
     extend: {
       colors: {
         hub: {
-          bg: "#131313",
+          bg: "#000000",
           surface: "#1C1C1E",
-          surfaceCard: "#18181A",
-          elevated: "#2A2A2C",
+          surfaceCard: "#1C1C1E",
+          elevated: "#2C2C2E",
           elevatedLight: "#3A3A3C",
           tag: "#242426",
           border: "rgba(255, 255, 255, 0.10)",
@@ -22,7 +22,7 @@ const config: Config = {
           textPrimary: "#F5F5F7",
           textSecondary: "#8E8E93",
           textMuted: "#636366",
-          green: "#34C759",
+          green: "#A1F524",
           red: "#E8505B",
           blue: "#0A84FF",
           orange: "#FF9500",
@@ -46,8 +46,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: [
-          "var(--font-nunito)",
-          "Nunito",
+          "Inter",
           "-apple-system",
           "BlinkMacSystemFont",
           "SF Pro Text",
@@ -58,12 +57,12 @@ const config: Config = {
       },
       borderRadius: {
         pill: "9999px",
-        card: "24px",
-        sheet: "32px",
-        modal: "36px",
+        card: "22px",
+        sheet: "28px",
+        modal: "28px",
       },
       boxShadow: {
-        glowGreen: "0 0 24px rgba(52, 199, 89, 0.25)",
+        glowGreen: "0 0 16px rgba(161, 245, 36, 0.18)",
         glowBlue: "0 0 24px rgba(10, 132, 255, 0.25)",
         glowRed: "0 0 24px rgba(232, 80, 91, 0.25)",
         modal: "0 20px 60px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.08)",

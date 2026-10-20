@@ -10,7 +10,7 @@ const STANDARD_PLATES_KG = [
   { weight: 25, color: '#E8505B' }, // Red
   { weight: 20, color: '#0A84FF' }, // Blue
   { weight: 15, color: '#FECA57' }, // Yellow
-  { weight: 10, color: '#34C759' }, // Green
+  { weight: 10, color: '#A1F524' }, // Green
   { weight: 5, color: '#FFFFFF' },  // White
   { weight: 2.5, color: '#8E8E93' }, // Silver/Grey
   { weight: 1.25, color: '#636366' }, // Dark Grey

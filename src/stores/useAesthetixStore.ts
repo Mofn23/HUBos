@@ -18,7 +18,6 @@ import {
   calculateOverallRank,
   mapTargetToAnatomy,
   TIERS_CATALOG,
-  SAMUEL_BASELINE_RANKS,
 } from '@/lib/muscleRanks';
 import { getExerciseById, getAllExercises } from '@/lib/exercisesDb';
 
@@ -489,122 +488,6 @@ export const PPL_X_UP_ROUTINE: WorkoutRoutine = {
   ],
 };
 
-// Seed PRs from Samuel's Symmetry screenshots
-const SAMUEL_INITIAL_PRS: Record<string, PersonalRecord> = {
-  '0314': {
-    exerciseId: '0314',
-    exerciseName: 'Press De Banca Inclinado (Mancuerna)',
-    maxWeightKg: 45,
-    maxReps: 11,
-    estimated1RM: 61.5,
-    date: '2026-09-17',
-  },
-  '0334': {
-    exerciseId: '0334',
-    exerciseName: 'Elevaciones Laterales (Mancuerna)',
-    maxWeightKg: 14,
-    maxReps: 10,
-    estimated1RM: 18.7,
-    date: '2026-09-15',
-  },
-  '0405': {
-    exerciseId: '0405',
-    exerciseName: 'Press De Hombros Sentado (Mancuerna)',
-    maxWeightKg: 30,
-    maxReps: 9,
-    estimated1RM: 39.0,
-    date: '2026-09-15',
-  },
-  '0150': {
-    exerciseId: '0150',
-    exerciseName: 'Jalón Al Pecho Agarre Cerrado (Polea)',
-    maxWeightKg: 65,
-    maxReps: 12,
-    estimated1RM: 91.0,
-    date: '2026-09-14',
-  },
-  '0009': {
-    exerciseId: '0009',
-    exerciseName: 'Fondos De Tríceps Agarre Cerrado',
-    maxWeightKg: 100,
-    maxReps: 12,
-    estimated1RM: 140.0,
-    date: '2026-09-11',
-  },
-  '0070': {
-    exerciseId: '0070',
-    exerciseName: 'Curl De Bíceps (Barra EZ)',
-    maxWeightKg: 30,
-    maxReps: 10,
-    estimated1RM: 40.0,
-    date: '2026-09-10',
-  },
-  '0025': {
-    exerciseId: '0025',
-    exerciseName: 'Press De Banca Plano',
-    maxWeightKg: 95,
-    maxReps: 8,
-    estimated1RM: 120.3,
-    date: '2026-09-08',
-  },
-  '0596': {
-    exerciseId: '0596',
-    exerciseName: 'Aperturas De PeckDeck',
-    maxWeightKg: 85,
-    maxReps: 10,
-    estimated1RM: 113.3,
-    date: '2026-09-05',
-  },
-  '0739': {
-    exerciseId: '0739',
-    exerciseName: 'Prensa Inclinada 45°',
-    maxWeightKg: 240,
-    maxReps: 10,
-    estimated1RM: 320.0,
-    date: '2026-09-04',
-  },
-  '0598': {
-    exerciseId: '0598',
-    exerciseName: 'Aductores (Máquina)',
-    maxWeightKg: 80,
-    maxReps: 10,
-    estimated1RM: 106.7,
-    date: '2026-09-03',
-  },
-  '0597': {
-    exerciseId: '0597',
-    exerciseName: 'Abductores (Máquina)',
-    maxWeightKg: 70,
-    maxReps: 10,
-    estimated1RM: 93.3,
-    date: '2026-09-03',
-  },
-  '0605': {
-    exerciseId: '0605',
-    exerciseName: 'Elevación De Talones (Máquina)',
-    maxWeightKg: 90,
-    maxReps: 12,
-    estimated1RM: 126.0,
-    date: '2026-09-02',
-  },
-  '0599': {
-    exerciseId: '0599',
-    exerciseName: 'Curl Femoral Sentado',
-    maxWeightKg: 60,
-    maxReps: 10,
-    estimated1RM: 80.0,
-    date: '2026-09-01',
-  },
-  '0175': {
-    exerciseId: '0175',
-    exerciseName: 'Crunch Abdominal / Giro Ruso',
-    maxWeightKg: 11,
-    maxReps: 25,
-    estimated1RM: 20.2,
-    date: '2026-09-16',
-  },
-};
-
 export const useAesthetixStore = create<AesthetixState>()(
   persist(
     (set, get) => ({
@@ -1010,7 +893,7 @@ export const useAesthetixStore = create<AesthetixState>()(
           currentStreak: streak,
           longestStreak: longest,
           lastWorkoutDate: dateStr,
-          totalWorkoutsCount: (state.totalWorkoutsCount || 112) + 1,
+          totalWorkoutsCount: (state.totalWorkoutsCount || 0) + 1,
         });
 
         return historyItem;
@@ -1025,16 +908,16 @@ export const useAesthetixStore = create<AesthetixState>()(
       addHistoricalWorkout: (item) => {
         set((state) => ({
           history: [item, ...state.history],
-          totalWorkoutsCount: (state.totalWorkoutsCount || 112) + 1,
+          totalWorkoutsCount: (state.totalWorkoutsCount || 0) + 1,
         }));
       },
 
-      prs: SAMUEL_INITIAL_PRS,
+      prs: {},
 
       // Cumulative Volume & Symmetry Data
-      importedVolumeKg: 1100000,
+      importedVolumeKg: 0,
       setImportedVolumeKg: (vol) => set({ importedVolumeKg: vol }),
-      totalWorkoutsCount: 112,
+      totalWorkoutsCount: 0,
       setTotalWorkoutsCount: (count) => set({ totalWorkoutsCount: count }),
       getTotalLifetimeVolumeKg: () => {
         const state = get();
@@ -1042,7 +925,7 @@ export const useAesthetixStore = create<AesthetixState>()(
           (sum, h) => sum + (h.totalVolumeKg || 0),
           0
         );
-        return (state.importedVolumeKg || 1100000) + historyVol;
+        return historyVol;
       },
 
       userWeightKg: 75,
@@ -1064,9 +947,9 @@ export const useAesthetixStore = create<AesthetixState>()(
       workoutDaysTarget: 5,
       setWorkoutDaysTarget: (days) => set({ workoutDaysTarget: days }),
 
-      currentStreak: 7,
-      longestStreak: 14,
-      lastWorkoutDate: '2026-09-17',
+      currentStreak: 0,
+      longestStreak: 0,
+      lastWorkoutDate: null,
 
       restTimerDefault: 150,
       setRestTimerDefault: (sec) => set({ restTimerDefault: sec }),
@@ -1151,11 +1034,8 @@ export const useAesthetixStore = create<AesthetixState>()(
         });
 
         const tiers: Record<AnatomicalMuscle, MuscleTierInfo> = {} as any;
-        (Object.keys(SAMUEL_BASELINE_RANKS) as AnatomicalMuscle[]).forEach((muscle) => {
-          const calculated = getTierFor1RM(muscle, muscle1RMs[muscle], weight);
-          const baseline = SAMUEL_BASELINE_RANKS[muscle];
-          // Preserve baseline if calculated level is lower
-          tiers[muscle] = (calculated.level >= baseline.level) ? calculated : baseline;
+        (Object.keys(muscle1RMs) as AnatomicalMuscle[]).forEach((muscle) => {
+          tiers[muscle] = getTierFor1RM(muscle, muscle1RMs[muscle], weight);
         });
 
         return tiers;
@@ -1163,6 +1043,20 @@ export const useAesthetixStore = create<AesthetixState>()(
 
       getOverallRank: () => {
         const state = get();
+        const hasRecordedPr = Object.values(state.prs).some((pr) => pr.estimated1RM > 0);
+        if (!hasRecordedPr) {
+          return {
+            overallTier: {
+              ...TIERS_CATALOG.hierro_1,
+              label: 'Sin datos',
+              level: 0,
+              percentile: undefined,
+              description: 'Registra un entrenamiento para calcular tu rango.',
+            },
+            averageLevel: 0,
+            progressToNext: 0,
+          };
+        }
         const tiers = state.getMuscleTiers();
         return calculateOverallRank(tiers);
       },
@@ -1195,16 +1089,19 @@ export const useAesthetixStore = create<AesthetixState>()(
           merged.activeRoutineId = 'routine_ppl_x_up';
         }
 
-        if (!merged.importedVolumeKg || merged.importedVolumeKg === 175000) {
-          merged.importedVolumeKg = 1100000;
+        const savedHistory = Array.isArray(merged.history) ? merged.history : [];
+        merged.history = savedHistory;
+        merged.totalWorkoutsCount = savedHistory.length;
+        merged.importedVolumeKg = 0;
+        if (savedHistory.length === 0) {
+          // Remove demonstration metrics left by earlier builds when there is no logged session.
+          merged.prs = {};
+          merged.currentStreak = 0;
+          merged.longestStreak = 0;
+          merged.lastWorkoutDate = null;
+        } else {
+          merged.prs = merged.prs || {};
         }
-
-        if (!merged.totalWorkoutsCount) {
-          merged.totalWorkoutsCount = 112;
-        }
-
-        // Merge baseline PRs
-        merged.prs = { ...SAMUEL_INITIAL_PRS, ...(merged.prs || {}) };
 
         return merged;
       },

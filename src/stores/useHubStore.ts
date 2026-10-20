@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { nativeStorage } from '@/lib/nativeStorage';
 
-export type AppModule = 'hub' | 'recomp' | 'subs' | 'schedule' | 'aesthetix';
+export type AppModule = 'hub' | 'recomp' | 'subs' | 'aesthetix';
 
 export interface HubQuickAction {
   id: string;
@@ -27,6 +27,8 @@ interface HubState {
   setCurrency: (curr: string) => void;
   notificationsEnabled: boolean;
   setNotificationsEnabled: (enabled: boolean) => void;
+  themeMode: 'dark' | 'light';
+  setThemeMode: (mode: 'dark' | 'light') => void;
   
   // Fast switcher & UI
   isSettingsOpen: boolean;
@@ -59,6 +61,8 @@ export const useHubStore = create<HubState>()(
       setCurrency: (curr) => set({ currency: curr }),
       notificationsEnabled: true,
       setNotificationsEnabled: (enabled) => set({ notificationsEnabled: enabled }),
+      themeMode: 'dark',
+      setThemeMode: (mode) => set({ themeMode: mode }),
       
       isSettingsOpen: false,
       setIsSettingsOpen: (open) => set({ isSettingsOpen: open }),
@@ -82,6 +86,7 @@ export const useHubStore = create<HubState>()(
         userName: state.userName,
         currency: state.currency,
         notificationsEnabled: state.notificationsEnabled,
+        themeMode: state.themeMode,
       }),
     }
   )

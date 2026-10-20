@@ -426,21 +426,6 @@ export const TIER_ORDER: MuscleTierName[] = [
 ];
 
 /**
- * Samuel's exact baseline ranks extracted directly from Symmetry.
- */
-export const SAMUEL_BASELINE_RANKS: Record<AnatomicalMuscle, MuscleTierInfo> = {
-  pecho: TIERS_CATALOG.esmeralda_2, // Esmeralda II (Top 17%)
-  espalda: TIERS_CATALOG.rubi_2, // Rubí II (Top 27%)
-  hombros: TIERS_CATALOG.rubi_1, // Rubí I (Top 31%)
-  biceps: TIERS_CATALOG.rubi_3, // Bíceps Rubí III (Top 23%)
-  triceps: TIERS_CATALOG.diamante_2, // Tríceps Diamante II (Top 9%)
-  piernas: TIERS_CATALOG.rubi_2, // Rubí II (Top 27%)
-  gluteos: TIERS_CATALOG.oro_1, // Glúteos
-  pantorrillas: TIERS_CATALOG.oro_2, // Gemelos Oro II (Top 40%)
-  abdomen: TIERS_CATALOG.oro_2, // Abdominales Oro II (Top 40%)
-};
-
-/**
  * Calculates Estimated One Rep Max (1RM) using the Epley formula:
  * 1RM = Weight * (1 + Reps / 30)
  */
@@ -572,9 +557,9 @@ export function getTierFor1RM(
   best1RM: number,
   userWeightKg: number = 75
 ): MuscleTierInfo {
-  // If no 1RM has been registered yet, use Samuel's baseline tier
+  // Without a logged lift, there is no basis for a personal rank.
   if (best1RM <= 0) {
-    return SAMUEL_BASELINE_RANKS[muscle] || TIERS_CATALOG.rubi_2;
+    return TIERS_CATALOG.hierro_1;
   }
 
   const weight = Math.max(50, userWeightKg || 75);

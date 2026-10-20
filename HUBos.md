@@ -70,7 +70,7 @@ graph TD
 
 - **Repositorio Oficial de GitHub:** [github.com/Mofn23/HUBos](https://github.com/Mofn23/HUBos)
 - **Branch Activa:** `main` (rama limpia y sincronizada con el remoto).
-- **Diseño Visual:** Apple Fitness 1:1 Dark Mode OLED (`#000000`, `#1C1C1E`, `#242426`, `#2C2C2E`), paleta oficial: Move (`#FA114F`), Exercise (`#A1F524`), Stand (`#00F0FF`), Awards (`#FFD60A`), Segmented tabs blancos puros (`bg-white text-black font-black`), cero claymorphism, micro-animaciones y física táctil `fitness-press` a 60fps.
+- **Diseño Visual:** Dark Mode OLED (`#131313`, `#1C1C1E`), acentos Verde iOS (`#34C759`) y Azul iOS (`#0A84FF`), micro-animaciones a 60fps con soporte para Dynamic Island.
 - **Almacenamiento Local:** `@capacitor/preferences` con persistencia nativa offline-first.
 
 ---

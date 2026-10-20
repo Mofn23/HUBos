@@ -2,29 +2,20 @@
 
 import React from 'react';
 import { useHubStore, AppModule } from '@/stores/useHubStore';
-import {
-  IconHome,
-  IconZap,
-  IconActivity,
-  IconCreditCard,
-  IconCalendar,
-  IconSparkles,
-} from '../common/Icons';
+import { IconHome, IconDumbbell, IconCreditCard, IconSparkles } from '../common/Icons';
 
 export const FloatingHubBar: React.FC = () => {
   const { currentApp, setCurrentApp, setIsQuickAiPromptOpen } = useHubStore();
 
-  const navItems: { id: AppModule; label: string; icon: React.FC<{ className?: string }>; accent: string }[] = [
-    { id: 'hub', label: 'HUB', icon: IconHome, accent: '#FFFFFF' },
-    { id: 'aesthetix', label: 'Gym', icon: IconZap, accent: '#FA114F' },
-    { id: 'recomp', label: 'Recomp', icon: IconActivity, accent: '#A1F524' },
-    { id: 'subs', label: 'Finanzas', icon: IconCreditCard, accent: '#BF5AF2' },
-    { id: 'schedule', label: 'Horarios', icon: IconCalendar, accent: '#00F0FF' },
+  const navItems: { id: AppModule; label: string; icon: React.FC<{ className?: string }> }[] = [
+    { id: 'hub', label: 'HUB', icon: IconHome },
+    { id: 'recomp', label: 'RecompAI', icon: IconDumbbell },
+    { id: 'subs', label: 'Suscripciones', icon: IconCreditCard },
   ];
 
   return (
-    <div className="fixed bottom-5 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
-      <nav className="fitness-glass-dock px-2.5 py-1.5 rounded-full flex items-center gap-1 pointer-events-auto border border-white/15 shadow-[0_16px_40px_rgba(0,0,0,0.85)]">
+    <div className="fixed bottom-6 inset-x-0 z-40 flex justify-center px-4 pointer-events-none">
+      <div className="fitness-glass-dock px-2 py-1.5 rounded-full shadow-2xl flex items-center gap-1 pointer-events-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = currentApp === item.id;
@@ -32,37 +23,29 @@ export const FloatingHubBar: React.FC = () => {
             <button
               key={item.id}
               onClick={() => setCurrentApp(item.id)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-full text-xs font-bold transition-all duration-150 fitness-press ${
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold transition-colors duration-150 ${
                 isActive
-                  ? 'bg-[#2C2C2E] text-white shadow-sm'
-                  : 'text-[#8E8E93] hover:text-white'
+                  ? 'bg-[#C8FF45] text-black'
+                  : 'text-[#8E8E93] hover:text-[#F5F5F7]'
               }`}
-              style={{
-                color: isActive ? item.accent : undefined,
-              }}
             >
-              <Icon
-                className={`w-4 h-4 transition-colors ${
-                  isActive ? 'drop-shadow-[0_0_6px_currentColor]' : 'text-[#8E8E93]'
-                }`}
-              />
-              <span className={isActive ? 'font-bold' : 'font-medium'}>{item.label}</span>
+              <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#8E8E93]'}`} />
+              <span>{item.label}</span>
             </button>
           );
         })}
 
-        <div className="w-[1px] h-4 bg-white/15 mx-0.5" />
+        <div className="w-[1px] h-5 bg-white/15 mx-1" />
 
         {/* Quick AI Trigger */}
         <button
           onClick={() => setIsQuickAiPromptOpen(true)}
-          className="w-8 h-8 rounded-full bg-[#A1F524] text-black flex items-center justify-center shadow-[0_0_12px_rgba(161,245,36,0.4)] fitness-press transition-transform hover:scale-105 active:scale-95"
+          className="w-9 h-9 rounded-full bg-[#C8FF45] text-black flex items-center justify-center transition-transform"
           title="Comando IA Rápido"
         >
-          <IconSparkles className="w-4 h-4 text-black fill-black/20" />
+          <IconSparkles className="w-4 h-4 text-white fill-white/20" />
         </button>
-      </nav>
+      </div>
     </div>
   );
 };
-

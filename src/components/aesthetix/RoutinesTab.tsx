@@ -10,18 +10,17 @@ import { CustomRoutineModal } from './CustomRoutineModal';
 
 interface RoutinesTabProps {
   onStartSession: (routineId?: string, dayIndex?: number) => void;
-  onOpenAiBuilder: () => void;
 }
 
 export const RoutinesTab: React.FC<RoutinesTabProps> = ({
   onStartSession,
-  onOpenAiBuilder,
 }) => {
   const { routines, activeRoutineId, setActiveRoutineId, deleteRoutine } = useAesthetixStore();
   const { showToast } = useHubStore();
 
   const [isCustomRoutineModalOpen, setIsCustomRoutineModalOpen] = useState(false);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
+  const [showAllExercises, setShowAllExercises] = useState(false);
   const [selectedExerciseModal, setSelectedExerciseModal] = useState<Exercise | null>(null);
 
   // Lock background scrolling in iOS WebKit when modal is open
@@ -54,14 +53,12 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
           🏋️
         </div>
         <h3 className="text-lg font-black text-[#F5F5F7]">No tienes ninguna rutina activa</h3>
-        <p className="text-xs text-[#8E8E93]">
-          Genera una rutina de élite personalizada con Gemini IA en 1 minuto.
-        </p>
+        <p className="text-xs text-[#8E8E93]">Crea una rutina y organiza tus días de entrenamiento.</p>
         <button
-          onClick={onOpenAiBuilder}
-          className="px-6 py-3.5 rounded-full bg-[#00F0FF] text-black font-black text-xs shadow-md active:scale-95 fitness-press"
+          onClick={() => setIsCustomRoutineModalOpen(true)}
+          className="px-6 py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-95"
         >
-          ✨ Crear con Gemini IA
+          + Crear rutina
         </button>
       </div>
     );
@@ -70,7 +67,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
   const selectedDay = activeRoutine.days[selectedDayIdx] || activeRoutine.days[0];
 
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="aesthetix-tab-redesign aesthetix-workouts space-y-4 animate-fade-in">
       {/* 0. Routines Quick Switcher Bar */}
       <div className="space-y-1.5">
         <div className="flex items-center justify-between px-1">
@@ -99,12 +96,12 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
                 }}
                 className={`shrink-0 px-3.5 py-1.5 rounded-full text-xs font-black transition-all flex items-center gap-1.5 ${
                   isActive
-                    ? 'bg-white text-black font-black shadow-md'
-                    : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
+                    ? 'bg-[#A1F524] text-black shadow-md'
+                    : 'fitness-pill text-[#8E8E93] hover:text-white'
                 }`}
               >
                 <span>{isActive ? '⚡' : '📋'}</span>
-                <span className="truncate max-w-[140px]">{r.name}</span>
+                  <span className="truncate max-w-[140px]">{r.name.replace(/^Protocolo\s+/i, '')}</span>
               </button>
             );
           })}
@@ -112,7 +109,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
       </div>
 
       {/* 1. Hero Bento Card: Active Routine */}
-      <div className="bg-[#1C1C1E] rounded-[28px] p-5 border border-white/5 space-y-4">
+      <div className="fitness-surface rounded-[30px] p-5 border-t-white/20 shadow-xl space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#A1F524] shadow-[0_0_8px_#A1F524]" />
@@ -125,7 +122,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
             {routines.length > 1 && (
               <button
                 onClick={() => handleDeleteCurrentRoutine(activeRoutine.id, activeRoutine.name)}
-                className="text-[11px] font-bold text-[#8E8E93] hover:text-[#FA114F] transition-colors px-1"
+                className="text-[11px] font-bold text-[#8E8E93] hover:text-[#FF453A] transition-colors px-1"
                 title="Eliminar rutina"
               >
                 🗑️
@@ -139,17 +136,14 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
         <div>
           <h2 className="text-xl font-black text-[#F5F5F7] tracking-tight">
-            {activeRoutine.name}
+            {activeRoutine.name.replace(/^Protocolo\s+/i, '')}
           </h2>
-          <p className="text-xs font-semibold text-[#8E8E93] mt-1 leading-relaxed">
-            {activeRoutine.description}
-          </p>
         </div>
 
         {/* Start Today's Workout Quick Action */}
         <button
           onClick={() => onStartSession(activeRoutine.id, selectedDayIdx)}
-          className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-sm shadow-[0_0_25px_rgba(161,245,36,0.25)] hover:scale-[1.01] active:scale-98 transition-all flex items-center justify-center gap-2 fitness-press"
+          className="w-full py-3.5 rounded-full bg-gradient-to-r from-[#A1F524] to-[#2ECC71] text-black font-black text-xs shadow-[0_0_25px_rgba(161,245,36,0.35)] hover:scale-[1.01] active:scale-98 transition-all flex items-center justify-center gap-2"
         >
           <span className="text-base">⚡</span>
           <span>Iniciar: {selectedDay?.dayName || 'Entrenamiento de Hoy'}</span>
@@ -171,11 +165,14 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
           {activeRoutine.days.map((day, idx) => (
             <button
               key={day.id || idx}
-              onClick={() => setSelectedDayIdx(idx)}
+              onClick={() => {
+                setSelectedDayIdx(idx);
+                setShowAllExercises(false);
+              }}
               className={`shrink-0 px-4 py-2 rounded-full text-xs font-black transition-all ${
                 selectedDayIdx === idx
-                  ? 'bg-white text-black font-black shadow-md'
-                  : 'bg-[#2C2C2E] border border-white/5 text-[#8E8E93] hover:text-white'
+                  ? 'bg-[#A1F524] text-black shadow-md'
+                  : 'fitness-pill text-[#8E8E93] hover:text-white'
               }`}
             >
               {day.dayName}
@@ -186,7 +183,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
       {/* 3. Selected Day Exercises Bento Card */}
       {selectedDay && (
-        <div className="bg-[#1C1C1E] rounded-[28px] p-5 border border-white/5 space-y-3">
+        <div className="fitness-surface-elevated rounded-[28px] p-4 border-t-white/10 space-y-3">
           <div className="flex items-center justify-between pb-2 border-b border-white/5">
             <div>
               <h4 className="text-sm font-black text-[#F5F5F7]">{selectedDay.dayName}</h4>
@@ -195,7 +192,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
             <button
               onClick={() => onStartSession(activeRoutine.id, selectedDayIdx)}
-              className="bg-[#2C2C2E] border border-white/5 px-3 py-1.5 rounded-full text-xs font-black text-[#A1F524] hover:text-white active:scale-95 transition-all flex items-center gap-1 fitness-press"
+              className="fitness-pill px-3 py-1.5 rounded-full text-xs font-black text-[#A1F524] hover:text-white active:scale-95 transition-all flex items-center gap-1"
             >
               <span>Entrenar</span>
               <span>→</span>
@@ -203,16 +200,18 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
           </div>
 
           <div className="space-y-2">
-            {selectedDay.exercises.map((ex, eIdx) => {
+            {selectedDay.exercises
+              .slice(0, showAllExercises ? selectedDay.exercises.length : 3)
+              .map((ex, eIdx) => {
               const dbEx = getExerciseById(ex.exerciseId);
               return (
                 <div
                   key={ex.id || eIdx}
                   onClick={() => dbEx && setSelectedExerciseModal(dbEx)}
-                  className="bg-[#242426] p-3 rounded-[20px] flex items-center justify-between gap-3 cursor-pointer border border-white/5 hover:border-white/20 active:scale-98 transition-all"
+                  className="fitness-surface p-2.5 rounded-[22px] flex items-center justify-between gap-3 cursor-pointer hover:border-[#A1F524]/40 active:scale-98 transition-all"
                 >
                   {/* Exercise Thumbnail / GIF */}
-                  <div className="w-12 h-12 rounded-[16px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/5 relative p-0.5">
+                  <div className="w-12 h-12 rounded-[16px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 relative p-0.5">
                     {(() => {
                       const media = dbEx ? getExerciseMediaUrls(dbEx) : null;
                       return media?.imageUrl ? (
@@ -247,69 +246,33 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#8E8E93] mt-0.5">
                       <span className="text-[#A1F524]">{ex.restSeconds}s descanso</span>
                       <span>•</span>
-                      <span className="text-[#00F0FF] capitalize">
+                      <span className="text-[#A1F524] capitalize">
                         {dbEx?.target || ex.target || 'Músculo'}
                       </span>
                     </div>
                   </div>
 
                   {/* Sets x Reps Pill */}
-                  <div className="px-2.5 py-1.5 rounded-full bg-[#2C2C2E] text-xs font-mono font-black text-[#00F0FF] shrink-0 border border-white/5">
+                  <div className="px-2.5 py-1.5 rounded-full bg-white/[0.06] text-xs font-mono font-black text-[#A1F524] shrink-0 border border-white/5">
                     {ex.targetSets} x {ex.targetReps}
                   </div>
                 </div>
               );
-            })}
+              })}
           </div>
+
+          {selectedDay.exercises.length > 3 && (
+            <button
+              type="button"
+              onClick={() => setShowAllExercises((shown) => !shown)}
+              aria-expanded={showAllExercises}
+              className="w-full rounded-full border border-white/10 bg-white/[0.04] py-2.5 text-xs font-bold text-[#A1F524] transition-colors hover:bg-white/[0.08]"
+            >
+              {showAllExercises ? 'Mostrar menos' : `Más · ${selectedDay.exercises.length - 3} ejercicios`}
+            </button>
+          )}
         </div>
       )}
-
-      {/* 4. Action Banners: Manual Builder & AI Generator */}
-      <div className="space-y-3">
-        {/* Manual Custom Builder Banner */}
-        <div
-          onClick={() => setIsCustomRoutineModalOpen(true)}
-          className="bg-[#1C1C1E] border border-white/5 rounded-[24px] p-4 flex items-center justify-between cursor-pointer hover:border-white/20 active:scale-98 transition-all group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[16px] bg-[#A1F524]/15 border border-[#A1F524]/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-              🛠️
-            </div>
-            <div>
-              <h4 className="text-xs font-black text-[#F5F5F7]">Diseñar Rutina Manual (PPL x UL)</h4>
-              <p className="text-[11px] font-bold text-[#8E8E93]">
-                Personaliza días de la semana y ejercicios a medida
-              </p>
-            </div>
-          </div>
-
-          <span className="bg-[#2C2C2E] border border-white/5 px-3 py-1.5 rounded-full text-xs font-black text-[#A1F524] fitness-press">
-            Diseñar
-          </span>
-        </div>
-
-        {/* AI Generator Banner */}
-        <div
-          onClick={onOpenAiBuilder}
-          className="bg-[#1C1C1E] border border-white/5 rounded-[24px] p-4 flex items-center justify-between cursor-pointer hover:border-white/20 active:scale-98 transition-all group"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[16px] bg-[#00F0FF]/15 border border-[#00F0FF]/30 flex items-center justify-center text-xl group-hover:scale-110 transition-transform">
-              ✨
-            </div>
-            <div>
-              <h4 className="text-xs font-black text-[#F5F5F7]">Generador Inteligente Gemini</h4>
-              <p className="text-[11px] font-bold text-[#8E8E93]">
-                Crea una rutina personalizada con IA en segundos
-              </p>
-            </div>
-          </div>
-
-          <span className="bg-[#2C2C2E] border border-white/5 px-3 py-1.5 rounded-full text-xs font-black text-[#00F0FF] fitness-press">
-            Crear
-          </span>
-        </div>
-      </div>
 
       {/* Custom Routine Designer Modal */}
       <CustomRoutineModal
@@ -321,7 +284,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
       {selectedExerciseModal && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center animate-fade-in p-2">
           <div
-            className="fixed inset-0 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
             onClick={() => setSelectedExerciseModal(null)}
             onTouchMove={(e) => {
               e.preventDefault();
@@ -329,7 +292,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
             }}
           />
           <div
-            className="relative w-full max-w-md bg-[#1C1C1E] rounded-[32px] p-5 z-10 border border-white/10 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
+            className="relative w-full max-w-md fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[85vh] flex flex-col overscroll-contain"
             onTouchMove={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between pb-2 border-b border-white/10 shrink-0">
@@ -344,7 +307,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
               <button
                 type="button"
                 onClick={() => setSelectedExerciseModal(null)}
-                className="w-7 h-7 rounded-full bg-[#2C2C2E] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white shrink-0 ml-2 transition-colors"
+                className="w-7 h-7 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white shrink-0 ml-2"
               >
                 ✕
               </button>
@@ -352,8 +315,8 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
 
             <div className="flex-1 overflow-y-auto space-y-3 pr-1 no-scrollbar overscroll-contain">
               {/* High-res GIF / Image Preview */}
-              <div className="w-full aspect-video rounded-[20px] bg-[#000000] overflow-hidden flex items-center justify-center border border-white/5 relative">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.06)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
+              <div className="w-full aspect-video rounded-[20px] bg-[#000000] overflow-hidden flex items-center justify-center border border-white/10 relative">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,229,255,0.06)_0%,rgba(0,0,0,0)_70%)] pointer-events-none" />
                 {(() => {
                   const media = getExerciseMediaUrls(selectedExerciseModal);
                   const src = media.gifUrl || media.imageUrl;
@@ -398,7 +361,7 @@ export const RoutinesTab: React.FC<RoutinesTabProps> = ({
             <button
               type="button"
               onClick={() => setSelectedExerciseModal(null)}
-              className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-sm shadow-md active:scale-98 transition-all shrink-0 fitness-press"
+              className="w-full py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-98 transition-all shrink-0"
             >
               Cerrar
             </button>

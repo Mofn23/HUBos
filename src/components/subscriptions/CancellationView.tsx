@@ -29,12 +29,12 @@ export const CancellationView: React.FC = () => {
 
   return (
     <div className="space-y-4 animate-fade-in pb-12">
-      <div className="fitness-card p-4.5 rounded-3xl flex items-center gap-3 border border-white/[0.08]">
-        <div className="w-10 h-10 rounded-2xl bg-[#FA114F]/15 border border-[#FA114F]/30 text-[#FA114F] flex items-center justify-center shrink-0">
+      <div className="bg-[#1C1C1E] border border-white/5 p-4.5 rounded-[24px] flex items-center gap-3">
+        <div className="w-10 h-10 rounded-xl bg-[#2C2C2E] border border-white/5 text-[#DC2626] flex items-center justify-center shrink-0">
           <IconShield className="w-5 h-5" />
         </div>
         <div className="text-xs">
-          <h3 className="font-bold text-white">Guías de Cancelación Instantánea</h3>
+          <h3 className="font-bold text-[#F5F5F7]">Guías de Cancelación Instantánea</h3>
           <p className="text-[#8E8E93] mt-0.5 text-[11px]">
             Enlaces directos a los portales oficiales para evitar cobros sorpresa.
           </p>
@@ -43,19 +43,19 @@ export const CancellationView: React.FC = () => {
 
       {/* User Subscriptions with Direct Cancel Links */}
       <div className="space-y-3">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93] px-1">
+        <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93] px-1">
           Tus Suscripciones Activas ({activeSubsWithCancel.length})
         </h3>
 
         {activeSubsWithCancel.map((sub) => (
           <div
             key={sub.id}
-            className="fitness-card p-4.5 rounded-3xl space-y-2.5 border border-white/[0.08]"
+            className="bg-[#1C1C1E] border border-white/5 p-4.5 rounded-[24px] space-y-2.5"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-lg">{sub.emoji}</span>
-                <span className="text-sm font-bold text-white">{sub.name}</span>
+                <span className="text-sm font-bold text-[#F5F5F7]">{sub.name}</span>
               </div>
 
               {sub.cancelUrl && (
@@ -63,7 +63,7 @@ export const CancellationView: React.FC = () => {
                   href={sub.cancelUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-3 py-1 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-[#FA114F] text-xs font-bold flex items-center gap-1 active:scale-95 transition-transform cursor-pointer fitness-press"
+                  className="bg-[#2C2C2E] border border-white/5 px-3 py-1 text-[#DC2626] text-xs font-bold flex items-center gap-1 hover:brightness-110 active:scale-95 transition-transform duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
                 >
                   <span>Portal Oficial</span>
                   <IconExternalLink className="w-3.5 h-3.5" />
@@ -72,8 +72,8 @@ export const CancellationView: React.FC = () => {
             </div>
 
             {sub.cancelSteps && (
-              <p className="text-xs text-[#8E8E93] bg-[#242426] p-3 rounded-2xl border border-white/5">
-                <strong className="text-white">Pasos: </strong>
+              <p className="text-xs text-[#8E8E93] bg-[#2C2C2E] border border-white/5 p-3">
+                <strong className="text-[#F5F5F7]">Pasos: </strong>
                 {sub.cancelSteps}
               </p>
             )}
@@ -83,25 +83,25 @@ export const CancellationView: React.FC = () => {
 
       {/* Global Store Guides */}
       <div className="space-y-3 pt-2">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#8E8E93] px-1">
+        <h3 className="text-xs font-black uppercase tracking-wider text-[#8E8E93] px-1">
           Portales Generales de Tiendas de Apps
         </h3>
 
         {defaultGuides.map((g, i) => (
-          <div key={i} className="fitness-card p-4.5 rounded-3xl space-y-2.5 border border-white/[0.08]">
+          <div key={i} className="bg-[#1C1C1E] border border-white/5 p-4.5 rounded-[24px] space-y-2.5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-white">{g.name}</span>
+              <span className="text-xs font-bold text-[#F5F5F7]">{g.name}</span>
               <a
                 href={g.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="px-3 py-1 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-xs font-bold text-[#A1F524] flex items-center gap-1 active:scale-95 transition-transform cursor-pointer fitness-press"
+                className="bg-[#2C2C2E] border border-white/5 px-3 py-1 text-xs font-bold text-[#FF375F] flex items-center gap-1 hover:brightness-110 active:scale-95 transition-transform duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8FF45] cursor-pointer"
               >
                 <span>Abrir</span>
-                <IconExternalLink className="w-3 h-3" />
+                <IconExternalLink className="w-3.5 h-3.5" />
               </a>
             </div>
-            <p className="text-[11px] text-[#8E8E93] leading-relaxed">
+            <p className="text-xs text-[#8E8E93] bg-[#2C2C2E] border border-white/5 p-3">
               {g.steps}
             </p>
           </div>

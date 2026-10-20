@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { WorkoutHistoryItem, WorkoutRoutine, ActiveWorkoutSession } from '@/types/workout';
+import { formatShortDateSpanish } from '@/lib/date';
 
 interface AppleWorkoutsSectionProps {
   history: WorkoutHistoryItem[];
@@ -25,75 +26,37 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
   // If activeSession is in progress, show glowing quick action
   const currentDay = activeRoutine?.days[0];
 
-  // Pick the top 3-4 sessions from history, or fallback mock items matching Apple Fitness
-  const displayItems = history.length > 0
-    ? history.slice(0, 4).map((h, i) => {
+  // Show only sessions the user has saved.
+  const displayItems = history.slice(0, 4).map((h) => {
         const isRunOrLegs = h.dayName?.toLowerCase().includes('leg') || h.dayName?.toLowerCase().includes('pierna');
         const isHIITorPush = h.dayName?.toLowerCase().includes('push') || h.dayName?.toLowerCase().includes('pecho');
         
         const themeColor = isRunOrLegs ? '#A1F524' : isHIITorPush ? '#FA114F' : '#00F0FF';
         const icon = isRunOrLegs ? '🏃' : isHIITorPush ? '⚡' : '🏋️';
 
-        const min = h.durationMinutes || 40;
-
         return {
           id: h.id,
-          title: h.dayName || 'Gym Workout',
-          metric: `${(h.totalVolumeKg || 0).toLocaleString()} KG`,
-          timeStr: `${min}:00`,
-          dateLabel: i === 0 ? 'Today' : i === 1 ? 'Yesterday' : 'Recent',
+          title: h.dayName || 'Entrenamiento',
+          metric: `${(h.totalVolumeKg || 0).toLocaleString('es-CO')} kg`,
+          timeStr: h.durationMinutes > 0 ? `${h.durationMinutes} min` : '',
+          dateLabel: formatShortDateSpanish(h.date),
           color: themeColor,
           icon,
-          hasAward: true,
+          hasAward: h.prCount > 0,
           rawItem: h,
         };
-      })
-    : [
-        {
-          id: 'mock-1',
-          title: 'Outdoor Run',
-          metric: '7.24 KM',
-          timeStr: '42:15',
-          dateLabel: 'Today',
-          color: '#A1F524',
-          icon: '🏃',
-          hasAward: true,
-          rawItem: null,
-        },
-        {
-          id: 'mock-2',
-          title: 'HIIT & Core',
-          metric: '308 CAL',
-          timeStr: '28:00',
-          dateLabel: 'Yesterday',
-          color: '#FA114F',
-          icon: '⚡',
-          hasAward: false,
-          rawItem: null,
-        },
-        {
-          id: 'mock-3',
-          title: 'Outdoor Cycle',
-          metric: '32.60 KM',
-          timeStr: '1:12:00',
-          dateLabel: 'Wednesday',
-          color: '#00F0FF',
-          icon: '🚴',
-          hasAward: true,
-          rawItem: null,
-        },
-      ];
+      });
 
   return (
     <div className="space-y-3">
       {/* Section Header */}
       <div className="flex items-center justify-between px-1">
-        <h3 className="text-xl font-black text-white tracking-tight">Workouts</h3>
+        <h3 className="text-xl font-black text-white tracking-tight">Entrenamientos</h3>
         <button
           onClick={onShowAllWorkouts}
           className="text-xs font-black text-[#A1F524] hover:underline transition-all"
         >
-          Show All
+          Ver todos
         </button>
       </div>
 
@@ -104,15 +67,15 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
           className="fitness-card p-4 border border-[#FA114F]/40 bg-[#FA114F]/10 flex items-center justify-between cursor-pointer fitness-press shadow-[0_0_24px_rgba(250,17,79,0.25)]"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-[#FA114F] flex items-center justify-center text-white shadow-md animate-pulse">
-              <span className="w-3 h-3 rounded-full bg-white animate-ping" />
+            <div className="w-10 h-10 rounded-full bg-[#FA114F] flex items-center justify-center text-white shadow-md ">
+              <span className="w-3 h-3 rounded-full bg-white " />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-black uppercase tracking-widest text-[#FA114F]">
                   ENTRENAMIENTO EN VIVO
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#FA114F] animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FA114F] " />
               </div>
               <div className="text-base font-black text-white">
                 {activeSession.dayName || 'Sesión Activa'}
@@ -147,15 +110,20 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
         </div>
       ) : null}
 
-      {/* Workout Items List (Apple Fitness 1:1) */}
+      {/* Historial guardado */}
+      {displayItems.length === 0 ? (
+        <div className="fitness-card p-5 border border-white/[0.08] text-center">
+          <div className="text-2xl mb-2">🏋️</div>
+          <p className="text-sm font-bold text-white">Aún no hay entrenamientos registrados</p>
+          <p className="mt-1 text-xs text-[#8E8E93]">Cuando guardes tu primera sesión, aparecerá aquí.</p>
+        </div>
+      ) : (
       <div className="space-y-2">
         {displayItems.map((item) => (
           <div
             key={item.id}
             onClick={() => {
-              if (item.rawItem) {
-                onSelectSessionDetail(item.rawItem);
-              }
+              onSelectSessionDetail(item.rawItem)
             }}
             className="fitness-card p-3.5 flex items-center justify-between border border-white/[0.06] hover:border-white/15 transition-all cursor-pointer fitness-press"
           >
@@ -181,7 +149,7 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
                   className="text-xs font-black tracking-tight mt-0.5"
                   style={{ color: item.color }}
                 >
-                  {item.metric}
+                  {item.rawItem.totalVolumeKg > 0 ? item.metric : `${item.rawItem.totalSets} series`}
                 </div>
               </div>
             </div>
@@ -209,6 +177,7 @@ export const AppleWorkoutsSection: React.FC<AppleWorkoutsSectionProps> = ({
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 };

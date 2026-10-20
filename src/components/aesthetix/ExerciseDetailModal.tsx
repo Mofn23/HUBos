@@ -43,7 +43,7 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
 
       {/* Sheet Content */}
       <div
-        className="relative w-full max-w-lg bg-[#1C1C1E] rounded-t-[36px] max-h-[92vh] flex flex-col overflow-hidden z-10 border-t border-white/15 shadow-2xl animate-slide-up overscroll-contain"
+        className="relative w-full max-w-lg fitness-surface-elevated rounded-t-[36px] max-h-[92vh] flex flex-col overflow-hidden z-10 border-t border-white/20 shadow-2xl animate-slide-up overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         {/* Handle */}
@@ -57,14 +57,14 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
             <span className="px-2.5 py-0.5 rounded-full bg-[#A1F524]/15 text-[#A1F524] border border-[#A1F524]/25 text-[10px] font-black uppercase tracking-wider">
               {bodyPartLabel}
             </span>
-            <span className="px-2.5 py-0.5 rounded-full bg-[#2C2C2E] text-[#8E8E93] text-[10px] font-bold border border-white/5">
+            <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[#8E8E93] text-[10px] font-bold border border-white/10">
               {equipmentLabel}
             </span>
           </div>
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-[#8E8E93] hover:text-white fitness-press transition-all"
+            className="w-8 h-8 rounded-full fitness-pill flex items-center justify-center text-[#8E8E93] hover:text-white active:scale-90 transition-all"
           >
             ✕
           </button>
@@ -78,7 +78,7 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
               {exercise.name}
             </h2>
             <p className="text-xs font-bold text-[#8E8E93] mt-0.5">
-              Enfoque: <span className="text-[#A1F524] font-black capitalize">{exercise.target}</span>
+              Enfoque: <span className="text-[#A1F524] capitalize">{exercise.target}</span>
               {exercise.secondary_muscles && exercise.secondary_muscles.length > 0 && (
                 <span> • Secundarios: {exercise.secondary_muscles.join(', ')}</span>
               )}
@@ -86,25 +86,25 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
           </div>
 
           {/* Media Player Bento Card (GIF Animation & Thumbnail) */}
-          <div className="bg-[#242426] border border-white/5 rounded-[26px] p-3 space-y-2 relative flex flex-col items-center">
+          <div className="fitness-surface rounded-[26px] p-3 space-y-2 relative border-t-white/20 flex flex-col items-center">
             {/* Tab switch GIF / JPG */}
             <div className="flex items-center gap-1.5 self-end mb-1">
               <button
                 onClick={() => setActiveMediaTab('gif')}
-                className={`px-3 py-1 rounded-full text-[11px] font-black transition-all fitness-press ${
+                className={`px-3 py-1 rounded-full text-[11px] font-black transition-all ${
                   activeMediaTab === 'gif'
-                    ? 'bg-white text-black shadow-sm'
-                    : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                    ? 'bg-[#A1F524] text-black shadow-md'
+                    : 'fitness-pill text-[#8E8E93] hover:text-white'
                 }`}
               >
                 Animación GIF
               </button>
               <button
                 onClick={() => setActiveMediaTab('image')}
-                className={`px-3 py-1 rounded-full text-[11px] font-black transition-all fitness-press ${
+                className={`px-3 py-1 rounded-full text-[11px] font-black transition-all ${
                   activeMediaTab === 'image'
-                    ? 'bg-white text-black shadow-sm'
-                    : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                    ? 'bg-[#A1F524] text-black shadow-md'
+                    : 'fitness-pill text-[#8E8E93] hover:text-white'
                 }`}
               >
                 Foto fija
@@ -138,7 +138,7 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
                 {exercise.steps_es.map((step, idx) => (
                   <div
                     key={idx}
-                    className="bg-[#242426] border border-white/5 p-3 rounded-[18px] flex items-start gap-2.5 text-xs text-[#F5F5F7] leading-relaxed"
+                    className="fitness-pill p-3 rounded-[18px] flex items-start gap-2.5 text-xs text-[#F5F5F7] leading-relaxed"
                   >
                     <span className="w-5 h-5 shrink-0 rounded-full bg-[#A1F524]/20 text-[#A1F524] border border-[#A1F524]/30 flex items-center justify-center font-black text-[10px]">
                       {idx + 1}
@@ -148,7 +148,7 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
                 ))}
               </div>
             ) : (
-              <p className="bg-[#242426] border border-white/5 p-3 rounded-[18px] text-xs text-[#8E8E93]">
+              <p className="fitness-pill p-3 rounded-[18px] text-xs text-[#8E8E93]">
                 {exercise.instructions_es || 'Mantén la postura erguida y controla el peso en todo momento.'}
               </p>
             )}
@@ -163,7 +163,7 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
                 onAddToActiveWorkout(exercise);
                 onClose();
               }}
-              className="flex-1 py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md shadow-[#A1F524]/20 fitness-press transition-all flex items-center justify-center gap-1.5"
+              className="flex-1 py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-[0_4px_20px_rgba(161,245,36,0.3)] hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-1.5"
             >
               <span>+</span>
               <span>Añadir a Sesión Activa</span>
@@ -172,7 +172,7 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="px-5 py-3.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-xs font-black text-[#F5F5F7] hover:text-white fitness-press transition-all"
+            className="px-5 py-3 rounded-full fitness-pill text-xs font-black text-[#F5F5F7] hover:text-white active:scale-95 transition-all"
           >
             Cerrar
           </button>

@@ -19,9 +19,8 @@ export const AchievementUnlockedToast: React.FC = () => {
 
   return (
     <div className="fixed inset-x-0 top-12 z-[999999] flex justify-center px-4 pointer-events-none animate-slide-down">
-      <div className="pointer-events-auto relative w-full max-w-sm rounded-[28px] bg-[#1C1C1E]/95 border-2 border-[#FFD60A]/40 shadow-[0_12px_40px_rgba(255,214,10,0.25)] backdrop-blur-2xl p-4 overflow-hidden">
+      <div className="pointer-events-auto relative w-full max-w-sm rounded-[28px] bg-[#1C1C1E]/95 border-2 border-[#FFD60A]/40   p-4 overflow-hidden">
         {/* Glow ambient background */}
-        <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#FFD60A]/20 rounded-full blur-2xl pointer-events-none" />
 
         <div className="flex items-center gap-3.5 relative z-10">
           {/* Icon Badge */}

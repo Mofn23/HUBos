@@ -253,7 +253,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
 
       {/* Main Single Modal Container */}
       <div
-        className="relative w-full max-w-lg bg-[#1C1C1E] rounded-[32px] p-5 z-10 border border-white/15 shadow-2xl space-y-4 max-h-[90vh] flex flex-col overscroll-contain"
+        className="relative w-full max-w-lg fitness-surface-elevated rounded-[32px] p-5 z-10 border border-white/20 shadow-2xl space-y-4 max-h-[90vh] flex flex-col overscroll-contain"
         onTouchMove={(e) => e.stopPropagation()}
       >
         
@@ -279,7 +279,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-7 h-7 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] flex items-center justify-center text-xs text-[#8E8E93] hover:text-white fitness-press"
+                className="w-7 h-7 rounded-full fitness-pill flex items-center justify-center text-xs text-[#8E8E93] hover:text-white"
               >
                 ✕
               </button>
@@ -296,21 +296,21 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                   <button
                     type="button"
                     onClick={loadPplxUlTemplate}
-                    className="shrink-0 px-3 py-1.5 rounded-full bg-[#2C2C2E] text-xs font-bold text-[#A1F524] hover:bg-[#3A3A3C] fitness-press transition-all"
+                    className="shrink-0 px-3 py-1.5 rounded-full fitness-pill text-xs font-bold text-[#A1F524] hover:bg-[#A1F524]/15 active:scale-95 transition-all"
                   >
                     ⚡ PPL x UL (5 Días)
                   </button>
                   <button
                     type="button"
                     onClick={loadPushPullLegs3Template}
-                    className="shrink-0 px-3 py-1.5 rounded-full bg-[#2C2C2E] text-xs font-bold text-[#00F0FF] hover:bg-[#3A3A3C] fitness-press transition-all"
+                    className="shrink-0 px-3 py-1.5 rounded-full fitness-pill text-xs font-bold text-[#64D2FF] hover:bg-[#64D2FF]/15 active:scale-95 transition-all"
                   >
                     💪 PPL Clásico (3 Días)
                   </button>
                   <button
                     type="button"
                     onClick={loadBlankTemplate}
-                    className="shrink-0 px-3 py-1.5 rounded-full bg-[#2C2C2E] text-xs font-bold text-[#8E8E93] hover:text-white fitness-press transition-all"
+                    className="shrink-0 px-3 py-1.5 rounded-full fitness-pill text-xs font-bold text-[#8E8E93] hover:text-white active:scale-95 transition-all"
                   >
                     📝 En Blanco
                   </button>
@@ -328,7 +328,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                     value={routineName}
                     onChange={(e) => setRoutineName(e.target.value)}
                     placeholder="Ej: Mi Rutina PPL x UL"
-                    className="w-full bg-[#2C2C2E] rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#A1F524]"
+                    className="w-full fitness-surface rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#A1F524]"
                   />
                 </div>
 
@@ -341,7 +341,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Ej: Distribución de 5 días con descansos programados..."
-                    className="w-full bg-[#2C2C2E] rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#A1F524]"
+                    className="w-full fitness-surface rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#A1F524]"
                   />
                 </div>
               </div>
@@ -367,10 +367,10 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                       key={day.id || idx}
                       type="button"
                       onClick={() => setActiveDayIdx(idx)}
-                      className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-black transition-all flex items-center gap-1.5 fitness-press ${
+                      className={`shrink-0 px-3.5 py-2 rounded-full text-xs font-black transition-all flex items-center gap-1.5 ${
                         activeDayIdx === idx
-                          ? 'bg-white text-black shadow-sm'
-                          : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                          ? 'bg-[#A1F524] text-black shadow-md'
+                          : 'fitness-pill text-[#8E8E93] hover:text-white'
                       }`}
                     >
                       <span>{day.dayName}</span>
@@ -386,7 +386,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
               {currentDay && (
                 <div className="space-y-3 pt-2 border-t border-white/10">
                   {/* Day Config Card */}
-                  <div className="bg-[#242426] border border-white/5 rounded-[20px] p-3 space-y-2">
+                  <div className="fitness-surface rounded-[20px] p-3 space-y-2">
                     <div className="flex items-center justify-between">
                       <input
                         type="text"
@@ -399,7 +399,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                         <button
                           type="button"
                           onClick={() => handleRemoveDay(activeDayIdx)}
-                          className="text-[10px] font-bold text-[#FA114F] hover:underline"
+                          className="text-[10px] font-bold text-[#FF453A] hover:underline"
                         >
                           Eliminar día
                         </button>
@@ -427,10 +427,10 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                       currentDay.exercises.map((ex, exIdx) => (
                         <div
                           key={ex.id || exIdx}
-                          className="bg-[#242426] border border-white/5 p-2.5 rounded-[18px] flex items-center justify-between gap-2"
+                          className="fitness-pill p-2.5 rounded-[18px] flex items-center justify-between gap-2"
                         >
                           <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                            <span className="w-5 h-5 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[10px] font-black text-[#8E8E93] shrink-0">
+                            <span className="w-5 h-5 rounded-full bg-white/[0.08] flex items-center justify-center text-[10px] font-black text-[#8E8E93] shrink-0">
                               {exIdx + 1}
                             </span>
                             <div className="min-w-0 flex-1">
@@ -453,7 +453,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                                       parseInt(e.target.value) || 120
                                     )
                                   }
-                                  className="w-12 text-center bg-[#2C2C2E] rounded px-1 text-[10px] text-[#A1F524] font-mono outline-none"
+                                  className="w-12 text-center bg-white/[0.06] rounded px-1 text-[10px] text-[#A1F524] font-mono outline-none"
                                 />
                                 <span>seg</span>
                               </div>
@@ -475,7 +475,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                                   parseInt(e.target.value) || 3
                                 )
                               }
-                              className="w-9 text-center bg-[#2C2C2E] border border-white/5 rounded-lg py-1 text-xs font-mono font-black text-[#00F0FF] outline-none"
+                              className="w-9 text-center fitness-surface rounded-lg py-1 text-xs font-mono font-black text-[#64D2FF] outline-none"
                               title="Series"
                             />
                             <span className="text-xs text-[#8E8E93] font-bold">x</span>
@@ -490,14 +490,14 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                                   e.target.value
                                 )
                               }
-                              className="w-12 text-center bg-[#2C2C2E] border border-white/5 rounded-lg py-1 text-xs font-mono font-black text-[#F5F5F7] outline-none"
+                              className="w-12 text-center fitness-surface rounded-lg py-1 text-xs font-mono font-black text-[#F5F5F7] outline-none"
                               title="Repeticiones"
                             />
 
                             <button
                               type="button"
                               onClick={() => handleRemoveExerciseFromDay(activeDayIdx, exIdx)}
-                              className="w-6 h-6 rounded-full bg-[#2C2C2E] flex items-center justify-center text-[10px] text-[#FA114F] hover:bg-[#FA114F]/20 ml-1 fitness-press"
+                              className="w-6 h-6 rounded-full fitness-pill flex items-center justify-center text-[10px] text-[#FF453A] hover:bg-[#FF453A]/20 ml-1"
                               title="Quitar ejercicio"
                             >
                               ✕
@@ -514,7 +514,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                         setPickerSearch('');
                         setCurrentView('catalog');
                       }}
-                      className="w-full py-3 rounded-full border border-dashed border-[#A1F524]/50 text-[#A1F524] hover:bg-[#A1F524]/10 text-xs font-black transition-all flex items-center justify-center gap-2 fitness-press"
+                      className="w-full py-3 rounded-full border border-dashed border-[#A1F524]/50 text-[#A1F524] hover:bg-[#A1F524]/10 text-xs font-black transition-all flex items-center justify-center gap-2"
                     >
                       <span className="text-sm">+</span>
                       <span>Añadir Ejercicio desde Catálogo (1.324 con GIFs)</span>
@@ -529,7 +529,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3.5 rounded-full bg-[#2C2C2E] hover:bg-[#3A3A3C] text-xs font-black text-[#8E8E93] hover:text-white fitness-press transition-all"
+                className="flex-1 py-3.5 rounded-full fitness-pill text-xs font-black text-[#8E8E93] hover:text-white transition-all"
               >
                 Cancelar
               </button>
@@ -537,7 +537,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
               <button
                 type="button"
                 onClick={handleSaveRoutine}
-                className="flex-[2] py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md shadow-[#A1F524]/20 fitness-press transition-all flex items-center justify-center gap-1.5"
+                className="flex-[2] py-3.5 rounded-full bg-gradient-to-r from-[#A1F524] to-[#2ECC71] text-black font-black text-xs shadow-[0_0_25px_rgba(161,245,36,0.35)] hover:scale-[1.01] active:scale-98 transition-all flex items-center justify-center gap-1.5"
               >
                 <span>✓</span>
                 <span>Guardar Rutina</span>
@@ -556,7 +556,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
               <button
                 type="button"
                 onClick={() => setCurrentView('editor')}
-                className="flex items-center gap-1.5 bg-[#2C2C2E] hover:bg-[#3A3A3C] px-3 py-1.5 rounded-full text-xs font-black text-[#A1F524] fitness-press transition-all"
+                className="flex items-center gap-1.5 fitness-pill px-3 py-1.5 rounded-full text-xs font-black text-[#A1F524] hover:text-white transition-all"
               >
                 <span>←</span>
                 <span>Volver a la rutina</span>
@@ -579,7 +579,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                 value={pickerSearch}
                 onChange={(e) => setPickerSearch(e.target.value)}
                 placeholder="Buscar ejercicio por nombre o músculo..."
-                className="w-full bg-[#2C2C2E] rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#00F0FF]"
+                className="w-full fitness-surface rounded-[16px] px-3.5 py-2.5 text-xs font-bold text-[#F5F5F7] outline-none border border-white/10 focus:border-[#A1F524]"
               />
 
               {/* Muscle Group Pills */}
@@ -587,10 +587,10 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setPickerBodyPart('all')}
-                  className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition-all fitness-press ${
+                  className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition-all ${
                     pickerBodyPart === 'all'
-                      ? 'bg-white text-black font-black'
-                      : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                      ? 'bg-[#A1F524] text-black'
+                      : 'fitness-pill text-[#8E8E93] hover:text-white'
                   }`}
                 >
                   Todos
@@ -601,10 +601,10 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                       key={bp}
                       type="button"
                       onClick={() => setPickerBodyPart(bp)}
-                      className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition-all fitness-press ${
+                      className={`shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black transition-all ${
                         pickerBodyPart === bp
-                          ? 'bg-white text-black font-black'
-                          : 'bg-[#2C2C2E] text-[#8E8E93] hover:text-white'
+                          ? 'bg-[#A1F524] text-black'
+                          : 'fitness-pill text-[#8E8E93] hover:text-white'
                       }`}
                     >
                       {BODY_PART_TRANSLATIONS[bp] || bp}
@@ -629,7 +629,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                     <div
                       key={dbEx.id}
                       onClick={() => handleAddExerciseToCurrentDay(dbEx)}
-                      className="bg-[#242426] border border-white/5 p-2.5 rounded-[18px] flex items-center justify-between gap-3 hover:border-[#A1F524]/40 cursor-pointer fitness-press transition-all"
+                      className="fitness-surface p-2.5 rounded-[18px] flex items-center justify-between gap-3 hover:border-[#A1F524]/50 cursor-pointer active:scale-98 transition-all"
                     >
                       {/* Exercise Thumbnail / GIF */}
                       <div className="w-12 h-12 rounded-[14px] bg-[#000000] overflow-hidden flex items-center justify-center shrink-0 border border-white/10 p-0.5">
@@ -665,7 +665,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                         </p>
                         <p className="text-[10px] font-bold text-[#8E8E93]">
                           {BODY_PART_TRANSLATIONS[dbEx.body_part] || dbEx.body_part} •{' '}
-                          <span className="text-[#A1F524] font-black capitalize">{dbEx.target}</span>
+                          <span className="text-[#A1F524] capitalize">{dbEx.target}</span>
                         </p>
                       </div>
 
@@ -674,7 +674,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
                         className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shrink-0 transition-all ${
                           isAlreadyInDay
                             ? 'bg-[#A1F524] text-black shadow-md'
-                            : 'bg-[#2C2C2E] text-[#A1F524] hover:bg-[#A1F524] hover:text-black'
+                            : 'bg-[#A1F524]/20 text-[#A1F524] hover:bg-[#A1F524] hover:text-black'
                         }`}
                       >
                         {isAlreadyInDay ? '✓' : '+'}
@@ -690,7 +690,7 @@ export const CustomRoutineModal: React.FC<CustomRoutineModalProps> = ({
               <button
                 type="button"
                 onClick={() => setCurrentView('editor')}
-                className="w-full py-3.5 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md shadow-[#A1F524]/20 fitness-press transition-all"
+                className="w-full py-3 rounded-full bg-[#A1F524] text-black font-black text-xs shadow-md active:scale-98 transition-all"
               >
                 Listo ({currentDay.exercises.length} en este día) → Volver a la rutina
               </button>
